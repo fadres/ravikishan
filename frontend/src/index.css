@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-deep-950: #04101f;
+  --color-deep-900: #071a33;
+  --color-deep-800: #0a2447;
+  --color-deep-700: #0e3060;
+  --color-deep-600: #123d75;
+  --color-aqua-100: #e0f7ff;
+  --color-aqua-300: #7dd3fc;
+  --color-aqua-400: #38bdf8;
+  --color-ink: #1f2937;
+
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", "Hind", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Noto Sans", "Noto Sans Devanagari", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Deep-ocean page backdrop */
+.ocean-bg {
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(56, 189, 248, 0.14), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(14, 165, 233, 0.1), transparent 55%),
+    linear-gradient(180deg, #04101f 0%, #071a33 45%, #0a2447 100%);
+  background-attachment: fixed;
+}
+
+/* Frosted-glass panel */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: rgba(10, 36, 71, 0.72);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Warm off-white top bar (streak bar) */
+.topbar-warm {
+  background: linear-gradient(180deg, #fbf7ef 0%, #f6efe3 100%);
+  color: #1f2937;
+}
+
+/* Subject watermark behind cards */
+.watermark {
+  position: relative;
+  overflow: hidden;
+}
+.watermark::after {
+  content: "";
+  position: absolute;
+  inset: auto -14px -26px auto;
+  width: 130px;
+  height: 130px;
+  opacity: 0.07;
+  background-image: var(--wm, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M0 0h24v24H0z'/%3E%3C/svg%3E"));
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* Gradient hero */
+.hero-gradient {
+  background:
+    radial-gradient(700px 300px at 20% -30%, rgba(125, 211, 252, 0.25), transparent 60%),
+    linear-gradient(120deg, #0a2447 0%, #0e3a6d 45%, #0d5c88 75%, #0aa5c8 130%);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #e0f7ff, #7dd3fc 55%, #a5f3fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scrollbar (subtle, webkit) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #04101f;
+}
+::-webkit-scrollbar-thumb {
+  background: #123d75;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0e4a8f;
+}
+
+/* KaTeX sizing inside prose */
+.katex {
+  font-size: 1.05em;
+}

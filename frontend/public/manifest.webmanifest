@@ -1,0 +1,24 @@
+{
+  "name": "Ravikishan",
+  "short_name": "Ravikishan",
+  "description": "Ravikishan — curated Class 11 & 12 exam notes by Ravikishan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04101f",
+  "theme_color": "#0a2447",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

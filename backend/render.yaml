@@ -1,0 +1,27 @@
+# Render blueprint for the Ravikishan backend web service.
+# Create the free PostgreSQL database separately on Neon or Supabase and
+# paste its connection string as DATABASE_URL (see docs/README.md).
+
+services:
+  - type: web
+    name: ravikishan-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm run migrate && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: OWNER_EMAIL
+        value: owner@ravikishan.com
+      - key: OWNER_PASSWORD
+        sync: false

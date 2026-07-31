@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Roles ────────────────────────────────────────────────────────────────
+// owner  → full control (Ravikishan)
+// admin  → trusted helpers: approve requests, manage users, edit content
+// member → approved student, full read access
+// guest  → default: sees structure and titles only
+enum Role {
+  owner
+  admin
+  member
+  guest
+}
+
+enum RequestStatus {
+  pending
+  approved
+  denied
+}
+
+enum SubjectType {
+  science_math // Physics | Chemistry | Mathematics
+  biology
+  english
+  nepali
+}
+
+// Allowed block types per subject_type (enforced in the API validation layer):
+//   science_math: note_topic|note_statement|note_example|note_concept|note_important|numerical|mindmap
+//   biology:      note_topic|note_statement|note_example|note_concept|note_important|diagram_compare|mindmap
+//   english:      summary|keywords|important_points
+//   nepali:       byakaran (sub_level drives the nesting: Sandhi > Swar Sandhi …)
+enum BlockType {
+  note_topic
+  note_statement
+  note_example
+  note_concept
+  note_important
+  numerical
+  mindmap
+  diagram_compare
+  summary
+  keywords
+  important_points
+  byakaran
+}
+
+model User {
+  id               String   @id @default(uuid())
+  email            String   @unique
+  passwordHash     String
+  displayName      String?
+  role             Role     @default(guest)
+  isApproved       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  refreshTokens    RefreshToken[]
+  accessRequests   AccessRequest[]
+  resolvedRequests AccessRequest[] @relation("ResolvedBy")
+  auditLogs        AuditLog[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revoked   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model AccessRequest {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email        String
+  message      String?
+  status       RequestStatus @default(pending)
+  requestedAt  DateTime      @default(now())
+  resolvedAt   DateTime?
+  resolvedById String?
+  resolvedBy   User?         @relation("ResolvedBy", fields: [resolvedById], references: [id])
+
+  @@index([status])
+}
+
+// ── Content hierarchy ────────────────────────────────────────────────────
+model Class {
+  id        String    @id @default(uuid())
+  name      String // "Class 11", "Class 12"
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  subjects  Subject[]
+}
+
+model Subject {
+  id          String      @id @default(uuid())
+  classId     String
+  class       Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
+  name        String // Physics, Chemistry, …
+  slug        String
+  subjectType SubjectType
+  icon        String?
+  themeColor  String?
+  isLocked    Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  chapters    Chapter[]
+
+  @@unique([classId, slug])
+}
+
+model Chapter {
+  id        String         @id @default(uuid())
+  subjectId String
+  subject   Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title     String
+  slug      String
+  isLocked  Boolean        @default(true)
+  sortOrder Int            @default(0)
+  blocks    ContentBlock[]
+
+  @@unique([subjectId, slug])
+}
+
+// One row per content piece, typed and ordered inside its chapter.
+model ContentBlock {
+  id              String    @id @default(uuid())
+  chapterId       String
+  chapter         Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blockType       BlockType
+  classifiedBy    String? // who decided blockType: "auto" (rule-based classifier) | "manual" (admin pick); null = legacy rows
+  title           String?
+  contentRichtext String? // markdown/HTML body
+  contentCode     String? // raw code snippet when block_type is code
+  codeLanguage    String? // javascript | python | json | sql | html | css | bash | …
+  mindmapJson     Json? // { name, children[] }
+  diagramData     Json? // { left, right, similarities[], differences[] }
+  subLevel        String? // Nepali byakaran nesting, e.g. "Sandhi > Swar Sandhi"
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([chapterId, sortOrder])
+}
+
+// ── Audit trail (who did what, when) ─────────────────────────────────────
+model AuditLog {
+  id         String   @id @default(uuid())
+  actor      User?    @relation(fields: [actorId], references: [id])
+  actorId    String?
+  actorEmail String?
+  action     String // "request.approved" | "user.role_changed" | "subject.lock_toggled" | …
+  targetType String
+  targetId   String?
+  detail     Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}

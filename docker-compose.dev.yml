@@ -1,0 +1,25 @@
+# Local development Postgres for Ravikishan.
+# Usage:  docker compose -f docker-compose.dev.yml up -d
+#         (then cp backend/.env.example backend/.env and run migrations)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: raviki-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: raviki
+      POSTGRES_PASSWORD: raviki_dev_pw
+      POSTGRES_DB: ravikishan
+    ports:
+      - "5433:5432"
+    volumes:
+      - raviki_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raviki"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  raviki_pgdata:
