@@ -67,19 +67,27 @@ export default function SubjectPage() {
       </div>
 
       <div className="mt-8 space-y-3">
-        {subject.chapters.map((chapter) => (
+        {subject.chapters.map((chapter, idx) => (
           <Link
             key={chapter.id}
             to={`/class/${classSlug}/subject/${subjectSlug}/chapter/${chapter.slug}`}
             className="glass rounded-2xl px-5 py-4 flex items-center justify-between gap-4 hover:border-aqua-400/40 hover:bg-white/8 transition group"
           >
-            <div className="min-w-0">
-              <h3 className="font-bold text-white group-hover:text-aqua-100 transition truncate">
-                {chapter.title}
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {chapter._count.blocks} block{chapter._count.blocks === 1 ? '' : 's'}
-              </p>
+            <div className="min-w-0 flex items-center gap-3.5">
+              <span
+                className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-extrabold"
+                style={{ background: `${subject.themeColor}1f`, border: `1px solid ${subject.themeColor}44`, color: subject.themeColor }}
+              >
+                {idx + 1}
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-bold text-white group-hover:text-aqua-100 transition truncate">
+                  Chapter {idx + 1} · {chapter.title}
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {chapter._count.blocks} block{chapter._count.blocks === 1 ? '' : 's'}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-2 py-1">

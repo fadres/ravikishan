@@ -127,7 +127,8 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
 
   const blocks = await prisma.contentBlock.findMany({
     where: { chapterId: chapter.id },
-    orderBy: { sortOrder: 'asc' },
+    // Content flow: free (3) → members (2) → premium (1), then manual order.
+    orderBy: [{ accessLevel: 'desc' }, { sortOrder: 'asc' }],
     select: blockFullSelect,
   });
 

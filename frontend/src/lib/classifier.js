@@ -3,6 +3,9 @@
 // re-runs the same rules on save (single source of truth on the server).
 
 const IMPORTANT_RE = /^\s*(important|note|remember|key\s*point|warning|caution|alert)\s*[:—\-]/i;
+const FORMULA_HEADING_RE = /^\s*(formulas?|equations?|derivations?)\s*[:—\-]/i;
+const FORMULA_LINE_RE = /[a-zA-Z0-9)\]]\s*=\s*[a-zA-Z0-9(+\-]/;
+const SYMBOLS_HEADING_RE = /^\s*(symbols?|notations?|units?|si\s*units?|sign\s*conventions?)\s*[:—\-]/i;
 const EXAMPLE_RE = /\b(e\.g\.|e\.g|eg\.|for\s+example|for\s+instance|such\s+as)\b/i;
 const CONCEPT_RE =
   /\b(is|are)\s+(defined\s+as|known\s+as|called|termed|referred\s+to)|refers\s+to|\bmeans\b/i;
@@ -24,6 +27,18 @@ export function classifyBlock({ title = '', content = '' } = {}) {
     return {
       blockType: 'note_example',
       reason: 'Contains an example signal ("e.g.", "for example", "such as", …)',
+    };
+  }
+  if (SYMBOLS_HEADING_RE.test(firstLine)) {
+    return {
+      blockType: 'symbols',
+      reason: 'Symbols/notation heading detected ("symbols:", "units:", …)',
+    };
+  }
+  if (FORMULA_HEADING_RE.test(firstLine) || FORMULA_LINE_RE.test(firstLine)) {
+    return {
+      blockType: 'formula',
+      reason: 'Equation-style line detected ("formula:", "=" between terms, …)',
     };
   }
   if (CONCEPT_RE.test(headline)) {

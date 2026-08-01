@@ -51,6 +51,30 @@ test('empty input falls back to note_statement', () => {
   assert.equal(classifyContent({}).blockType, 'note_statement');
 });
 
+test('formula lines with "=" map to formula', () => {
+  for (const text of [
+    'v = u + at',
+    'Formula: v = u + at',
+    'F = ma is Newton\u2019s second law.',
+  ]) {
+    assert.equal(classifyContent({ content: text }).blockType, 'formula', `text: ${text}`);
+  }
+});
+
+test('symbols/units headings map to symbols', () => {
+  for (const text of [
+    'Symbols: v = velocity, t = time',
+    'SI Units: metre, kilogram, second',
+    'Notation - v for velocity',
+  ]) {
+    assert.equal(classifyContent({ content: text }).blockType, 'symbols', `text: ${text}`);
+  }
+});
+
+test('example signals beat equation detection', () => {
+  assert.equal(classifyContent({ content: 'e.g. v = u + at' }).blockType, 'note_example');
+});
+
 // ── suggestForSubject: coercion to the subject allowed set ───────────────
 
 test('suggestion is kept when the subject allows the type', () => {

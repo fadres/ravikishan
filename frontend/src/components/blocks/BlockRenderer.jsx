@@ -17,6 +17,8 @@ const BLOCK_STYLE = {
   keywords: { color: '#f59e0b', icon: ICONS.keywords, label: 'Keywords' },
   important_points: { color: '#f97316', icon: ICONS.points, label: 'Important points' },
   byakaran: { color: '#f43f5e', icon: ICONS.byakaran, label: 'Byakaran' },
+  formula: { color: '#38bdf8', icon: ICONS.formula, label: 'Formula' },
+  symbols: { color: '#c084fc', icon: ICONS.symbols, label: 'Symbols' },
 };
 
 function KeywordsTags({ content }) {
@@ -74,6 +76,68 @@ function ByakaranBody({ block }) {
   );
 }
 
+// Formula section: equation lines (those containing "=") render as centered
+// mono pills; the rest flows as normal markdown.
+function FormulaBody({ content }) {
+  const lines = (content || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  return (
+    <div className="space-y-1.5">
+      {lines.map((line, i) =>
+        /[a-zA-Z0-9)\]]\s*=\s*[a-zA-Z0-9(+\-]/.test(line) ? (
+          <div
+            key={i}
+            className="rounded-xl border border-aqua-400/30 bg-aqua-400/10 px-4 py-2.5 text-center font-mono text-[15px] text-aqua-100 overflow-x-auto"
+          >
+            {line}
+          </div>
+        ) : (
+          <Markdown key={i} content={line} />
+        ),
+      )}
+    </div>
+  );
+}
+
+// Symbols section: tabular "symbol — meaning (unit)" rows. Lines are split on
+// " — ", " - ", "=", ":" or tabs; the first line may be a header.
+function SymbolsTable({ content }) {
+  const lines = (content || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  const splitLine = (line) =>
+    line
+      .replace(/\s+/g, ' ')
+      .split(/\s+[—–-]\s+|\s*=\s*|\s*:\s*|\t+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  const rows = lines.map(splitLine).filter((r) => r.length > 0);
+  if (rows.length === 0) return null;
+  const headerish = rows[0].every((c) => /^[a-z][a-z ]+$/i.test(c)) && rows.length > 1;
+  const header = headerish ? rows.shift() : ['Symbol', 'Meaning', 'Unit'];
+  return (
+    <div className="overflow-x-auto rounded-xl border border-white/10">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-[11px] uppercase tracking-wider text-violet-300 bg-violet-400/10 border-b border-white/10">
+            {header.map((h, i) => (
+              <th key={i} className="px-4 py-2 font-bold whitespace-nowrap">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i} className="border-b border-white/5 last:border-0">
+              {[0, 1, 2].map((c) => (
+                <td key={c} className={`px-4 py-2 ${c === 0 ? 'font-mono font-bold text-violet-100' : 'text-slate-300'}`}>
+                  {r[c] || ''}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function BlockRenderer({ block, subjectType }) {
   const style = BLOCK_STYLE[block.blockType] || BLOCK_STYLE.note_topic;
   const { color, icon, label } = style;
@@ -91,6 +155,10 @@ export default function BlockRenderer({ block, subjectType }) {
         return <MindmapTree data={block.mindmapJson} />;
       case 'diagram_compare':
         return <DiagramCompare data={block.diagramData} />;
+      case 'formula':
+        return <FormulaBody content={block.contentRichtext} />;
+      case 'symbols':
+        return <SymbolsTable content={block.contentRichtext} />;
       default:
         return <Markdown content={block.contentRichtext} />;
     }

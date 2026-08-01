@@ -33,7 +33,7 @@ enum SubjectType {
 }
 
 // Allowed block types per subject_type (enforced in the API validation layer):
-//   science_math: note_topic|note_statement|note_example|note_concept|note_important|numerical|mindmap
+//   science_math: note_topic|note_statement|note_example|note_concept|note_important|numerical|mindmap|formula|symbols
 //   biology:      note_topic|note_statement|note_example|note_concept|note_important|diagram_compare|mindmap
 //   english:      summary|keywords|important_points
 //   nepali:       byakaran (sub_level drives the nesting: Sandhi > Swar Sandhi …)
@@ -50,6 +50,8 @@ enum BlockType {
   keywords
   important_points
   byakaran
+  formula // formula section: equations, derivations
+  symbols // symbols section: notations, units, conventions
 }
 
 model User {
@@ -133,6 +135,7 @@ model Chapter {
   blocks    ContentBlock[]
 
   @@unique([subjectId, slug])
+  @@index([subjectId])
 }
 
 // One row per content piece, typed, level-tagged and ordered inside its chapter.

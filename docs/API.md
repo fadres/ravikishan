@@ -100,6 +100,10 @@ Blocks with `accessLevel <= viewerAccessLevel` additionally include
 `updatedAt`. Everything else is public — structure, titles and lock state
 are always visible.
 
+Blocks are arranged by the content flow: **free (3) → members (2) →
+premium (1)**, then by `sortOrder` within each tier, so every viewer reads
+the free sections first and premium ones last.
+
 **404** → subject or chapter not found.
 
 ### GET `/api/search?q=…`
@@ -158,7 +162,7 @@ Actions: `access.approved`, `access.denied`, `access.requested`,
 
 | subjectType | allowed blockTypes |
 |---|---|
-| `science_math` | `note_topic, note_statement, note_example, note_concept, note_important, numerical, mindmap` |
+| `science_math` | `note_topic, note_statement, note_example, note_concept, note_important, numerical, mindmap, formula, symbols` |
 | `biology` | `note_topic, note_statement, note_example, note_concept, note_important, diagram_compare, mindmap` |
 | `english` | `summary, keywords, important_points` |
 | `nepali` | `byakaran` |

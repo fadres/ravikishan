@@ -162,6 +162,14 @@ test('registered but unapproved guest stays at level 3', async () => {
   assert.equal(secret.contentRichtext, undefined);
 });
 
+test('chapter blocks are arranged free (3) → members (2) → premium (1)', async () => {
+  const res = await request(app).get('/api/subjects/physics/chapters/kinematics');
+  const levels = res.body.blocks.map((b) => b.accessLevel);
+  assert.deepEqual(levels, [...levels].sort((a, b) => b - a), 'blocks must be ordered by level desc');
+  assert.equal(res.body.blocks[0].accessLevel, 3, 'free blocks come first');
+  assert.equal(res.body.blocks[res.body.blocks.length - 1].accessLevel, 1, 'premium blocks come last');
+});
+
 test('search hides snippets for premium tiers but keeps titles', async () => {
   const guestRes = await request(app).get('/api/search').query({ q: 'secret' });
   assert.equal(guestRes.status, 200);

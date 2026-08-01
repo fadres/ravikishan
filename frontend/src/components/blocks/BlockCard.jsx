@@ -100,4 +100,14 @@ export const ICONS = {
       <path d="M12 3c2 3 6 4.5 8 5-2 .5-6 2-8 5-2-3-6-4.5-8-5 2-.5 6-2 8-5zM12 13c2 3 6 4.5 8 5-2 .5-6 2-8 5-2-3-6-4.5-8-5 2-.5 6-2 8-5z" />
     </svg>
   ),
+  formula: (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4">
+      <path d="M4 7h6M7 4v6M14 5l6 14M14 19l6-14M14 8h6M14 16h6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  symbols: (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4">
+      <path d="M4 4v5M6.5 4v5M4 6.5h5M12 4l1.6 4L18 9l-4.4 1-1.6 4-1.6-4-4.4-1 4.4-1zM7 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" />
+    </svg>
+  ),
 };

@@ -8,7 +8,7 @@
 // Which block types are acceptable per subject_type — also used by the admin
 // content routes to validate explicit picks and to coerce auto suggestions.
 export const ALLOWED_BLOCK_TYPES = {
-  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap'],
+  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'formula', 'symbols'],
   biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap'],
   english: ['summary', 'keywords', 'important_points'],
   nepali: ['byakaran'],
@@ -32,6 +32,14 @@ const EXAMPLE_RE = /\b(e\.g\.|e\.g|eg\.|for\s+example|for\s+instance|such\s+as)\
 // Definition phrasing: "X is defined as …", "X refers to …", "X means …", …
 const CONCEPT_RE =
   /\b(is|are)\s+(defined\s+as|known\s+as|called|termed|referred\s+to)|refers\s+to|\bmeans\b/i;
+
+// Formula section: heading marker ("Formula:", "Equation:", "Derivation:") or
+// an equation line like "v = u + at", "F = ma", "$x^2 = 4$".
+const FORMULA_HEADING_RE = /^\s*(formulas?|equations?|derivations?)\s*[:—\-]/i;
+const FORMULA_LINE_RE = /[a-zA-Z0-9)\]]\s*=\s*[a-zA-Z0-9(+\-]/;
+
+// Symbols section: heading marker ("Symbols:", "Notations:", "Units:", "SI units:")
+const SYMBOLS_HEADING_RE = /^\s*(symbols?|notations?|units?|si\s*units?|sign\s*conventions?)\s*[:—\-]/i;
 
 const MAX_TOPIC_WORDS = 8;
 
@@ -59,6 +67,20 @@ export function classifyContent({ title = '', content = '' } = {}) {
     return {
       blockType: 'note_example',
       reason: 'Contains an example signal ("e.g.", "for example", "such as", …)',
+    };
+  }
+
+  if (SYMBOLS_HEADING_RE.test(firstLine)) {
+    return {
+      blockType: 'symbols',
+      reason: 'Symbols/notation heading detected ("symbols:", "units:", …)',
+    };
+  }
+
+  if (FORMULA_HEADING_RE.test(firstLine) || FORMULA_LINE_RE.test(firstLine)) {
+    return {
+      blockType: 'formula',
+      reason: 'Equation-style line detected ("formula:", "=" between terms, …)',
     };
   }
 

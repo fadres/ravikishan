@@ -6,6 +6,7 @@ const TYPE_LABELS = {
   note_concept: 'Concept', note_important: 'Important', numerical: 'Numerical',
   mindmap: 'Mind map', diagram_compare: 'Compare', summary: 'Summary',
   keywords: 'Keywords', important_points: 'Important points', byakaran: 'Byakaran',
+  formula: 'Formula', symbols: 'Symbols',
 };
 
 // Full block editor: markdown body, code + language picker, mindmap JSON,
