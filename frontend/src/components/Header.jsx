@@ -183,12 +183,28 @@ export default function Header() {
     <header className="sticky top-0 z-40 shadow-lg">
       {/* Main bar */}
       <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5">
-        {/* Brand tile */}
-        <Link to="/" className="shrink-0" aria-label="Ravikishan home">
-          <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_-4px_#8b5cf6]">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 6c-2.5-2.5-6.5-2.5-9-1v14c2.5-1.5 6.5-1.5 9 1 2.5-2.5 6.5-2.5 9-1V5c-2.5-1.5-6.5-1.5-9 1z" />
-              <path d="M12 6v14" />
+        {/* Brand tile — premium R */}
+        <Link to="/" className="shrink-0 group" aria-label="Ravikishan home">
+          <span className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-deep-700 via-deep-600 to-aqua-500 flex items-center justify-center ring-1 ring-white/25 shadow-[0_0_22px_-4px_#7dd3fc] group-hover:shadow-[0_0_30px_-4px_#fbbf24] transition">
+            <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true">
+              <defs>
+                <linearGradient id="rkR" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#fde68a" />
+                  <stop offset="0.55" stopColor="#fbbf24" />
+                  <stop offset="1" stopColor="#f59e0b" />
+                </linearGradient>
+              </defs>
+              <text
+                x="12"
+                y="17.6"
+                textAnchor="middle"
+                fontFamily="Arial, Helvetica, sans-serif"
+                fontSize="17"
+                fontWeight="800"
+                fill="url(#rkR)"
+              >
+                R
+              </text>
             </svg>
           </span>
         </Link>

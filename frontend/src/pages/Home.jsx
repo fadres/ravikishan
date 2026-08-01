@@ -444,6 +444,40 @@ export default function Home() {
           className="absolute -top-20 -right-16 w-64 h-64 rounded-full opacity-40 blur-3xl"
           style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.35), transparent 70%)' }}
         />
+
+        {/* Natural vibes — static decorations */}
+        <span className="absolute -top-1.5 left-5 hidden sm:block pointer-events-none" aria-hidden="true">
+          <svg viewBox="0 0 60 72" width="46" height="56" fill="none">
+            <path d="M4 70 C 10 44, 22 26, 36 4" stroke="#34d399" strokeWidth="2" strokeLinecap="round" opacity="0.55" />
+            <path d="M9 54 q9 -2 9 -10 q-9 -2 -9 10 z" fill="#4ade80" opacity="0.65" />
+            <path d="M17 38 q9 -2 9 -10 q-9 -2 -9 10 z" fill="#22c55e" opacity="0.65" />
+            <path d="M27 22 q9 -2 9 -10 q-9 -2 -9 10 z" fill="#a3e635" opacity="0.6" />
+          </svg>
+        </span>
+        <span className="absolute top-2.5 right-7 hidden sm:block pointer-events-none" aria-hidden="true">
+          <svg viewBox="0 0 60 28" width="54" height="25">
+            <ellipse cx="20" cy="16" rx="16" ry="9" fill="#e2e8f0" opacity="0.4" />
+            <ellipse cx="38" cy="18" rx="13" ry="7" fill="#cbd5e1" opacity="0.3" />
+          </svg>
+        </span>
+        <span className="absolute right-12 bottom-3 hidden sm:block pointer-events-none" aria-hidden="true">
+          <svg viewBox="0 0 40 34" width="30" height="26">
+            <path d="M20 16 C10 4, 2 6, 2 14 C2 22, 12 24, 20 16 Z" fill="#c4b5fd" opacity="0.8" />
+            <path d="M20 16 C30 4, 38 6, 38 14 C38 22, 28 24, 20 16 Z" fill="#a78bfa" opacity="0.8" />
+            <path d="M20 16 C12 24, 6 26, 6 30 C12 32, 20 26, 20 16 Z" fill="#e9d5ff" opacity="0.7" />
+            <path d="M20 16 C28 24, 34 26, 34 30 C28 32, 20 26, 20 16 Z" fill="#c4b5fd" opacity="0.7" />
+            <rect x="19" y="6" width="2" height="22" rx="1" fill="#7c3aed" />
+            <path d="M20 8 q-4 -5 -8 -4 M20 8 q4 -5 8 -4" stroke="#7c3aed" strokeWidth="1.2" fill="none" />
+          </svg>
+        </span>
+        <span className="absolute bottom-2.5 left-4 hidden sm:block pointer-events-none" aria-hidden="true">
+          <svg viewBox="0 0 40 24" width="34" height="20" fill="none">
+            <path d="M2 20 C 10 12, 20 8, 36 2" stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" opacity="0.5" />
+            <path d="M8 17 q9 -1 9 -9 q-9 -1 -9 9 z" fill="#4ade80" opacity="0.6" />
+            <path d="M18 12 q9 -1 9 -9 q-9 -1 -9 9 z" fill="#22c55e" opacity="0.6" />
+          </svg>
+        </span>
+
         <div className="relative z-10">
           <span className="relative inline-flex w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 items-center justify-center shadow-lg shadow-emerald-400/40 ring-4 ring-emerald-400/15">
             <span

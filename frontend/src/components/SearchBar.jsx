@@ -1,6 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { TypeBadge } from '../utils/blockMeta.jsx';
+
+const SUBJECT_COLORS = {
+  physics: '#38bdf8',
+  chemistry: '#34d399',
+  biology: '#f472b6',
+  mathematics: '#fb923c',
+  english: '#60a5fa',
+  nepali: '#a78bfa',
+  loksewa: '#f59e0b',
+  'general-knowledge': '#22d3ee',
+};
 
 export default function SearchBar({ autoFocus = false, placeholder = 'Search subjects, chapters or topics…' }) {
   const [query, setQuery] = useState('');
@@ -88,7 +100,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
         <div className="absolute left-0 right-0 mt-2 glass-strong rounded-2xl overflow-hidden shadow-2xl z-50">
           {results.length > 0 && (
             <div className="max-h-80 overflow-y-auto">
-              {results.slice(0, 8).map((r) => (
+              {results.slice(0, 10).map((r) => (
                 <button
                   key={r.id}
                   onClick={() => goTo(r)}
@@ -105,9 +117,16 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
                       <path d="M20 20l-3.5-3.5" />
                     </svg>
                   )}
-                  <span className="min-w-0">
-                    <span className="block text-sm text-white font-medium truncate">{r.title}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2">
+                      <span className="block text-sm text-white font-medium truncate">{r.title}</span>
+                      <TypeBadge blockType={r.blockType} className="shrink-0" />
+                    </span>
                     <span className="block text-xs text-slate-400 truncate">
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle"
+                        style={{ background: SUBJECT_COLORS[r.subject.slug] || '#38bdf8' }}
+                      />
                       {r.subject.name} · {r.chapter.title}
                       {r.locked && ' · reserved'}
                     </span>
@@ -117,6 +136,13 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
               ))}
             </div>
           )}
+
+          <button
+            onClick={submit}
+            className="w-full text-center px-4 py-2.5 border-t border-white/10 text-xs font-bold text-aqua-300 hover:bg-aqua-400/10 transition"
+          >
+            View all results for "{query.trim()}" →
+          </button>
 
           {recommendations.length > 0 && (
             <div className="border-t border-white/10 px-4 py-3">

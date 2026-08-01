@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { TypeBadge, AccessBadge, typeMeta } from '../utils/blockMeta.jsx';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -9,7 +10,36 @@ const SUBJECT_COLORS = {
   biology: '#2dd4bf',
   english: '#fbbf24',
   nepali: '#fb7185',
+  loksewa: '#f59e0b',
+  'general-knowledge': '#22d3ee',
 };
+
+const ACCESS_OPTIONS = [
+  { value: 0, label: 'All access' },
+  { value: 3, label: 'Free' },
+  { value: 2, label: 'Members' },
+  { value: 1, label: 'Premium' },
+];
+
+function FilterChip({ active, color, onClick, children }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1 rounded-full text-xs font-bold border transition ${
+        active
+          ? 'text-white border-transparent'
+          : 'border-white/15 text-slate-300 hover:bg-white/10 hover:text-white'
+      }`}
+      style={
+        active && color
+          ? { background: `${color}33`, borderColor: `${color}88`, boxShadow: `0 0 14px -6px ${color}` }
+          : undefined
+      }
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function SearchPage() {
   const [params, setParams] = useSearchParams();
@@ -19,6 +49,9 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
+  const [subjectFilter, setSubjectFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [accessFilter, setAccessFilter] = useState(0);
 
   useEffect(() => {
     const q = params.get('q') || '';
@@ -51,10 +84,32 @@ export default function SearchPage() {
     setParams({ q: query.trim() });
   };
 
+  // Filter options derived from the live result set.
+  const subjectOptions = useMemo(() => {
+    const seen = new Map();
+    for (const r of results) {
+      if (!seen.has(r.subject.slug)) seen.set(r.subject.slug, r.subject.name);
+    }
+    return [...seen.entries()].map(([slug, name]) => ({ slug, name }));
+  }, [results]);
+
+  const typeOptions = useMemo(() => {
+    const seen = new Set();
+    for (const r of results) seen.add(r.blockType);
+    return [...seen].map((t) => ({ value: t, label: typeMeta(t).label }));
+  }, [results]);
+
+  const filtered = results.filter(
+    (r) =>
+      (!subjectFilter || r.subject.slug === subjectFilter) &&
+      (!typeFilter || r.blockType === typeFilter) &&
+      (!accessFilter || r.accessLevel === accessFilter),
+  );
+
   // Group results by subject, preserving rank order.
   const groups = [];
   const groupMap = new Map();
-  for (const r of results) {
+  for (const r of filtered) {
     const key = r.subject.slug;
     if (!groupMap.has(key)) {
       const g = { key, name: r.subject.name, color: SUBJECT_COLORS[r.subject.slug] || '#7dd3fc', items: [] };
@@ -63,6 +118,8 @@ export default function SearchPage() {
     }
     groupMap.get(key).items.push(r);
   }
+
+  const anyFilter = Boolean(subjectFilter || typeFilter || accessFilter);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -107,10 +164,98 @@ export default function SearchPage() {
               <p className="text-sm text-slate-400">Here are some recommended topics instead:</p>
             </div>
           ) : (
-            <p className="text-sm text-slate-400 mb-4">
-              {results.length} result{results.length === 1 ? '' : 's'} for "
-              <span className="text-aqua-300 font-semibold">{params.get('q')}</span>"
-            </p>
+            <>
+              <p className="text-sm text-slate-400 mb-4">
+                {filtered.length} of {results.length} result{results.length === 1 ? '' : 's'} for "
+                <span className="text-aqua-300 font-semibold">{params.get('q')}</span>"
+              </p>
+
+              {/* Powerful filters */}
+              <div className="glass rounded-2xl p-4 mb-6 space-y-3">
+                {subjectOptions.length > 1 && (
+                  <div className="flex items-start gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
+                      Subject
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      <FilterChip
+                        active={!subjectFilter}
+                        onClick={() => setSubjectFilter('')}
+                      >
+                        All
+                      </FilterChip>
+                      {subjectOptions.map((s) => (
+                        <FilterChip
+                          key={s.slug}
+                          active={subjectFilter === s.slug}
+                          color={SUBJECT_COLORS[s.slug]}
+                          onClick={() => setSubjectFilter(subjectFilter === s.slug ? '' : s.slug)}
+                        >
+                          {s.name}
+                        </FilterChip>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {typeOptions.length > 1 && (
+                  <div className="flex items-start gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
+                      Type
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      <FilterChip active={!typeFilter} onClick={() => setTypeFilter('')}>
+                        All
+                      </FilterChip>
+                      {typeOptions.map((t) => (
+                        <FilterChip
+                          key={t.value}
+                          active={typeFilter === t.value}
+                          color={typeMeta(t.value).color}
+                          onClick={() => setTypeFilter(typeFilter === t.value ? '' : t.value)}
+                        >
+                          {t.label}
+                        </FilterChip>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-2 flex-wrap">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
+                    Access
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ACCESS_OPTIONS.map((a) => (
+                      <FilterChip
+                        key={a.value}
+                        active={accessFilter === a.value}
+                        color={a.value === 1 ? '#fbbf24' : a.value === 2 ? '#7dd3fc' : '#34d399'}
+                        onClick={() => setAccessFilter(accessFilter === a.value ? 0 : a.value)}
+                      >
+                        {a.label}
+                      </FilterChip>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {anyFilter && filtered.length === 0 && results.length > 0 && (
+            <div className="glass rounded-2xl p-8 text-center mb-6">
+              <p className="text-slate-200 font-semibold">Nothing matches these filters.</p>
+              <button
+                onClick={() => {
+                  setSubjectFilter('');
+                  setTypeFilter('');
+                  setAccessFilter(0);
+                }}
+                className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
+              >
+                Clear all filters
+              </button>
+            </div>
           )}
 
           {groups.map((g) => (
@@ -128,19 +273,10 @@ export default function SearchPage() {
                   >
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-bold text-white">{r.title}</h3>
-                      {r.accessLevel && (
-                        <span
-                          className={`text-[10px] uppercase tracking-wider font-bold rounded-full px-2 py-0.5 border ${
-                            r.accessLevel === 1
-                              ? 'text-amber-300 border-amber-400/40 bg-amber-400/10'
-                              : r.accessLevel === 2
-                                ? 'text-aqua-200 border-aqua-400/40 bg-aqua-400/10'
-                                : 'text-emerald-300 border-emerald-400/40 bg-emerald-400/10'
-                          }`}
-                        >
-                          {r.accessLevel === 1 ? 'Premium' : r.accessLevel === 2 ? 'Members' : 'Free'}
-                        </span>
-                      )}
+                      {r.accessLevel && <AccessBadge accessLevel={r.accessLevel} />}
+                      <span className="ml-auto">
+                        <TypeBadge blockType={r.blockType} />
+                      </span>
                     </div>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {r.chapter.title} · {r.klass.name}
