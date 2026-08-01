@@ -17,6 +17,7 @@ const RequestsPanel = lazy(() => import('./pages/admin/RequestsPanel.jsx'));
 const UsersPanel = lazy(() => import('./pages/admin/UsersPanel.jsx'));
 const ContentPanel = lazy(() => import('./pages/admin/ContentPanel.jsx'));
 const AuditPanel = lazy(() => import('./pages/admin/AuditPanel.jsx'));
+const Class11Extras = lazy(() => import('./pages/admin/Class11Extras.jsx'));
 
 function PageLoader() {
   return (
@@ -42,7 +43,7 @@ function Shell() {
       <main className="flex-1 pb-safe px-4 sm:px-6">
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<><Home /><Footer /></>} />
+            <Route path="/" element={<Home />} />
             <Route path="/class/:classSlug" element={<ClassPage />} />
             <Route path="/class/:classSlug/subject/:subjectSlug" element={<SubjectPage />} />
             <Route
@@ -58,6 +59,7 @@ function Shell() {
               <Route path="users" element={<UsersPanel />} />
               <Route path="content" element={<ContentPanel />} />
               <Route path="audit" element={<AuditPanel />} />
+              <Route path="class-11-extras" element={<Class11Extras />} />
             </Route>
           </Routes>
         </Suspense>
