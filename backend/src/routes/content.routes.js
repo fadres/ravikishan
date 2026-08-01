@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
-import { authenticate, canReadLocked } from '../middleware/auth.js';
+import { authenticate } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
 
@@ -81,17 +81,10 @@ router.get('/subjects/:slug', async (req, res) => {
   res.json({ subject });
 });
 
-const blockListSelect = {
-  id: true,
-  blockType: true,
-  title: true,
-  subLevel: true,
-  sortOrder: true,
-};
-
 const blockFullSelect = {
   id: true,
   blockType: true,
+  accessLevel: true,
   title: true,
   contentRichtext: true,
   contentCode: true,
@@ -104,10 +97,23 @@ const blockFullSelect = {
   updatedAt: true,
 };
 
+// Metadata-only projection for blocks the viewer cannot read. Content fields
+// (contentRichtext, contentCode, codeLanguage, mindmapJson, diagramData)
+// never leave the server for inaccessible blocks.
+const blockMetaOnly = (b) => ({
+  id: b.id,
+  blockType: b.blockType,
+  accessLevel: b.accessLevel,
+  title: b.title,
+  subLevel: b.subLevel,
+  sortOrder: b.sortOrder,
+});
+
 // GET /api/subjects/:subjectSlug/chapters/:chapterSlug
-// THE locked-content rule lives here: when the subject or chapter is locked
-// and the caller is not an approved reader (owner/admin/member), only block
-// metadata is returned — content fields never leave the server.
+// Access tiers (spec): each block carries accessLevel 1 (most premium) – 3
+// (free). A block is readable when accessLevel >= the viewer's accessLevel.
+// Everything else about the subject/chapter is public — visitors see the
+// whole structure, titles and lock state, and only premium *content* is gated.
 router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (req, res) => {
   const subject = await prisma.subject.findFirst({
     where: { slug: req.params.subjectSlug },
@@ -117,13 +123,12 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
   const chapter = subject.chapters[0];
   if (!chapter) throw new AppError(404, 'Chapter not found');
 
-  const locked = subject.isLocked || chapter.isLocked;
-  const readable = !locked || canReadLocked(req.user);
+  const viewerLevel = req.user?.accessLevel ?? 3;
 
   const blocks = await prisma.contentBlock.findMany({
     where: { chapterId: chapter.id },
     orderBy: { sortOrder: 'asc' },
-    select: readable ? blockFullSelect : blockListSelect,
+    select: blockFullSelect,
   });
 
   res.json({
@@ -131,11 +136,11 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
       id: chapter.id,
       title: chapter.title,
       slug: chapter.slug,
-      isLocked: locked,
-      canRead: readable,
+      viewerAccessLevel: viewerLevel,
+      canRead: true, // gating now happens per block, not per chapter
     },
     subject: { id: subject.id, name: subject.name, slug: subject.slug, themeColor: subject.themeColor },
-    blocks,
+    blocks: blocks.map((b) => (b.accessLevel >= viewerLevel ? b : blockMetaOnly(b))),
   });
 });
 
@@ -144,13 +149,14 @@ const searchSchema = z.object({
 });
 
 // GET /api/search?q= — live search, ranked by ts_rank, grouped client-side.
+// Snippets are gated per block by the viewer's access level (default 3).
 router.get('/search', authenticate, validate(searchSchema, 'query'), async (req, res) => {
   const q = req.validated.q;
-  const canRead = canReadLocked(req.user);
-  const results = await searchContent(q, canRead);
+  const viewerLevel = req.user?.accessLevel ?? 3;
+  const results = await searchContent(q, viewerLevel);
   const recommendations =
     results.length < 3
-      ? await recommendBlocks(results.map((r) => r.id), canRead)
+      ? await recommendBlocks(results.map((r) => r.id), viewerLevel)
       : [];
 
   res.json({ query: q, results, recommendations });

@@ -34,6 +34,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
         }
       : { leftName: '', leftPoints: '', rightName: '', rightPoints: '', similarities: '', differences: '' },
     subLevel: block?.subLevel || '',
+    accessLevel: block?.accessLevel || 3,
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -51,6 +52,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       contentCode: form.contentCode || null,
       codeLanguage: form.contentCode ? form.codeLanguage : null,
       subLevel: form.subLevel.trim() || null,
+      accessLevel: Number(form.accessLevel),
       mindmapJson: null,
       diagramData: null,
     };
@@ -165,6 +167,31 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
             <input value={form.subLevel} onChange={(e) => set('subLevel', e.target.value)} className={inputCls} placeholder="सन्धि > स्वर सन्धि" />
           </div>
         )}
+
+        <div className="mt-4">
+          <label className={labelCls}>Access level (who can read this block)</label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { value: 1, label: 'Premium', hint: 'owner only' },
+              { value: 2, label: 'Members', hint: 'approved readers' },
+              { value: 3, label: 'Free', hint: 'everyone' },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => set('accessLevel', opt.value)}
+                className={`rounded-xl border px-3 py-2 text-left transition ${
+                  Number(form.accessLevel) === opt.value
+                    ? 'bg-aqua-400/20 border-aqua-400/60'
+                    : 'bg-white/5 border-white/15 hover:bg-white/10'
+                }`}
+              >
+                <span className="block text-sm font-bold text-white">{opt.label}</span>
+                <span className="block text-[11px] text-slate-400">{opt.hint}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="mt-4">
           <label className={labelCls}>Content (markdown — supports $math$, **bold**, lists)</label>

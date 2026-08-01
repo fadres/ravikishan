@@ -326,6 +326,19 @@ export default function ContentPanel() {
                       auto
                     </span>
                   )}
+                  {b.accessLevel && (
+                    <span
+                      className={`text-[9px] uppercase tracking-wider font-bold rounded-full px-1.5 py-0.5 mr-1.5 align-middle border ${
+                        b.accessLevel === 1
+                          ? 'text-amber-300 border-amber-400/40 bg-amber-400/10'
+                          : b.accessLevel === 2
+                            ? 'text-aqua-200 border-aqua-400/30 bg-aqua-400/10'
+                            : 'text-emerald-300 border-emerald-400/30 bg-emerald-400/10'
+                      }`}
+                    >
+                      L{b.accessLevel} {b.accessLevel === 1 ? '· premium' : b.accessLevel === 2 ? '· members' : '· free'}
+                    </span>
+                  )}
                   {b.title || '(untitled)'}
                 </p>
                 <p className="text-xs text-slate-400 truncate">

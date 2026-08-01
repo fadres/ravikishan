@@ -18,9 +18,23 @@ export default function Header() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [day, setDay] = useState(1);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     setDay(streakDay());
+  }, []);
+
+  // Hide the header while scrolling down, reveal it while scrolling up —
+  // gives more room for reading without losing navigation.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > lastY && y > 120);
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleLogout = async () => {
@@ -32,7 +46,11 @@ export default function Header() {
   const initial = user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'G';
 
   return (
-    <header className="sticky top-0 z-40">
+    <header
+      className={`sticky top-0 z-40 transition-transform duration-300 ${
+        hidden ? '-translate-y-full' : 'translate-y-0'
+      }`}
+    >
       {/* Warm off-white streak bar */}
       <div className="topbar-warm text-xs sm:text-sm flex items-center justify-between px-3 sm:px-6 py-1.5 shadow-sm">
         <span className="font-medium text-ink flex items-center gap-1.5">

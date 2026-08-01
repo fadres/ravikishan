@@ -18,7 +18,9 @@ router.get('/requests', async (req, res) => {
     where: { status },
     orderBy: { requestedAt: 'desc' },
     include: {
-      user: { select: { id: true, email: true, displayName: true, role: true, isApproved: true, createdAt: true } },
+      user: {
+        select: { id: true, email: true, displayName: true, role: true, accessLevel: true, isApproved: true, createdAt: true },
+      },
       resolvedBy: { select: { id: true, email: true } },
     },
   });
@@ -37,14 +39,18 @@ router.post('/requests/:id/approve', async (req, res) => {
     }),
     prisma.user.update({
       where: { id: request.userId },
-      data: { role: 'member', isApproved: true },
+      data: { role: 'member', isApproved: true, accessLevel: 2 },
     }),
   ]);
   await recordAudit(req.user, 'access.approved', 'AccessRequest', request.id, { userId: request.userId });
 
   const updated = await prisma.accessRequest.findUnique({
     where: { id: request.id },
-    include: { user: { select: { id: true, email: true, displayName: true, role: true, isApproved: true } } },
+    include: {
+      user: {
+        select: { id: true, email: true, displayName: true, role: true, accessLevel: true, isApproved: true },
+      },
+    },
   });
   res.json({ request: updated });
 });
@@ -73,6 +79,7 @@ router.get('/users', async (_req, res) => {
       displayName: true,
       role: true,
       isApproved: true,
+      accessLevel: true,
       createdAt: true,
       _count: { select: { accessRequests: true } },
     },
@@ -83,9 +90,12 @@ router.get('/users', async (_req, res) => {
 const userPatchSchema = z.object({
   role: z.enum(['owner', 'admin', 'member', 'guest']).optional(),
   isApproved: z.boolean().optional(),
+  accessLevel: z.number().int().min(1).max(3).optional(),
 });
 
 // Owners may assign any role; admins may only manage member/guest roles.
+// Access levels: 1 (most premium) is reserved for the owner; admins may grant
+// 2 or 3. A role change also nudges the default level unless one is explicit.
 router.patch('/users/:id', validate(userPatchSchema), async (req, res) => {
   const target = await prisma.user.findUnique({ where: { id: req.params.id } });
   if (!target) throw new AppError(404, 'User not found');
@@ -95,13 +105,24 @@ router.patch('/users/:id', validate(userPatchSchema), async (req, res) => {
   if (req.user.role === 'admin' && (req.body.role === 'owner' || req.body.role === 'admin')) {
     throw new AppError(403, 'Admins cannot grant owner or admin roles');
   }
+  if (req.body.accessLevel === 1 && req.user.role !== 'owner') {
+    throw new AppError(403, 'Only the owner can grant premium level 1 access');
+  }
 
   const data = {};
   if (req.body.role !== undefined) data.role = req.body.role;
   if (req.body.isApproved !== undefined) data.isApproved = req.body.isApproved;
+  if (req.body.accessLevel !== undefined) {
+    data.accessLevel = req.body.accessLevel;
+  } else if (req.body.role !== undefined) {
+    data.accessLevel = req.body.role === 'owner' || req.body.role === 'admin' ? 1 : req.body.role === 'member' ? 2 : 3;
+  }
 
   const updated = await prisma.user.update({ where: { id: target.id }, data });
-  await recordAudit(req.user, 'user.updated', 'User', target.id, { before: { role: target.role, isApproved: target.isApproved }, after: data });
+  await recordAudit(req.user, 'user.updated', 'User', target.id, {
+    before: { role: target.role, isApproved: target.isApproved, accessLevel: target.accessLevel },
+    after: data,
+  });
   res.json({ user: updated });
 });
 
@@ -180,6 +201,7 @@ const blockSchema = z.object({
     .nullish(),
   subLevel: z.string().trim().max(300).nullish(),
   sortOrder: z.number().int().min(0).nullish(),
+  accessLevel: z.number().int().min(1).max(3).nullish(),
 });
 
 async function assertBlockTypeAllowed(subjectId, blockType) {
@@ -229,6 +251,7 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
     data: {
       ...data,
       chapterId: chapter.id,
+      accessLevel: req.body.accessLevel ?? 3,
       sortOrder: req.body.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
     },
   });
@@ -236,6 +259,7 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
     blockType: block.blockType,
     title: block.title,
     classifiedBy: block.classifiedBy,
+    accessLevel: block.accessLevel,
     autoReason,
   });
   res.status(201).json({ block });

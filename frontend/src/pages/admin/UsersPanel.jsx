@@ -56,6 +56,7 @@ export default function UsersPanel() {
               <tr className="text-left text-xs uppercase tracking-wider text-slate-400 border-b border-white/10">
                 <th className="px-5 py-3 font-semibold">User</th>
                 <th className="px-5 py-3 font-semibold">Role</th>
+                <th className="px-5 py-3 font-semibold">Access level</th>
                 <th className="px-5 py-3 font-semibold">Approved</th>
                 <th className="px-5 py-3 font-semibold">Joined</th>
                 <th className="px-5 py-3 font-semibold text-right">Actions</th>
@@ -72,6 +73,25 @@ export default function UsersPanel() {
                     <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold capitalize border ${ROLE_BADGE[u.role]}`}>
                       {u.role}
                     </span>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <select
+                      disabled={busyId === u.id || (u.role === 'owner' && me.id !== u.id)}
+                      value={u.accessLevel ?? 3}
+                      onChange={(e) => update(u.id, { accessLevel: Number(e.target.value) })}
+                      className={`bg-white/10 border rounded-lg px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-aqua-400/60 disabled:opacity-40 ${
+                        (u.accessLevel ?? 3) === 1
+                          ? 'text-amber-300 border-amber-400/40'
+                          : (u.accessLevel ?? 3) === 2
+                            ? 'text-aqua-200 border-aqua-400/40'
+                            : 'text-emerald-300 border-emerald-400/40'
+                      }`}
+                      title="Only the owner can grant Premium (1)"
+                    >
+                      <option value={1} className="bg-deep-800">1 · Premium</option>
+                      <option value={2} className="bg-deep-800">2 · Members</option>
+                      <option value={3} className="bg-deep-800">3 · Free</option>
+                    </select>
                   </td>
                   <td className="px-5 py-3.5">
                     <button
@@ -117,7 +137,7 @@ export default function UsersPanel() {
         </div>
       )}
       <p className="text-xs text-slate-500 mt-3">
-        Admins can assign member/guest roles. Owners can also promote to admin or owner.
+        Admins can assign member/guest roles and levels 2–3. Only the owner can grant Premium (level 1) or the owner role.
       </p>
     </div>
   );

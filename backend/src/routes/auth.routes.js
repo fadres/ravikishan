@@ -38,6 +38,7 @@ function publicUser(user) {
     email: user.email,
     displayName: user.displayName,
     role: user.role,
+    accessLevel: user.accessLevel ?? 3,
     isApproved: user.isApproved,
     createdAt: user.createdAt,
   };

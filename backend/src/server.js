@@ -20,7 +20,7 @@ async function ensureOwner() {
   }
   const passwordHash = await bcrypt.hash(env.ownerPassword, 12);
   await prisma.user.create({
-    data: { email, passwordHash, role: 'owner', isApproved: true, displayName: 'Ravikishan' },
+    data: { email, passwordHash, role: 'owner', isApproved: true, displayName: 'Ravikishan', accessLevel: 1 },
   });
   console.log(`Owner account ensured for ${email}`);
 }

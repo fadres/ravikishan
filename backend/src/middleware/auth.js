@@ -7,7 +7,12 @@ export function authenticate(req, _res, next) {
   if (token) {
     try {
       const payload = verifyAccessToken(token);
-      req.user = { id: payload.sub, email: payload.email, role: payload.role };
+      req.user = {
+        id: payload.sub,
+        email: payload.email,
+        role: payload.role,
+        accessLevel: payload.accessLevel ?? 3,
+      };
     } catch {
       // invalid/expired token → treated as anonymous
     }
@@ -28,9 +33,4 @@ export function requireRole(...roles) {
     }
     next();
   };
-}
-
-// Roles that may read locked content.
-export function canReadLocked(user) {
-  return Boolean(user && ['owner', 'admin', 'member'].includes(user.role));
 }

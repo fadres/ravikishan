@@ -59,6 +59,9 @@ model User {
   displayName      String?
   role             Role     @default(guest)
   isApproved       Boolean  @default(false)
+  // Access tiers (3 = free for everyone, 2 = approved members, 1 = most premium).
+  // Content block is readable when block.accessLevel >= user.accessLevel.
+  accessLevel      Int      @default(3)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   refreshTokens    RefreshToken[]
@@ -132,13 +135,16 @@ model Chapter {
   @@unique([subjectId, slug])
 }
 
-// One row per content piece, typed and ordered inside its chapter.
+// One row per content piece, typed, level-tagged and ordered inside its chapter.
 model ContentBlock {
   id              String    @id @default(uuid())
   chapterId       String
   chapter         Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   blockType       BlockType
-  classifiedBy    String? // who decided blockType: "auto" (rule-based classifier) | "manual" (admin pick); null = legacy rows
+  classifiedBy    String? // who decided blockType: "auto" | "manual" | null (legacy)
+  // Access tier: 3 = free for every visitor, 2 = approved members, 1 = most premium.
+  // Readable when accessLevel >= viewer's accessLevel.
+  accessLevel     Int       @default(3)
   title           String?
   contentRichtext String? // markdown/HTML body
   contentCode     String? // raw code snippet when block_type is code

@@ -67,6 +67,8 @@ export function createApp() {
   });
 
   app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'ravikishan-api' }));
+  // Public site metadata (contact email for premium access queries).
+  app.get('/api/meta', (_req, res) => res.json({ contactEmail: env.ownerEmail }));
 
   app.use('/api/auth', authLimiter, authRoutes);
   app.use('/api/access-requests', requestLimiter, accessRoutes);

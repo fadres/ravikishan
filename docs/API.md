@@ -10,11 +10,16 @@ sent in JSON bodies (cross-origin SPA friendly).
 
 - **Errors**: `{ "error": string, "details"?: object }` with status 400/401/403/404/409/500.
 - **Roles**: `owner` > `admin` > `member` > `guest`.
-- **Access rule**: content is readable when the subject **and** chapter are
-  unlocked, **or** the caller is `owner`/`admin`/`member` (approved).
-  Guests always receive block **titles**, never content fields, for locked
-  content — `contentRichtext`, `contentCode`, `codeLanguage`,
-  `mindmapJson` and `diagramData` are omitted server-side.
+- **Access levels** (per block): `1` = Premium (owner), `2` = Members
+  (approved), `3` = Free (everyone). A block is readable when
+  `block.accessLevel >= viewer.accessLevel` (anonymous viewers default to
+  `3`). Unreadable blocks always return **titles + metadata only** —
+  `contentRichtext`, `contentCode`, `codeLanguage`, `mindmapJson` and
+  `diagramData` are omitted server-side, never hidden in the response.
+- Access-level policy: approving an access request sets the user to
+  `member` + level `2`; only the owner may grant level `1`; a role change
+  nudges the level (owner/admin → 1, member → 2, guest → 3) unless an
+  explicit level is given.
 - Rate limits: global 300 req/15 min; auth 20/15 min; access requests 5/hour.
 
 ---
@@ -46,7 +51,7 @@ Body: `{ refreshToken: string }`
 Body: `{ refreshToken: string }` — revokes it. **204**.
 
 ### GET `/api/auth/me` *(auth)*
-**200** → `{ user: { id, email, displayName, role, isApproved, createdAt } }`
+**200** → `{ user: { id, email, displayName, role, accessLevel, isApproved, createdAt } }`
 
 ---
 
@@ -75,29 +80,33 @@ Body:
 **200** → `{ subject: { …, chapters: [{ id, title, slug, isLocked, sortOrder, _count: { blocks } }] } }`
 
 ### GET `/api/subjects/:subjectSlug/chapters/:chapterSlug`
-The heart of the access rule.
+The heart of the access rule: every block carries its own `accessLevel`.
 
 **200** →
 ```json
 {
-  "chapter": { "id", "title", "slug", "isLocked": true, "canRead": false },
+  "chapter": { "id", "title", "slug", "viewerAccessLevel": 3, "canRead": true },
   "subject": { "id", "name", "slug", "themeColor" },
   "blocks": [
-    { "id", "blockType", "title", "subLevel", "sortOrder" }
+    {
+      "id", "blockType", "accessLevel": 2, "title", "subLevel", "sortOrder"
+    }
   ]
 }
 ```
-When `canRead` is true, each block additionally includes
+Blocks with `accessLevel <= viewerAccessLevel` additionally include
 `contentRichtext`, `contentCode`, `codeLanguage`, `mindmapJson`,
 `diagramData`, `classifiedBy` ("auto" | "manual" | null), `createdAt`,
-`updatedAt`.
+`updatedAt`. Everything else is public — structure, titles and lock state
+are always visible.
 
 **404** → subject or chapter not found.
 
 ### GET `/api/search?q=…`
 Full-text search over `tsvector` (`english` + `simple` configs), ranked by
-`ts_rank`. Snippets (`ts_headline`) are included only when the caller may
-read that content; locked results carry `"locked": true` and `snippet: null`.
+`ts_rank`. Snippets (`ts_headline`) are included only when
+`accessLevel >= viewer level`; unreadable results carry
+`"locked": true` and `snippet: null`.
 When fewer than 3 results match, `recommendations` returns sibling topics.
 
 **200** → `{ query, results: [{ id, title, blockType, subLevel, chapter: { title, slug }, subject: { name, slug }, klass: { name, slug }, rank, locked, snippet }], recommendations: [same shape] }`
@@ -120,10 +129,13 @@ When fewer than 3 results match, `recommendations` returns sibling topics.
 
 | Method | Path | Body | Result |
 |---|---|---|---|
-| GET | `/api/admin/users` | — | `{ users: [{ id, email, displayName, role, isApproved, createdAt, _count: { accessRequests } }] }` |
-| PATCH | `/api/admin/users/:id` | `{ role?: "owner"\|"admin"\|"member"\|"guest", isApproved?: boolean }` | 200 `{ user }`; admins cannot grant owner/admin; the owner account cannot be demoted by others. Audit `user.updated`. |
+| GET | `/api/admin/users` | — | `{ users: [{ id, email, displayName, role, accessLevel, isApproved, createdAt, _count: { accessRequests } }] }` |
+| PATCH | `/api/admin/users/:id` | `{ role?: "owner"\|"admin"\|"member"\|"guest", isApproved?: boolean, accessLevel?: 1\|2\|3 }` | 200 `{ user }`; admins cannot grant owner/admin or level `1` (owner-only); a role change nudges the level (owner/admin → 1, member → 2, guest → 3) unless explicit. The owner account cannot be demoted by others. Audit `user.updated`. |
 
 ### Lock toggles
+
+`isLocked` on subjects/chapters is a legacy display flag — it no longer gates
+content. Gating is per block via `accessLevel` (see the chapter endpoint).
 
 | Method | Path | Body | Result |
 |---|---|---|---|
@@ -152,7 +164,8 @@ Actions: `access.approved`, `access.denied`, `access.requested`,
 | `nepali` | `byakaran` |
 
 Block body fields:
-`blockType` (optional — see auto-classification below), `title` (≤200),
+`blockType` (optional — see auto-classification below), `accessLevel` (`1` Premium / `2` Members / `3` Free, defaults to `3`),
+`title` (≤200),
 `contentRichtext` (≤100k, markdown),
 `contentCode` (≤100k), `codeLanguage` (≤50; e.g. `javascript, typescript, python, json, html, css, sql, java, c, cpp, bash`),
 `mindmapJson` `{ name, children[] }`, `diagramData`

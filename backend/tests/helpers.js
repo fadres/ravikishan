@@ -48,6 +48,7 @@ export async function resetDb() {
       displayName: 'Ravikishan Owner',
       role: 'owner',
       isApproved: true,
+      accessLevel: 1,
     },
   });
   const member = await prisma.user.create({
@@ -57,6 +58,7 @@ export async function resetDb() {
       displayName: 'Test Member',
       role: 'member',
       isApproved: true,
+      accessLevel: 2,
     },
   });
   const guest = await prisma.user.create({
@@ -66,6 +68,17 @@ export async function resetDb() {
       displayName: 'Test Guest',
       role: 'guest',
       isApproved: false,
+      accessLevel: 3,
+    },
+  });
+  const admin = await prisma.user.create({
+    data: {
+      email: 'admin@test.ravikishan',
+      passwordHash,
+      displayName: 'Test Admin',
+      role: 'admin',
+      isApproved: true,
+      accessLevel: 1,
     },
   });
 
@@ -112,13 +125,36 @@ export async function resetDb() {
     },
   });
 
+  // Kinematics: a free block, a premium block (level 2) and an owner-only
+  // block (level 1) — the access-level ladder every gating test relies on.
+  await prisma.contentBlock.create({
+    data: {
+      chapterId: lockedChapter.id,
+      blockType: 'note_topic',
+      title: 'Free Kinematics Intro',
+      contentRichtext: 'Kinematics is the study of motion.',
+      accessLevel: 3,
+      sortOrder: 0,
+    },
+  });
   await prisma.contentBlock.create({
     data: {
       chapterId: lockedChapter.id,
       blockType: 'note_topic',
       title: 'Secret Topic',
       contentRichtext: 'SUPER-SECRET-KINEMATICS-CONTENT',
-      sortOrder: 0,
+      accessLevel: 2,
+      sortOrder: 1,
+    },
+  });
+  await prisma.contentBlock.create({
+    data: {
+      chapterId: lockedChapter.id,
+      blockType: 'note_topic',
+      title: 'Owner Strategy Notes',
+      contentRichtext: 'OWNER-ONLY-STRATEGY-CONTENT',
+      accessLevel: 1,
+      sortOrder: 2,
     },
   });
   await prisma.contentBlock.create({
@@ -127,6 +163,7 @@ export async function resetDb() {
       blockType: 'summary',
       title: 'Public Summary',
       contentRichtext: 'This summary is free for everyone.',
+      accessLevel: 3,
       sortOrder: 0,
     },
   });
@@ -140,7 +177,7 @@ export async function resetDb() {
     },
   });
 
-  return { owner, member, guest, lockedSubject, openSubject, lockedChapter, openChapter };
+  return { owner, member, guest, admin, lockedSubject, openSubject, lockedChapter, openChapter };
 }
 
 export async function closeDb() {

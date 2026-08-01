@@ -87,21 +87,9 @@ export default function Home() {
                 >
                   <div className="flex items-start justify-between">
                     <SubjectIcon icon={subject.icon} color={subject.themeColor} size={40} />
-                    <div className="flex items-center gap-1.5">
-                      {subject.isLocked ? (
-                        <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-amber-400/90 bg-amber-400/10 border border-amber-400/25 rounded-full px-2 py-0.5">
-                          <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <rect x="5" y="11" width="14" height="9" rx="2" />
-                            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-                          </svg>
-                          Reserved
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-2 py-0.5">
-                          Open
-                        </span>
-                      )}
-                    </div>
+                    <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-2 py-0.5">
+                      Free to browse
+                    </span>
                   </div>
                   <h3 className="text-lg font-bold text-white mt-3 group-hover:text-aqua-100 transition">
                     {subject.name}
@@ -121,15 +109,15 @@ export default function Home() {
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-slate-300">
             <div className="flex gap-3">
               <span className="text-aqua-400 font-extrabold">01</span>
-              <p>Browse freely — every subject and chapter is visible. Open subjects are readable right away.</p>
+              <p>Browse freely — every subject, chapter and free section is visible and readable right away.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-aqua-400 font-extrabold">02</span>
-              <p>Reserved subjects show a request card — send a short message to the owner.</p>
+              <p>Premium sections show a request card — send a short message to the owner, or write to them directly.</p>
             </div>
             <div className="flex gap-3">
               <span className="text-aqua-400 font-extrabold">03</span>
-              <p>Once approved you become a member and every locked subject unlocks for you.</p>
+              <p>Once approved you become a member and every member-level section unlocks for you.</p>
             </div>
           </div>
         </section>

@@ -52,14 +52,8 @@ export default function ClassPage() {
           >
             <div className="flex items-start justify-between">
               <SubjectIcon icon={subject.icon} color={subject.themeColor} size={40} />
-              <span
-                className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border ${
-                  subject.isLocked
-                    ? 'text-amber-400/90 bg-amber-400/10 border-amber-400/25'
-                    : 'text-emerald-400 bg-emerald-400/10 border-emerald-400/25'
-                }`}
-              >
-                {subject.isLocked ? 'Reserved' : 'Open'}
+              <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border text-emerald-400 bg-emerald-400/10 border-emerald-400/25">
+                Free to browse
               </span>
             </div>
             <h3 className="text-lg font-bold text-white mt-3 group-hover:text-aqua-100 transition">

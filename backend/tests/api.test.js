@@ -40,6 +40,7 @@ test('register creates a guest account and returns tokens', async () => {
   assert.equal(res.status, 201);
   assert.equal(res.body.user.role, 'guest');
   assert.equal(res.body.user.isApproved, false);
+  assert.equal(res.body.user.accessLevel, 3);
   assert.ok(res.body.accessToken);
   assert.ok(res.body.refreshToken);
 });
@@ -87,62 +88,113 @@ test('unauthenticated /api/auth/me is rejected', async () => {
   assert.equal(res.status, 401);
 });
 
-// ── THE LOCKED-CONTENT RULE ──────────────────────────────────────────────
-// A guest must never receive content fields for a locked subject — not in
-// the body, not hidden anywhere in the response.
+// ── ACCESS LEVELS ─────────────────────────────────────────────────────────
+// Per-block tiers: 1 = most premium, 2 = approved members, 3 = free. A block
+// is readable when block.accessLevel >= viewer.accessLevel. Content fields of
+// higher tiers must never leave the server — not hidden anywhere in the body.
 
-test('guest receives NO content for a locked subject — only titles', async () => {
+test('guest sees titles of premium blocks but never their content', async () => {
   const res = await request(app).get('/api/subjects/physics/chapters/kinematics');
   assert.equal(res.status, 200);
-  assert.equal(res.body.chapter.isLocked, true);
-  assert.equal(res.body.chapter.canRead, false);
-  assert.ok(res.body.blocks.length > 0);
-  assert.equal(res.body.blocks[0].title, 'Secret Topic');
-
-  const serialized = JSON.stringify(res.body);
-  for (const field of ['contentRichtext', 'contentCode', 'mindmapJson', 'diagramData', 'codeLanguage']) {
-    assert.equal(
-      serialized.includes(field),
-      false,
-      `guest response leaked "${field}" for locked content`,
-    );
-  }
-  assert.equal(serialized.includes('SUPER-SECRET-KINEMATICS-CONTENT'), false);
-});
-
-test('guest receives full content for an unlocked subject', async () => {
-  const res = await request(app).get('/api/subjects/english/chapters/the-selfish-giant');
-  assert.equal(res.status, 200);
   assert.equal(res.body.chapter.canRead, true);
-  assert.equal(res.body.blocks[0].contentRichtext, 'This summary is free for everyone.');
+  assert.equal(res.body.chapter.viewerAccessLevel, 3);
+
+  const free = res.body.blocks.find((b) => b.title === 'Free Kinematics Intro');
+  assert.equal(free.contentRichtext, 'Kinematics is the study of motion.');
+
+  const secret = res.body.blocks.find((b) => b.title === 'Secret Topic');
+  assert.ok(secret, 'premium block titles are still visible to guests');
+  assert.equal(secret.accessLevel, 2);
+  assert.equal(secret.contentRichtext, undefined);
+
+  const ownerOnly = res.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(ownerOnly.accessLevel, 1);
+  assert.equal(ownerOnly.contentRichtext, undefined);
+
+  // Gated blocks must not smuggle content fields anywhere in their JSON.
+  for (const gated of [secret, ownerOnly]) {
+    const serialized = JSON.stringify(gated);
+    for (const field of ['contentRichtext', 'contentCode', 'mindmapJson', 'diagramData', 'codeLanguage']) {
+      assert.equal(
+        serialized.includes(field),
+        false,
+        `gated block leaked "${field}"`,
+      );
+    }
+  }
+
+  // And the actual secret content never appears anywhere in the response.
+  const serialized = JSON.stringify(res.body);
+  assert.equal(serialized.includes('SUPER-SECRET-KINEMATICS-CONTENT'), false);
+  assert.equal(serialized.includes('OWNER-ONLY-STRATEGY-CONTENT'), false);
 });
 
-test('member receives full content for a locked subject', async () => {
+test('member (level 2) reads premium blocks but not owner-only ones', async () => {
   const loginRes = await login('member@test.ravikishan', 'testpass123');
+  assert.equal(loginRes.body.user.accessLevel, 2);
   const res = await request(app)
     .get('/api/subjects/physics/chapters/kinematics')
     .set(authHeaders(loginRes.body.accessToken));
-  assert.equal(res.status, 200);
-  assert.equal(res.body.chapter.canRead, true);
-  assert.equal(res.body.blocks[0].contentRichtext, 'SUPER-SECRET-KINEMATICS-CONTENT');
+  const secret = res.body.blocks.find((b) => b.title === 'Secret Topic');
+  assert.equal(secret.contentRichtext, 'SUPER-SECRET-KINEMATICS-CONTENT');
+  const ownerOnly = res.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(ownerOnly.accessLevel, 1);
+  assert.equal(ownerOnly.contentRichtext, undefined);
 });
 
-test('search hides snippets from locked content for guests but shows titles', async () => {
-  const guestRes = await request(app).get('/api/search').query({ q: 'secret kinematics' });
-  assert.equal(guestRes.status, 200);
-  const hit = guestRes.body.results.find((r) => r.title === 'Secret Topic');
-  assert.ok(hit, 'search should surface titles of locked content');
-  assert.equal(hit.locked, true);
-  assert.equal(hit.snippet, null);
+test('owner (level 1) reads every block', async () => {
+  const loginRes = await login('owner@test.ravikishan', 'testpass123');
+  assert.equal(loginRes.body.user.accessLevel, 1);
+  const res = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders(loginRes.body.accessToken));
+  const ownerOnly = res.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(ownerOnly.contentRichtext, 'OWNER-ONLY-STRATEGY-CONTENT');
+});
 
-  const loginRes = await login('member@test.ravikishan', 'testpass123');
+test('registered but unapproved guest stays at level 3', async () => {
+  const loginRes = await login('guest@test.ravikishan', 'testpass123');
+  assert.equal(loginRes.body.user.accessLevel, 3);
+  const res = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders(loginRes.body.accessToken));
+  const secret = res.body.blocks.find((b) => b.title === 'Secret Topic');
+  assert.equal(secret.contentRichtext, undefined);
+});
+
+test('search hides snippets for premium tiers but keeps titles', async () => {
+  const guestRes = await request(app).get('/api/search').query({ q: 'secret' });
+  assert.equal(guestRes.status, 200);
+  const secret = guestRes.body.results.find((r) => r.title === 'Secret Topic');
+  assert.ok(secret, 'search must surface premium titles');
+  assert.equal(secret.accessLevel, 2);
+  assert.equal(secret.locked, true);
+  assert.equal(secret.snippet, null);
+
   const memberRes = await request(app)
     .get('/api/search')
-    .query({ q: 'secret kinematics' })
-    .set(authHeaders(loginRes.body.accessToken));
+    .query({ q: 'secret' })
+    .set(authHeaders((await login('member@test.ravikishan', 'testpass123')).body.accessToken));
   const memberHit = memberRes.body.results.find((r) => r.title === 'Secret Topic');
   assert.equal(memberHit.locked, false);
   assert.ok(memberHit.snippet);
+
+  const ownerRes = await request(app)
+    .get('/api/search')
+    .query({ q: 'strategy' })
+    .set(authHeaders((await login('owner@test.ravikishan', 'testpass123')).body.accessToken));
+  const ownerHit = ownerRes.body.results.find((r) => r.title === 'Owner Strategy Notes');
+  assert.equal(ownerHit.locked, false);
+  assert.ok(ownerHit.snippet);
+});
+
+test('recommendations never include blocks above the viewer level', async () => {
+  const guestRes = await request(app).get('/api/search').query({ q: 'zzzz-no-match' });
+  assert.ok(guestRes.body.recommendations.every((r) => r.accessLevel <= 3));
+  assert.ok(
+    guestRes.body.recommendations.every((r) => r.accessLevel <= 3),
+    'guests must only be recommended readable blocks',
+  );
 });
 
 // ── Access requests & admin panel ────────────────────────────────────────
@@ -189,6 +241,7 @@ test('approving a request promotes the student to member', async () => {
   assert.equal(approve.body.request.status, 'approved');
   assert.equal(approve.body.request.user.role, 'member');
   assert.equal(approve.body.request.user.isApproved, true);
+  assert.equal(approve.body.request.user.accessLevel, 2);
 });
 
 test('approving a request again is rejected (already resolved)', async () => {
@@ -203,39 +256,88 @@ test('approving a request again is rejected (already resolved)', async () => {
   assert.equal(res.status, 409);
 });
 
-test('owner can toggle a subject lock; guests then see the content', async () => {
+test('owner can create a block at any access level and it is gated per tier', async () => {
   const loginRes = await login('owner@test.ravikishan', 'testpass123');
-  const subject = (await request(app).get('/api/subjects/physics')).body.subject;
-  assert.equal(subject.isLocked, true);
-  const chapter = subject.chapters.find((c) => c.slug === 'kinematics');
-  assert.equal(chapter.isLocked, true);
+  const chapter = (await request(app).get('/api/subjects/physics')).body.subject.chapters.find(
+    (c) => c.slug === 'kinematics',
+  );
 
-  const toggleSubject = await request(app)
-    .patch(`/api/admin/subjects/${subject.id}`)
+  const created = await request(app)
+    .post(`/api/admin/chapters/${chapter.id}/blocks`)
     .set(authHeaders(loginRes.body.accessToken))
-    .send({ isLocked: false });
-  assert.equal(toggleSubject.status, 200);
-  assert.equal(toggleSubject.body.subject.isLocked, false);
+    .send({ blockType: 'numerical', title: 'Premium Numerical', contentRichtext: 'Solve this.', accessLevel: 2 });
+  assert.equal(created.status, 201);
+  assert.equal(created.body.block.accessLevel, 2);
 
-  const toggleChapter = await request(app)
-    .patch(`/api/admin/chapters/${chapter.id}`)
-    .set(authHeaders(loginRes.body.accessToken))
-    .send({ isLocked: false });
-  assert.equal(toggleChapter.status, 200);
+  const memberRes = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders((await login('member@test.ravikishan', 'testpass123')).body.accessToken));
+  assert.equal(
+    memberRes.body.blocks.find((b) => b.title === 'Premium Numerical').contentRichtext,
+    'Solve this.',
+  );
 
   const guestRes = await request(app).get('/api/subjects/physics/chapters/kinematics');
-  assert.equal(guestRes.body.chapter.canRead, true);
-  assert.equal(guestRes.body.blocks[0].contentRichtext, 'SUPER-SECRET-KINEMATICS-CONTENT');
+  const gated = guestRes.body.blocks.find((b) => b.title === 'Premium Numerical');
+  assert.equal(gated.accessLevel, 2);
+  assert.equal(gated.contentRichtext, undefined);
+});
 
-  // Lock it back for the other tests.
-  await request(app)
-    .patch(`/api/admin/subjects/${subject.id}`)
+test('blocks created without a level default to level 3 (free)', async () => {
+  const loginRes = await login('owner@test.ravikishan', 'testpass123');
+  const chapter = (await request(app).get('/api/subjects/physics')).body.subject.chapters.find(
+    (c) => c.slug === 'kinematics',
+  );
+  const created = await request(app)
+    .post(`/api/admin/chapters/${chapter.id}/blocks`)
     .set(authHeaders(loginRes.body.accessToken))
-    .send({ isLocked: true });
+    .send({ blockType: 'note_topic', title: 'Freebie', contentRichtext: 'Free for all.' });
+  assert.equal(created.body.block.accessLevel, 3);
+});
+
+test('admin can change a user to level 2 or 3 but cannot grant level 1', async () => {
+  const adminLogin = await login('admin@test.ravikishan', 'testpass123');
+  const target = (await login('guest@test.ravikishan', 'testpass123')).body.user;
+
+  const grantTwo = await request(app)
+    .patch(`/api/admin/users/${target.id}`)
+    .set(authHeaders(adminLogin.body.accessToken))
+    .send({ accessLevel: 2 });
+  assert.equal(grantTwo.status, 200);
+  assert.equal(grantTwo.body.user.accessLevel, 2);
+
+  const grantOne = await request(app)
+    .patch(`/api/admin/users/${target.id}`)
+    .set(authHeaders(adminLogin.body.accessToken))
+    .send({ accessLevel: 1 });
+  assert.equal(grantOne.status, 403);
+});
+
+test('only the owner can grant level 1, and it takes effect on the next login', async () => {
+  const ownerLogin = await login('owner@test.ravikishan', 'testpass123');
+  const target = (await login('guest@test.ravikishan', 'testpass123')).body.user;
+
+  const grantOne = await request(app)
+    .patch(`/api/admin/users/${target.id}`)
+    .set(authHeaders(ownerLogin.body.accessToken))
+    .send({ accessLevel: 1 });
+  assert.equal(grantOne.status, 200);
+  assert.equal(grantOne.body.user.accessLevel, 1);
+
+  const upgraded = await login('guest@test.ravikishan', 'testpass123');
+  assert.equal(upgraded.body.user.accessLevel, 1);
+
+  const ownerOnly = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders(upgraded.body.accessToken));
+  const strategy = ownerOnly.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(strategy.contentRichtext, 'OWNER-ONLY-STRATEGY-CONTENT');
+
+  // restore guest level for the other tests
   await request(app)
-    .patch(`/api/admin/chapters/${chapter.id}`)
-    .set(authHeaders(loginRes.body.accessToken))
-    .send({ isLocked: true });
+    .patch(`/api/admin/users/${target.id}`)
+    .set(authHeaders(ownerLogin.body.accessToken))
+    .send({ accessLevel: 3 });
 });
 
 test('admin can create a content block and it appears in the chapter', async () => {

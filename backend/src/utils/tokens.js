@@ -4,7 +4,7 @@ import { env } from '../config/env.js';
 
 export function signAccessToken(user) {
   return jwt.sign(
-    { sub: user.id, email: user.email, role: user.role },
+    { sub: user.id, email: user.email, role: user.role, accessLevel: user.accessLevel ?? 3 },
     env.jwtAccessSecret,
     { expiresIn: env.accessTtl },
   );

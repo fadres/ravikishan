@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
       refreshUser: fetchMe,
       isOwner: user?.role === 'owner',
       isAdmin: user?.role === 'owner' || user?.role === 'admin',
-      canReadLocked: ['owner', 'admin', 'member'].includes(user?.role),
+      accessLevel: user?.accessLevel ?? 3,
     }),
     [user, loading, login, register, logout, requestAccess, fetchMe],
   );

@@ -126,15 +126,19 @@ export default function SearchPage() {
                     className="glass rounded-2xl px-5 py-4 block hover:border-aqua-400/40 hover:bg-white/8 transition"
                     style={{ borderLeft: `3px solid ${g.color}` }}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-bold text-white">{r.title}</h3>
-                      {r.locked && (
-                        <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-amber-400 bg-amber-400/10 border border-amber-400/25 rounded-full px-2 py-0.5">
-                          <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <rect x="5" y="11" width="14" height="9" rx="2" />
-                            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-                          </svg>
-                          Reserved
+                      {r.accessLevel && (
+                        <span
+                          className={`text-[10px] uppercase tracking-wider font-bold rounded-full px-2 py-0.5 border ${
+                            r.accessLevel === 1
+                              ? 'text-amber-300 border-amber-400/40 bg-amber-400/10'
+                              : r.accessLevel === 2
+                                ? 'text-aqua-200 border-aqua-400/40 bg-aqua-400/10'
+                                : 'text-emerald-300 border-emerald-400/40 bg-emerald-400/10'
+                          }`}
+                        >
+                          {r.accessLevel === 1 ? 'Premium' : r.accessLevel === 2 ? 'Members' : 'Free'}
                         </span>
                       )}
                     </div>

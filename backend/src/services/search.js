@@ -1,23 +1,22 @@
 import { prisma } from '../config/db.js';
-import { AppError } from '../middleware/error.js';
 
 const SNIPPET_OPTIONS = 'MaxWords=25, MinWords=6, MaxFragments=1, StartSel=<<, StopSel=>>';
 
 // Full-text search over content_blocks using Postgres tsvector + ts_rank.
-// `canRead` decides whether snippets are included for locked content;
-// locked results always return title/metadata only.
-export async function searchContent(q, canRead) {
+// `viewerLevel` (1 = most premium … 3 = free) decides which blocks include
+// snippets: a block is readable when accessLevel >= viewerLevel. Titles and
+// metadata are always returned; content snippets never leak for higher tiers.
+export async function searchContent(q, viewerLevel = 3) {
   const englishQuery = prisma.$queryRaw`
     SELECT cb.id,
            cb.title,
            cb."blockType",
            cb."subLevel",
+           cb."accessLevel",
            ch.title AS "chapterTitle",
            ch.slug   AS "chapterSlug",
-           ch."isLocked" AS "chapterLocked",
            s.name    AS "subjectName",
            s.slug    AS "subjectSlug",
-           s."isLocked" AS "subjectLocked",
            c.slug    AS "classSlug",
            c.name    AS "className",
            ts_headline(
@@ -41,12 +40,11 @@ export async function searchContent(q, canRead) {
            cb.title,
            cb."blockType",
            cb."subLevel",
+           cb."accessLevel",
            ch.title AS "chapterTitle",
            ch.slug   AS "chapterSlug",
-           ch."isLocked" AS "chapterLocked",
            s.name    AS "subjectName",
            s.slug    AS "subjectSlug",
-           s."isLocked" AS "subjectLocked",
            c.slug    AS "classSlug",
            c.name    AS "className",
            ts_headline(
@@ -77,19 +75,19 @@ export async function searchContent(q, canRead) {
     .sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
     .slice(0, 25)
     .map((row) => {
-      const locked = row.subjectLocked || row.chapterLocked;
-      const readable = !locked || canRead;
+      const readable = (row.accessLevel ?? 3) >= viewerLevel;
       const headline = row.snippetEn || row.snippetSimple || '';
       return {
         id: row.id,
         title: row.title ?? '',
         blockType: row.blockType,
+        accessLevel: row.accessLevel ?? 3,
         subLevel: row.subLevel ?? null,
         chapter: { title: row.chapterTitle, slug: row.chapterSlug },
         subject: { name: row.subjectName, slug: row.subjectSlug },
         klass: { name: row.className, slug: row.classSlug },
         rank: Number(row.rank ?? 0),
-        locked: locked && !readable,
+        locked: !readable,
         snippet: readable ? stripHeadline(headline) : null,
       };
     });
@@ -97,17 +95,13 @@ export async function searchContent(q, canRead) {
 
 // Recommendations when the user gets few/no results: sibling blocks from the
 // same chapters as whatever did match (falling back to the same subjects).
-export async function recommendBlocks(excludeIds = [], canRead, limit = 6) {
+// Only blocks the viewer could actually read are recommended.
+export async function recommendBlocks(excludeIds = [], viewerLevel = 3, limit = 6) {
   const excluded = excludeIds.length ? { id: { notIn: excludeIds } } : {};
   const rows = await prisma.contentBlock.findMany({
     where: {
       ...excluded,
-      chapter: {
-        subject: {
-          isLocked: canRead ? undefined : false,
-          chapters: { some: { isLocked: canRead ? undefined : false } },
-        },
-      },
+      accessLevel: { gte: viewerLevel },
     },
     include: {
       chapter: { include: { subject: { include: { class: true } } } },
@@ -120,6 +114,7 @@ export async function recommendBlocks(excludeIds = [], canRead, limit = 6) {
     id: row.id,
     title: row.title ?? '',
     blockType: row.blockType,
+    accessLevel: row.accessLevel ?? 3,
     subLevel: row.subLevel ?? null,
     chapter: { title: row.chapter.title, slug: row.chapter.slug },
     subject: { name: row.chapter.subject.name, slug: row.chapter.subject.slug },

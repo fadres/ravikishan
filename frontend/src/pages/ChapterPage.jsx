@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
-import LockedCard from '../components/LockedCard.jsx';
+import LockedBlockCard from '../components/LockedBlockCard.jsx';
 import BlockRenderer from '../components/blocks/BlockRenderer.jsx';
 import SectionDivider from '../components/blocks/SectionDivider.jsx';
 
@@ -56,6 +56,7 @@ export default function ChapterPage() {
   }
 
   const { chapter, subject, blocks } = data;
+  const viewerLevel = chapter.viewerAccessLevel ?? 3;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -74,24 +75,22 @@ export default function ChapterPage() {
         </p>
       </div>
 
-      {!chapter.canRead ? (
-        <LockedCard subjectName={subject.name} themeColor={subject.themeColor} />
-      ) : (
-        <div className="space-y-6">
-          {buildItems(blocks).map((item, i) =>
-            item.type === 'divider' ? (
-              <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />
-            ) : (
-              <BlockRenderer key={item.block.id} block={item.block} subjectType={subject.type} />
-            ),
-          )}
-          {blocks.length === 0 && (
-            <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
-              This chapter has no notes yet.
-            </p>
-          )}
-        </div>
-      )}
+      <div className="space-y-6">
+        {buildItems(blocks).map((item, i) =>
+          item.type === 'divider' ? (
+            <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />
+          ) : (item.block.accessLevel ?? 3) > viewerLevel ? (
+            <LockedBlockCard key={item.block.id} block={item.block} themeColor={subject.themeColor} />
+          ) : (
+            <BlockRenderer key={item.block.id} block={item.block} subjectType={subject.type} />
+          ),
+        )}
+        {blocks.length === 0 && (
+          <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
+            This chapter has no notes yet.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

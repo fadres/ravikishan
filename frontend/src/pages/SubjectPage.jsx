@@ -82,15 +82,9 @@ export default function SubjectPage() {
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              {chapter.isLocked ? (
-                <span className="text-[10px] uppercase tracking-wider font-bold text-amber-400/90 bg-amber-400/10 border border-amber-400/25 rounded-full px-2 py-1">
-                  Reserved
-                </span>
-              ) : (
-                <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-2 py-1">
-                  Open
-                </span>
-              )}
+              <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 rounded-full px-2 py-1">
+                Free to browse
+              </span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-500 group-hover:text-aqua-300 transition">
                 <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

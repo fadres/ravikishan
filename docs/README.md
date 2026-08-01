@@ -38,12 +38,16 @@ working owner/admin panel.
 - **Database** — PostgreSQL with Prisma migrations. Full-text search via
   `tsvector` generated columns (`english` + `simple` configs for Devanagari)
   ranked with `ts_rank`, plus recommendation fallbacks.
-- **Locked-content rule** — anonymous visitors see subject/chapter
-  navigation and block *titles* only. The backend never returns
-  `contentRichtext` / `contentCode` / `mindmapJson` / `diagramData` for
-  locked subjects (or locked chapters) to non-approved users — not even
-  hidden in the response. This is enforced server-side and covered by an
-  automated test (`backend/tests/api.test.js`).
+- **Access levels** — every content block carries an `accessLevel`:
+  `1` Premium (owner), `2` Members (approved), `3` Free (everyone). A block
+  is readable when `accessLevel >= viewer level` (anonymous = 3). The backend
+  never returns `contentRichtext` / `contentCode` / `mindmapJson` /
+  `diagramData` for unreadable blocks — not even hidden in the response —
+  while titles and structure stay fully public. Approving an access request
+  makes the user a member (level 2); only the owner can grant level 1.
+  The frontend shows a per-block locked card with "Request access" and the
+  owner's contact email for premium content. Enforced server-side and
+  covered by automated tests (`backend/tests/api.test.js`).
 - **Auto content-type detection (4c)** — the admin panel can create blocks
   without picking a type: a rule-based classifier (`backend/src/services/classifier.js`,
   mirrored live in the editor as `frontend/src/lib/classifier.js`) suggests
@@ -110,7 +114,7 @@ cp .env.example .env            # fill in DATABASE_URL + JWT secrets
 npm install
 npx prisma migrate deploy       # apply migrations
 npm run seed                    # owner + demo content (idempotent)
-npm test                        # 20 tests — auth + locked-content rule
+npm test                        # 41 tests — auth, access levels, classifier
 npm run dev                     # API on http://localhost:4000
 
 # 3. Frontend
