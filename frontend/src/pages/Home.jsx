@@ -80,6 +80,8 @@ const SUBJECT_ACCENTS = {
   mathematics: { color: '#fb923c', glow: 'rgba(251,146,60,0.5)' },
   english: { color: '#60a5fa', glow: 'rgba(96,165,250,0.5)' },
   nepali: { color: '#a78bfa', glow: 'rgba(167,139,250,0.5)' },
+  loksewa: { color: '#f59e0b', glow: 'rgba(245,158,11,0.5)' },
+  'general-knowledge': { color: '#22d3ee', glow: 'rgba(34,211,238,0.5)' },
 };
 
 const SUBJECT_BLURBS = {
@@ -89,6 +91,8 @@ const SUBJECT_BLURBS = {
   mathematics: 'Practice equations, theorems and problem solving.',
   english: 'Improve grammar, vocabulary and comprehension.',
   nepali: 'Learn grammar, literature and language skills.',
+  loksewa: 'Prepare for Loksewa exams with key facts and concepts.',
+  'general-knowledge': 'Sharpen general awareness, facts and current affairs.',
 };
 
 // Night study-desk illustration (purple/blue tones).

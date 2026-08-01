@@ -30,6 +30,7 @@ enum SubjectType {
   biology
   english
   nepali
+  general_knowledge // Loksewa Knowledge | General Knowledge
 }
 
 // Allowed block types per subject_type (enforced in the API validation layer):

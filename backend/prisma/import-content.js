@@ -30,6 +30,8 @@ const SUBJECTS = {
   biology: { name: 'Biology', subjectType: 'biology', icon: 'dna', themeColor: '#2dd4bf' },
   english: { name: 'English', subjectType: 'english', icon: 'book', themeColor: '#fbbf24' },
   nepali: { name: 'Nepali', subjectType: 'nepali', icon: 'pen', themeColor: '#fb7185' },
+  loksewa: { name: 'Loksewa Knowledge', subjectType: 'general_knowledge', icon: 'scale', themeColor: '#f59e0b' },
+  'general-knowledge': { name: 'General Knowledge', subjectType: 'general_knowledge', icon: 'globe', themeColor: '#22d3ee' },
 };
 
 // Level plan (per user): level 3 = simple explanation, free for everyone;
@@ -73,6 +75,12 @@ const BLOCK_TYPES = {
     numericals: 'byakaran', quiz: 'byakaran', formulas: 'byakaran',
     keyPoints: 'byakaran', summary: 'byakaran',
     flashcards: 'byakaran', mindmap: 'byakaran',
+  },
+  general_knowledge: {
+    notes: 'note_topic', examples: 'note_example', practice: 'note_example',
+    numericals: 'note_example', quiz: 'note_example', formulas: 'note_important',
+    keyPoints: 'note_important', summary: 'note_important',
+    flashcards: 'note_important', mindmap: 'mindmap',
   },
 };
 

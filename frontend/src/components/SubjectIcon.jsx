@@ -49,6 +49,23 @@ const ICONS = {
       <path d="M24 13v27" />
     </svg>
   ),
+  scale: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 5h24" />
+      <path d="M14 5v6M34 5v6" />
+      <path d="M8 11h32l-5 14H13L8 11z" />
+      <path d="M24 11v20" />
+      <path d="M17 31h14" />
+      <path d="M18 40a6 6 0 0 0 12 0z" />
+    </svg>
+  ),
+  globe: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <circle cx="24" cy="24" r="19" />
+      <ellipse cx="24" cy="24" rx="9" ry="19" />
+      <path d="M5 24h38" />
+    </svg>
+  ),
 };
 
 export default function SubjectIcon({ icon, size = 44, color = '#7dd3fc', className = '' }) {

@@ -1,0 +1,37 @@
+{
+  "name": "General Knowledge",
+  "chapters": [
+    {
+      "id": "world-facts-and-geography",
+      "title": "World Facts & Geography",
+      "description": "Countries, oceans, rivers and organizations",
+      "topics": [
+        { "id": "world-facts-and-geography", "title": "World Facts & Geography" }
+      ]
+    },
+    {
+      "id": "science-and-technology-essentials",
+      "title": "Science & Technology Essentials",
+      "description": "Everyday science and modern technology",
+      "topics": [
+        { "id": "science-and-technology-essentials", "title": "Science & Technology Essentials" }
+      ]
+    },
+    {
+      "id": "history-and-culture",
+      "title": "History & Culture",
+      "description": "World milestones, heritage and festivals",
+      "topics": [
+        { "id": "history-and-culture", "title": "History & Culture" }
+      ]
+    },
+    {
+      "id": "current-affairs-basics",
+      "title": "Current Affairs Basics",
+      "description": "How to follow news and key trends",
+      "topics": [
+        { "id": "current-affairs-basics", "title": "Current Affairs Basics" }
+      ]
+    }
+  ]
+}

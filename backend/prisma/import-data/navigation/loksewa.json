@@ -1,0 +1,37 @@
+{
+  "name": "Loksewa Knowledge",
+  "chapters": [
+    {
+      "id": "overview-and-exam-pattern",
+      "title": "Overview & Exam Pattern",
+      "description": "What Loksewa is and how the exams work",
+      "topics": [
+        { "id": "overview-and-exam-pattern", "title": "Loksewa Overview & Exam Pattern" }
+      ]
+    },
+    {
+      "id": "nepal-constitution-and-government",
+      "title": "Nepal: Constitution & Government",
+      "description": "Constitution 2072 and the federal structure",
+      "topics": [
+        { "id": "nepal-constitution-and-government", "title": "Nepal: Constitution & Government" }
+      ]
+    },
+    {
+      "id": "public-administration",
+      "title": "Public Administration in Nepal",
+      "description": "Civil service structure and key concepts",
+      "topics": [
+        { "id": "public-administration", "title": "Public Administration in Nepal" }
+      ]
+    },
+    {
+      "id": "nepal-at-a-glance",
+      "title": "Nepal at a Glance",
+      "description": "Key facts, geography and national symbols",
+      "topics": [
+        { "id": "nepal-at-a-glance", "title": "Nepal at a Glance" }
+      ]
+    }
+  ]
+}
