@@ -11,12 +11,23 @@
           "title": "Bio-Molecules"
         },
         {
-          "id": "cell-biology",
-          "title": "Cell Biology"
-        },
-        {
           "id": "botany5.1",
           "title":  "Botany5.1"
+        }
+      ]
+    },
+    {
+      "id": "cell-biology",
+      "title": "Cell Biology",
+      "description": "Cell theory, organelles, and cell division.",
+      "topics": [
+        {
+          "id": "cell-theory-and-cell-organelles",
+          "title": "Cell Theory and Cell Organelles"
+        },
+        {
+          "id": "cell-division",
+          "title": "Cell Division"
         }
       ]
     },
@@ -55,6 +66,10 @@
         {
           "id": "mcqs1",
           "title": "Bio-molecules MCQs"
+        },
+        {
+          "id": "biomolecules-detail",
+          "title": "Biomolecules & Cell Biology — Detailed Study"
         }
       ]
     }

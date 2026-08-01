@@ -1,0 +1,39 @@
+{
+  "title": "Biomolecules & Cell Biology — Detailed Study",
+  "notes": [
+    "<h1>Life Components</h1><p>All living organisms are made up of complex chemical substances, which are continuously being synthesized and broken down.</p><h2>Components of Life</h2><ul><li><strong>Organic components:</strong> Carbohydrates, proteins, lipids, vitamins, nucleic acids, hormones.</li><li><strong>Inorganic components:</strong> Water, minerals, gases.</li></ul><h2>Inorganic Components</h2><h3>Water</h3><ul><li>About 90% of the protoplasm of living cells is water.</li><li>Small and dipolar molecule — acts as a universal solvent.</li><li>Acts as a medium for biochemical reactions.</li></ul><h3>Minerals</h3><p>Needed in small amounts for body functions. Common minerals: sodium, potassium, calcium, magnesium, iron, phosphorus, sulphur, iodine.</p>",
+    "<h2>Biomolecules</h2><p>Organic compounds synthesized by living organisms.</p><h3>Carbohydrates</h3><p>Polyhydroxy aldehydes or ketones with the general formula <strong>Cn(H2O)n</strong>.</p><table><thead><tr><th>Class</th><th>Examples</th><th>Features</th></tr></thead><tbody><tr><td>Monosaccharides</td><td>Glucose, fructose, galactose, ribose</td><td>Simplest; cannot be hydrolyzed further.</td></tr><tr><td>Oligosaccharides</td><td>Sucrose, maltose, lactose</td><td>2–10 monosaccharide units (disaccharides: 2 units).</td></tr><tr><td>Polysaccharides</td><td>Starch, glycogen, cellulose</td><td>Many monosaccharide units; structural/energy storage roles.</td></tr></tbody></table>",
+    "<h3>Amino Acids</h3><p>Organic compounds containing an amino group (−NH2) and a carboxyl group (−COOH).</p><p><strong>General structure:</strong> R–CH(NH2)–COOH; linked by <strong>peptide bonds</strong> to form proteins. About <strong>20 amino acids</strong> make up all proteins.</p><h3>Proteins</h3><p>Most abundant organic molecules of the cell.</p><ul><li><strong>Structure levels:</strong> Primary (amino acid sequence), secondary (α-helix, β-pleated sheet), tertiary (3D folding), quaternary (subunit assembly).</li><li><strong>Functions:</strong> Structural support, catalysis (enzymes), transport, immunity (antibodies), muscle contraction (actin, myosin).</li></ul>",
+    "<h3>Lipids</h3><p>Hydrophobic organic compounds (fats, oils, waxes, sterols).</p><ul><li>Not polymers — built from glycerol and fatty acids via <strong>ester bonds</strong>.</li><li><strong>Functions:</strong> Energy storage (9 kcal/g), cell membrane structure (phospholipids), insulation, hormone precursors.</li></ul>",
+    "<h3>Nucleic Acids</h3><p>Nucleotides (pentose sugar + nitrogenous base + phosphate) linked by <strong>phosphodiester bonds</strong>.</p><table><thead><tr><th>Feature</th><th>DNA</th><th>RNA</th></tr></thead><tbody><tr><td>Sugar</td><td>Deoxyribose</td><td>Ribose</td></tr><tr><td>Bases</td><td>Adenine, Guanine, Cytosine, Thymine</td><td>Adenine, Guanine, Cytosine, Uracil</td></tr><tr><td>Strand</td><td>Double-stranded (double helix)</td><td>Single-stranded</td></tr><tr><td>Location</td><td>Nucleus (chromosomes), mitochondria, plastids</td><td>Nucleolus, cytoplasm, ribosomes</td></tr><tr><td>Function</td><td>Genetic material; heredity</td><td>Protein synthesis (mRNA, tRNA, rRNA)</td></tr></tbody></table>",
+    "<h2>Enzymes</h2><p>Biocatalysts — proteinaceous substances that speed up biochemical reactions without being consumed.</p><p><strong>Characteristics:</strong></p><ul><li>Highly specific to their substrate.</li><li>Work best at an optimum temperature (about 37°C) and optimum pH.</li><li>Enzymes lower the activation energy of reactions.</li><li>They are reused — one enzyme molecule can act on many substrate molecules.</li></ul><p><strong>Naming:</strong> Usually end in <em>-ase</em> (e.g., sucrase, lipase, maltase).</p>"
+  ],
+  "examples": [
+    "**Q1: Polymer Linkages**\n\nWhich bonds link monomers in carbohydrates, proteins, and nucleic acids respectively?\n\n**Solution:** Glycosidic bonds in carbohydrates, peptide bonds in proteins, and phosphodiester bonds in nucleic acids.",
+    "**Q2: Protein Structure**\n\nThe α-helix and β-pleated sheet represent which level of protein organization?\n\n**Solution:** Secondary structure. It arises from hydrogen bonding between the backbone atoms; the primary structure is the linear amino acid sequence held by peptide bonds.",
+    "**Q3: DNA vs RNA**\n\nA nucleic acid contains ribose sugar and uracil. Is it DNA or RNA?\n\n**Solution:** RNA. DNA contains deoxyribose and thymine instead; uracil pairs with adenine in RNA.",
+    "**Q4: Enzyme Properties**\n\nWhy can one enzyme molecule catalyze many substrate molecules?\n\n**Solution:** Because enzymes are not consumed in reactions — they lower activation energy, bind substrate at the active site, and are released unchanged to act again."
+  ],
+  "practice": [
+    "What is the general formula of carbohydrates?",
+    "Which bond links amino acids to form proteins?",
+    "Name the sugar present in RNA and the base unique to RNA.",
+    "Why is water called a universal solvent?",
+    "Which level of protein structure is a linear amino acid sequence?",
+    "What type of bond joins glycerol and fatty acids in lipids?"
+  ],
+  "formulas": [
+    "**General carbohydrate formula:** Cn(H2O)n",
+    "**Amino acid general structure:** R–CH(NH2)–COOH",
+    "**Energy value of lipids:** 9 kcal per gram (proteins and carbohydrates: 4 kcal per gram)"
+  ],
+  "keyPoints": [
+    "Carbohydrates: monosaccharides → oligosaccharides → polysaccharides, joined by glycosidic bonds.",
+    "Proteins: 20 amino acids linked by peptide bonds; structure levels primary → secondary → tertiary → quaternary.",
+    "DNA: deoxyribose + A,G,C,T, double-stranded; RNA: ribose + A,G,C,U, single-stranded.",
+    "Lipids: glycerol + fatty acids (ester bonds), hydrophobic, 9 kcal/g energy storage.",
+    "Enzymes: protein biocatalysts, substrate-specific, optimum ~37°C, reusable, lower activation energy.",
+    "Water: ~90% of protoplasm, dipolar universal solvent."
+  ],
+  "summary": "Life is composed of organic (carbohydrates, proteins, lipids, nucleic acids) and inorganic (water, minerals) components. Carbohydrates (Cn(H2O)n) store and provide energy; amino acids join by peptide bonds to form proteins with four structural levels; lipids (ester-linked, hydrophobic) store energy at 9 kcal/g and build membranes; nucleic acids carry heredity (DNA double helix) and drive protein synthesis (RNA). Enzymes are specific, reusable protein catalysts with optimum temperature and pH. DNA vs RNA differ in sugar (deoxyribose/ribose), bases (thymine/uracil), and strand nature."
+}
