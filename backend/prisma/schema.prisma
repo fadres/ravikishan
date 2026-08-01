@@ -60,6 +60,7 @@ model User {
   resolvedRequests AccessRequest[] @relation("ResolvedBy")
   auditLogs        AuditLog[]
   decisionMakers   DecisionMaker[]
+  r2Uploads        R2Upload[]
 
   @@index([role])
   @@index([accessLevel])
@@ -192,6 +193,18 @@ model DecisionMaker {
   decidedAt      DateTime     @default(now())
 
   @@index([userId])
+}
+
+model R2Upload {
+  id          String   @id @default(uuid())
+  key         String
+  contentType String
+  uploadedBy  User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  uploadedById String
+  createdAt   DateTime @default(now())
+
+  @@index([uploadedById])
+  @@index([createdAt])
 }
 
 model AuditLog {

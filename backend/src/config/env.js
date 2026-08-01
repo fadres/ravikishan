@@ -30,4 +30,8 @@ export const env = {
   smtpPass: process.env.SMTP_PASS || '',
   mailFrom: process.env.MAIL_FROM || '',
   siteUrl: process.env.SITE_URL || 'https://timepass001.netlify.app',
+  r2Endpoint: process.env.R2_ENDPOINT || '',
+  r2AccessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+  r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+  r2Bucket: process.env.R2_BUCKET || '',
 };

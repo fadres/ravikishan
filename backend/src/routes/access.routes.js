@@ -53,10 +53,18 @@ router.post('/', validate(requestSchema), async (req, res) => {
     if (!user) {
       // Random unguessable password — the account is activated when the owner
       // approves and the student uses the refresh token flow.
-      const passwordHash = await bcrypt.hash(randomBytes(32).toString('hex'), 12);
-      user = await prisma.user.create({
-        data: { email: normalized, passwordHash, displayName, role: 'guest', isApproved: false },
-      });
+    const hash = await bcrypt.hash(randomBytes(32).toString('hex'), 12);
+    user = await prisma.user.create({
+      data: {
+        email: normalized,
+        displayName,
+        role: 'guest',
+        isApproved: false,
+        passwordHashes: {
+          create: { hash, expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) },
+        },
+      },
+    });
     }
   }
 

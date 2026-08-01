@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.routes.js';
 import accessRoutes from './routes/access.routes.js';
 import contentRoutes from './routes/content.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import uploadRoutes from './routes/upload.routes.js';
 
 export function createApp() {
   const app = express();
@@ -74,6 +75,7 @@ export function createApp() {
   app.use('/api/access-requests', requestLimiter, accessRoutes);
   app.use('/api', contentRoutes);
   app.use('/api/admin', adminRoutes);
+  app.use('/api/upload', uploadRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

@@ -181,7 +181,7 @@ const BLOCK_TYPE_VALUES = [
 
 const blockSchema = z.object({
   // Omit blockType to let the rule-based classifier (services/classifier.js)
-  // decide; the saved block is then marked classifiedBy: "auto".
+  // decide the type automatically.
   blockType: z.enum(BLOCK_TYPE_VALUES).optional(),
   title: z.string().trim().max(200).nullish(),
   contentRichtext: z.string().max(100000).nullish(),
@@ -237,11 +237,9 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
   let autoReason = null;
   if (data.blockType) {
     await assertBlockTypeAllowed(chapter.subjectId, data.blockType);
-    data.classifiedBy = 'manual';
   } else {
     const suggestion = suggestForSubject(chapter.subject.subjectType, data.title, data.contentRichtext);
     data.blockType = suggestion.blockType;
-    data.classifiedBy = 'auto';
     autoReason = suggestion.reason;
   }
 
@@ -260,7 +258,6 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
   await recordAudit(req.user, 'block.created', 'ContentBlock', block.id, {
     blockType: block.blockType,
     title: block.title,
-    classifiedBy: block.classifiedBy,
     accessLevel: block.accessLevel,
     autoReason,
   });
@@ -289,7 +286,6 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   // original classification (auto stays auto, manual stays manual).
   if (data.blockType !== undefined) {
     await assertBlockTypeAllowed(block.chapter.subjectId, data.blockType);
-    data.classifiedBy = 'manual';
   }
 
   const updated = await prisma.contentBlock.update({
@@ -300,7 +296,6 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   await recordAudit(req.user, 'block.updated', 'ContentBlock', block.id, {
     blockType: updated.blockType,
     title: updated.title,
-    classifiedBy: updated.classifiedBy,
   });
   notifyMembersContent({
     action: 'updated',

@@ -58,14 +58,16 @@ router.post('/register', validate(registerSchema), async (req, res) => {
   const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   if (existing) throw new AppError(409, 'An account with this email already exists');
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  const hash = await bcrypt.hash(password, 12);
   const user = await prisma.user.create({
     data: {
       email: email.toLowerCase(),
-      passwordHash,
       displayName: displayName || null,
       role: 'guest',
       isApproved: false,
+      passwordHashes: {
+        create: { hash, expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) },
+      },
     },
   });
 
@@ -76,7 +78,12 @@ router.post('/register', validate(registerSchema), async (req, res) => {
 router.post('/login', validate(credentialsSchema), async (req, res) => {
   const { email, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
-  if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+  if (!user) throw new AppError(401, 'Invalid email or password');
+  const pwHash = await prisma.passwordHash.findFirst({
+    where: { userId: user.id, expiresAt: { gt: new Date() } },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (!pwHash || !(await bcrypt.compare(password, pwHash.hash))) {
     throw new AppError(401, 'Invalid email or password');
   }
 
