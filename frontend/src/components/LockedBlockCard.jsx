@@ -75,21 +75,37 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
       <div className="mt-4 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center gap-3">
         {status !== 'success' && (
           <p className="text-xs text-slate-400 flex-1">
-            Contact the owner{contactEmail ? ` at ${contactEmail}` : ''} or send an access
-            request to unlock this content.
+            This section is locked for your current access level — contact the owner
+            {contactEmail ? ` at ${contactEmail}` : ''} to unlock it.
           </p>
         )}
 
         {!open && status !== 'success' && (
-          <button
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-          >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-            </svg>
-            Request access
-          </button>
+          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+            {contactEmail && (
+              <a
+                href={`mailto:${contactEmail}?subject=${encodeURIComponent(`Access request — "${block.title}"`)}&body=${encodeURIComponent(
+                  'Hi, I would like to request access to the locked content. Please let me know how to unlock it.\n\nName:\nEmail:',
+                )}`}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold border border-aqua-400/40 text-aqua-200 hover:bg-aqua-400/10 transition"
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="M22 7l-10 6L2 7" />
+                </svg>
+                Contact owner
+              </a>
+            )}
+            <button
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+              Request access
+            </button>
+          </div>
         )}
 
         {open && status !== 'success' && (

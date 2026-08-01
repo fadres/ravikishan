@@ -5,6 +5,7 @@ import { AppError } from '../middleware/error.js';
 import { requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { recordAudit } from '../services/audit.js';
+import { notifyMembersContent } from '../services/mailer.js';
 import { suggestForSubject, ALLOWED_BLOCK_TYPES } from '../services/classifier.js';
 
 const router = Router();
@@ -263,6 +264,14 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
     accessLevel: block.accessLevel,
     autoReason,
   });
+  // Notify members by email (fire-and-forget, never blocks the response).
+  notifyMembersContent({
+    action: 'added',
+    subjectName: chapter.subject.name,
+    chapterTitle: chapter.title,
+    blockTitle: block.title,
+    accessLevel: block.accessLevel,
+  }).catch(() => {});
   res.status(201).json({ block });
 });
 
@@ -271,7 +280,7 @@ const blockPatchSchema = blockSchema.partial();
 router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   const block = await prisma.contentBlock.findUnique({
     where: { id: req.params.id },
-    include: { chapter: true },
+    include: { chapter: { include: { subject: true } } },
   });
   if (!block) throw new AppError(404, 'Block not found');
 
@@ -293,6 +302,13 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
     title: updated.title,
     classifiedBy: updated.classifiedBy,
   });
+  notifyMembersContent({
+    action: 'updated',
+    subjectName: block.chapter.subject.name,
+    chapterTitle: block.chapter.title,
+    blockTitle: updated.title,
+    accessLevel: updated.accessLevel,
+  }).catch(() => {});
   res.json({ block: updated });
 });
 

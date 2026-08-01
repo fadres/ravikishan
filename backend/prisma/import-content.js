@@ -15,6 +15,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, basename, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
+import { notifyMembersImport } from '../src/services/mailer.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -550,6 +551,7 @@ async function main() {
 
   const chapterGroups = listContentFiles();
   const stats = { blocks: 0, byLevel: { 1: 0, 2: 0, 3: 0 }, chapters: 0 };
+  const changedChapters = [];
 
   for (const group of chapterGroups) {
     const subjectCfg = SUBJECTS[group.subjectId];
@@ -578,6 +580,7 @@ async function main() {
       },
     });
 
+    const beforeCount = await prisma.contentBlock.count({ where: { chapterId: chapter.id } });
     await prisma.contentBlock.deleteMany({ where: { chapterId: chapter.id } });
 
     const chapterBlocks = [];
@@ -599,10 +602,23 @@ async function main() {
     stats.chapters += 1;
     stats.blocks += chapterBlocks.length;
     for (const b of chapterBlocks) stats.byLevel[b.accessLevel] += 1;
+    if (chapterBlocks.length !== beforeCount) {
+      changedChapters.push({
+        subject: subjectCfg.name,
+        chapter: chapter.title,
+        before: beforeCount,
+        after: chapterBlocks.length,
+      });
+    }
     console.log(`  ✓ ${subjectCfg.name} / ${chapter.title}: ${chapterBlocks.length} blocks`);
   }
 
   console.log(`✓ Import complete — ${stats.chapters} chapters, ${stats.blocks} blocks (free=${stats.byLevel[3]}, members=${stats.byLevel[2]}, premium=${stats.byLevel[1]})`);
+
+  if (changedChapters.length) {
+    const result = await notifyMembersImport({ changed: changedChapters, totalBlocks: stats.blocks });
+    console.log(`✉ member digest sent: ${result.sent}/${result.total} recipients (${changedChapters.length} changed chapters)`);
+  }
 }
 
 main()

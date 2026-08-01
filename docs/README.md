@@ -173,6 +173,11 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
    - `OWNER_EMAIL`, `OWNER_PASSWORD` → **auto-bootstrapped**: the server
       creates the owner account on startup if it doesn't exist (no one-off
       seed needed). `npm run seed` is only for optional demo content.
+   - Member email notifications (optional): `SMTP_USER` (GMail address),
+      `SMTP_PASS` (GMail **App Password**, not the account password),
+      optionally `MAIL_FROM` and `SITE_URL`. Members get an email whenever a
+      block is added/updated via the admin panel and when an import changes a
+      chapter's block count. Leave `SMTP_PASS` empty to disable mail.
    - `NODE_ENV=production`
 4. Content: `npm run migrate` also runs `prisma/import-content.js`, which
    upserts Class 11 subjects/chapters from `prisma/import-data/` and refreshes

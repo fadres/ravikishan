@@ -24,4 +24,10 @@ export const env = {
   authRateLimit: parseInt(process.env.AUTH_RATE_LIMIT || '20', 10),
   ownerEmail: process.env.OWNER_EMAIL || 'owner@ravikishan.com',
   ownerPassword: process.env.OWNER_PASSWORD || '',
+  smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+  smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
+  smtpUser: process.env.SMTP_USER || '',
+  smtpPass: process.env.SMTP_PASS || '',
+  mailFrom: process.env.MAIL_FROM || '',
+  siteUrl: process.env.SITE_URL || 'https://timepass001.netlify.app',
 };
