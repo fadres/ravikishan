@@ -5,6 +5,53 @@ import SubjectIcon from '../components/SubjectIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { streakDays } from '../utils/streak.js';
 
+const IDIOMS = [
+  { text: 'Practice makes perfect.', author: 'Proverb' },
+  { text: 'Knowledge is power.', author: 'Francis Bacon' },
+  { text: 'The journey of a thousand miles begins with a single step.', author: 'Lao Tzu' },
+  { text: "Rome wasn't built in a day.", author: 'Proverb' },
+  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
+  { text: 'Slow and steady wins the race.', author: 'Aesop' },
+  { text: 'Mistakes are proof that you are trying.', author: 'Proverb' },
+  { text: 'It always seems impossible until it is done.', author: 'Nelson Mandela' },
+  { text: 'The more you learn, the more you earn.', author: 'Proverb' },
+  { text: 'Success is a journey, not a destination.', author: 'Proverb' },
+];
+
+function IdiomsStrip() {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * IDIOMS.length));
+  useEffect(() => {
+    const timer = setInterval(() => setIndex((i) => (i + 1) % IDIOMS.length), 7000);
+    return () => clearInterval(timer);
+  }, []);
+  const idiom = IDIOMS[index];
+  return (
+    <section className="glass rounded-2xl px-5 py-4 mt-5 flex items-center gap-4" aria-label="Daily wisdom">
+      <span className="w-10 h-10 shrink-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-indigo-950">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M9.6 4c-4.2.8-7 4-7 8.6 0 1.6.4 3.4 1.3 4.9.6-1.2.9-2.4 1-3.7-2.6-1-3-2.6-3-4.1 0-2.9 2.4-5 5.7-5.7L9.6 4zm9 0c-4.2.8-7 4-7 8.6 0 1.6.4 3.4 1.3 4.9.6-1.2.9-2.4 1-3.7-2.6-1-3-2.6-3-4.1 0-2.9 2.4-5 5.7-5.7L18.6 4z" />
+        </svg>
+      </span>
+      <div key={index} className="idiom-fade min-w-0">
+        <p className="text-sm sm:text-base font-semibold text-white leading-snug">
+          “{idiom.text}”
+        </p>
+        <p className="text-xs text-aqua-300 mt-0.5">— {idiom.author}</p>
+      </div>
+      <span className="ml-auto shrink-0 hidden sm:flex items-center gap-1.5">
+        {IDIOMS.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Show idiom ${i + 1}`}
+            onClick={() => setIndex(i)}
+            className={`w-1.5 h-1.5 rounded-full transition ${i === index ? 'bg-amber-400' : 'bg-white/25 hover:bg-white/40'}`}
+          />
+        ))}
+      </span>
+    </section>
+  );
+}
+
 // Deterministic star field (fixed seed → no flicker between renders).
 function makeStars(count, seed) {
   const stars = [];
@@ -219,7 +266,7 @@ export default function Home() {
                 caption="Explore all"
               />
               <StatCard
-                to="/tests"
+                to="/class/class-11"
                 icon={
                   <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="5" y="4" width="14" height="17" rx="2" />
@@ -228,9 +275,9 @@ export default function Home() {
                   </svg>
                 }
                 bg="bg-gradient-to-br from-emerald-500 to-teal-500"
-                label="Tests Taken"
+                label="Quizzes Solved"
                 value="24"
-                caption="View history"
+                caption="View subjects"
               />
               <StatCard
                 to="/class/class-11"
@@ -251,6 +298,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <IdiomsStrip />
 
       {/* Explore Subjects */}
       <section className="mt-10">

@@ -126,6 +126,13 @@ body {
   6% { transform: translate(-260px, 180px) rotate(-35deg); opacity: 0; }
   100% { transform: translate(-260px, 180px) rotate(-35deg); opacity: 0; }
 }
+.idiom-fade {
+  animation: idiomFade 0.7s ease both;
+}
+@keyframes idiomFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
 
 /* Active nav pill — accent gradient, theme-aware */
 .nav-pill {

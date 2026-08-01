@@ -17,8 +17,6 @@ function NavIcon({ name }) {
       return <svg {...common}><path d="M3 10.5L12 3l9 7.5" /><path d="M5 9.5V21h14V9.5" /></svg>;
     case 'book':
       return <svg {...common}><path d="M4 5a4 4 0 0 1 4-4h12v20H8a4 4 0 0 0-4 4z" /><path d="M20 17H8a4 4 0 0 0-4 4" /></svg>;
-    case 'doc':
-      return <svg {...common}><path d="M6 2h9l5 5v15H6z" /><path d="M15 2v5h5" /><path d="M9 13h6M9 17h6" /></svg>;
     default:
       return null;
   }
@@ -139,7 +137,6 @@ export default function Header() {
               </>
             )}
           </div>
-          {navItem(NAV[2])}
         </nav>
 
         {/* Desktop search */}
