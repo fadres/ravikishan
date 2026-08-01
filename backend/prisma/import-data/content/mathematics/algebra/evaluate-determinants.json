@@ -3,51 +3,43 @@
   "notes": [
     "<h2>Question 1: Evaluate the determinants of the following matrices</h2>",
     "<p><b>General approach:</b> For 2×2, use ad − bc. For 3×3, use cofactor expansion along Row 1 (or any row/column with a zero to save work).</p>",
-
     "<h3>(a) Evaluate |1 2; 3 4|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table><p></p>",
     "$$|A| = \\begin{vmatrix}1&2\\\\3&4\\end{vmatrix} = (1)(4) - (2)(3) = 4 - 6 = -2$$",
     "<p><b>Answer:</b> |A| = −2</p>",
-
     "<h3>(b) Evaluate |1 −1; 1 −1|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>1</td><td>−1</td></tr><tr><td>1</td><td>−1</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>1</td><td>−1</td></tr><tr><td>1</td><td>−1</td></tr></table><p></p>",
     "$$|A| = \\begin{vmatrix}1&-1\\\\1&-1\\end{vmatrix} = (1)(-1) - (-1)(1) = -1+1 = 0$$",
     "<p><b>Answer:</b> |A| = 0</p>",
     "<p><b>Pattern to notice:</b> Row 2 is identical to Row 1 here (same numbers) — by Property (iii), identical rows always give determinant = 0. Recognizing this instantly saves calculation time.</p>",
-
     "<h3>(c) Evaluate |1 2 3; −1 0 4; 1 2 3|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>−1</td><td>0</td><td>4</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>−1</td><td>0</td><td>4</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table><p></p>",
     "$$|A| = 1\\begin{vmatrix}0&4\\\\2&3\\end{vmatrix} - 2\\begin{vmatrix}-1&4\\\\1&3\\end{vmatrix} + 3\\begin{vmatrix}-1&0\\\\1&2\\end{vmatrix}$$",
     "$$= 1(0-8) - 2(-3-4) + 3(-2-0)$$",
     "$$= -8 + 14 - 6 = 0$$",
     "<p><b>Answer:</b> |A| = 0</p>",
     "<p><b>Pattern to notice:</b> Row 1 and Row 3 are identical here too! You could have spotted this instantly and written |A| = 0 without any calculation using Property (iii).</p>",
-
     "<h3>(d) Evaluate |−1 0 3; 2 1 4; −2 −3 −1|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>−1</td><td>0</td><td>3</td></tr><tr><td>2</td><td>1</td><td>4</td></tr><tr><td>−2</td><td>−3</td><td>−1</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>−1</td><td>0</td><td>3</td></tr><tr><td>2</td><td>1</td><td>4</td></tr><tr><td>−2</td><td>−3</td><td>−1</td></tr></table><p></p>",
     "$$|A| = -1\\begin{vmatrix}1&4\\\\-3&-1\\end{vmatrix} - 0\\begin{vmatrix}2&4\\\\-2&-1\\end{vmatrix} + 3\\begin{vmatrix}2&1\\\\-2&-3\\end{vmatrix}$$",
     "$$= -1(-1+12) - 0(-2+8) + 3(-6+2)$$",
     "$$= -11 - 0 + 3(-4) = -11 - 12 = -23$$",
     "<p><b>Answer:</b> |A| = −23</p>",
     "<p><b>Approach hint:</b> since a₁₂ = 0 here, expanding along Row 1 automatically eliminates the middle term (−0 × minor = 0), saving one 2×2 calculation. Always scan for zeros first.</p>",
-
     "<h3>(e) Evaluate |3 −2 2; 4 1 0; 2 3 1|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>3</td><td>−2</td><td>2</td></tr><tr><td>4</td><td>1</td><td>0</td></tr><tr><td>2</td><td>3</td><td>1</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>3</td><td>−2</td><td>2</td></tr><tr><td>4</td><td>1</td><td>0</td></tr><tr><td>2</td><td>3</td><td>1</td></tr></table><p></p>",
     "$$|A| = 3\\begin{vmatrix}1&0\\\\3&1\\end{vmatrix} - (-2)\\begin{vmatrix}4&0\\\\2&1\\end{vmatrix} + 2\\begin{vmatrix}4&1\\\\2&3\\end{vmatrix}$$",
     "$$= 3(1-0) + 2(4-0) + 2(12-2)$$",
     "$$= 3 + 8 + 20 = 31$$",
     "<p><b>Answer:</b> |A| = 31</p>",
-
     "<h3>(f) Evaluate |2 −2 0; −1 2 4; −4 5 6|</h3>",
-    "<p><b>Solution:</b> Let A = <table><tr><td>2</td><td>−2</td><td>0</td></tr><tr><td>−1</td><td>2</td><td>4</td></tr><tr><td>−4</td><td>5</td><td>6</td></tr></table></p>",
+    "<p><b>Solution:</b> Let A = </p><table><tr><td>2</td><td>−2</td><td>0</td></tr><tr><td>−1</td><td>2</td><td>4</td></tr><tr><td>−4</td><td>5</td><td>6</td></tr></table><p></p>",
     "$$|A| = 2\\begin{vmatrix}2&4\\\\5&6\\end{vmatrix} + 2\\begin{vmatrix}-1&4\\\\-4&6\\end{vmatrix} + 0\\begin{vmatrix}-1&2\\\\-4&5\\end{vmatrix}$$",
     "$$= 2(12-20) + 2(-6+16) + 0(-5+8)$$",
     "$$= -16 + 20 = 4$$",
     "<p><b>Answer:</b> |A| = 4</p>",
-
     "<h3>Practice Variant 1 (same pattern as a, b): Evaluate |5 3; 2 4|</h3>",
     "<p><b>Solution:</b> |A| = (5)(4) − (3)(2) = 20 − 6 = 14</p>",
-
     "<h3>Practice Variant 2 (same pattern as c/d/e/f, watch for repeated rows): Evaluate |2 1 4; 0 3 −1; 2 1 4|</h3>",
     "<p><b>Solution:</b> Row 1 = Row 3 → by Property (iii), |A| = 0 instantly, no expansion needed.</p>"
   ]

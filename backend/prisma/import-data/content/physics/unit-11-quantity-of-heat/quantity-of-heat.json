@@ -2,7 +2,7 @@
   "title": "Quantity of Heat",
   "notes": [
     "<h2>Heat and Temperature</h2>",
-    "<p><b>Heat</b> is the energy transferred between two bodies due to a temperature difference. It flows from a hotter body to a colder body. <b>Temperature</b> is a measure of the average kinetic energy of the molecules of a body; it decides the direction of heat flow. The SI unit of heat is the <b>joule (J)</b>; the practical unit is the <b>calorie (cal)</b>, where $1\\,cal = 4.186\\,J$.</p>",
+    "<p><b>Heat</b> is the energy transferred between two bodies due to a temperature difference. It flows from a hotter body to a colder body. <b>Temperature</b> is a measure of the average kinetic energy of the molecules of a body; it decides the direction of heat flow.</p><p>The SI unit of heat is the <b>joule (J)</b>; the practical unit is the <b>calorie (cal)</b>, where $1\\,cal = 4.186\\,J$.</p>",
     "<h2>Heat Capacity and Specific Heat Capacity</h2>",
     "<p>The <b>heat capacity (C)</b> of a body is the quantity of heat required to raise its temperature by 1°C (or 1 K): $C = \\frac{Q}{\\Delta\\theta}$, unit J/K.</p>",
     "<p>The <b>specific heat capacity (s or c)</b> is the heat required to raise the temperature of unit mass of a substance by 1°C:</p>",
@@ -117,27 +117,52 @@
   "quiz": [
     {
       "question": "The SI unit of specific heat capacity is:",
-      "options": ["J kg⁻¹", "J K⁻¹", "J kg⁻¹ K⁻¹", "cal g⁻¹ °C⁻¹"],
+      "options": [
+        "J kg⁻¹",
+        "J K⁻¹",
+        "J kg⁻¹ K⁻¹",
+        "cal g⁻¹ °C⁻¹"
+      ],
       "answer": 2
     },
     {
       "question": "Heat required to change the state of a substance without changing temperature is:",
-      "options": ["Specific heat", "Latent heat", "Heat capacity", "Water equivalent"],
+      "options": [
+        "Specific heat",
+        "Latent heat",
+        "Heat capacity",
+        "Water equivalent"
+      ],
       "answer": 1
     },
     {
       "question": "1 calorie is equal to:",
-      "options": ["4.186 J", "41.86 J", "0.4186 J", "418.6 J"],
+      "options": [
+        "4.186 J",
+        "41.86 J",
+        "0.4186 J",
+        "418.6 J"
+      ],
       "answer": 0
     },
     {
       "question": "During melting of ice at 0°C, the temperature of the ice-water mixture:",
-      "options": ["Increases", "Decreases", "Remains constant", "First increases then decreases"],
+      "options": [
+        "Increases",
+        "Decreases",
+        "Remains constant",
+        "First increases then decreases"
+      ],
       "answer": 2
     },
     {
       "question": "Which body has a higher specific heat capacity?",
-      "options": ["Water", "Iron", "Copper", "Mercury"],
+      "options": [
+        "Water",
+        "Iron",
+        "Copper",
+        "Mercury"
+      ],
       "answer": 0
     }
   ],
@@ -147,31 +172,53 @@
       {
         "title": "Heat vs Temperature",
         "children": [
-          { "title": "Heat: energy in transit", "details": "1 cal = 4.186 J" },
-          { "title": "Temperature: average kinetic energy" }
+          {
+            "title": "Heat: energy in transit",
+            "details": "1 cal = 4.186 J"
+          },
+          {
+            "title": "Temperature: average kinetic energy"
+          }
         ]
       },
       {
         "title": "Q = msΔθ",
         "children": [
-          { "title": "s: specific heat capacity", "details": "Water: 4200 J kg⁻¹ K⁻¹" },
-          { "title": "C = Q/Δθ: heat capacity" },
-          { "title": "W = ms: water equivalent" }
+          {
+            "title": "s: specific heat capacity",
+            "details": "Water: 4200 J kg⁻¹ K⁻¹"
+          },
+          {
+            "title": "C = Q/Δθ: heat capacity"
+          },
+          {
+            "title": "W = ms: water equivalent"
+          }
         ]
       },
       {
         "title": "Change of state",
         "children": [
-          { "title": "Q = mL, constant temperature" },
-          { "title": "L_f (ice) = 3.36 × 10⁵ J kg⁻¹" },
-          { "title": "L_v (water) = 2.26 × 10⁶ J kg⁻¹" }
+          {
+            "title": "Q = mL, constant temperature"
+          },
+          {
+            "title": "L_f (ice) = 3.36 × 10⁵ J kg⁻¹"
+          },
+          {
+            "title": "L_v (water) = 2.26 × 10⁶ J kg⁻¹"
+          }
         ]
       },
       {
         "title": "Calorimetry",
         "children": [
-          { "title": "Heat lost = Heat gained" },
-          { "title": "Used to find specific heat" }
+          {
+            "title": "Heat lost = Heat gained"
+          },
+          {
+            "title": "Used to find specific heat"
+          }
         ]
       }
     ]

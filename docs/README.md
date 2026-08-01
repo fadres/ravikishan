@@ -131,7 +131,7 @@ npm run dev                     # app on http://localhost:5173
 
 | Email | Password | Role |
 |---|---|---|
-| `owner@ravikishan.com` | `ravikishan-owner-2026` | owner |
+| `harindarsah98172@gmail.com` | `ravikishan-owner-2026` | owner |
 | `member@ravikishan.com` | `member1234` | member |
 | `student@ravikishan.com` | `student1234` | guest (has a pending request) |
 

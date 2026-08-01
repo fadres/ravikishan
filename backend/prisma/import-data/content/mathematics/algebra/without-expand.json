@@ -3,7 +3,6 @@
   "notes": [
     "<h2>Question 3: Without expanding the determinants, show that the value of each of the following determinants is zero</h2>",
     "<p><b>General approach pattern:</b> Look for a row/column that is a linear combination of others (common factor, sum of two other rows, etc.) using Row/Column Operations (R→R+kR or C→C+kC). If you can reduce any row or column entirely to zeros, the determinant is instantly 0 by Property that says a zero row/column gives zero determinant.</p>",
-
     "<h3>(i) Show |6 1 9; 2 4 7; 18 3 27| = 0</h3>",
     "<p><b>Solution:</b></p>",
     "$$\\begin{vmatrix}6&1&9\\\\2&4&7\\\\18&3&27\\end{vmatrix}$$",
@@ -13,7 +12,6 @@
     "$$= 3 \\times 0 = 0$$",
     "<p><b>Proved.</b></p>",
     "<p><b>Pattern to recognize:</b> whenever one row/column is a multiple of another, factor out the multiple first — this immediately reveals identical rows.</p>",
-
     "<h3>(ii) Show |1 a b+c; 1 b c+a; 1 c a+b| = 0</h3>",
     "<p><b>Solution:</b> Adding Column 2 into Column 3 (C₃ → C₃ + C₂):</p>",
     "$$= \\begin{vmatrix}1&a&a+b+c\\\\1&b&a+b+c\\\\1&c&a+b+c\\end{vmatrix}$$",
@@ -23,7 +21,6 @@
     "$$= (a+b+c) \\times 0 = 0$$",
     "<p><b>Proved.</b></p>",
     "<p><b>Pattern to recognize:</b> whenever you see 'x, y, x+y' type entries, try adding the other column/row to combine them into a constant sum like (a+b+c) — this is the single most common trick in this whole exercise.</p>",
-
     "<h3>(iii) Show |(a−b) (b−c) (c−a); (b−c) (c−a) (a−b); (c−a) (a−b) (b−c)| = 0</h3>",
     "<p><b>Solution:</b> Using C₃ → C₂ + C₃:</p>",
     "$$= \\begin{vmatrix}(a-b)&(b-c)&(b-c+c-a)\\\\(b-c)&(c-a)&(c-a+a-b)\\\\(c-a)&(a-b)&(a-b+b-c)\\end{vmatrix}$$",
@@ -33,7 +30,6 @@
     "<p>Since Column 1 = Column 3:</p>",
     "$$= -1 \\times 0 = 0$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(iv) Show |1 bc a(b+c); 1 ca b(c+a); 1 ab c(a+b)| = 0</h3>",
     "<p><b>Solution:</b> Expanding a(b+c) = ab+ac, b(c+a) = bc+ab, c(a+b) = ac+bc, so Column 3 becomes:</p>",
     "$$= \\begin{vmatrix}1&bc&bc+ab+ca\\\\1&ca&ca+bc+ab\\\\1&ab&ab+ca+bc\\end{vmatrix}$$",
@@ -42,7 +38,6 @@
     "<p>Since Column 1 = Column 3:</p>",
     "$$= (ab+bc+ca) \\times 0 = 0$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(v) Show |1 bc bc(b+c); 1 ca ac(c+a); 1 ab ab(a+b)| = 0</h3>",
     "<p><b>Solution:</b> Multiply Row 1 by a, Row 2 by b, Row 3 by c (and divide the whole determinant by abc to compensate):</p>",
     "$$= \\frac{1}{abc}\\begin{vmatrix}a&abc&abc(b+c)\\\\b&abc&abc(c+a)\\\\c&abc&abc(a+b)\\end{vmatrix}$$",
@@ -54,7 +49,6 @@
     "<p>Since Column 2 = Column 3:</p>",
     "$$= abc(a+b+c) \\times 0 = 0$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(vi) Show |1 ω ω²; ω ω² 1; ω² 1 ω| = 0 (where ω is a cube root of unity)</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ + C₂ + C₃:</p>",
     "$$= \\begin{vmatrix}1+\\omega+\\omega^2&\\omega&\\omega^2\\\\\\omega+\\omega^2+1&\\omega^2&1\\\\\\omega^2+1+\\omega&1&\\omega\\end{vmatrix}$$",
@@ -63,9 +57,7 @@
     "<p>(Since Column 1 is entirely zero, the determinant is zero.)</p>",
     "<p><b>Proved.</b></p>",
     "<p><b>Pattern to recognize:</b> whenever you see ω or ω² in a determinant question, the identity 1+ω+ω²=0 is almost always the key to unlocking it.</p>",
-
     "<h2>Question 6: Show That (Determinant Identity Proofs)</h2>",
-
     "<h3>(i) Show |1 1 1; a b c; bc ca ab| = (a−b)(b−c)(c−a)</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ − C₂, C₂ → C₂ − C₃:</p>",
     "$$= \\begin{vmatrix}0&0&1\\\\a-b&b-c&c\\\\bc-ca&ca-ab&ab\\end{vmatrix}$$",
@@ -76,7 +68,6 @@
     "$$= (a-b)(b-c) \\times 1 \\times \\begin{vmatrix}1&1\\\\-c&-a\\end{vmatrix}$$",
     "$$= (a-b)(b-c)[-a-(-c)] = (a-b)(b-c)(c-a)$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(ii) Show |a b c; a² b² c²; b+c c+a a+b| = (b−c)(c−a)(a−b)(a+b+c)</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ − C₂, C₂ → C₂ − C₃:</p>",
     "$$= \\begin{vmatrix}a-b&b-c&c\\\\a^2-b^2&b^2-c^2&c^2\\\\b+c-c-a&c+a-a-b&a+b\\end{vmatrix}$$",
@@ -89,7 +80,6 @@
     "$$= (a-b)(b-c)(a+b+c)\\begin{vmatrix}a+b&b+c\\\\-1&-1\\end{vmatrix}$$",
     "$$= (a-b)(b-c)(a+b+c)(c-a)$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(iii) Show |1 1 1; a b c; a³ b³ c³| = (b−c)(c−a)(a−b)(a+b+c)</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ − C₂, C₂ → C₂ − C₃:</p>",
     "$$= \\begin{vmatrix}0&0&1\\\\a-b&b-c&c\\\\a^3-b^3&b^3-c^3&c^3\\end{vmatrix}$$",
@@ -102,7 +92,6 @@
     "$$= (a-b)(b-c)(c-a)(a+b+c)$$",
     "<p><b>Proved.</b></p>",
     "<p><b>Meta-pattern across (i), (ii), (iii):</b> these three prove increasingly complex versions of the same identity family. Once you master the C₁→C₁−C₂, C₂→C₂−C₃ trick + factoring (a−b), (b−c) from resulting columns, you can solve all of them the same way.</p>",
-
     "<h3>(iv) Show |x y z; x² y² z²; yz zx xy| = (y−z)(z−x)(x−y)(yz+zx+xy)</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ − C₂, C₂ → C₂ − C₃:</p>",
     "$$= \\begin{vmatrix}x-y&y-z&z\\\\x^2-y^2&y^2-z^2&z^2\\\\yz-zx&zx-xy&xy\\end{vmatrix}$$",
@@ -114,7 +103,6 @@
     "$$= (x-y)(y-z)(x-z)(-xy-xz-yz)$$",
     "$$= (x-y)(y-z)(z-x)(xy+xz+yz)$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(v) Show |b+c a b; c+a c a; a+b b c| = (a+b+c)(a−c)²</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ + C₂ + C₃:</p>",
     "$$= \\begin{vmatrix}2(a+b+c)&a&b\\\\c+a&c&a\\\\a+b&b&c\\end{vmatrix}$$",
@@ -123,7 +111,6 @@
     "<p>Using R₂ → R₂ (row simplification), then expanding after producing zeros:</p>",
     "$$= (a+b+c)(a-c)\\begin{vmatrix}1&1\\\\c&a\\end{vmatrix} = (a+b+c)(a-c)(a-c) = (a+b+c)(a-c)^2$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(vi) Show |a−b−c 2a 2a; 2b b−c−a 2b; 2c 2c c−a−b| = (a+b+c)³</h3>",
     "<p><b>Solution:</b> Using R₁ → R₁ + R₂ + R₃:</p>",
     "$$= \\begin{vmatrix}a+b+c&a+b+c&a+b+c\\\\2b&b-c-a&2b\\\\2c&2c&c-a-b\\end{vmatrix}$$",
@@ -134,7 +121,6 @@
     "<p>Expanding along Row 1:</p>",
     "$$= (a+b+c)\\left[-(a+b+c)\\cdot-(a+b+c)-0\\right] = (a+b+c)^3$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(vii) Show |1+a₁ a₂ a₃; a₁ 1+a₂ a₃; a₁ a₂ 1+a₃| = 1+a₁+a₂+a₃</h3>",
     "<p><b>Solution:</b> Using C₁ → C₁ + C₂ + C₃:</p>",
     "$$= \\begin{vmatrix}1+a_1+a_2+a_3&a_2&a_3\\\\1+a_1+a_2+a_3&1+a_2&a_3\\\\1+a_1+a_2+a_3&a_2&1+a_3\\end{vmatrix}$$",
@@ -145,7 +131,6 @@
     "<p>Expanding along Column 1:</p>",
     "$$= (1+a_1+a_2+a_3)(1-0) = 1+a_1+a_2+a_3$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(viii) Show |1+x 1 1; 1 1+y 1; 1 1 1+z| = xyz(1/x + 1/y + 1/z + 1)</h3>",
     "<p><b>Solution:</b> Multiply Row 1 by x, Row 2 by y, Row 3 by z, dividing by xyz to compensate; then factor xyz out:</p>",
     "$$= \\frac{xyz}{xyz}\\begin{vmatrix}1/x+1&1/x&1/x\\\\1/y&1/y+1&1/y\\\\1/z&1/z&1/z+1\\end{vmatrix}$$",
@@ -154,7 +139,6 @@
     "<p>Using C₂ → C₂ − C₁, C₃ → C₃ − C₁, then expanding along Row 1:</p>",
     "$$= xyz\\left(\\frac{1}{x}+\\frac{1}{y}+\\frac{1}{z}+1\\right)$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>(ix) Show |a² bc c²+ac; a²+ab b² ac; ab b²+bc c²| = 4a²b²c²</h3>",
     "<p><b>Solution:</b> Factoring each row: Row 1 → a[a, bc/a, c(c+a)/a]... more directly:</p>",
     "$$= abc\\begin{vmatrix}a&c&c+a\\\\a+b&b&a\\\\b&b+c&c\\end{vmatrix}$$",
@@ -164,7 +148,6 @@
     "$$= abc\\begin{vmatrix}0&-b&a\\\\0&b&a\\\\-2c&b+c&c\\end{vmatrix}$$",
     "<p>Expanding: = abc{−2c(−ab−ab)} = abc{−2c(−2ab)} = 4a²b²c²</p>",
     "<p><b>Proved.</b></p>",
-
     "<h3>(x) Show |x²+1 xy xz; xy y²+1 yz; xz yz z²+1| = 1+x²+y²+z²</h3>",
     "<p><b>Solution:</b> Factor x from Row 1, y from Row 2, z from Row 3 (dividing by xyz to compensate), then take x, y, z common from Columns 1, 2, 3:</p>",
     "$$= \\frac{xyz}{xyz}\\begin{vmatrix}x^2+1&y^2&z^2\\\\x^2&y^2+1&z^2\\\\x^2&y^2&z^2+1\\end{vmatrix}$$",
@@ -175,11 +158,9 @@
     "$$= (1+x^2+y^2+z^2)\\{-(-1)[(1)(z^2+1)-(1)(z^2)]\\}$$",
     "$$= (1+x^2+y^2+z^2)(1) = 1+x^2+y^2+z^2$$",
     "<p><b>Proved.</b></p>",
-
     "<h3>Practice Variant 1 (same 'sum-of-row/column' pattern as most proofs above): Prove without expanding: |1 1 1; x y z; x² y² z²| = (x−y)(y−z)(z−x)</h3>",
     "<p><b>Approach hint:</b> This is essentially the transpose structure of proof (i) in Question 6. Use C₁→C₁−C₂, C₂→C₂−C₃, factor (x−y) and (y−z), then expand the remaining 2×2.</p>",
-
     "<h3>Practice Variant 2 (same 'add all rows/columns' pattern as vi, vii): Prove without expanding: |b+c c+a a+b; c+a a+b b+c; a+b b+c c+a| = 2(a+b+c)(a²+b²+c²−ab−bc−ca) ... or simpler variant: show |a a a; a b b; a b c| = a(b−a)(c−b)</h3>",
-    "<p><b>Approach hint:</b> Use row subtraction R₃→R₃−R₂, R₂→R₂−R₁ to create zeros progressively, then expand the resulting triangular-style determinant along the first column."
+    "<p><b>Approach hint:</b> Use row subtraction R₃→R₃−R₂, R₂→R₂−R₁ to create zeros progressively, then expand the resulting triangular-style determinant along the first column.</p>"
   ]
 }

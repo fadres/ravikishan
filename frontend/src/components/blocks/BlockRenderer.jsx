@@ -139,6 +139,14 @@ function SymbolsTable({ content }) {
 }
 
 export default function BlockRenderer({ block, subjectType }) {
+  const isEmpty =
+    !(block.contentRichtext || '').trim() &&
+    !(block.contentCode || '').trim() &&
+    !block.mindmapJson &&
+    !block.diagramData &&
+    !block.title;
+  if (isEmpty) return null;
+
   const style = BLOCK_STYLE[block.blockType] || BLOCK_STYLE.note_topic;
   const { color, icon, label } = style;
   const glow = block.blockType === 'note_important';

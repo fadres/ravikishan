@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import { ApiError } from '../api/client.js';
+import { api, ApiError } from '../api/client.js';
+
+const FALLBACK_CONTACT = 'harindarsah98172@gmail.com';
 
 export default function LoginPage() {
   const { login, user } = useAuth();
@@ -11,6 +13,13 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [contactEmail, setContactEmail] = useState(FALLBACK_CONTACT);
+
+  useEffect(() => {
+    api('/api/meta')
+      .then((d) => setContactEmail(d.contactEmail || FALLBACK_CONTACT))
+      .catch(() => {});
+  }, []);
 
   const next = new URLSearchParams(location.search).get('next');
   const afterLogin = (role) => {
@@ -39,6 +48,14 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-14">
+      <div className="text-center mb-5">
+        <p className="inline-flex items-center gap-2 text-sm text-slate-300 glass-strong rounded-full px-4 py-2 font-semibold">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#34d399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+          Contact with owner after login
+        </p>
+      </div>
       <div className="glass-strong rounded-3xl p-8 shadow-2xl">
         <div className="flex flex-col items-center mb-6">
           <Logo size={52} />
@@ -88,6 +105,16 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-5 text-center text-sm text-slate-400">
+          Contact email:{' '}
+          <a
+            href={`mailto:${contactEmail}`}
+            className="glow-green font-bold text-base"
+          >
+            {contactEmail}
+          </a>
+        </p>
+
+        <p className="mt-4 text-center text-sm text-slate-400">
           New here?{' '}
           <Link to="/register" className="text-aqua-300 font-semibold hover:text-aqua-100">
             Create an account

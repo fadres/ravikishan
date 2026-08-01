@@ -22,7 +22,7 @@ services:
       - key: CORS_ORIGIN
         sync: false
       - key: OWNER_EMAIL
-        value: owner@ravikishan.com
+        value: harindarsah98172@gmail.com
       - key: OWNER_PASSWORD
         sync: false
       - key: SMTP_HOST

@@ -190,6 +190,15 @@ body {
   color: transparent;
 }
 
+/* Green signature glow — used for the owner contact email */
+.glow-green {
+  background: linear-gradient(120deg, #a7f3d0, #34d399 45%, #10b981 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.6)) drop-shadow(0 0 28px rgba(52, 211, 153, 0.3));
+}
+
 /* Night-sky banner: nebula glows + star field + shooting star */
 .idiom-fade {
   animation: idiomFade 0.7s ease both;

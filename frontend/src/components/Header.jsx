@@ -8,6 +8,7 @@ import { useTheme, WALLPAPERS } from '../context/ThemeContext.jsx';
 const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
   { to: '/class/class-11', label: 'Subjects', icon: 'book' },
+  { to: '/search', label: 'Search', icon: 'search' },
 ];
 
 function NavIcon({ name }) {
@@ -17,6 +18,8 @@ function NavIcon({ name }) {
       return <svg {...common}><path d="M3 10.5L12 3l9 7.5" /><path d="M5 9.5V21h14V9.5" /></svg>;
     case 'book':
       return <svg {...common}><path d="M4 5a4 4 0 0 1 4-4h12v20H8a4 4 0 0 0-4 4z" /><path d="M20 17H8a4 4 0 0 0-4 4" /></svg>;
+    case 'search':
+      return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>;
     default:
       return null;
   }
@@ -182,7 +185,14 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 shadow-lg">
       {/* Main bar */}
-      <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5">
+      <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5 relative">
+        {/* Knowledge is power — small centered motto */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden lg:flex items-center justify-center text-[11px] italic tracking-widest text-slate-400"
+        >
+          Knowledge is power
+        </span>
         {/* Brand tile — premium R */}
         <Link to="/" className="shrink-0 group" aria-label="Ravikishan home">
           <span className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-deep-700 via-deep-600 to-aqua-500 flex items-center justify-center ring-1 ring-white/25 shadow-[0_0_22px_-4px_#7dd3fc] group-hover:shadow-[0_0_30px_-4px_#fbbf24] transition">

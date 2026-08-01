@@ -22,7 +22,7 @@ export const env = {
   port: parseInt(process.env.PORT || '4000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   authRateLimit: parseInt(process.env.AUTH_RATE_LIMIT || '20', 10),
-  ownerEmail: process.env.OWNER_EMAIL || 'owner@ravikishan.com',
+  ownerEmail: process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com',
   ownerPassword: process.env.OWNER_PASSWORD || '',
   smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
   smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),

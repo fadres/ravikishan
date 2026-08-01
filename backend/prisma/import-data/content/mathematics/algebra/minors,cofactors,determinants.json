@@ -2,61 +2,49 @@
   "title": "Matrix 5.2 - Theory: Minors, Cofactors, Determinants",
   "notes": [
     "<h2>Minors</h2>",
-    "<p>Let A = <table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix.</p>",
+    "<p>Let A = </p><table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix.<p></p>",
     "<p>The determinant of the 2×2 matrix formed by omitting the i<sup>th</sup> row and j<sup>th</sup> column of A is called the <b>minor</b> of an element a<sub>ij</sub> and is denoted by M<sub>ij</sub>.</p>",
     "<p><b>Example:</b></p>",
     "$$M_{11} = \\begin{vmatrix} a_{22} & a_{23} \\\\ a_{32} & a_{33} \\end{vmatrix}$$",
-
     "<h2>Co-factor</h2>",
     "<p>The cofactor A<sub>ij</sub> of the i<sup>th</sup> row and j<sup>th</sup> column element a<sub>ij</sub> is defined by:</p>",
     "$$A_{ij} = (-1)^{i+j} M_{ij} = \\text{Cofactor of } a_{ij}$$",
     "<p><b>Approach hint:</b> the sign pattern for cofactors follows a checkerboard: +, −, +, −, +, − ... starting with + at position (1,1). You only need to remember (−1)^(i+j); even sum → positive, odd sum → negative.</p>",
-
     "<h2>Determinant (Cofactor Expansion Method)</h2>",
     "<p>Determinant of a 3×3 matrix is defined by:</p>",
     "$$|A| = a_{11}A_{11} + a_{12}A_{12} + a_{13}A_{13}$$",
     "$$= a_{11}M_{11} - a_{12}M_{12} + a_{13}M_{13}$$",
     "$$= a_{11}\\begin{vmatrix}a_{22}&a_{23}\\\\a_{32}&a_{33}\\end{vmatrix} - a_{12}\\begin{vmatrix}a_{21}&a_{23}\\\\a_{31}&a_{33}\\end{vmatrix} + a_{13}\\begin{vmatrix}a_{21}&a_{22}\\\\a_{31}&a_{32}\\end{vmatrix}$$",
     "<p><b>Pattern to recognize:</b> expand along Row 1 → take each element of that row, multiply it by the determinant left after deleting its own row and column, and apply alternating signs (+, −, +). This works for expansion along <i>any</i> row or column, not just Row 1 — pick whichever row/column has the most zeros to minimize work.</p>",
-
     "<h2>Sarrus Rule (Shortcut for 3×3 determinants)</h2>",
-    "<p>If A = <table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix, then |A| is determined by rewriting the first two columns to the right of the matrix, then summing products along the three downward diagonals and subtracting products along the three upward diagonals:</p>",
+    "<p>If A = </p><table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix, then |A| is determined by rewriting the first two columns to the right of the matrix, then summing products along the three downward diagonals and subtracting products along the three upward diagonals:<p></p>",
     "$$|A| = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{31}a_{22}a_{13} + a_{32}a_{23}a_{11} + a_{33}a_{21}a_{12})$$",
-
     "<h3>Worked Example (Sarrus Rule)</h3>",
-    "<p>Let A = <table><tr><td>1</td><td>2</td><td>−3</td></tr><tr><td>2</td><td>0</td><td>4</td></tr><tr><td>3</td><td>2</td><td>1</td></tr></table></p>",
+    "<p>Let A = </p><table><tr><td>1</td><td>2</td><td>−3</td></tr><tr><td>2</td><td>0</td><td>4</td></tr><tr><td>3</td><td>2</td><td>1</td></tr></table><p></p>",
     "<p><b>Step 1:</b> Rewrite first two columns beside the matrix: 1,2 | 2,0 | 3,2</p>",
     "<p><b>Step 2:</b> Sum of downward diagonal products − sum of upward diagonal products</p>",
     "$$|A| = (0+24-12) - (0+8+4)$$",
     "$$|A| = 12 - 12 = 0$$",
     "<p><b>Answer:</b> |A| = 0</p>",
     "<p><b>Approach hint:</b> Sarrus Rule only works for 3×3 matrices — never for 4×4 or larger. It's faster than cofactor expansion for pure numeric 3×3 matrices, but cofactor expansion is safer/necessary when variables and simplification are involved.</p>",
-
     "<h2>Properties of Determinants</h2>",
     "<p><b>(i)</b> The value of a determinant is unaltered by interchanging its rows and columns.</p>",
     "$$\\begin{vmatrix}a_1&b_1&c_1\\\\a_2&b_2&c_2\\\\a_3&b_3&c_3\\end{vmatrix} = \\begin{vmatrix}a_1&a_2&a_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix}$$",
-
     "<p><b>(ii)</b> Interchanging any two adjacent rows (or columns) changes the sign of the determinant.</p>",
     "$$\\begin{vmatrix}a_1&a_2&a_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix} = -\\begin{vmatrix}b_1&b_2&b_3\\\\a_1&a_2&a_3\\\\c_1&c_2&c_3\\end{vmatrix}$$",
-
     "<p><b>(iii)</b> If any two rows (or columns) are identical, the value of the determinant is zero.</p>",
     "$$\\begin{vmatrix}1&2&3\\\\4&5&6\\\\1&2&3\\end{vmatrix} = 0$$",
-
     "<p><b>(iv)</b> If all elements of any row (or column) are multiplied by a constant k, then the value of the determinant is also multiplied by k.</p>",
     "$$\\begin{vmatrix}ka_1&ka_2&ka_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix} = k\\begin{vmatrix}a_1&a_2&a_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix}$$",
-
     "<p><b>(v)</b> If each element of any row (or column) of a determinant is expressed as the sum of two terms, then the determinant can be expressed as the sum of two determinants:</p>",
     "$$\\begin{vmatrix}\\alpha_1+\\beta_1&a_2&a_3\\\\\\alpha_2+\\beta_2&b_2&b_3\\\\\\alpha_3+\\beta_3&c_2&c_3\\end{vmatrix} = \\begin{vmatrix}\\alpha_1&a_2&a_3\\\\\\alpha_2&b_2&b_3\\\\\\alpha_3&c_2&c_3\\end{vmatrix} + \\begin{vmatrix}\\beta_1&a_2&a_3\\\\\\beta_2&b_2&b_3\\\\\\beta_3&c_2&c_3\\end{vmatrix}$$",
-
     "<p><b>(vi)</b> If to the elements of any row (or column) a multiple of any other row or column is added, the value of the determinant remains unaltered.</p>",
     "<p><b>Example:</b> R₁ → R₁ + kR₂ transforms</p>",
     "$$\\begin{vmatrix}a_1&a_2&a_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix} \\rightarrow \\begin{vmatrix}a_1+kb_1&a_2+kb_2&a_3+kb_3\\\\b_1&b_2&b_3\\\\c_1&c_2&c_3\\end{vmatrix}$$",
     "<p>...without changing the value. <b>This is the most important property</b> — it's the core trick used in almost every proof question in this exercise.</p>",
-
     "<h2>Adjoint of a 3×3 Matrix</h2>",
-    "<p>Let A = <table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix. The adjoint of matrix A is defined as the <b>transpose</b> of the matrix of cofactors:</p>",
+    "<p>Let A = </p><table><tr><td>a₁₁</td><td>a₁₂</td><td>a₁₃</td></tr><tr><td>a₂₁</td><td>a₂₂</td><td>a₂₃</td></tr><tr><td>a₃₁</td><td>a₃₂</td><td>a₃₃</td></tr></table> be a 3×3 matrix. The adjoint of matrix A is defined as the <b>transpose</b> of the matrix of cofactors:<p></p>",
     "$$\\text{adj. A} = \\text{Transpose of } \\begin{pmatrix}A_{11}&A_{12}&A_{13}\\\\A_{21}&A_{22}&A_{23}\\\\A_{31}&A_{32}&A_{33}\\end{pmatrix}$$",
-
     "<h2>Inverse of a 3×3 Matrix</h2>",
     "<p>The inverse of A is defined by:</p>",
     "$$A^{-1} = \\frac{1}{|A|} \\cdot \\text{adj. A}$$",

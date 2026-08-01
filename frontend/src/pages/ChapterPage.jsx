@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import LockedBlockCard from '../components/LockedBlockCard.jsx';
 import BlockRenderer from '../components/blocks/BlockRenderer.jsx';
 import SectionDivider from '../components/blocks/SectionDivider.jsx';
@@ -28,15 +29,28 @@ function buildItems(blocks) {
 
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
+  const [siblings, setSiblings] = useState([]);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setData(null);
+    setError('');
     api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${classSlug}`)
       .then((d) => setData(d))
       .catch(() => setError('Chapter not found.'));
-  }, [subjectSlug, chapterSlug]);
+    api(`/api/subjects/${subjectSlug}?class=${classSlug}`)
+      .then((d) => setSiblings(d.subject?.chapters || []))
+      .catch(() => setSiblings([]));
+  }, [subjectSlug, chapterSlug, classSlug]);
+
+  // Refetch when the viewer's access level changes (e.g. after login or when
+  // the owner approves an access request) so locked content opens in place.
+  useEffect(() => {
+    load();
+  }, [load, user?.accessLevel]);
 
   if (error) {
     return (
@@ -55,8 +69,21 @@ export default function ChapterPage() {
     );
   }
 
-  const { chapter, subject, blocks } = data;
+  const { chapter, subject, blocks: rawBlocks } = data;
   const viewerLevel = chapter.viewerAccessLevel ?? 3;
+  const blocks = rawBlocks.filter(
+    (b) =>
+      Boolean((b.contentRichtext || '').trim()) ||
+      Boolean((b.contentCode || '').trim()) ||
+      Boolean(b.mindmapJson) ||
+      Boolean(b.diagramData) ||
+      Boolean(b.title),
+  );
+
+  const idx = siblings.findIndex((c) => c.slug === chapterSlug);
+  const prevChapter = idx > 0 ? siblings[idx - 1] : null;
+  const nextChapter = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
+  const chapterHref = (c) => `/class/${classSlug}/subject/${subjectSlug}/chapter/${c.slug}`;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -73,6 +100,66 @@ export default function ChapterPage() {
         <p className="text-sm text-slate-400 mt-1">
           {subject.name} · {blocks.length} section{blocks.length === 1 ? '' : 's'}
         </p>
+      </div>
+
+      {/* Home / Back / Next — active on all stages */}
+      <div className="sticky top-16 z-30 mb-6 flex items-center justify-between gap-2">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+        >
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 10.5L12 3l9 7.5" />
+            <path d="M5 9.5V21h14V9.5" />
+          </svg>
+          Home
+        </Link>
+
+        <div className="flex items-center gap-2">
+          {prevChapter ? (
+            <Link
+              to={chapterHref(prevChapter)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+            >
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M11 18l-6-6 6-6" />
+              </svg>
+              Back
+            </Link>
+          ) : (
+            <button
+              onClick={() => navigate(`/class/${classSlug}/subject/${subjectSlug}`)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+            >
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M11 18l-6-6 6-6" />
+              </svg>
+              Back
+            </button>
+          )}
+
+          {nextChapter ? (
+            <Link
+              to={chapterHref(nextChapter)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+            >
+              Next
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </Link>
+          ) : (
+            <Link
+              to={`/class/${classSlug}/subject/${subjectSlug}`}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+            >
+              Done
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="space-y-6">

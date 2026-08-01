@@ -2,7 +2,7 @@
   "title": "Vector",
   "notes": [
     "<h2>Introduction</h2>",
-    "<p>A <b>vector quantity</b> has both <b>magnitude</b> and <b>direction</b> and obeys the triangle law of addition. Examples: displacement, velocity, acceleration, force, momentum. A <b>scalar quantity</b> has only magnitude. Examples: mass, time, temperature, speed, work.</p>",
+    "<p>A <b>vector quantity</b> has both <b>magnitude</b> and <b>direction</b> and obeys the triangle law of addition. Examples: displacement, velocity, acceleration, force, momentum. A <b>scalar quantity</b> has only magnitude.</p><p>Examples: mass, time, temperature, speed, work.</p>",
     "<h2>Types of Vectors</h2>",
     "<p><b>Equal vectors</b>: same magnitude and same direction. <b>Negative vector</b>: same magnitude, opposite direction. <b>Null vector</b>: zero magnitude (its direction is undefined). <b>Unit vector</b>: a vector of magnitude 1 along a given direction, written as $\\hat{a} = \\frac{\\vec{a}}{|\\vec{a}|}$. <b>Parallel and antiparallel vectors</b>: vectors along the same line (same or opposite sense). <b>Position vector</b>: vector joining the origin to a point. <b>Collinear vectors</b>: vectors along the same straight line.</p>",
     "<h2>Addition of Vectors — Triangle and Parallelogram Law</h2>",
@@ -113,27 +113,52 @@
   "quiz": [
     {
       "question": "Which of the following is a vector quantity?",
-      "options": ["Mass", "Speed", "Force", "Temperature"],
+      "options": [
+        "Mass",
+        "Speed",
+        "Force",
+        "Temperature"
+      ],
       "answer": 2
     },
     {
       "question": "The magnitude of the resultant of two perpendicular vectors of magnitude 3 and 4 is:",
-      "options": ["5", "7", "1", "12"],
+      "options": [
+        "5",
+        "7",
+        "1",
+        "12"
+      ],
       "answer": 0
     },
     {
       "question": "The dot product of two perpendicular vectors is:",
-      "options": ["Maximum", "Zero", "Negative", "Equal to the product of magnitudes"],
+      "options": [
+        "Maximum",
+        "Zero",
+        "Negative",
+        "Equal to the product of magnitudes"
+      ],
       "answer": 1
     },
     {
       "question": "If |a + b| = |a| + |b|, the angle between the vectors is:",
-      "options": ["0°", "90°", "180°", "60°"],
+      "options": [
+        "0°",
+        "90°",
+        "180°",
+        "60°"
+      ],
       "answer": 0
     },
     {
       "question": "The direction of the cross product a × b is:",
-      "options": ["Along a", "Along b", "Perpendicular to both a and b", "In the plane of a and b"],
+      "options": [
+        "Along a",
+        "Along b",
+        "Perpendicular to both a and b",
+        "In the plane of a and b"
+      ],
       "answer": 2
     }
   ],
@@ -143,37 +168,61 @@
       {
         "title": "Scalar vs Vector",
         "children": [
-          { "title": "Scalar: magnitude only" },
-          { "title": "Vector: magnitude + direction" }
+          {
+            "title": "Scalar: magnitude only"
+          },
+          {
+            "title": "Vector: magnitude + direction"
+          }
         ]
       },
       {
         "title": "Types",
         "children": [
-          { "title": "Equal / negative / null vectors" },
-          { "title": "Unit vector â = a/|a|" },
-          { "title": "Position & collinear vectors" }
+          {
+            "title": "Equal / negative / null vectors"
+          },
+          {
+            "title": "Unit vector â = a/|a|"
+          },
+          {
+            "title": "Position & collinear vectors"
+          }
         ]
       },
       {
         "title": "Addition",
         "children": [
-          { "title": "Triangle law" },
-          { "title": "Parallelogram law", "details": "R = √(a² + b² + 2ab cos θ)" }
+          {
+            "title": "Triangle law"
+          },
+          {
+            "title": "Parallelogram law",
+            "details": "R = √(a² + b² + 2ab cos θ)"
+          }
         ]
       },
       {
         "title": "Resolution",
         "children": [
-          { "title": "Ax = A cos θ" },
-          { "title": "Ay = A sin θ" }
+          {
+            "title": "Ax = A cos θ"
+          },
+          {
+            "title": "Ay = A sin θ"
+          }
         ]
       },
       {
         "title": "Products",
         "children": [
-          { "title": "Dot product: scalar, ab cos θ" },
-          { "title": "Cross product: vector, ab sin θ", "details": "Used for torque and angular momentum" }
+          {
+            "title": "Dot product: scalar, ab cos θ"
+          },
+          {
+            "title": "Cross product: vector, ab sin θ",
+            "details": "Used for torque and angular momentum"
+          }
         ]
       }
     ]

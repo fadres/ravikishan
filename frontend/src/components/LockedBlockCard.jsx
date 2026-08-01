@@ -3,10 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api, ApiError } from '../api/client.js';
 
-const LEVEL_LABELS = { 1: 'Premium', 2: 'Members', 3: 'Free' };
-
 // Compact locked card for a single premium block: title stays visible, the
-// content is replaced by a "request access" prompt with the owner's contact.
+// content is replaced by an "Access it" prompt — login → request → approval.
 export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
   const { user, requestAccess } = useAuth();
   const navigate = useNavigate();
@@ -44,8 +42,6 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
     }
   };
 
-  const levelLabel = LEVEL_LABELS[block.accessLevel] || `Level ${block.accessLevel}`;
-
   return (
     <div
       className="glass rounded-2xl p-5 sm:p-6"
@@ -64,33 +60,42 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
           </div>
           <div className="min-w-0">
             <p className="font-bold text-white truncate">{block.title}</p>
-            <p className="text-xs text-slate-400">This is a {levelLabel.toLowerCase()} section</p>
+            <p className="text-xs text-slate-400">This section is locked</p>
           </div>
         </div>
         <span
           className="shrink-0 text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-bold border"
           style={{ color: themeColor, borderColor: `${themeColor}55`, background: `${themeColor}11` }}
         >
-          {levelLabel}
+          Locked
         </span>
       </div>
 
       <div className="mt-4 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center gap-3">
         {status !== 'success' && (
           <p className="text-xs text-slate-400 flex-1">
-            This section is locked for your current access level — contact the owner
-            {contactEmail ? ` at ${contactEmail}` : ''} to unlock it.
+            Click <span className="font-bold text-white">Access it</span> to open this content —
+            it will be unlocked for you once the owner approves.
           </p>
         )}
 
         {!open && status !== 'success' && (
           <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+            <button
+              onClick={() => (user ? setOpen(true) : navigate(`/login?next=${encodeURIComponent(location.pathname)}`))}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-emerald-400 to-teal-300 hover:brightness-110 transition"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+              Access it
+            </button>
             {contactEmail && (
               <a
                 href={`mailto:${contactEmail}?subject=${encodeURIComponent(`Access request — "${block.title}"`)}&body=${encodeURIComponent(
                   'Hi, I would like to request access to the locked content. Please let me know how to unlock it.\n\nName:\nEmail:',
                 )}`}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold border border-aqua-400/40 text-aqua-200 hover:bg-aqua-400/10 transition"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold border border-emerald-400/40 text-emerald-200 hover:bg-emerald-400/10 transition"
               >
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -98,27 +103,6 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
                 </svg>
                 Contact owner
               </a>
-            )}
-            {user ? (
-              <button
-                onClick={() => setOpen(true)}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-              >
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                </svg>
-                Request access
-              </button>
-            ) : (
-              <button
-                onClick={() => navigate(`/login?next=${encodeURIComponent(location.pathname)}`)}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-              >
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                </svg>
-                Get access
-              </button>
             )}
           </div>
         )}
@@ -174,7 +158,8 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
 
         {status === 'success' && (
           <p className="text-sm text-emerald-300 font-semibold">
-            Request sent! The owner reviews requests personally.
+            Request sent! The owner reviews requests personally — this content will open here after
+            approval.
           </p>
         )}
       </div>

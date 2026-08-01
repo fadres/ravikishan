@@ -12,7 +12,7 @@ import 'dotenv/config';
 
 const prisma = new PrismaClient();
 
-const ownerEmail = (process.env.OWNER_EMAIL || 'owner@ravikishan.com').toLowerCase();
+const ownerEmail = (process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com').toLowerCase();
 const ownerPassword = process.env.OWNER_PASSWORD || 'Ravikishan@2026!';
 
 async function main() {

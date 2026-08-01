@@ -8,7 +8,7 @@ import 'dotenv/config';
 
 const prisma = new PrismaClient();
 
-const ownerEmail = process.env.OWNER_EMAIL || 'owner@ravikishan.com';
+const ownerEmail = process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com';
 const ownerPassword = process.env.OWNER_PASSWORD || 'ravikishan-owner-2026';
 
 async function upsertUser({ email, password, displayName, role, isApproved }) {
