@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ── Roles ────────────────────────────────────────────────────────────────
-// owner  → full control (Ravikishan)
-// admin  → trusted helpers: approve requests, manage users, edit content
-// member → approved student, full read access
-// guest  → default: sees structure and titles only
 enum Role {
   owner
   admin
@@ -26,18 +21,13 @@ enum RequestStatus {
 }
 
 enum SubjectType {
-  science_math // Physics | Chemistry | Mathematics
+  science_math
   biology
   english
   nepali
-  general_knowledge // Loksewa Knowledge | General Knowledge
+  general_knowledge
 }
 
-// Allowed block types per subject_type (enforced in the API validation layer):
-//   science_math: note_topic|note_statement|note_example|note_concept|note_important|numerical|mindmap|formula|symbols
-//   biology:      note_topic|note_statement|note_example|note_concept|note_important|diagram_compare|mindmap
-//   english:      summary|keywords|important_points
-//   nepali:       byakaran (sub_level drives the nesting: Sandhi > Swar Sandhi …)
 enum BlockType {
   note_topic
   note_statement
@@ -51,33 +41,47 @@ enum BlockType {
   keywords
   important_points
   byakaran
-  formula // formula section: equations, derivations
-  symbols // symbols section: notations, units, conventions
+  formula
+  symbols
 }
 
 model User {
-  id               String   @id @default(uuid())
-  email            String   @unique
-  passwordHash     String
+  id               String        @id @default(uuid())
+  email            String        @unique
   displayName      String?
-  role             Role     @default(guest)
-  isApproved       Boolean  @default(false)
-  // Access tiers (3 = free for everyone, 2 = approved members, 1 = most premium).
-  // Content block is readable when block.accessLevel >= user.accessLevel.
-  accessLevel      Int      @default(3)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  role             Role          @default(guest)
+  isApproved       Boolean       @default(false)
+  accessLevel      Int           @default(3)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  passwordHashes   PasswordHash[]
   refreshTokens    RefreshToken[]
   accessRequests   AccessRequest[]
   resolvedRequests AccessRequest[] @relation("ResolvedBy")
   auditLogs        AuditLog[]
+  decisionMakers   DecisionMaker[]
+
+  @@index([role])
+  @@index([accessLevel])
+}
+
+model PasswordHash {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  hash      String
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model RefreshToken {
   id        String    @id @default(uuid())
   tokenHash String    @unique
   userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   expiresAt DateTime
   revoked   Boolean   @default(false)
   createdAt DateTime  @default(now())
@@ -88,52 +92,52 @@ model RefreshToken {
 model AccessRequest {
   id           String        @id @default(uuid())
   userId       String
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   email        String
   message      String?
   status       RequestStatus @default(pending)
   requestedAt  DateTime      @default(now())
   resolvedAt   DateTime?
   resolvedById String?
-  resolvedBy   User?         @relation("ResolvedBy", fields: [resolvedById], references: [id])
+  resolvedBy   User?         @relation("ResolvedBy", fields: [resolvedById], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   @@index([status])
+  @@index([userId, status])
 }
 
-// ── Content hierarchy ────────────────────────────────────────────────────
 model Class {
   id        String    @id @default(uuid())
-  name      String // "Class 11", "Class 12"
+  name      String
   slug      String    @unique
   sortOrder Int       @default(0)
   subjects  Subject[]
+
+  @@index([slug])
 }
 
 model Subject {
-  id          String      @id @default(uuid())
-  classId     String
-  class       Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
-  name        String // Physics, Chemistry, …
-  slug        String
-  subjectType SubjectType
-  icon        String?
-  themeColor  String?
-  isLocked    Boolean     @default(true)
-  sortOrder   Int         @default(0)
-  chapters    Chapter[]
+  id             String            @id @default(uuid())
+  classId        String
+  class          Class             @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name           String
+  slug           String
+  subjectType    SubjectType
+  icon           String?
+  themeColor     String?
+  isLocked       Boolean           @default(true)
+  sortOrder      Int               @default(0)
+  chapters       Chapter[]
   customSubjects CustomSubject[]
 
   @@unique([classId, slug])
+  @@index([subjectType])
 }
 
-// Owner-defined subjects under a section (e.g. Loksewa Knowledge / General
-// Knowledge) — lightweight, renamable via the dashboard. No content of their
-// own; they point at the parent subject until dedicated content exists.
 model CustomSubject {
   id        String   @id @default(uuid())
   name      String
   subjectId String
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -144,7 +148,7 @@ model CustomSubject {
 model Chapter {
   id        String         @id @default(uuid())
   subjectId String
-  subject   Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject   Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   title     String
   slug      String
   isLocked  Boolean        @default(true)
@@ -155,41 +159,51 @@ model Chapter {
   @@index([subjectId])
 }
 
-// One row per content piece, typed, level-tagged and ordered inside its chapter.
 model ContentBlock {
-  id              String    @id @default(uuid())
+  id              String         @id @default(uuid())
   chapterId       String
-  chapter         Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   blockType       BlockType
-  classifiedBy    String? // who decided blockType: "auto" | "manual" | null (legacy)
-  // Access tier: 3 = free for every visitor, 2 = approved members, 1 = most premium.
-  // Readable when accessLevel >= viewer's accessLevel.
-  accessLevel     Int       @default(3)
+  accessLevel     Int            @default(3)
   title           String?
-  contentRichtext String? // markdown/HTML body
-  contentCode     String? // raw code snippet when block_type is code
-  codeLanguage    String? // javascript | python | json | sql | html | css | bash | …
-  mindmapJson     Json? // { name, children[] }
-  diagramData     Json? // { left, right, similarities[], differences[] }
-  subLevel        String? // Nepali byakaran nesting, e.g. "Sandhi > Swar Sandhi"
-  sortOrder       Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  contentRichtext String?
+  contentCode     String?
+  codeLanguage    String?
+  mindmapJson     Json?
+  diagramData     Json?
+  subLevel        String?
+  sortOrder       Int            @default(0)
+  decisionMaker   DecisionMaker?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   @@index([chapterId, sortOrder])
+  @@index([accessLevel])
+  @@index([blockType])
 }
 
-// ── Audit trail (who did what, when) ─────────────────────────────────────
+model DecisionMaker {
+  id             String       @id @default(uuid())
+  contentBlockId String       @unique
+  contentBlock   ContentBlock @relation(fields: [contentBlockId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  decidedAt      DateTime     @default(now())
+
+  @@index([userId])
+}
+
 model AuditLog {
   id         String   @id @default(uuid())
-  actor      User?    @relation(fields: [actorId], references: [id])
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   actorId    String?
-  actorEmail String?
-  action     String // "request.approved" | "user.role_changed" | "subject.lock_toggled" | …
+  action     String
   targetType String
   targetId   String?
   detail     Json?
   createdAt  DateTime @default(now())
 
   @@index([createdAt])
+  @@index([actorId])
+  @@index([action])
 }
