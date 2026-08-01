@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 
-export default function SearchBar({ autoFocus = false }) {
+export default function SearchBar({ autoFocus = false, placeholder = 'Search subjects, chapters or topics…' }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
@@ -76,7 +76,7 @@ export default function SearchBar({ autoFocus = false }) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => (results.length || recommendations.length) && setOpen(true)}
           autoFocus={autoFocus}
-          placeholder="Search notes… e.g. kinematics, sandhi, mole"
+          placeholder={placeholder}
           className="w-full rounded-full bg-white/15 border border-white/20 pl-9 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60 focus:bg-white/20 transition"
         />
         {loading && (
