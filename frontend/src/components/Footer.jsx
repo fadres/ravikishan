@@ -12,10 +12,10 @@ export default function Footer() {
         </nav>
         <div className="mt-5 pt-4 border-t border-white/10 text-center space-y-1">
           <p className="text-sm text-slate-400">
-            © {year} Study-Vault · <span className="font-semibold text-purple-400">Owner: Ravikishan</span> ✦
+            © {year} Direction by → <span className="font-semibold text-purple-400">Creator ~ Owner: Ravikishan</span> ✦
           </p>
           <p className="text-xs text-slate-500">
-            Curated &amp; made with curiosity by Ravikishan. All rights reserved.
+           &amp; Made with curiosity by Ravikishan. <br /> All rights reserved.
           </p>
         </div>
       </div>

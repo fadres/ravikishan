@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import SubjectIcon from '../components/SubjectIcon.jsx';
@@ -8,20 +8,42 @@ import { streakDays } from '../utils/streak.js';
 const IDIOMS = [
   { text: 'Practice makes perfect.', author: 'Proverb' },
   { text: 'Knowledge is power.', author: 'Francis Bacon' },
-  { text: 'The journey of a thousand miles begins with a single step.', author: 'Lao Tzu' },
-  { text: "Rome wasn't built in a day.", author: 'Proverb' },
-  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
   { text: 'Slow and steady wins the race.', author: 'Aesop' },
-  { text: 'Mistakes are proof that you are trying.', author: 'Proverb' },
-  { text: 'It always seems impossible until it is done.', author: 'Nelson Mandela' },
-  { text: 'The more you learn, the more you earn.', author: 'Proverb' },
+  { text: "Where there's a will, there's a way.", author: 'Proverb' },
+  { text: 'The early bird catches the worm.', author: 'Proverb' },
+  { text: "Rome wasn't built in a day.", author: 'Proverb' },
+  { text: 'A journey of a thousand miles begins with a single step.', author: 'Lao Tzu' },
+  { text: 'Little strokes fell great oaks.', author: 'Benjamin Franklin' },
   { text: 'Success is a journey, not a destination.', author: 'Proverb' },
+  { text: "It always seems impossible until it's done.", author: 'Nelson Mandela' },
+  { text: 'Mistakes are proof that you are trying.', author: 'Proverb' },
+  { text: 'The best time to plant a tree was 20 years ago.', author: 'Chinese Proverb' },
+  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
+  { text: 'The more you learn, the more you earn.', author: 'Proverb' },
+  { text: 'Learning never exhausts the mind.', author: 'Leonardo da Vinci' },
+  { text: 'Today a reader, tomorrow a leader.', author: 'Proverb' },
+  { text: 'Action speaks louder than words.', author: 'Proverb' },
+  { text: 'Well begun is half done.', author: 'Aristotle' },
+  { text: 'No pain, no gain.', author: 'Proverb' },
+  { text: 'Every cloud has a silver lining.', author: 'Proverb' },
+  { text: 'Fall seven times, stand up eight.', author: 'Japanese Proverb' },
+  { text: 'Discipline is the bridge between goals and accomplishment.', author: 'Jim Rohn' },
+  { text: 'The expert in anything was once a beginner.', author: 'Helen Hayes' },
+  { text: 'Your only limit is your mind.', author: 'Proverb' },
+  { text: 'Don\'t watch the clock; keep going.', author: 'Sam Levenson' },
+  { text: 'Education is the most powerful weapon to change the world.', author: 'Nelson Mandela' },
+  { text: 'Small steps every day lead to big results.', author: 'Proverb' },
+  { text: 'Study hard, dream big.', author: 'Proverb' },
+  { text: 'Reading is to the mind what exercise is to the body.', author: 'Joseph Addison' },
+  { text: 'Start where you are; use what you have; do what you can.', author: 'Arthur Ashe' },
+  { text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
+  { text: 'Better late than never.', author: 'Proverb' },
 ];
 
 function IdiomsStrip() {
   const [index, setIndex] = useState(() => Math.floor(Math.random() * IDIOMS.length));
   useEffect(() => {
-    const timer = setInterval(() => setIndex((i) => (i + 1) % IDIOMS.length), 7000);
+    const timer = setInterval(() => setIndex((i) => (i + 1) % IDIOMS.length), 6000);
     return () => clearInterval(timer);
   }, []);
   const idiom = IDIOMS[index];
@@ -33,44 +55,25 @@ function IdiomsStrip() {
         </svg>
       </span>
       <div key={index} className="idiom-fade min-w-0">
-        <p className="text-sm sm:text-base font-semibold text-white leading-snug">
-          “{idiom.text}”
-        </p>
+        <p className="text-sm sm:text-base font-semibold text-white leading-snug">“{idiom.text}”</p>
         <p className="text-xs text-aqua-300 mt-0.5">— {idiom.author}</p>
       </div>
-      <span className="ml-auto shrink-0 hidden sm:flex items-center gap-1.5">
-        {IDIOMS.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Show idiom ${i + 1}`}
-            onClick={() => setIndex(i)}
-            className={`w-1.5 h-1.5 rounded-full transition ${i === index ? 'bg-amber-400' : 'bg-white/25 hover:bg-white/40'}`}
-          />
-        ))}
-      </span>
     </section>
   );
 }
 
-// Deterministic star field (fixed seed → no flicker between renders).
-function makeStars(count, seed) {
-  const stars = [];
-  let s = seed;
-  const rand = () => {
-    s = (s * 9301 + 49297) % 233280;
-    return s / 233280;
-  };
-  for (let i = 0; i < count; i += 1) {
-    stars.push({
-      left: rand() * 100,
-      top: rand() * 100,
-      size: 1 + rand() * 2.4,
-      delay: rand() * 3,
-      duration: 2 + rand() * 2.5,
-      opacity: 0.35 + rand() * 0.65,
-    });
-  }
-  return stars;
+// Growing tree with leaves — "Improvement is Life".
+function TreeIcon({ size = 34 }) {
+  return (
+    <svg viewBox="0 0 64 64" width={size} height={size} fill="none" aria-hidden="true">
+      <path d="M32 58V36" stroke="#34d399" strokeWidth="5" strokeLinecap="round" />
+      <path d="M32 42c-2.2 4-2.2 7.4 0 10.6 2.2-3.2 2.2-6.6 0-10.6z" fill="#6ee7b7" />
+      <path d="M22 30c-7.5-3-10.6-8.5-9.5-14 6.4-1 12 1 15 6.5 1.2-7.2 5.4-12.6 12-13.6 2.2 6.2-1 11.8-6.5 14.8 6.4 1.7 9.8 6.2 9.8 11.8-7.8.8-14.2-1.6-18.8-5.5" fill="#22c55e" />
+      <path d="M20 33c-8.8 1-13 6.5-12 12 8.6 0 14.2-3.2 17-8.6 2.4 7.4 7.8 11.6 15.5 11.6 0-7.6-3.4-13-9-15.4" fill="#10b981" />
+      <circle cx="45" cy="11" r="4.4" fill="#4ade80" />
+      <path d="M11 59h42" stroke="#475569" strokeWidth="3.5" strokeLinecap="round" />
+    </svg>
+  );
 }
 
 const SUBJECT_ACCENTS = {
@@ -95,82 +98,212 @@ const SUBJECT_BLURBS = {
   'general-knowledge': 'Sharpen general awareness, facts and current affairs.',
 };
 
-// Night study-desk illustration (purple/blue tones).
-function DeskIllustration() {
+function CustomSubjects({ subjectSlug, accent, canManage }) {
+  const [items, setItems] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(() => {
+    api(`/api/subjects/${subjectSlug}/custom`)
+      .then((d) => setItems(d.customSubjects || []))
+      .catch(() => setItems([]));
+  }, [subjectSlug]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setEditName(item.name);
+  };
+
+  const saveEdit = async (id) => {
+    const name = editName.trim();
+    if (!name || busy) return;
+    setBusy(true);
+    try {
+      await api(`/api/subjects/${subjectSlug}/custom/${id}`, { method: 'PATCH', body: { name } });
+      setEditingId(null);
+      load();
+    } catch {
+      /* keep the input open so the user can fix it */
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const addCustom = async () => {
+    const name = newName.trim();
+    if (!name || busy) return;
+    setBusy(true);
+    try {
+      await api(`/api/subjects/${subjectSlug}/custom`, { method: 'POST', body: { name } });
+      setNewName('');
+      setAdding(false);
+      load();
+    } catch {
+      /* keep the input open */
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeCustom = async (id) => {
+    if (busy || !window.confirm('Delete this custom subject?')) return;
+    setBusy(true);
+    try {
+      await api(`/api/subjects/${subjectSlug}/custom/${id}`, { method: 'DELETE' });
+      load();
+    } catch {
+      /* nothing to do */
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (items === null) return null;
+
   return (
-    <svg viewBox="0 0 420 300" className="w-full max-w-md mx-auto" role="img" aria-label="Study desk at night">
-      <defs>
-        <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
-        </radialGradient>
-      </defs>
+    <div className="mt-5">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">
+          Custom Subjects
+        </p>
+        {canManage && !adding && items.length < 12 && (
+          <button
+            onClick={() => setAdding(true)}
+            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-aqua-400/15 text-aqua-300 hover:bg-aqua-400/25 transition"
+          >
+            + Add
+          </button>
+        )}
+      </div>
 
-      {/* Desk */}
-      <rect x="40" y="230" width="340" height="14" rx="7" fill="#312e81" />
-      <rect x="70" y="244" width="10" height="34" rx="4" fill="#312e81" />
-      <rect x="340" y="244" width="10" height="34" rx="4" fill="#312e81" />
+      {items.length === 0 && !adding && (
+        <p className="text-xs text-slate-500">No custom subjects yet.</p>
+      )}
 
-      {/* Books */}
-      <rect x="52" y="204" width="70" height="26" rx="4" fill="#7c3aed" />
-      <rect x="58" y="194" width="60" height="16" rx="4" fill="#3b82f6" />
-      <rect x="66" y="182" width="46" height="15" rx="4" fill="#a78bfa" />
+      {adding && (
+        <div className="flex items-center gap-2 mb-3">
+          <input
+            autoFocus
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addCustom()}
+            placeholder="Subject name"
+            maxLength={60}
+            className="flex-1 min-w-0 bg-white/5 border border-white/15 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-aqua-400/60"
+          />
+          <button
+            onClick={addCustom}
+            aria-label="Save subject"
+            className="w-8 h-8 shrink-0 rounded-lg bg-aqua-400/20 border border-aqua-400/40 text-aqua-200 hover:bg-aqua-400/35 transition flex items-center justify-center"
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12.5l5 5L20 6.5" />
+            </svg>
+          </button>
+          <button
+            onClick={() => {
+              setAdding(false);
+              setNewName('');
+            }}
+            aria-label="Cancel"
+            className="w-8 h-8 shrink-0 rounded-lg bg-white/5 border border-white/15 text-slate-300 hover:bg-white/15 transition flex items-center justify-center"
+          >
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      )}
 
-      {/* Plant */}
-      <rect x="126" y="212" width="22" height="18" rx="6" fill="#1e3a8a" />
-      <path d="M137 212c-2-14-10-22-10-22s10-2 12 8c2-8 12-8 12-8s-8 8-10 22" fill="#34d399" />
-      <path d="M137 210c0-12-6-20-6-20s6-4 8 2c2-6 8-6 8-6s-4 8-6 20" fill="#10b981" />
-
-      {/* Mug with steam */}
-      <rect x="330" y="206" width="26" height="24" rx="5" fill="#6366f1" />
-      <path d="M356 210h8a6 6 0 0 1 0 12h-8" fill="none" stroke="#6366f1" strokeWidth="4" />
-      <path d="M336 200c-1-5 2-8 0-12M346 200c-1-5 2-8 0-12" stroke="#c4b5fd" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-
-      {/* Laptop */}
-      <rect x="196" y="176" width="116" height="74" rx="8" fill="#1e1b4b" />
-      <rect x="203" y="183" width="102" height="58" rx="4" fill="#4338ca" />
-      <rect x="203" y="183" width="102" height="58" rx="4" fill="url(#lampGlow)" />
-      {/* Apple logo */}
-      <path
-        d="M250 218c-7-1-12 5-17 3 1-6 6-9 12-9 5 0 9 3 11 6 4-2 9-2 13 1 5 3 7 8 8 13-7 1-11 4-14 8 5 4 11 5 15 3-3 8-9 14-15 12-4 0-8-3-13-3s-9 3-13 3c-7-1-12-8-14-15-4-12 2-26 12-30 4 1 8 3 9 5"
-        fill="#c4b5fd"
-      />
-      <rect x="238" y="250" width="32" height="6" rx="3" fill="#312e81" />
-      <rect x="196" y="250" width="116" height="7" rx="4" fill="#4338ca" />
-
-      {/* Desk lamp */}
-      <path d="M300 252l4-30 40-10 14 18-40 10z" fill="#6366f1" />
-      <path d="M304 222l26-16 26 12-22 18z" fill="#a5b4fc" />
-      <ellipse cx="316" cy="224" rx="70" ry="55" fill="url(#lampGlow)" />
-      <rect x="300" y="252" width="6" height="28" rx="3" fill="#4f46e5" />
-      <rect x="274" y="276" width="60" height="8" rx="4" fill="#3730a3" />
-    </svg>
-  );
-}
-
-function StatCard({ icon, bg, label, value, caption, to }) {
-  return (
-    <Link
-      to={to}
-      className="glass rounded-2xl p-4 flex items-center gap-3 hover:bg-white/8 transition min-w-0"
-    >
-      <span className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center text-white ${bg}`}>
-        {icon}
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[11px] uppercase tracking-wider text-slate-400 font-bold">{label}</span>
-        <span className="block text-lg font-extrabold text-white leading-tight">{value}</span>
-        <span className="block text-xs text-aqua-300">{caption}</span>
-      </span>
-    </Link>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {items.map((c) => {
+          const editing = editingId === c.id;
+          return (
+            <div key={c.id} className="glass rounded-xl p-3.5 relative group">
+              {editing ? (
+                <div className="flex items-center gap-1.5">
+                  <input
+                    autoFocus
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && saveEdit(c.id)}
+                    maxLength={60}
+                    className="w-full min-w-0 bg-transparent border border-white/20 rounded-md px-2 py-1 text-sm text-white focus:outline-none focus:border-aqua-400/60"
+                  />
+                  <button
+                    onClick={() => saveEdit(c.id)}
+                    aria-label="Save name"
+                    className="p-1 rounded-md text-aqua-300 hover:bg-white/10 transition"
+                  >
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 12.5l5 5L20 6.5" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setEditingId(null)}
+                    aria-label="Cancel rename"
+                    className="p-1 rounded-md text-slate-400 hover:bg-white/10 transition"
+                  >
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2.5 pr-8">
+                    <span
+                      className="w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-[11px] font-bold uppercase"
+                      style={{ background: `${accent}22`, color: accent, border: `1px solid ${accent}44` }}
+                    >
+                      {c.name.slice(0, 2)}
+                    </span>
+                    <span className="text-sm font-semibold text-white truncate">{c.name}</span>
+                  </div>
+                  {canManage && (
+                    <span className="absolute top-2 right-2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition">
+                      <button
+                        onClick={() => startEdit(c)}
+                        title="Rename"
+                        className="p-1 rounded-md text-slate-400 hover:text-aqua-300 hover:bg-white/10 transition"
+                      >
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 20h4l10-10-4-4L4 16v4z" />
+                          <path d="M13.5 6.5l4 4" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => removeCustom(c.id)}
+                        title="Delete"
+                        className="p-1 rounded-md text-slate-400 hover:text-rose-300 hover:bg-white/10 transition"
+                      >
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6" />
+                        </svg>
+                      </button>
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState('');
-  const stars = useMemo(() => makeStars(42, 7), []);
 
   useEffect(() => {
     api('/api/classes')
@@ -179,9 +312,11 @@ export default function Home() {
   }, []);
 
   const class11 = classes.find((k) => k.slug === 'class-11');
-  const other = classes.filter((k) => k.slug !== 'class-11');
   const subjects11 = class11?.subjects || [];
   const streak = streakDays();
+
+  const loksewa = subjects11.find((s) => s.slug === 'loksewa');
+  const gk = subjects11.find((s) => s.slug === 'general-knowledge');
 
   const subjectCard = (subject) => {
     const accent = SUBJECT_ACCENTS[subject.slug] || { color: subject.themeColor || '#38bdf8', glow: 'rgba(56,189,248,0.4)' };
@@ -199,8 +334,10 @@ export default function Home() {
           >
             <SubjectIcon icon={subject.icon} size={26} />
           </span>
-          <span className="w-9 h-9 rounded-full border flex items-center justify-center text-slate-300 hover:scale-110 transition"
-            style={{ borderColor: `${accent.color}55`, color: accent.color }}>
+          <span
+            className="w-9 h-9 rounded-full border flex items-center justify-center text-slate-300 hover:scale-110 transition"
+            style={{ borderColor: `${accent.color}55`, color: accent.color }}
+          >
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
@@ -225,94 +362,147 @@ export default function Home() {
     );
   };
 
+  const options = [
+    {
+      to: '/class/class-11',
+      name: 'Class 11',
+      desc: 'All subjects · NCE syllabus',
+      meta: `${subjects11.length} subjects`,
+      color: '#a78bfa',
+      icon: (
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+      ),
+    },
+    {
+      to: '/class/class-12',
+      name: 'Class 12',
+      desc: 'Higher secondary content',
+      meta: 'Coming soon',
+      color: '#60a5fa',
+      icon: (
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 10L12 5 2 10l10 5 10-5z" />
+          <path d="M6 12.5V18c0 1.5 2.7 3.5 6 3.5s6-2 6-3.5v-5.5" />
+        </svg>
+      ),
+    },
+    {
+      to: '/class/class-11/subject/loksewa',
+      name: 'Loksewa Knowledge',
+      desc: 'Service commission prep',
+      meta: loksewa ? `${loksewa._count.chapters} chapters` : '',
+      color: '#f59e0b',
+      icon: (
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3v18M8 6l-4 2c0 6 3 9 8 9s8-3 8-9l-4-2c0 3-1.5 4-4 4s-4-1-4-4z" />
+          <path d="M6 12a6 6 0 0 0 12 0" opacity="0" />
+        </svg>
+      ),
+    },
+    {
+      to: '/class/class-11/subject/general-knowledge',
+      name: 'General Knowledge',
+      desc: 'Awareness, facts & current affairs',
+      meta: gk ? `${gk._count.chapters} chapters` : '',
+      color: '#22d3ee',
+      icon: (
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18" />
+          <path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-      {/* Night-sky hero */}
-      <section className="nebula-banner rounded-3xl">
-        <div className="shooting-star" aria-hidden="true" />
-        <div aria-hidden="true">
-          {stars.map((s, i) => (
-            <span
-              key={i}
-              className="star"
-              style={{
-                left: `${s.left}%`,
-                top: `${s.top}%`,
-                width: s.size,
-                height: s.size,
-                opacity: s.opacity,
-                animationDelay: `${s.delay}s`,
-                animationDuration: `${s.duration}s`,
-              }}
-            />
-          ))}
-        </div>
-        <div className="relative grid lg:grid-cols-5 gap-8 p-6 sm:p-10 items-center">
-          <div className="lg:col-span-3">
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
-              Welcome back, {user?.displayName || 'Ravikishan'}! 👋
-            </h1>
-            <p className="text-slate-300 text-sm sm:text-base mt-2">
-              Keep learning, stay consistent and achieve your goals.
-            </p>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <StatCard
-                to="/class/class-11"
-                icon={
-                  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 6c-2.5-2.5-6.5-2.5-9-1v14c2.5-1.5 6.5-1.5 9 1 2.5-2.5 6.5-2.5 9-1V5c-2.5-1.5-6.5-1.5-9 1z" />
-                    <path d="M12 6v14" />
-                  </svg>
-                }
-                bg="bg-gradient-to-br from-purple-500 to-indigo-500"
-                label="Subjects"
-                value={subjects11.length || 6}
-                caption="Explore all"
-              />
-              <StatCard
-                to="/class/class-11"
-                icon={
-                  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="5" y="4" width="14" height="17" rx="2" />
-                    <path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
-                    <path d="M9 12l2 2 4-4" />
-                  </svg>
-                }
-                bg="bg-gradient-to-br from-emerald-500 to-teal-500"
-                label="Quizzes Solved"
-                value="24"
-                caption="View subjects"
-              />
-              <StatCard
-                to="/class/class-11"
-                icon={
-                  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2c2.5 4.5 5 6.5 5 10a5 5 0 1 1-10 0c0-3.5 2.5-5.5 5-10z" />
-                  </svg>
-                }
-                bg="bg-gradient-to-br from-orange-500 to-rose-500"
-                label="Study Streak"
-                value={`${streak} day${streak === 1 ? '' : 's'}`}
-                caption="Keep it up!"
-              />
-            </div>
-          </div>
-          <div className="lg:col-span-2">
-            <DeskIllustration />
-          </div>
+      {/* Compact welcome */}
+      <section className="glass rounded-2xl px-6 py-6 text-center relative overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="absolute -top-20 -right-16 w-64 h-64 rounded-full opacity-40 blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.35), transparent 70%)' }}
+        />
+        <div className="relative z-10">
+          <span className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 items-center justify-center shadow-lg shadow-emerald-500/25">
+            <TreeIcon size={36} />
+          </span>
+          <h1 className="mt-3 text-xl sm:text-2xl font-extrabold text-white">
+            Improvement is Life
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            {user ? `Keep growing, ${user.displayName || 'friend'}. ` : 'Small steps every day. '}
+            Little by little, everything grows.
+          </p>
+          <span className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-bold px-3 py-1 rounded-full bg-orange-400/15 text-orange-300 border border-orange-400/25">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2c2.5 4.5 5 6.5 5 10a5 5 0 1 1-10 0c0-3.5 2.5-5.5 5-10z" />
+            </svg>
+            {streak} day{streak === 1 ? '' : 's'} streak
+          </span>
         </div>
       </section>
 
       <IdiomsStrip />
 
-      {/* Explore Subjects */}
+      {/* Four main sections */}
+      <section className="mt-8">
+        <div className="flex items-center gap-2.5 mb-4">
+          <span className="w-1.5 h-6 rounded-full bg-gradient-to-b from-aqua-400 to-emerald-500" aria-hidden="true" />
+          <h2 className="text-xl sm:text-2xl font-extrabold text-white">Choose Your Path</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {options.map((opt) => (
+            <Link
+              key={opt.to}
+              to={opt.to}
+              className="subject-card rounded-2xl p-5 flex flex-col"
+              style={{ '--card-accent': opt.color }}
+            >
+              <span
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: `${opt.color}1f`, border: `1px solid ${opt.color}55`, color: opt.color }}
+              >
+                {opt.icon}
+              </span>
+              <h3 className="text-lg font-bold mt-4" style={{ color: opt.color }}>{opt.name}</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed flex-1">{opt.desc}</p>
+              <span
+                className="mt-4 text-[11px] font-bold px-3 py-1.5 rounded-full self-start"
+                style={{ background: `${opt.color}1a`, color: opt.color, border: `1px solid ${opt.color}40` }}
+              >
+                {opt.meta || 'Explore'}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Class 11 — all content */}
       <section className="mt-10">
-        <div className="flex items-center gap-2.5 mb-5">
-          <span className="w-1.5 h-6 rounded-full bg-gradient-to-b from-fuchsia-500 to-purple-600" aria-hidden="true" />
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#e879f9" strokeWidth="2" strokeLinecap="round" className="shrink-0">
-            <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z" />
-          </svg>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-white">Explore Subjects</h2>
+        <div className="flex items-end justify-between mb-5">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-6 rounded-full bg-gradient-to-b from-fuchsia-500 to-purple-600" aria-hidden="true" />
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#e879f9" strokeWidth="2" strokeLinecap="round" className="shrink-0">
+                <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z" />
+              </svg>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white">Class 11 · All Content</h2>
+            </div>
+            <p className="text-xs font-semibold text-slate-400 mt-0.5 tracking-wide">
+              {subjects11.length} subjects curated
+            </p>
+          </div>
+          <Link
+            to="/class/class-11"
+            className="text-sm font-semibold text-aqua-300 hover:text-aqua-100 transition"
+          >
+            View all →
+          </Link>
         </div>
 
         {error && <p className="text-rose-300 text-sm mb-6">{error}</p>}
@@ -320,56 +510,113 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {subjects11.map(subjectCard)}
         </div>
-
-        {other.map((klass) => (
-          <section key={klass.id} className="mt-10">
-            <div className="flex items-end justify-between mb-5">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white">
-                {klass.name}
-                <span className="block text-xs font-semibold text-slate-400 mt-0.5 tracking-wide">
-                  {klass.subjects.length} subjects curated
-                </span>
-              </h2>
-              <Link
-                to={`/class/${klass.slug}`}
-                className="text-sm font-semibold text-aqua-300 hover:text-aqua-100 transition"
-              >
-                View all →
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {klass.subjects.map((subject) => (
-                <Link
-                  key={subject.id}
-                  to={`/class/${klass.slug}/subject/${subject.slug}`}
-                  className="subject-card rounded-2xl p-5 flex flex-col"
-                  style={{ '--card-accent': SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor || '#38bdf8' }}
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ background: `${SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor}1f`, border: `1px solid ${SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor}55`, color: SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor }}>
-                      <SubjectIcon icon={subject.icon} size={26} />
-                    </span>
-                    <span className="text-[11px] text-slate-500">
-                      {subject._count.chapters} chapter{subject._count.chapters === 1 ? '' : 's'}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold mt-4" style={{ color: SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor }}>
-                    {subject.name}
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed flex-1">
-                    {SUBJECT_BLURBS[subject.slug] || `${subject._count.chapters} chapters curated.`}
-                  </p>
-                  <span className="mt-4 text-xs font-bold px-3.5 py-1.5 rounded-full self-start"
-                    style={{ background: `${SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor}1a`, color: SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor, border: `1px solid ${SUBJECT_ACCENTS[subject.slug]?.color || subject.themeColor}40` }}>
-                    Explore
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
       </section>
+
+      {/* Loksewa Knowledge */}
+      {loksewa && (
+        <section className="mt-10">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-6 rounded-full" style={{ background: SUBJECT_ACCENTS.loksewa.color }} aria-hidden="true" />
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white">Loksewa Knowledge</h2>
+              </div>
+              <p className="text-xs font-semibold text-slate-400 mt-1">
+                Prepare for service commission exams
+              </p>
+            </div>
+            <Link
+              to="/class/class-11/subject/loksewa"
+              className="text-sm font-semibold text-aqua-300 hover:text-aqua-100 transition"
+            >
+              Open →
+            </Link>
+          </div>
+          <div className="glass rounded-2xl p-4 sm:p-5 flex items-center gap-4 flex-wrap">
+            <span
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{
+                background: `${SUBJECT_ACCENTS.loksewa.color}1f`,
+                border: `1px solid ${SUBJECT_ACCENTS.loksewa.color}55`,
+                color: SUBJECT_ACCENTS.loksewa.color,
+              }}
+            >
+              <SubjectIcon icon={loksewa.icon} size={26} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-white">{loksewa.name}</h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {loksewa._count.chapters} chapters · {SUBJECT_BLURBS.loksewa}
+              </p>
+            </div>
+            <Link
+              to="/class/class-11/subject/loksewa"
+              className="text-xs font-bold px-3.5 py-1.5 rounded-full"
+              style={{
+                background: `${SUBJECT_ACCENTS.loksewa.color}1a`,
+                color: SUBJECT_ACCENTS.loksewa.color,
+                border: `1px solid ${SUBJECT_ACCENTS.loksewa.color}40`,
+              }}
+            >
+              Explore
+            </Link>
+          </div>
+          <CustomSubjects subjectSlug="loksewa" accent={SUBJECT_ACCENTS.loksewa.color} canManage={isAdmin} />
+        </section>
+      )}
+
+      {/* General Knowledge */}
+      {gk && (
+        <section className="mt-10">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-6 rounded-full" style={{ background: SUBJECT_ACCENTS['general-knowledge'].color }} aria-hidden="true" />
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white">General Knowledge</h2>
+              </div>
+              <p className="text-xs font-semibold text-slate-400 mt-1">
+                Awareness, facts & current affairs
+              </p>
+            </div>
+            <Link
+              to="/class/class-11/subject/general-knowledge"
+              className="text-sm font-semibold text-aqua-300 hover:text-aqua-100 transition"
+            >
+              Open →
+            </Link>
+          </div>
+          <div className="glass rounded-2xl p-4 sm:p-5 flex items-center gap-4 flex-wrap">
+            <span
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{
+                background: `${SUBJECT_ACCENTS['general-knowledge'].color}1f`,
+                border: `1px solid ${SUBJECT_ACCENTS['general-knowledge'].color}55`,
+                color: SUBJECT_ACCENTS['general-knowledge'].color,
+              }}
+            >
+              <SubjectIcon icon={gk.icon} size={26} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-white">{gk.name}</h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {gk._count.chapters} chapters · {SUBJECT_BLURBS['general-knowledge']}
+              </p>
+            </div>
+            <Link
+              to="/class/class-11/subject/general-knowledge"
+              className="text-xs font-bold px-3.5 py-1.5 rounded-full"
+              style={{
+                background: `${SUBJECT_ACCENTS['general-knowledge'].color}1a`,
+                color: SUBJECT_ACCENTS['general-knowledge'].color,
+                border: `1px solid ${SUBJECT_ACCENTS['general-knowledge'].color}40`,
+              }}
+            >
+              Explore
+            </Link>
+          </div>
+          <CustomSubjects subjectSlug="general-knowledge" accent={SUBJECT_ACCENTS['general-knowledge'].color} canManage={isAdmin} />
+        </section>
+      )}
     </div>
   );
 }

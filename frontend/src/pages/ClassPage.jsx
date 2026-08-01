@@ -65,6 +65,21 @@ export default function ClassPage() {
           </Link>
         ))}
       </div>
+
+      {klass.subjects.length === 0 && (
+        <div className="glass rounded-2xl p-10 text-center">
+          <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-slate-500">
+            <path d="M24 6v8M24 14c-8 0-14 5-14 12v16h28V26c0-7-6-12-14-12z" />
+            <path d="M10 34c6 0 28-2 28-2" opacity="0.5" />
+            <path d="M18 20h12M18 26h12" opacity="0.7" />
+          </svg>
+          <h2 className="text-xl font-bold text-white mt-4">{klass.name} — Coming Soon</h2>
+          <p className="text-sm text-slate-400 mt-1">No subjects here yet. Content will be added soon.</p>
+          <Link to="/" className="inline-block mt-5 text-sm font-semibold text-aqua-300 hover:text-aqua-100 transition">
+            ← Back home
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,6 +2,24 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { THEMES, DEFAULT_THEME } from '../theme/themes.js';
 
 const STORAGE_KEY = 'rk_theme';
+const WALLPAPER_KEY = 'rk_wallpaper';
+
+export const WALLPAPERS = [
+  { id: 'none', name: 'None' },
+  { id: 'mountain', name: 'Mountain' },
+  { id: 'ocean', name: 'Ocean' },
+  { id: 'forest', name: 'Forest' },
+  { id: 'sunset', name: 'Sunset' },
+];
+
+export function storedWallpaperId() {
+  try {
+    const id = localStorage.getItem(WALLPAPER_KEY);
+    return WALLPAPERS.some((w) => w.id === id) ? id : 'none';
+  } catch {
+    return 'none';
+  }
+}
 
 function themeById(id) {
   return THEMES.find((t) => t.id === id) || THEMES[0];
@@ -33,6 +51,7 @@ const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
   const [themeId, setThemeId] = useState(storedThemeId);
+  const [wallpaper, setWallpaper] = useState(storedWallpaperId);
 
   useEffect(() => {
     applyTheme(themeById(themeId));
@@ -43,6 +62,14 @@ export function ThemeProvider({ children }) {
     }
   }, [themeId]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(WALLPAPER_KEY, wallpaper);
+    } catch {
+      /* private mode — wallpaper still applies for this session */
+    }
+  }, [wallpaper]);
+
   const setTheme = useCallback((id) => setThemeId(themeById(id).id), []);
   const cycle = useCallback(() => {
     setThemeId((prev) => {
@@ -52,7 +79,7 @@ export function ThemeProvider({ children }) {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme: themeById(themeId), themes: THEMES, setTheme, cycle }}>
+    <ThemeContext.Provider value={{ theme: themeById(themeId), themes: THEMES, setTheme, cycle, wallpaper, setWallpaper }}>
       {children}
     </ThemeContext.Provider>
   );

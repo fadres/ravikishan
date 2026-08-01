@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
 
@@ -86,6 +86,62 @@ router.get('/subjects/:slug', async (req, res) => {
   });
   if (!subject) throw new AppError(404, 'Subject not found');
   res.json({ subject });
+});
+
+// ── Custom subjects (owner-renamable cards under Loksewa / General Knowledge)
+// GET /api/subjects/:slug/custom — public: the custom subject cards.
+router.get('/subjects/:slug/custom', async (req, res) => {
+  const subject = await prisma.subject.findFirst({
+    where: { slug: req.params.slug },
+    orderBy: { class: { sortOrder: 'asc' } },
+    select: { id: true },
+  });
+  if (!subject) throw new AppError(404, 'Subject not found');
+  const custom = await prisma.customSubject.findMany({
+    where: { subjectId: subject.id },
+    orderBy: { sortOrder: 'asc' },
+    select: { id: true, name: true, sortOrder: true },
+  });
+  res.json({ customSubjects: custom });
+});
+
+// POST /api/subjects/:slug/custom — owner/admin: add a custom subject.
+router.post('/subjects/:slug/custom', requireRole('owner', 'admin'), async (req, res) => {
+  const name = String(req.body?.name || '').trim();
+  if (!name) throw new AppError(400, 'Name is required');
+  if (name.length > 60) throw new AppError(400, 'Name must be 60 characters or fewer');
+  const subject = await prisma.subject.findFirst({
+    where: { slug: req.params.slug },
+    orderBy: { class: { sortOrder: 'asc' } },
+    select: { id: true },
+  });
+  if (!subject) throw new AppError(404, 'Subject not found');
+  const count = await prisma.customSubject.count({ where: { subjectId: subject.id } });
+  if (count >= 12) throw new AppError(400, 'Maximum 12 custom subjects per section');
+  const custom = await prisma.customSubject.create({
+    data: { name, subjectId: subject.id, sortOrder: count },
+    select: { id: true, name: true, sortOrder: true },
+  });
+  res.status(201).json({ customSubject: custom });
+});
+
+// PATCH /api/subjects/:slug/custom/:customId — owner/admin: rename.
+router.patch('/subjects/:slug/custom/:customId', requireRole('owner', 'admin'), async (req, res) => {
+  const name = String(req.body?.name || '').trim();
+  if (!name) throw new AppError(400, 'Name is required');
+  if (name.length > 60) throw new AppError(400, 'Name must be 60 characters or fewer');
+  const custom = await prisma.customSubject.update({
+    where: { id: req.params.customId },
+    data: { name },
+    select: { id: true, name: true, sortOrder: true },
+  });
+  res.json({ customSubject: custom });
+});
+
+// DELETE /api/subjects/:slug/custom/:customId — owner/admin: remove.
+router.delete('/subjects/:slug/custom/:customId', requireRole('owner', 'admin'), async (req, res) => {
+  await prisma.customSubject.delete({ where: { id: req.params.customId } });
+  res.json({ ok: true });
 });
 
 const blockFullSelect = {

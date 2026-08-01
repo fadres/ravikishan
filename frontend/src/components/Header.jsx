@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar.jsx';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { useTheme } from '../context/ThemeContext.jsx';
+import { useTheme, WALLPAPERS } from '../context/ThemeContext.jsx';
 
 const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
@@ -22,9 +22,50 @@ function NavIcon({ name }) {
   }
 }
 
+function WallpaperPreview({ id }) {
+  const common = { viewBox: '0 0 28 20', width: 28, height: 20, fill: 'none', className: 'absolute inset-0 w-full h-full' };
+  switch (id) {
+    case 'mountain':
+      return (
+        <svg {...common}>
+          <circle cx="21" cy="6" r="2.6" fill="#fbbf24" opacity="0.7" />
+          <polygon points="0,20 8,9 15,20" fill="#0a2447" />
+          <polygon points="11,20 20,5 28,20" fill="#123d75" />
+        </svg>
+      );
+    case 'ocean':
+      return (
+        <svg {...common}>
+          <circle cx="21" cy="7" r="2.4" fill="#38bdf8" opacity="0.6" />
+          <path d="M0,12 Q5,10 10,12 T20,12 T28,12 V20 H0 Z" fill="#0a2447" />
+          <path d="M0,15 Q5,13 10,15 T20,15 T28,15 V20 H0 Z" fill="#123d75" />
+        </svg>
+      );
+    case 'forest':
+      return (
+        <svg {...common}>
+          <circle cx="6" cy="6" r="2.6" fill="#fb923c" opacity="0.6" />
+          <polygon points="3,20 8,10 13,20" fill="#0a2447" />
+          <polygon points="9,20 15,7 21,20" fill="#0e3060" />
+          <polygon points="17,20 22,11 27,20" fill="#0a2447" />
+        </svg>
+      );
+    case 'sunset':
+      return (
+        <svg {...common}>
+          <circle cx="14" cy="9" r="3.4" fill="#fb923c" opacity="0.7" />
+          <path d="M0,14 H28 V20 H0 Z" fill="#0e3060" />
+          <path d="M0,16 H28 V20 H0 Z" fill="#123d75" />
+        </svg>
+      );
+    default:
+      return <svg {...common}><path d="M6 5l16 10M22 5L6 15" stroke="#64748b" strokeWidth="2" /></svg>;
+  }
+}
+
 export default function Header() {
   const { user, logout, isAdmin } = useAuth();
-  const { theme, themes, setTheme, cycle } = useTheme();
+  const { theme, themes, setTheme, cycle, wallpaper, setWallpaper } = useTheme();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
@@ -198,6 +239,32 @@ export default function Header() {
                     );
                   })}
                 </div>
+
+                <div className="flex items-center justify-between px-1 mt-3 mb-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">Wallpaper</p>
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {WALLPAPERS.map((w) => (
+                    <button
+                      key={w.id}
+                      onClick={() => setWallpaper(w.id)}
+                      title={w.name}
+                      className={`flex flex-col items-center gap-1.5 rounded-xl px-1 py-2 border transition ${
+                        wallpaper === w.id
+                          ? 'border-aqua-400/70 bg-aqua-400/10'
+                          : 'border-white/10 hover:border-white/25 hover:bg-white/5'
+                      }`}
+                    >
+                      <span className="w-7 h-7 rounded-lg overflow-hidden border border-white/20 relative bg-gradient-to-b from-deep-700 to-deep-900">
+                        <WallpaperPreview id={w.id} />
+                      </span>
+                      <span className="text-[9px] text-slate-300">{w.name}</span>
+                    </button>
+                  ))}
+                </div>
+                <p className="px-1 mt-2 text-[10px] text-slate-500">
+                  Static nature scenery — no animations, battery friendly.
+                </p>
               </div>
             </>
           )}

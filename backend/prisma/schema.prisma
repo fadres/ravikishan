@@ -121,8 +121,24 @@ model Subject {
   isLocked    Boolean     @default(true)
   sortOrder   Int         @default(0)
   chapters    Chapter[]
+  customSubjects CustomSubject[]
 
   @@unique([classId, slug])
+}
+
+// Owner-defined subjects under a section (e.g. Loksewa Knowledge / General
+// Knowledge) — lightweight, renamable via the dashboard. No content of their
+// own; they point at the parent subject until dedicated content exists.
+model CustomSubject {
+  id        String   @id @default(uuid())
+  name      String
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
 }
 
 model Chapter {

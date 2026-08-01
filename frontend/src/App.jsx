@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import { ThemeProvider } from './context/ThemeContext.jsx';
+import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
 
 // Route-level code splitting: KaTeX + Prism + admin tooling load on demand.
 const Home = lazy(() => import('./pages/Home.jsx'));
@@ -29,33 +29,40 @@ function PageLoader() {
 export default function App() {
   return (
     <ThemeProvider>
-      <div className="ocean-bg min-h-screen text-slate-100 flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/class/:classSlug" element={<ClassPage />} />
-              <Route path="/class/:classSlug/subject/:subjectSlug" element={<SubjectPage />} />
-              <Route
-                path="/class/:classSlug/subject/:subjectSlug/chapter/:chapterSlug"
-                element={<ChapterPage />}
-              />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<RequestsPanel />} />
-                <Route path="requests" element={<RequestsPanel />} />
-                <Route path="users" element={<UsersPanel />} />
-                <Route path="content" element={<ContentPanel />} />
-                <Route path="audit" element={<AuditPanel />} />
-              </Route>
-            </Routes>
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
+      <Shell />
     </ThemeProvider>
+  );
+}
+
+function Shell() {
+  const { wallpaper } = useTheme();
+  return (
+    <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
+      <Header />
+      <main className="flex-1">
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/class/:classSlug" element={<ClassPage />} />
+            <Route path="/class/:classSlug/subject/:subjectSlug" element={<SubjectPage />} />
+            <Route
+              path="/class/:classSlug/subject/:subjectSlug/chapter/:chapterSlug"
+              element={<ChapterPage />}
+            />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<RequestsPanel />} />
+              <Route path="requests" element={<RequestsPanel />} />
+              <Route path="users" element={<UsersPanel />} />
+              <Route path="content" element={<ContentPanel />} />
+              <Route path="audit" element={<AuditPanel />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </main>
+      <Footer />
+    </div>
   );
 }

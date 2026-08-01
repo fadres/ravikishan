@@ -34,6 +34,12 @@ const SUBJECTS = {
   'general-knowledge': { name: 'General Knowledge', subjectType: 'general_knowledge', icon: 'globe', themeColor: '#22d3ee' },
 };
 
+// Default renamable custom subjects per section (dashboard cards).
+const CUSTOM_SUBJECT_DEFAULTS = {
+  loksewa: ['Nepal Constitution', 'Public Administration', 'Current Affairs', 'Nepal Geography'],
+  'general-knowledge': ['World Geography', 'Science & Technology', 'History & Culture', 'Current Affairs'],
+};
+
 // Level plan (per user): level 3 = simple explanation, free for everyone;
 // level 2 = better/deeper (examples, practice, numericals); level 1 = premium
 // deep content: major formulas, concepts, condensed key points & short answers.
@@ -720,6 +726,13 @@ async function main() {
     create: { name: 'Class 11', slug: 'class-11', sortOrder: 1 },
   });
 
+  // Class 12 placeholder (content to be added later).
+  await prisma.class.upsert({
+    where: { slug: 'class-12' },
+    update: { name: 'Class 12', sortOrder: 2 },
+    create: { name: 'Class 12', slug: 'class-12', sortOrder: 2 },
+  });
+
   const chapterGroups = listContentFiles();
   const stats = { blocks: 0, byLevel: { 1: 0, 2: 0, 3: 0 }, chapters: 0 };
   const changedChapters = [];
@@ -737,6 +750,19 @@ async function main() {
       update: subjectCfg,
       create: { ...subjectCfg, classId: klass.id, slug: group.subjectId },
     });
+
+    // Default custom subjects per section (seeded once — renames are preserved
+    // on re-imports because we only create when the section has none yet).
+    const customDefaults = CUSTOM_SUBJECT_DEFAULTS[group.subjectId];
+    if (customDefaults?.length) {
+      const existing = await prisma.customSubject.count({ where: { subjectId: subject.id } });
+      if (existing === 0) {
+        await prisma.customSubject.createMany({
+          data: customDefaults.map((name, i) => ({ name, subjectId: subject.id, sortOrder: i })),
+        });
+        console.log(`  ✓ seeded ${customDefaults.length} custom subjects for ${group.subjectId}`);
+      }
+    }
 
     const chapterSlug = slugify(group.chapterName);
     const navChapter = nav?.chapters?.find((c) => slugify(c.id) === chapterSlug);

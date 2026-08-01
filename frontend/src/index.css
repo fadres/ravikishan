@@ -33,6 +33,44 @@ body {
   background-attachment: fixed;
 }
 
+/* Nature wallpapers — static SVG silhouettes (no animation, battery-friendly).
+   The silhouette layer scrolls with the page; the themed gradient stays fixed. */
+.wp-mountain {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Ccircle cx='1120' cy='58' r='30' fill='%23fbbf24' opacity='.45'/%3E%3Cpolygon points='0,160 240,72 420,160' fill='%230a2447'/%3E%3Cpolygon points='280,160 520,44 760,160' fill='%23123d75'/%3E%3Cpolygon points='640,160 900,60 1180,160' fill='%230e3060'/%3E%3Cpolygon points='1080,160 1300,84 1440,160' fill='%23123d75'/%3E%3Crect y='150' width='1440' height='10' fill='%23071a33'/%3E%3C/svg%3E") center bottom / 100% auto no-repeat scroll,
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--color-aqua-400) 16%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, color-mix(in srgb, var(--color-aqua-300) 12%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--color-deep-950) 0%, var(--color-deep-900) 45%, var(--color-deep-800) 100%);
+  background-attachment: scroll, fixed, fixed, fixed;
+}
+
+.wp-ocean {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Ccircle cx='1150' cy='60' r='24' fill='%2338bdf8' opacity='.35'/%3E%3Cpath d='M0,96 Q120,84 240,96 T480,96 T720,96 T960,96 T1200,96 T1440,96 V160 H0 Z' fill='%230a2447'/%3E%3Cpath d='M0,112 Q140,100 280,112 T560,112 T840,112 T1120,112 T1440,112 V160 H0 Z' fill='%23123d75'/%3E%3Cpath d='M760,78 l10,-12 v12 z' fill='%23cbd5e1'/%3E%3Cpath d='M754,92 h26 v5 h-26 z' fill='%2394a3b8'/%3E%3C/svg%3E") center bottom / 100% auto no-repeat scroll,
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--color-aqua-400) 16%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, color-mix(in srgb, var(--color-aqua-300) 12%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--color-deep-950) 0%, var(--color-deep-900) 45%, var(--color-deep-800) 100%);
+  background-attachment: scroll, fixed, fixed, fixed;
+}
+
+.wp-forest {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Ccircle cx='240' cy='56' r='26' fill='%23fb923c' opacity='.4'/%3E%3Cpolygon points='60,160 90,92 120,160' fill='%23071a33'/%3E%3Cpolygon points='120,160 160,66 200,160' fill='%230a2447'/%3E%3Cpolygon points='200,160 250,84 300,160' fill='%230e3060'/%3E%3Cpolygon points='330,160 380,72 430,160' fill='%230a2447'/%3E%3Cpolygon points='460,160 520,88 580,160' fill='%23071a33'/%3E%3Cpolygon points='620,160 680,70 740,160' fill='%230e3060'/%3E%3Cpolygon points='780,160 840,90 900,160' fill='%230a2447'/%3E%3Cpolygon points='940,160 1000,76 1060,160' fill='%23071a33'/%3E%3Cpolygon points='1100,160 1160,88 1220,160' fill='%230e3060'/%3E%3Cpolygon points='1260,160 1320,72 1380,160' fill='%230a2447'/%3E%3Crect y='152' width='1440' height='8' fill='%23071a33'/%3E%3C/svg%3E") center bottom / 100% auto no-repeat scroll,
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--color-aqua-400) 16%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, color-mix(in srgb, var(--color-aqua-300) 12%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--color-deep-950) 0%, var(--color-deep-900) 45%, var(--color-deep-800) 100%);
+  background-attachment: scroll, fixed, fixed, fixed;
+}
+
+.wp-sunset {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Ccircle cx='720' cy='86' r='36' fill='%23fb923c' opacity='.5'/%3E%3Cpath d='M0,106 H1440 V160 H0 Z' fill='%230e3060'/%3E%3Cpath d='M0,120 H1440 V160 H0 Z' fill='%23123d75'/%3E%3Cpath d='M430,56 q9,-9 18,0 q9,-9 18,0' stroke='%231e293b' fill='none' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M520,42 q8,-8 16,0 q8,-8 16,0' stroke='%231e293b' fill='none' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center bottom / 100% auto no-repeat scroll,
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--color-aqua-400) 16%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, color-mix(in srgb, var(--color-aqua-300) 12%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--color-deep-950) 0%, var(--color-deep-900) 45%, var(--color-deep-800) 100%);
+  background-attachment: scroll, fixed, fixed, fixed;
+}
+
 /* Frosted-glass panel (theme-aware border tint) */
 .glass {
   background: rgba(255, 255, 255, 0.05);
@@ -92,40 +130,6 @@ body {
 }
 
 /* Night-sky banner: nebula glows + star field + shooting star */
-.nebula-banner {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(480px 260px at 12% 0%, color-mix(in srgb, var(--color-aqua-400) 35%, transparent), transparent 60%),
-    radial-gradient(560px 300px at 88% 110%, color-mix(in srgb, var(--color-aqua-300) 30%, transparent), transparent 60%),
-    linear-gradient(140deg, var(--color-deep-900) 0%, var(--color-deep-800) 40%, var(--color-deep-700) 75%, color-mix(in srgb, var(--color-aqua-400) 60%, var(--color-deep-700)) 130%);
-}
-.star {
-  position: absolute;
-  border-radius: 9999px;
-  background: #fff;
-  animation: twinkle 3s ease-in-out infinite;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 1; }
-}
-.shooting-star {
-  position: absolute;
-  width: 120px;
-  height: 2px;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, #fff, transparent);
-  transform: rotate(-35deg);
-  opacity: 0;
-  animation: shoot 7s ease-in 2s infinite;
-}
-@keyframes shoot {
-  0% { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
-  2% { opacity: 0.9; }
-  6% { transform: translate(-260px, 180px) rotate(-35deg); opacity: 0; }
-  100% { transform: translate(-260px, 180px) rotate(-35deg); opacity: 0; }
-}
 .idiom-fade {
   animation: idiomFade 0.7s ease both;
 }
