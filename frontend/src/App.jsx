@@ -19,6 +19,8 @@ const ContentPanel = lazy(() => import('./pages/admin/ContentPanel.jsx'));
 const AuditPanel = lazy(() => import('./pages/admin/AuditPanel.jsx'));
 const Class11Extras = lazy(() => import('./pages/admin/Class11Extras.jsx'));
 const UploadPage = lazy(() => import('./pages/admin/UploadPage.jsx'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
+const StudentDashboard = lazy(() => import('./pages/student/Dashboard.jsx'));
 
 function PageLoader() {
   return (
@@ -55,7 +57,8 @@ function Shell() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<RequestsPanel />} />
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="requests" element={<RequestsPanel />} />
               <Route path="users" element={<UsersPanel />} />
               <Route path="content" element={<ContentPanel />} />
@@ -63,6 +66,7 @@ function Shell() {
               <Route path="class-11-extras" element={<Class11Extras />} />
               <Route path="upload" element={<UploadPage />} />
             </Route>
+            <Route path="/dashboard" element={<StudentDashboard />} />
           </Routes>
         </Suspense>
       </main>

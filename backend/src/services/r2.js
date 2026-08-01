@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import {
   S3Client,
   PutObjectCommand,
@@ -23,6 +24,7 @@ const r2 = new S3Client({
 const BUCKET = env.r2Bucket;
 const UPLOAD_TTL_SECONDS = 300;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
+const DEDUP_LOOKUP_WINDOW_MS = 60 * 60 * 1000;
 
 const ALLOWED_MIME_TYPES = new Set([
   'image/jpeg',
@@ -61,23 +63,42 @@ export function getAllowedMimeTypes() {
   return [...ALLOWED_MIME_TYPES];
 }
 
-export async function getUploadUrl(fileName, contentType) {
+function generateKey(fileName, contentType) {
+  return `${Date.now()}-${crypto.randomBytes(8).toString('hex')}-${fileName}`;
+}
+
+export async function getUploadUrl(fileName, contentType, fileHash) {
   if (!BUCKET) throw new AppError(500, 'R2 bucket is not configured');
   if (!ALLOWED_MIME_TYPES.has(contentType)) {
     throw new AppError(415, `Unsupported content type: "${contentType}"`);
   }
 
-  const key = `${Date.now()}-${Math.random().toString(36).slice(2)}-${fileName}`;
+  const existing = fileHash
+    ? await prisma.r2Upload.findFirst({
+        where: {
+          fileHash,
+          status: 'complete',
+          createdAt: { gte: new Date(Date.now() - DEDUP_LOOKUP_WINDOW_MS) },
+        },
+        select: { id: true, key: true, fileUrl: true, originalFilename: true },
+      })
+    : null;
+
+  if (existing) {
+    return { url: null, key: existing.key, duplicate: true, existingFile: existing };
+  }
+
+  const key = generateKey(fileName, contentType);
   const command = new PutObjectCommand({
     Bucket: BUCKET,
     Key: key,
     ContentType: contentType,
   });
   const url = await getSignedUrl(r2, command, { expiresIn: UPLOAD_TTL_SECONDS });
-  return { url, key };
+  return { url, key, duplicate: false };
 }
 
-export async function confirmUpload(key, originalFilename, contentType, fileSize, uploadedById) {
+export async function confirmUpload(key, originalFilename, contentType, fileSize, uploadedById, fileHash) {
   const existing = await prisma.r2Upload.findFirst({
     where: { key, uploadedById, status: 'pending' },
   });
@@ -92,6 +113,7 @@ export async function confirmUpload(key, originalFilename, contentType, fileSize
       bucket: BUCKET,
       fileSize,
       mimeType: contentType,
+      fileHash,
       status: 'complete',
     },
   });
@@ -113,6 +135,7 @@ export async function listFiles(userId, page = 1, perPage = 20) {
         fileUrl: true,
         fileSize: true,
         mimeType: true,
+        fileHash: true,
         status: true,
         createdAt: true,
       },
@@ -135,6 +158,7 @@ export async function getFileDetails(id, userId) {
       bucket: true,
       fileSize: true,
       mimeType: true,
+      fileHash: true,
       status: true,
       uploadedById: true,
       createdAt: true,
@@ -159,6 +183,28 @@ export async function getDownloadUrl(id, userId) {
   return { url, key: file.key, originalFilename: file.originalFilename };
 }
 
+export async function getPreviewUrl(id, userId) {
+  const file = await prisma.r2Upload.findFirst({
+    where: { id, uploadedById: userId, status: 'complete' },
+  });
+  if (!file) throw new AppError(404, 'File not found');
+
+  const isImage = file.mimeType.startsWith('image/');
+  const isPdf = file.mimeType === 'application/pdf';
+  const isText = file.mimeType.startsWith('text/') || file.mimeType === 'application/json' || file.mimeType === 'text/csv';
+
+  if (!isImage && !isPdf && !isText) {
+    throw new AppError(400, `Preview not supported for "${file.mimeType}"`);
+  }
+
+  const command = new GetObjectCommand({
+    Bucket: BUCKET,
+    Key: file.key,
+  });
+  const url = await getSignedUrl(r2, command, { expiresIn: UPLOAD_TTL_SECONDS });
+  return { url, key: file.key, originalFilename: file.originalFilename, mimeType: file.mimeType, previewType: isImage ? 'image' : isPdf ? 'pdf' : 'text' };
+}
+
 export async function deleteFile(id, userId) {
   const file = await prisma.r2Upload.findFirst({
     where: { id, uploadedById: userId },
@@ -166,9 +212,26 @@ export async function deleteFile(id, userId) {
   if (!file) throw new AppError(404, 'File not found');
   if (file.status === 'deleted') throw new AppError(409, 'File already deleted');
 
+  let r2Deleted = false;
+  let r2Error = null;
+
+  if (BUCKET) {
+    try {
+      const deleteCommand = new DeleteObjectCommand({
+        Bucket: BUCKET,
+        Key: file.key,
+      });
+      await r2.send(deleteCommand);
+      r2Deleted = true;
+    } catch (err) {
+      r2Error = err.message;
+    }
+  }
+
   await prisma.r2Upload.update({
     where: { id: file.id },
     data: { status: 'deleted' },
   });
-  return { deleted: true, key: file.key };
+
+  return { deleted: true, key: file.key, r2Deleted, r2Error };
 }

@@ -215,6 +215,12 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
 
 const searchSchema = z.object({
   q: z.string().trim().min(1).max(120),
+  subject: z.string().trim().optional(),
+  class: z.string().trim().optional(),
+  type: z.string().trim().optional(),
+  access: z.number().int().min(1).max(3).optional(),
+  page: z.number().int().min(1).optional(),
+  perPage: z.number().int().min(1).max(50).optional(),
 });
 
 // GET /api/search?q= — live search, ranked by ts_rank, grouped client-side.
@@ -222,13 +228,21 @@ const searchSchema = z.object({
 router.get('/search', authenticate, validate(searchSchema, 'query'), async (req, res) => {
   const q = req.validated.q;
   const viewerLevel = req.user?.accessLevel ?? 3;
-  const results = await searchContent(q, viewerLevel);
+  const filters = {
+    subjectSlug: req.validated.subject,
+    classSlug: req.validated.class,
+    blockType: req.validated.type,
+    accessLevel: req.validated.access,
+    page: req.validated.page,
+    perPage: req.validated.perPage,
+  };
+  const data = await searchContent(q, viewerLevel, filters);
   const recommendations =
-    results.length < 3
-      ? await recommendBlocks(results.map((r) => r.id), viewerLevel)
+    data.results.length < 3
+      ? await recommendBlocks(data.results.map((r) => r.id), viewerLevel)
       : [];
 
-  res.json({ query: q, results, recommendations });
+  res.json({ query: q, results: data.results, totalCount: data.totalCount, page: data.page, totalPages: data.totalPages, recommendations });
 });
 
 export default router;

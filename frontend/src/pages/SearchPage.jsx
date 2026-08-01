@@ -49,9 +49,13 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
-  const [subjectFilter, setSubjectFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
-  const [accessFilter, setAccessFilter] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const activeSubjectFilter = params.get('subject') || '';
+  const activeTypeFilter = params.get('type') || '';
+  const activeAccessFilter = parseInt(params.get('access') || '0', 10);
 
   useEffect(() => {
     const q = params.get('q') || '';
@@ -66,8 +70,22 @@ export default function SearchPage() {
     setError('');
     const timer = setTimeout(async () => {
       try {
-        const data = await api(`/api/search?q=${encodeURIComponent(q)}`);
+        const subject = activeSubjectFilter;
+        const type = activeTypeFilter;
+        const access = activeAccessFilter || '';
+        const p = params.get('page') || '1';
+        const url = new URL(`/api/search`, window.location.origin);
+        url.searchParams.set('q', q);
+        if (subject) url.searchParams.set('subject', subject);
+        if (type) url.searchParams.set('type', type);
+        if (access) url.searchParams.set('access', access);
+        url.searchParams.set('page', p);
+        url.searchParams.set('perPage', '25');
+        const data = await api(url.pathname + url.search);
         setResults(data.results);
+        setTotalCount(data.totalCount);
+        setTotalPages(data.totalPages);
+        setPage(data.page);
         setRecommendations(data.recommendations);
         setSearched(true);
       } catch {
@@ -79,9 +97,22 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [params]);
 
+  const setFilter = (key, value) => {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value) {
+        next.set(key, value);
+      } else {
+        next.delete(key);
+      }
+      next.set('page', '1');
+      return next;
+    });
+  };
+
   const submit = (e) => {
     e.preventDefault();
-    setParams({ q: query.trim() });
+    setParams({ q: query.trim(), subject: activeSubjectFilter || undefined, type: activeTypeFilter || undefined, access: activeAccessFilter || undefined, page: '1' });
   };
 
   // Filter options derived from the live result set.
@@ -99,17 +130,10 @@ export default function SearchPage() {
     return [...seen].map((t) => ({ value: t, label: typeMeta(t).label }));
   }, [results]);
 
-  const filtered = results.filter(
-    (r) =>
-      (!subjectFilter || r.subject.slug === subjectFilter) &&
-      (!typeFilter || r.blockType === typeFilter) &&
-      (!accessFilter || r.accessLevel === accessFilter),
-  );
-
   // Group results by subject, preserving rank order.
   const groups = [];
   const groupMap = new Map();
-  for (const r of filtered) {
+  for (const r of results) {
     const key = r.subject.slug;
     if (!groupMap.has(key)) {
       const g = { key, name: r.subject.name, color: SUBJECT_COLORS[r.subject.slug] || '#7dd3fc', items: [] };
@@ -118,8 +142,6 @@ export default function SearchPage() {
     }
     groupMap.get(key).items.push(r);
   }
-
-  const anyFilter = Boolean(subjectFilter || typeFilter || accessFilter);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -165,10 +187,11 @@ export default function SearchPage() {
             </div>
           ) : (
             <>
-              <p className="text-sm text-slate-400 mb-4">
-                {filtered.length} of {results.length} result{results.length === 1 ? '' : 's'} for "
-                <span className="text-aqua-300 font-semibold">{params.get('q')}</span>"
-              </p>
+<p className="text-sm text-slate-400 mb-4">
+                 {totalCount} result{totalCount === 1 ? '' : 's'} for "
+                 <span className="text-aqua-300 font-semibold">{params.get('q')}</span>"
+                 {page > 1 && ` — page ${page} of ${totalPages}`}
+               </p>
 
               {/* Powerful filters */}
               <div className="glass rounded-2xl p-4 mb-6 space-y-3">
@@ -178,22 +201,22 @@ export default function SearchPage() {
                       Subject
                     </span>
                     <div className="flex flex-wrap gap-1.5">
-                      <FilterChip
-                        active={!subjectFilter}
-                        onClick={() => setSubjectFilter('')}
-                      >
-                        All
-                      </FilterChip>
-                      {subjectOptions.map((s) => (
-                        <FilterChip
-                          key={s.slug}
-                          active={subjectFilter === s.slug}
-                          color={SUBJECT_COLORS[s.slug]}
-                          onClick={() => setSubjectFilter(subjectFilter === s.slug ? '' : s.slug)}
-                        >
-                          {s.name}
-                        </FilterChip>
-                      ))}
+<FilterChip
+                         active={!activeSubjectFilter}
+                         onClick={() => setFilter('subject', '')}
+                       >
+                         All
+                       </FilterChip>
+                       {subjectOptions.map((s) => (
+                         <FilterChip
+                           key={s.slug}
+                           active={activeSubjectFilter === s.slug}
+                           color={SUBJECT_COLORS[s.slug]}
+                           onClick={() => setFilter('subject', activeSubjectFilter === s.slug ? '' : s.slug)}
+                         >
+                           {s.name}
+                         </FilterChip>
+                       ))}
                     </div>
                   </div>
                 )}
@@ -204,19 +227,19 @@ export default function SearchPage() {
                       Type
                     </span>
                     <div className="flex flex-wrap gap-1.5">
-                      <FilterChip active={!typeFilter} onClick={() => setTypeFilter('')}>
-                        All
-                      </FilterChip>
-                      {typeOptions.map((t) => (
-                        <FilterChip
-                          key={t.value}
-                          active={typeFilter === t.value}
-                          color={typeMeta(t.value).color}
-                          onClick={() => setTypeFilter(typeFilter === t.value ? '' : t.value)}
-                        >
-                          {t.label}
-                        </FilterChip>
-                      ))}
+<FilterChip active={!activeTypeFilter} onClick={() => setFilter('type', '')}>
+                         All
+                       </FilterChip>
+                       {typeOptions.map((t) => (
+                         <FilterChip
+                           key={t.value}
+                           active={activeTypeFilter === t.value}
+                           color={typeMeta(t.value).color}
+                           onClick={() => setFilter('type', activeTypeFilter === t.value ? '' : t.value)}
+                         >
+                           {t.label}
+                         </FilterChip>
+                       ))}
                     </div>
                   </div>
                 )}
@@ -226,37 +249,37 @@ export default function SearchPage() {
                     Access
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {ACCESS_OPTIONS.map((a) => (
-                      <FilterChip
-                        key={a.value}
-                        active={accessFilter === a.value}
-                        color={a.value === 1 ? '#fbbf24' : a.value === 2 ? '#7dd3fc' : '#34d399'}
-                        onClick={() => setAccessFilter(accessFilter === a.value ? 0 : a.value)}
-                      >
-                        {a.label}
-                      </FilterChip>
-                    ))}
+{ACCESS_OPTIONS.map((a) => (
+                       <FilterChip
+                         key={a.value}
+                         active={activeAccessFilter === a.value}
+                         color={a.value === 1 ? '#fbbf24' : a.value === 2 ? '#7dd3fc' : '#34d399'}
+                         onClick={() => setFilter('access', activeAccessFilter === a.value ? '' : String(a.value))}
+                       >
+                         {a.label}
+                       </FilterChip>
+                     ))}
                   </div>
                 </div>
               </div>
             </>
           )}
 
-          {anyFilter && filtered.length === 0 && results.length > 0 && (
-            <div className="glass rounded-2xl p-8 text-center mb-6">
-              <p className="text-slate-200 font-semibold">Nothing matches these filters.</p>
-              <button
-                onClick={() => {
-                  setSubjectFilter('');
-                  setTypeFilter('');
-                  setAccessFilter(0);
-                }}
-                className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
+{activeSubjectFilter || activeTypeFilter || activeAccessFilter ? (
+             <div className="glass rounded-2xl p-8 text-center mb-6">
+               <p className="text-slate-200 font-semibold">Nothing matches these filters.</p>
+               <button
+                 onClick={() => {
+                   setFilter('subject', '');
+                   setFilter('type', '');
+                   setFilter('access', '');
+                 }}
+                 className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
+               >
+                 Clear all filters
+               </button>
+             </div>
+           ) : null}
 
           {groups.map((g) => (
             <section key={g.key} className="mb-8">
@@ -305,6 +328,36 @@ export default function SearchPage() {
                 ))}
               </div>
             </section>
+          )}
+
+          {totalPages > 1 && (
+            <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Search pagination">
+              <button
+                onClick={() => {
+                  const p = Math.max(1, page - 1);
+                  setParams({ q: query, subject: subjectFilter, type: typeFilter, access: accessFilter || undefined, page: p });
+                }}
+                disabled={page <= 1}
+                className="px-4 py-2 rounded-xl glass text-sm font-bold text-slate-300 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                aria-label="Previous page"
+              >
+                ← Prev
+              </button>
+              <span className="text-sm text-slate-400 px-3">
+                {page} / {totalPages}
+              </span>
+              <button
+                onClick={() => {
+                  const p = Math.min(totalPages, page + 1);
+                  setParams({ q: query, subject: subjectFilter, type: typeFilter, access: accessFilter || undefined, page: p });
+                }}
+                disabled={page >= totalPages}
+                className="px-4 py-2 rounded-xl glass text-sm font-bold text-slate-300 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                aria-label="Next page"
+              >
+                Next →
+              </button>
+            </nav>
           )}
         </>
       )}

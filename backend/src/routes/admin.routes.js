@@ -7,6 +7,22 @@ import { validate } from '../middleware/validate.js';
 import { recordAudit } from '../services/audit.js';
 import { notifyMembersContent } from '../services/mailer.js';
 import { suggestForSubject, ALLOWED_BLOCK_TYPES } from '../services/classifier.js';
+import {
+  listTopics,
+  createTopic,
+  updateTopic,
+  deleteTopic,
+  listVersions,
+  createVersion,
+  listTags,
+  createTag,
+  deleteTag,
+  setBlockTags,
+  publishSubject,
+  archiveSubject,
+  publishChapter,
+  archiveChapter,
+} from '../services/cms.js';
 
 const router = Router();
 router.use(requireRole('owner', 'admin'));
@@ -438,5 +454,124 @@ function slugify(text) {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '') || 'untitled';
 }
+
+// ── Dashboard ─────────────────────────────────────
+
+router.get('/dashboard', async (_req, res) => {
+  const [totalUsers, totalSubjects, totalChapters, totalBlocks, totalUploads] = await Promise.all([
+    prisma.user.count(),
+    prisma.subject.count(),
+    prisma.chapter.count(),
+    prisma.contentBlock.count(),
+    prisma.r2Upload.count(),
+  ]);
+  const recentUploads = await prisma.r2Upload.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+    select: { id: true, originalFilename: true, fileSize: true, status: true, createdAt: true },
+  });
+  res.json({
+    totalUsers,
+    totalSubjects,
+    totalChapters,
+    totalBlocks,
+    totalUploads,
+    recentUploads,
+  });
+});
+
+router.get('/chapters/:id/topics', async (req, res) => {
+  const { topics, chapter } = await listTopics(req.params.id, req.user.id);
+  res.json({ chapter, topics });
+});
+
+router.post('/chapters/:id/topics', validate(z.object({
+  title: z.string().trim().min(1).max(200),
+  slug: z.string().trim().min(1).max(200).optional(),
+  description: z.string().trim().max(2000).optional(),
+  sortOrder: z.number().int().min(0).optional(),
+  status: z.enum(['draft', 'published', 'archived']).optional(),
+})), async (req, res) => {
+  const topic = await createTopic(req.params.id, req.validated, req.user);
+  res.status(201).json({ topic });
+});
+
+router.patch('/topics/:id', validate(z.object({
+  title: z.string().trim().min(1).max(200).optional(),
+  slug: z.string().trim().min(1).max(200).optional(),
+  description: z.string().trim().max(2000).optional(),
+  sortOrder: z.number().int().min(0).optional(),
+  status: z.enum(['draft', 'published', 'archived']).optional(),
+})), async (req, res) => {
+  const topic = await updateTopic(req.params.id, req.validated, req.user);
+  res.json({ topic });
+});
+
+router.delete('/topics/:id', async (req, res) => {
+  await deleteTopic(req.params.id, req.user);
+  res.status(204).end();
+});
+
+// ── CMS: Content Versions ──────────────────────────────
+
+router.get('/blocks/:id/versions', async (req, res) => {
+  const { block, versions } = await listVersions(req.params.id);
+  res.json({ block, versions });
+});
+
+router.post('/blocks/:id/versions', async (req, res) => {
+  const version = await createVersion(req.params.id, req.body, req.user);
+  res.status(201).json({ version });
+});
+
+// ── CMS: Tags ──────────────────────────────────────────
+
+router.get('/tags', async (_req, res) => {
+  const tags = await listTags();
+  res.json({ tags });
+});
+
+router.post('/tags', validate(z.object({
+  name: z.string().trim().min(1).max(50),
+})), async (req, res) => {
+  const tag = await createTag(req.validated.name, req.user);
+  res.status(201).json({ tag });
+});
+
+router.delete('/tags/:id', async (req, res) => {
+  await deleteTag(req.params.id, req.user);
+  res.status(204).end();
+});
+
+// ── CMS: Block Tags ────────────────────────────────────
+
+router.post('/blocks/:id/tags', validate(z.object({
+  tagIds: z.array(z.string().uuid()),
+})), async (req, res) => {
+  await setBlockTags(req.params.id, req.validated.tagIds, req.user);
+  res.json({ ok: true });
+});
+
+// ── CMS: Publish / Archive ────────────────────────────
+
+router.post('/subjects/:id/publish', async (req, res) => {
+  const subject = await publishSubject(req.params.id, req.user);
+  res.json({ subject });
+});
+
+router.post('/subjects/:id/archive', async (req, res) => {
+  const subject = await archiveSubject(req.params.id, req.user);
+  res.json({ subject });
+});
+
+router.post('/chapters/:id/publish', async (req, res) => {
+  const chapter = await publishChapter(req.params.id, req.user);
+  res.json({ chapter });
+});
+
+router.post('/chapters/:id/archive', async (req, res) => {
+  const chapter = await archiveChapter(req.params.id, req.user);
+  res.json({ chapter });
+});
 
 export default router;

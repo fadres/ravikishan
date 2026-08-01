@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import rateLimit from 'express-rate-limit';
 import { prisma } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
 import { requireAuth } from '../middleware/auth.js';
@@ -11,6 +12,7 @@ import {
   listFiles,
   getFileDetails,
   getDownloadUrl,
+  getPreviewUrl,
   deleteFile,
   validateFile,
   getAllowedMimeTypes,
@@ -18,10 +20,19 @@ import {
 
 const router = Router();
 
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many upload requests — please wait a few minutes.' },
+});
+
 const presignSchema = z.object({
   fileName: z.string().trim().max(255),
   contentType: z.string().trim().max(100),
   fileSize: z.number().int().positive().max(50 * 1024 * 1024),
+  fileHash: z.string().trim().length(64).optional(),
 });
 
 const confirmSchema = z.object({
@@ -29,18 +40,31 @@ const confirmSchema = z.object({
   fileName: z.string().trim().max(255),
   contentType: z.string().trim().max(100),
   fileSize: z.number().int().positive(),
+  fileHash: z.string().trim().length(64).optional(),
 });
 
-router.post('/presigned-url', requireAuth, validate(presignSchema), async (req, res) => {
-  const { fileName, contentType, fileSize } = req.body;
+router.post('/presigned-url', requireAuth, uploadLimiter, validate(presignSchema), async (req, res) => {
+  const { fileName, contentType, fileSize, fileHash } = req.body;
   validateFile({ name: fileName, type: contentType, size: fileSize });
-  const { url, key } = await getUploadUrl(fileName, contentType);
+  const { url, key, duplicate, existingFile } = await getUploadUrl(fileName, contentType, fileHash);
+
+  if (duplicate && existingFile) {
+    await recordAudit(req.user, 'upload.duplicate', 'R2Upload', existingFile.id, {
+      fileName,
+      contentType,
+      fileSize,
+      key,
+    });
+    return res.json({ url: null, key, duplicate: true, existingFile });
+  }
+
   await prisma.r2Upload.create({
     data: {
       key,
       originalFilename: fileName,
       mimeType: contentType,
       fileSize,
+      fileHash,
       status: 'pending',
       uploadedById: req.user.id,
     },
@@ -51,12 +75,12 @@ router.post('/presigned-url', requireAuth, validate(presignSchema), async (req, 
     fileSize,
     key,
   });
-  res.json({ url, key });
+  res.json({ url, key, duplicate: false });
 });
 
 router.post('/confirm', requireAuth, validate(confirmSchema), async (req, res) => {
-  const { key, fileName, contentType, fileSize } = req.body;
-  const confirmed = await confirmUpload(key, fileName, contentType, fileSize, req.user.id);
+  const { key, fileName, contentType, fileSize, fileHash } = req.body;
+  const confirmed = await confirmUpload(key, fileName, contentType, fileSize, req.user.id, fileHash);
   await recordAudit(req.user, 'upload.confirmed', 'R2Upload', confirmed.id, {
     fileName,
     contentType,
@@ -87,6 +111,15 @@ router.get('/files/:id/download', requireAuth, async (req, res) => {
   res.json({ url, key, originalFilename });
 });
 
+router.get('/files/:id/preview', requireAuth, async (req, res) => {
+  const preview = await getPreviewUrl(req.params.id, req.user.id);
+  await recordAudit(req.user, 'file.previewed', 'R2Upload', req.params.id, {
+    key: preview.key,
+    originalFilename: preview.originalFilename,
+  });
+  res.json(preview);
+});
+
 router.delete('/files/:id', requireAuth, async (req, res) => {
   const result = await deleteFile(req.params.id, req.user.id);
   await recordAudit(req.user, 'file.deleted', 'R2Upload', req.params.id, result);
@@ -98,6 +131,7 @@ router.get('/meta', (_req, res) => {
     maxFileSize: 50 * 1024 * 1024,
     allowedMimeTypes: getAllowedMimeTypes(),
     presignedUrlTtlSeconds: 300,
+    uploadLimit: { maxUploads: 20, windowMs: 15 * 60 * 1000 },
   });
 });
 

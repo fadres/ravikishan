@@ -9,6 +9,7 @@ const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
   { to: '/class/class-11', label: 'Subjects', icon: 'book' },
   { to: '/search', label: 'Search', icon: 'search' },
+  { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
 ];
 
 function NavIcon({ name }) {
@@ -20,6 +21,8 @@ function NavIcon({ name }) {
       return <svg {...common}><path d="M4 5a4 4 0 0 1 4-4h12v20H8a4 4 0 0 0-4 4z" /><path d="M20 17H8a4 4 0 0 0-4 4" /></svg>;
     case 'search':
       return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>;
+    case 'dashboard':
+      return <svg {...common}><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>;
     default:
       return null;
   }

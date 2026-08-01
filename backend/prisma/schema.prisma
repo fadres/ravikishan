@@ -28,6 +28,19 @@ enum SubjectType {
   general_knowledge
 }
 
+enum Difficulty {
+  easy
+  medium
+  hard
+  expert
+}
+
+enum ContentStatus {
+  draft
+  published
+  archived
+}
+
 enum BlockType {
   note_topic
   note_statement
@@ -61,6 +74,11 @@ model User {
   auditLogs        AuditLog[]
   decisionMakers   DecisionMaker[]
   r2Uploads        R2Upload[]
+  contentVersions  ContentVersion[]
+  userProgress     UserProgress[]
+  bookmarks        Bookmark[]
+  studyStreak      StudyStreak?
+  learningAnalytics LearningAnalytics[]
 
   @@index([role])
   @@index([accessLevel])
@@ -127,11 +145,15 @@ model Subject {
   themeColor     String?
   isLocked       Boolean           @default(true)
   sortOrder      Int               @default(0)
+  status         ContentStatus     @default(draft)
+  description    String?
+  difficulty     Difficulty        @default(easy)
   chapters       Chapter[]
   customSubjects CustomSubject[]
 
   @@unique([classId, slug])
   @@index([subjectType])
+  @@index([status])
 }
 
 model CustomSubject {
@@ -147,14 +169,20 @@ model CustomSubject {
 }
 
 model Chapter {
-  id        String         @id @default(uuid())
-  subjectId String
-  subject   Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  title     String
-  slug      String
-  isLocked  Boolean        @default(true)
-  sortOrder Int            @default(0)
-  blocks    ContentBlock[]
+  id             String            @id @default(uuid())
+  subjectId      String
+  subject        Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  title          String
+  slug           String
+  isLocked       Boolean           @default(true)
+  sortOrder      Int               @default(0)
+  status         ContentStatus     @default(draft)
+  prerequisites  String?
+  readingTime    Int?
+  blocks         ContentBlock[]
+  topics         Topic[]
+  userProgress   UserProgress[]
+  bookmarks      Bookmark[]
 
   @@unique([subjectId, slug])
   @@index([subjectId])
@@ -166,6 +194,7 @@ model ContentBlock {
   chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   blockType       BlockType
   accessLevel     Int            @default(3)
+  difficulty      Difficulty     @default(easy)
   title           String?
   contentRichtext String?
   contentCode     String?
@@ -175,6 +204,8 @@ model ContentBlock {
   subLevel        String?
   sortOrder       Int            @default(0)
   decisionMaker   DecisionMaker?
+  versions        ContentVersion[]
+  blockTags       BlockTag[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
@@ -182,6 +213,7 @@ model ContentBlock {
   @@index([sortOrder])
   @@index([accessLevel])
   @@index([blockType])
+  @@index([difficulty])
 }
 
 model DecisionMaker {
@@ -210,6 +242,7 @@ model R2Upload {
   bucket           String?
   fileSize         Int?
   mimeType         String
+  fileHash         String?
   status           UploadStatus  @default(pending)
   uploadedBy       User          @relation(fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
   uploadedById     String
@@ -219,6 +252,7 @@ model R2Upload {
   @@index([uploadedById])
   @@index([createdAt])
   @@index([status])
+  @@index([fileHash])
 }
 
 model AuditLog {
@@ -234,4 +268,130 @@ model AuditLog {
   @@index([createdAt, targetId])
   @@index([actorId])
   @@index([action])
+}
+
+// ── CMS ──────────────────────────────────────────────────────────
+
+model Topic {
+  id          String   @id @default(uuid())
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  title       String
+  slug        String
+  description String?
+  sortOrder   Int      @default(0)
+  status      ContentStatus @default(draft)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([chapterId, slug])
+  @@index([chapterId])
+}
+
+model ContentVersion {
+  id          String   @id @default(uuid())
+  blockId     String
+  block       ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  version     Int
+  title       String?
+  contentRichtext String?
+  contentCode     String?
+  codeLanguage    String?
+  mindmapJson     Json?
+  diagramData     Json?
+  subLevel        String?
+  changedBy   String
+  user        User     @relation(fields: [changedById], references: [id], onDelete: SetNull)
+  changedById String
+  createdAt   DateTime @default(now())
+
+  @@unique([blockId, version])
+  @@index([blockId])
+  @@index([changedById])
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+
+  blockTags   BlockTag[]
+}
+
+model BlockTag {
+  id        String   @id @default(uuid())
+  blockId   String
+  tagId     String
+  block     ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  tag       Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([blockId, tagId])
+  @@index([blockId])
+  @@index([tagId])
+}
+
+// ── Progress Tracking ────────────────────────────────────────────
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blocksCompleted Int  @default(0)
+  totalBlocks    Int   @default(0)
+  lastBlockId   String?
+  lastAccessedAt DateTime @default(now())
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blockId   String?
+  label     String?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, chapterId, blockId])
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model StudyStreak {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  streak      Int      @default(1)
+  lastDate    DateTime @default(now())
+  longestStreak Int   @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId])
+}
+
+model LearningAnalytics {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType   String
+  chapterId   String?
+  blockId     String?
+  timeSpent   Int      @default(0)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([createdAt])
 }

@@ -2,7 +2,8 @@ import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const TABS = [
-  { to: '/admin', label: 'Requests', end: true },
+  { to: '/admin', label: 'Dashboard', end: true },
+  { to: '/admin/requests', label: 'Requests' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/content', label: 'Content' },
   { to: '/admin/audit', label: 'Audit' },
