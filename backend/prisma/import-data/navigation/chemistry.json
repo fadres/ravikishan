@@ -2,223 +2,305 @@
   "name": "Chemistry",
   "chapters": [
     {
-      "id": "foundation and fundamentals",
-      "title": "Foundation and Fundamentals",
-      "description": "",
+      "id": "unit-1-foundation-and-fundamentals",
+      "title": "Unit 1: Foundation and Fundamentals",
+      "description": "General and Physical Chemistry · 2 teaching hours",
       "topics": [
         {
-          "id": "introduction-to-chemistry",
+          "id": "syllabus-topics",
+          "title": "Unit 1: Foundation and Fundamentals — Syllabus Overview"
+        },
+        {
+          "id": "introduction",
           "title": "Introduction to Chemistry"
         },
         {
-          "id": "importance-and-scope-of-chemistry",
-          "title": "Importance and Scope of Chemistry"
-        }
-      ]
-    },
-    {
-      "id": "chemical bonding and shapes od molecules",
-      "title": "Chemical Bonding and Shapes of Molecules",
-      "description": "",
-      "topics": [
-        {
-          "id": "ionic bonding",
-          "title": "Ionic Bonding"
+          "id": "metals-nonmetals-metalloids",
+          "title": "Metals, Non-metals & Metalloids"
         },
         {
-          "id": "covalent bonding",
-          "title": "Covalent Bonding"
-        }
-      ]
-    },
-    {
-      "id": "atomic structure",
-      "title": "Atomic Structure",
-      "description": "",
-      "topics": [
-        {
-          "id": "rutherford's-atomic-model",
-          "title": "Rutherford's Atomic Model",
-          "important":true
-        
+          "id": "organic-inorganic-compounds",
+          "title": "Organic & Inorganic Compounds"
         },
-        {
-          "id": "limitations-of-rutherford's-atomic-model",
-          "title": "Limitations of Rutherford's Atomic Model"
-        },
-        {
-          "id": "postulates-of-bohr's-atomic-model",
-          "title":  "Postulates of Bohr's Atomic Model"
-        },
-         {
-          "id": "spectrum-of-hydrogen-atom",
-          "title":  "Spectrum of Hydrogen Atom"
-        }
-
-
-
-      ]
-    },
-    {
-      "id": "state of matter (gaseous state)",
-      "title": "State of Matter(Gaseous State)",
-      "description": "",
-      "topics": [
-        {
-          "id": "kinetic-theory-of-gases-and-its-postulates",
-          "title": "Kinetic Theory of Gases and Its Postulates"
-        },
-        {
-          "id": "boyles-law-(gas-laws)",
-          "title": "Boyles Law (Gas Laws)",
-          "important": true
-        }
-      ]
-    },
-       {
-      "id": "gaseous-state",
-      "title": "Gaseous State",
-      "description": "",
-      "topics": [
-        {
-          "id": "gas-state",
-          "title": "Gas State"
-        }
-      ]
-    },
-       {
-      "id": "stoichiometry",
-      "title": "Stoichiometry",
-      "description": "",
-      "topics": [
-        {
-          "id": "numerical",
-          "title": "Numerical"
-        }
-      ]
-    },
-    {
-      "id": "states of matter",
-      "title": "States of Matter",
-      "description": "Properties of matter and the five states.",
-      "topics": [
-        {
-          "id": "properties",
-          "title": "Properties of Matter"
-        },
-        {
-          "id": "five-states",
-          "title": "Five States of Matter"
-        }
-      ]
-    },
-    {
-      "id": "classification of matter",
-      "title": "Classification of Matter",
-      "description": "Physical/chemical classification, pure substances and mixtures.",
-      "topics": [
         {
           "id": "physical-chemical-classification",
           "title": "Physical & Chemical Classification"
         },
         {
           "id": "pure-substances-mixtures",
-          "title": "Pure Substances and Mixtures"
-        },
-        {
-          "id": "metals-nonmetals-metalloids",
-          "title": "Metals, Non-Metals and Metalloids"
-        },
-        {
-          "id": "organic-inorganic-compounds",
-          "title": "Organic and Inorganic Compounds"
+          "title": "Pure Substances & Mixtures"
         }
       ]
     },
     {
-      "id": "compounds & chemical bonding",
-      "title": "Compounds & Chemical Bonding",
-      "description": "How compounds form and bond.",
+      "id": "unit-2-stoichiometry",
+      "title": "Unit 2: Stoichiometry",
+      "description": "General and Physical Chemistry · 8 teaching hours",
       "topics": [
         {
-          "id": "water",
-          "title": "Water: A Polar Compound"
-        }
-      ]
-    },
-    {
-      "id": "atomic mass & atomic mass unit",
-      "title": "Atomic Mass & Atomic Mass Unit",
-      "description": "Definitions and concepts of atomic mass.",
-      "topics": [
-        {
-          "id": "atomic-mass-def",
-          "title": "Atomic Mass: Definitions"
-        }
-      ]
-    },
-    {
-      "id": "relative molecular mass & formula mass",
-      "title": "Relative Molecular Mass & Formula Mass",
-      "description": "Molecular and formula mass concepts.",
-      "topics": [
-        {
-          "id": "relative-molecular-mass",
-          "title": "Relative Molecular Mass"
+          "id": "syllabus-topics",
+          "title": "Unit 2: Stoichiometry — Syllabus Overview"
         },
         {
           "id": "formula-mass",
-          "title": "Formula Mass"
+          "title": "Formula Mass of Ionic Compounds"
+        },
+        {
+          "id": "numerical",
+          "title": "Numerical"
+        },
+        {
+          "id": "relative-molecular-mass",
+          "title": "Relative Molecular Mass & Gram Mole"
         }
       ]
     },
     {
-      "id": "organic chemistry foundations",
-      "title": "Organic Chemistry Foundations",
-      "description": "Carbon classification, hybridization and homologous series.",
+      "id": "unit-3-atomic-structure",
+      "title": "Unit 3: Atomic Structure",
+      "description": "General and Physical Chemistry · 8 teaching hours",
       "topics": [
         {
+          "id": "syllabus-topics",
+          "title": "Unit 3: Atomic Structure — Syllabus Overview"
+        },
+        {
+          "id": "atomic-mass-def",
+          "title": "Atomic Mass / Relative Atomic Mass"
+        },
+        {
+          "id": "atomic-mass-gram-atom",
+          "title": "Atomic Mass, Gram Atom & Isotopes"
+        },
+        {
+          "id": "atoms-molecules",
+          "title": "Atoms & Molecules"
+        },
+        {
+          "id": "bohrs-model",
+          "title": "Bohr's Atomic Model & Planck's Quantum Theory"
+        },
+        {
+          "id": "daltons-theory",
+          "title": "Dalton's Atomic Theory & Limitations"
+        },
+        {
+          "id": "isotopes-isobars-isotones",
+          "title": "Isotopes, Isobars, Isotones, Isoelectronic & Isodiaphers"
+        },
+        {
+          "id": "rutherford's-atomic-model",
+          "title": "Rutherford's Atomic Model"
+        },
+        {
+          "id": "rutherfords-model",
+          "title": "Rutherford's Alpha Scattering Experiment"
+        },
+        {
+          "id": "subatomic-particles",
+          "title": "Subatomic Particles & Specific Charge"
+        },
+        {
+          "id": "symbols-of-elements",
+          "title": "Symbols of Elements"
+        }
+      ]
+    },
+    {
+      "id": "unit-4-classification-of-elements-and-periodic-table",
+      "title": "Unit 4: Classification of Elements and Periodic Table",
+      "description": "General and Physical Chemistry · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 4: Classification of Elements and Periodic Table — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-5-chemical-bonding-and-shapes-of-molecules",
+      "title": "Unit 5: Chemical Bonding and Shapes of Molecules",
+      "description": "General and Physical Chemistry · 9 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 5: Chemical Bonding and Shapes of Molecules — Syllabus Overview"
+        },
+        {
+          "id": "water",
+          "title": "Water (H₂O) & Electrolysis"
+        }
+      ]
+    },
+    {
+      "id": "unit-6-oxidation-and-reduction",
+      "title": "Unit 6: Oxidation and Reduction",
+      "description": "General and Physical Chemistry · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 6: Oxidation and Reduction — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-7-states-of-matter",
+      "title": "Unit 7: States of Matter",
+      "description": "General and Physical Chemistry · 8 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 7: States of Matter — Syllabus Overview"
+        },
+        {
+          "id": "boyles-law",
+          "title": "Boyle's Law & Kinetic Molecular Theory"
+        },
+        {
+          "id": "boyles-law-(gas-laws)",
+          "title": "Boyle's Law (Gas Laws)"
+        },
+        {
+          "id": "five-states",
+          "title": "The Five States of Matter"
+        },
+        {
+          "id": "gas-state",
+          "title": "Gas State"
+        },
+        {
+          "id": "kinetic-theory-of-gases-and-its-postulates",
+          "title": "Kinetic Theory of Gases and Its Postulates"
+        },
+        {
+          "id": "properties",
+          "title": "Key Gas Properties (GMVTP)"
+        }
+      ]
+    },
+    {
+      "id": "unit-8-chemical-equilibrium",
+      "title": "Unit 8: Chemical Equilibrium",
+      "description": "General and Physical Chemistry · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 8: Chemical Equilibrium — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-9-chemistry-of-non-metals",
+      "title": "Unit 9: Chemistry of Non-metals",
+      "description": "Inorganic Chemistry · 22 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 9: Chemistry of Non-metals — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-10-chemistry-of-metals",
+      "title": "Unit 10: Chemistry of Metals",
+      "description": "Inorganic Chemistry · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 10: Chemistry of Metals — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-11-bio-inorganic-chemistry",
+      "title": "Unit 11: Bio-inorganic Chemistry",
+      "description": "Inorganic Chemistry · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 11: Bio-inorganic Chemistry — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-12-basic-concept-of-organic-chemistry",
+      "title": "Unit 12: Basic Concept of Organic Chemistry",
+      "description": "Organic Chemistry · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 12: Basic Concept of Organic Chemistry — Syllabus Overview"
+        },
+        {
           "id": "carbon-classification",
-          "title": "Classification of Carbon Atoms"
-        },
-        {
-          "id": "vinyl-vinylic-allylic",
-          "title": "Vinyl, Vinylic and Allylic Positions"
-        },
-        {
-          "id": "hybridization",
-          "title": "Hybridization"
+          "title": "Classifying Carbons (1°, 2°, 3°, 4°)"
         },
         {
           "id": "homologous-series",
           "title": "Homologous Series"
+        },
+        {
+          "id": "hybridization",
+          "title": "Hybridization of Carbon (sp, sp², sp³)"
+        },
+        {
+          "id": "vinyl-vinylic-allylic",
+          "title": "Vinyl, Vinylic & Allylic Groups"
         }
       ]
     },
     {
-      "id": "atomic models & isotopic species",
-      "title": "Atomic Models & Isotopic Species",
-      "description": "Dalton's theory, subatomic particles and atomic models.",
+      "id": "unit-13-fundamental-principles-of-organic-chemistry",
+      "title": "Unit 13: Fundamental Principles of Organic Chemistry",
+      "description": "Organic Chemistry · 10 teaching hours",
       "topics": [
         {
-          "id": "daltons-theory",
-          "title": "Dalton's Atomic Theory"
-        },
+          "id": "syllabus-topics",
+          "title": "Unit 13: Fundamental Principles of Organic Chemistry — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-14-hydrocarbons",
+      "title": "Unit 14: Hydrocarbons",
+      "description": "Organic Chemistry · 8 teaching hours",
+      "topics": [
         {
-          "id": "subatomic-particles",
-          "title": "Subatomic Particles"
-        },
+          "id": "syllabus-topics",
+          "title": "Unit 14: Hydrocarbons — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-15-aromatic-hydrocarbons",
+      "title": "Unit 15: Aromatic Hydrocarbons",
+      "description": "Organic Chemistry · 6 teaching hours",
+      "topics": [
         {
-          "id": "rutherfords-model",
-          "title": "Rutherford's Model"
-        },
+          "id": "syllabus-topics",
+          "title": "Unit 15: Aromatic Hydrocarbons — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-16-fundamentals-of-applied-chemistry",
+      "title": "Unit 16: Fundamentals of Applied Chemistry",
+      "description": "Applied Chemistry · 4 teaching hours",
+      "topics": [
         {
-          "id": "bohrs-model",
-          "title": "Bohr's Model"
-        },
+          "id": "syllabus-topics",
+          "title": "Unit 16: Fundamentals of Applied Chemistry — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-17-modern-chemical-manufactures",
+      "title": "Unit 17: Modern Chemical Manufactures",
+      "description": "Applied Chemistry · 11 teaching hours",
+      "topics": [
         {
-          "id": "isotopes-isobars-isotones",
-          "title": "Isotopes, Isobars and Isotones"
+          "id": "syllabus-topics",
+          "title": "Unit 17: Modern Chemical Manufactures — Syllabus Overview"
         }
       ]
     }

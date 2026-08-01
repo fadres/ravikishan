@@ -12,7 +12,6 @@ const ChapterPage = lazy(() => import('./pages/ChapterPage.jsx'));
 const SearchPage = lazy(() => import('./pages/SearchPage.jsx'));
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage.jsx'));
-const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage.jsx'));
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'));
 const RequestsPanel = lazy(() => import('./pages/admin/RequestsPanel.jsx'));
 const UsersPanel = lazy(() => import('./pages/admin/UsersPanel.jsx'));
@@ -43,10 +42,6 @@ export default function App() {
                 element={<ChapterPage />}
               />
               <Route path="/search" element={<SearchPage />} />
-              <Route path="/practice" element={<PlaceholderPage />} />
-              <Route path="/tests" element={<PlaceholderPage />} />
-              <Route path="/flashcards" element={<PlaceholderPage />} />
-              <Route path="/notes" element={<PlaceholderPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/admin" element={<AdminLayout />}>

@@ -2,137 +2,21 @@
   "name": "Physics",
   "chapters": [
     {
-      "id": "mechanics",
-      "title": "Mechanics",
-      "description": "Study of motion and force",
-
+      "id": "unit-1-physical-quantities",
+      "title": "Unit 1: Physical Quantities",
+      "description": "Mechanics · 3 teaching hours",
       "topics": [
         {
-          "id": "physical-quantity",
-          "title": "Physical Quantity",
-          "important": true
-        },
-         {
-          "id": "dimensions",
-          "title": "Dimensions"
+          "id": "syllabus-topics",
+          "title": "Unit 1: Physical Quantities — Syllabus Overview"
         },
         {
-          "id": "errors",
-          "title": "Errors"
-        },
-        {
-          "id": "m,p-errors",
-          "title": "M,P Errors"
-        },
-         {
-          "id": "s-f-rules",
-          "title": "S F Rules"
-        },
-         {
-          "id": "numerical-p",
-          "title": "Numerical P"
+          "id": "accurate-measurement",
+          "title": "Accurate Measurement"
         },
         {
           "id": "c,q-and-mcq",
           "title": "C,Q and MCQ"
-        },
-         {
-          "id": "l,s,a,q-and-n",
-          "title": "L,S,A,Q and N"
-        },
-        {
-          "id": "dimensional-analysis-practice-set-1",
-          "title":  "Dimensional Analysis - Practice Set 1"
-        },
-        {
-          "id": "dimensional-analysis-practice-set-2",
-          "title": "Dimensional Analysis - Practice Set 2"
-        },
-        {
-          "id": "vector",
-          "title": "Vector"
-        }
-
-       
-      ]
-    },
-     {
-      "id": "optics",
-      "title": "Optics",
-
-      "topics": [
-        {
-          "id": "reflection-at-curve-surface",
-          "title": "Reflection at Curved Surface"
-        },
-        {
-          "id": "refraction-at-plane-surface",
-          "title": "Refraction at Plane Surface"
-        },
-        {
-          "id": "opticsn1",
-          "title": "Optics N1"
-        },
-        {
-          "id": "n1",
-          "title": "N1"
-        },
-        {
-          "id": "on1",
-          "title": "Mirrors and Lenses",
-          "important": true
-        },
-         {
-          "id": "n2",
-          "title": "N2"
-        },
-         {
-          "id": "n3",
-          "title": "N3"
-        }
-      ]
-    },
-
-    {
-      "id": "heat",
-      "title": "Heat",
-
-      "topics": [
-        {
-          "id": "heat-and-temperature",
-          "title": "Heat and Temperature"
-        },
-        {
-          "id": "temperature-scales",
-          "title": "Temperature Scales"
-        },
-        {
-          "id": "quantity-of-heat",
-          "title": "Quantity of Heat"
-        },
-        {
-          "id": "h-and-t",
-          "title": "HEAT AND TEMPERATURE — Chapter 9, Class 11 Physics (Concepts, All 5 Scales & Step-by-Step Numericalals)",
-          "important": true
-        }
-      ]
-    },
-    {
-      "id": "physical-quantities",
-      "title": "Unit 1: Physical Quantities",
-      "description": "18 topics, 474 practice questions.",
-      "topics": [
-        {
-          "id": "physical-quantity-types",
-          "title": "Physical Quantities (Measurable & Non-measurable)"
-        },
-        {
-          "id": "fundamental-quantities",
-          "title": "Fundamental Quantities"
-        },
-        {
-          "id": "supplementary-quantities",
-          "title": "Supplementary Quantities"
         },
         {
           "id": "derived-quantities",
@@ -140,134 +24,478 @@
         },
         {
           "id": "dimension",
-          "title": "Dimension"
+          "title": "Dimension of a Physical Quantity"
         },
         {
-          "id": "precise-measurement",
-          "title": "Precise Measurement"
+          "id": "dimensional-analysis-check-correctness",
+          "title": "Uses of Dimensional Equation — Checking Correctness of Physical Relations"
         },
         {
-          "id": "accurate-measurement",
-          "title": "Accurate Measurement"
+          "id": "dimensional-analysis-derive-relations",
+          "title": "Uses of Dimensional Equation — Deriving Relations Between Physical Quantities"
         },
         {
-          "id": "significant-figure",
-          "title": "Significant Figures"
+          "id": "dimensional-analysis-derived-dimensions",
+          "title": "Uses of Dimensional Analysis — Finding Dimensions of Derived Quantities"
+        },
+        {
+          "id": "dimensional-analysis-find-constants",
+          "title": "Uses of Dimensional Equation — Finding Dimension of Constants"
+        },
+        {
+          "id": "dimensional-analysis-unit-conversion",
+          "title": "Uses of Dimensional Equation — Unit Conversion"
         },
         {
           "id": "error-in-measurement",
           "title": "Error in Measurement"
         },
         {
-          "id": "systematic-error",
-          "title": "Systematic Error"
-        },
-        {
-          "id": "random-error",
-          "title": "Random Error"
-        },
-        {
-          "id": "least-count-error",
-          "title": "Least Count Error"
+          "id": "fundamental-quantities",
+          "title": "Fundamental Quantities"
         },
         {
           "id": "gross-error",
           "title": "Gross Error"
         },
         {
-          "id": "dimensional-analysis-check-correctness",
-          "title": "Dimensional Analysis - Checking Correctness"
+          "id": "l,s,a,q-and-n",
+          "title": "L,S,A,Q and N"
         },
         {
-          "id": "dimensional-analysis-derived-dimensions",
-          "title": "Dimensional Analysis - Derived Dimensions"
+          "id": "least-count-error",
+          "title": "Least Count Error"
         },
         {
-          "id": "dimensional-analysis-derive-relations",
-          "title": "Dimensional Analysis - Deriving Relations"
+          "id": "m,p-errors",
+          "title": "M,P Errors"
         },
         {
-          "id": "dimensional-analysis-find-constants",
-          "title": "Dimensional Analysis - Finding Constants"
+          "id": "numerical-p",
+          "title": "Numerical P"
         },
         {
-          "id": "dimensional-analysis-unit-conversion",
-          "title": "Dimensional Analysis - Unit Conversion"
+          "id": "physical-quantity-types",
+          "title": "Physical Quantities (Measurable & Non-measurable)"
+        },
+        {
+          "id": "precise-measurement",
+          "title": "Precise Measurement"
+        },
+        {
+          "id": "random-error",
+          "title": "Random Error"
+        },
+        {
+          "id": "s-f-rules",
+          "title": "Error Propagation & Significant Figures Rules"
+        },
+        {
+          "id": "significant-figure",
+          "title": "Significant Figure"
+        },
+        {
+          "id": "supplementary-quantities",
+          "title": "Supplementary Quantities"
+        },
+        {
+          "id": "systematic-error",
+          "title": "Systematic Error"
+        },
+        {
+          "id": "topic-map",
+          "title": "Topic Map — Physical Quantities"
         }
       ]
     },
     {
-      "id": "vectors",
+      "id": "unit-2-vectors",
       "title": "Unit 2: Vectors",
-      "description": "17 topics, 446 practice questions.",
+      "description": "Mechanics · 4 teaching hours",
       "topics": [
         {
-          "id": "scalar-quantity",
-          "title": "Scalar Quantity"
-        },
-        {
-          "id": "vector-quantity",
-          "title": "Vector Quantity"
-        },
-        {
-          "id": "triangle-law",
-          "title": "Triangle Law of Vectors"
-        },
-        {
-          "id": "parallelogram-law",
-          "title": "Parallelogram Law of Vectors"
-        },
-        {
-          "id": "types-of-vector",
-          "title": "Types of Vectors"
-        },
-        {
-          "id": "unit-vector",
-          "title": "Unit Vector"
-        },
-        {
-          "id": "null-vector",
-          "title": "Null Vector"
-        },
-        {
-          "id": "parallel-vector",
-          "title": "Parallel Vectors"
-        },
-        {
-          "id": "equal-vector",
-          "title": "Equal Vectors"
-        },
-        {
-          "id": "negative-vector",
-          "title": "Negative Vector"
+          "id": "syllabus-topics",
+          "title": "Unit 2: Vectors — Syllabus Overview"
         },
         {
           "id": "collinear-vector",
-          "title": "Collinear Vectors"
+          "title": "Collinear Vector"
         },
         {
           "id": "coplanar-vector",
-          "title": "Coplanar Vectors"
+          "title": "Coplanar Vector"
+        },
+        {
+          "id": "equal-vector",
+          "title": "Equal Vector"
+        },
+        {
+          "id": "negative-vector",
+          "title": "Negative of a Vector"
+        },
+        {
+          "id": "null-vector",
+          "title": "Null (or Zero) Vector"
+        },
+        {
+          "id": "parallel-vector",
+          "title": "Parallel Vector"
+        },
+        {
+          "id": "parallelogram-law",
+          "title": "Parallelogram Law of Vector Addition"
         },
         {
           "id": "product-of-two-vectors",
           "title": "Product of Two Vectors"
         },
         {
-          "id": "scalar-dot-product",
-          "title": "Scalar (Dot) Product"
-        },
-        {
-          "id": "vector-cross-product",
-          "title": "Vector (Cross) Product"
-        },
-        {
           "id": "resolution-of-vector",
           "title": "Resolution of a Vector"
         },
         {
+          "id": "scalar-dot-product",
+          "title": "Scalar (Dot) Product of Two Vectors"
+        },
+        {
+          "id": "scalar-quantity",
+          "title": "Scalar Quantity"
+        },
+        {
+          "id": "topic-map",
+          "title": "Topic Map — Vectors"
+        },
+        {
+          "id": "triangle-law",
+          "title": "Triangle Law of Vector Addition"
+        },
+        {
+          "id": "types-of-vector",
+          "title": "Types of Vector"
+        },
+        {
+          "id": "unit-vector",
+          "title": "Unit Vector"
+        },
+        {
+          "id": "vector",
+          "title": "Vector"
+        },
+        {
+          "id": "vector-cross-product",
+          "title": "Vector (Cross) Product of Two Vectors"
+        },
+        {
           "id": "vector-numerical-problems",
-          "title": "Vector Numerical Problems"
+          "title": "Vector Numerical Problems (Applications)"
+        },
+        {
+          "id": "vector-quantity",
+          "title": "Vector Quantity"
+        }
+      ]
+    },
+    {
+      "id": "unit-3-kinematics",
+      "title": "Unit 3: Kinematics",
+      "description": "Mechanics · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 3: Kinematics — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-4-dynamics",
+      "title": "Unit 4: Dynamics",
+      "description": "Mechanics · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 4: Dynamics — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-5-work-energy-and-power",
+      "title": "Unit 5: Work, Energy and Power",
+      "description": "Mechanics · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 5: Work, Energy and Power — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-6-circular-motion",
+      "title": "Unit 6: Circular Motion",
+      "description": "Mechanics · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 6: Circular Motion — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-7-gravitation",
+      "title": "Unit 7: Gravitation",
+      "description": "Mechanics · 10 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 7: Gravitation — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-8-elasticity",
+      "title": "Unit 8: Elasticity",
+      "description": "Mechanics · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 8: Elasticity — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-9-heat-and-temperature",
+      "title": "Unit 9: Heat and Temperature",
+      "description": "Heat and Thermodynamics · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 9: Heat and Temperature — Syllabus Overview"
+        },
+        {
+          "id": "h-and-t",
+          "title": "HEAT AND TEMPERATURE — Chapter 9, Class 11 Physics (Concepts, All 5 Scales & Step-by-Step Numericals)"
+        },
+        {
+          "id": "heat-and-temperature",
+          "title": "Heat and Temperature"
+        },
+        {
+          "id": "temperature-scales",
+          "title": "Temperature Scales"
+        }
+      ]
+    },
+    {
+      "id": "unit-10-thermal-expansion",
+      "title": "Unit 10: Thermal Expansion",
+      "description": "Heat and Thermodynamics · 4 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 10: Thermal Expansion — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-11-quantity-of-heat",
+      "title": "Unit 11: Quantity of Heat",
+      "description": "Heat and Thermodynamics · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 11: Quantity of Heat — Syllabus Overview"
+        },
+        {
+          "id": "quantity-of-heat",
+          "title": "Quantity of Heat"
+        }
+      ]
+    },
+    {
+      "id": "unit-12-rate-of-heat-flow",
+      "title": "Unit 12: Rate of Heat Flow",
+      "description": "Heat and Thermodynamics · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 12: Rate of Heat Flow — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-13-ideal-gas",
+      "title": "Unit 13: Ideal Gas",
+      "description": "Heat and Thermodynamics · 8 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 13: Ideal Gas — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-14-reflection-at-curved-mirror",
+      "title": "Unit 14: Reflection at Curved Mirror",
+      "description": "Waves & Optics · 2 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 14: Reflection at Curved Mirror — Syllabus Overview"
+        },
+        {
+          "id": "n1",
+          "title": "N1"
+        },
+        {
+          "id": "opticsn1",
+          "title": "OPTICS N1"
+        },
+        {
+          "id": "reflection-at-curve-surface",
+          "title": "Reflection at Curved Surface"
+        }
+      ]
+    },
+    {
+      "id": "unit-15-refraction-at-plane-surfaces",
+      "title": "Unit 15: Refraction at Plane Surfaces",
+      "description": "Waves & Optics · 4 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 15: Refraction at Plane Surfaces — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-16-refraction-through-prisms",
+      "title": "Unit 16: Refraction Through Prisms",
+      "description": "Waves & Optics · 4 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 16: Refraction Through Prisms — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-17-lenses",
+      "title": "Unit 17: Lenses",
+      "description": "Waves & Optics · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 17: Lenses — Syllabus Overview"
+        },
+        {
+          "id": "n2",
+          "title": "N2"
+        },
+        {
+          "id": "n3",
+          "title": "N3"
+        },
+        {
+          "id": "on1",
+          "title": "Mirrors and Lenses"
+        }
+      ]
+    },
+    {
+      "id": "unit-18-dispersion",
+      "title": "Unit 18: Dispersion",
+      "description": "Waves & Optics · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 18: Dispersion — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-19-electric-charges",
+      "title": "Unit 19: Electric Charges",
+      "description": "Electricity & Magnetism · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 19: Electric Charges — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-20-electric-field",
+      "title": "Unit 20: Electric Field",
+      "description": "Electricity & Magnetism · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 20: Electric Field — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-21-potential-potential-difference-and-potential-energy",
+      "title": "Unit 21: Potential, Potential Difference and Potential Energy",
+      "description": "Electricity & Magnetism · 4 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 21: Potential, Potential Difference and Potential Energy — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-22-capacitor",
+      "title": "Unit 22: Capacitor",
+      "description": "Electricity & Magnetism · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 22: Capacitor — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-23-dc-circuits",
+      "title": "Unit 23: DC Circuits",
+      "description": "Electricity & Magnetism · 10 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 23: DC Circuits — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-24-nuclear-physics",
+      "title": "Unit 24: Nuclear Physics",
+      "description": "Modern Physics · 4 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 24: Nuclear Physics — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-25-solids",
+      "title": "Unit 25: Solids",
+      "description": "Modern Physics · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 25: Solids — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-26-recent-trends-in-physics",
+      "title": "Unit 26: Recent Trends in Physics",
+      "description": "Modern Physics · 6 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 26: Recent Trends in Physics — Syllabus Overview"
         }
       ]
     }

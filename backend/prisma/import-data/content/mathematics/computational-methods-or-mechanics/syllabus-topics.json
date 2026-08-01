@@ -1,0 +1,9 @@
+{
+  "title": "Computational Methods OR Mechanics — Syllabus Overview",
+  "syllabus": "Mat. 007",
+  "notes": [
+    "<p><strong>Computational Methods OR Mechanics</strong> &middot; 12 working hours</p>",
+    "<h2>Syllabus Topics</h2>",
+    "<ul>\n  <li>Numerical computation: Bisection and Newton-Raphson methods</li>\n  <li>Numerical integration: Trapezoidal rule and Simpson's rule</li>\n  <li>Statics: Forces, resultant forces, parallelogram law, composition/resolution of coplanar forces</li>\n  <li>Dynamics: Straight-line motion, uniform acceleration, motion under gravity, motion down smooth inclined planes</li>\n</ul>"
+  ]
+}

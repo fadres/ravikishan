@@ -4,116 +4,143 @@
     {
       "id": "algebra",
       "title": "Algebra",
-      "description": "",
+      "description": "44 working hours",
       "topics": [
         {
-          "id": "linear equations",
-          "title": "Linear Equations"
+          "id": "syllabus-topics",
+          "title": "Algebra — Syllabus Overview"
         },
         {
-          "id": "quadratic equations",
-          "title": "Quadratic Equations"
+          "id": "evaluate-determinants",
+          "title": "Exercise 5.2 - Question 1: Evaluate Determinants"
+        },
+        {
+          "id": "matrix-5.2",
+          "title": "Matrix5.2"
+        },
+        {
+          "id": "matrix.0001",
+          "title": "Matrix.0001"
+        },
+        {
+          "id": "matrix.5.02",
+          "title": "Matrix5.02"
+        },
+        {
+          "id": "matrix5.2",
+          "title": "Matrix5.2"
+        },
+        {
+          "id": "minors,cofactors,determinants",
+          "title": "Matrix 5.2 - Theory: Minors, Cofactors, Determinants"
+        },
+        {
+          "id": "without-expand",
+          "title": "Exercise 5.2 - Q3 & Q6: Proof-Type Determinant Identities"
         }
       ]
     },
     {
-      "id": "analytical-geometry",
-      "title": "Analytical Geometry",
-      "description": "",
+      "id": "trigonometry",
+      "title": "Trigonometry",
+      "description": "12 working hours",
       "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Trigonometry — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "analytic-geometry",
+      "title": "Analytic Geometry",
+      "description": "20 working hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Analytic Geometry — Syllabus Overview"
+        },
         {
           "id": "geometry.9-1",
           "title": "Geometry 9-1"
-        },
+        }
+      ]
+    },
+    {
+      "id": "vectors",
+      "title": "Vectors",
+      "description": "12 working hours",
+      "topics": [
         {
-          "id": "circles",
-          "title": "Circles"
+          "id": "syllabus-topics",
+          "title": "Vectors — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "statistics-and-probability",
+      "title": "Statistics and Probability",
+      "description": "12 working hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Statistics and Probability — Syllabus Overview"
         }
       ]
     },
     {
       "id": "calculus",
       "title": "Calculus",
-      "description": "Calculus is a branch of mathematics focused on limits, functions, derivatives, integrals, and infinite series.",
+      "description": "48 working hours",
       "topics": [
         {
-        "id": "limits",
-        "title": "Limits"
+          "id": "syllabus-topics",
+          "title": "Calculus — Syllabus Overview"
+        },
+        {
+          "id": "limit5.01",
+          "title": "LIMITS — Infinite Limits, Indeterminate Forms & Evaluation of Limits (Step-by-Step)"
+        },
+        {
+          "id": "limitc",
+          "title": "TRIGONOMETRIC LIMITS — First-Principle Substitution Method (x → a type problems)"
+        },
+        {
+          "id": "limits",
+          "title": "Limits"
         },
         {
           "id": "limits5.1",
-          "title":  "Limits5.1"
+          "title": "Limits5.1"
         },
-         {
+        {
           "id": "limits5.2",
-          "title":  "Limits5.2"
-         },
-          {
+          "title": "Limits5.2"
+        },
+        {
           "id": "limits5.3",
-          "title":  "Limits5.3"
-         },
-         { "id": "limit5.01",
-           "title":"LIMITS — Infinite Limits, Indeterminate Forms & Evaluation of Limits (Step-by-Step)",
-            "important":true
-
-         },
-         {
-        "id": "limitc",
-        "title": "TRIGONOMETRIC LIMITS — First-Principle Substitution Method (x → a type problems)",
-        "important":true
+          "title": "Limits5.3"
+        },
+        {
+          "id": "topic-1",
+          "title": "Quiz -1 - Limit Evaluation Techniques"
+        },
+        {
+          "id": "topic-2",
+          "title": "Limits Master Class & Intuition"
         }
-        ]
+      ]
     },
-     {
-      "id": "matrix (algebra)",
-      "title": "Matrix (Algebra)",
-      "description": "A rectangular array or grid of numbers, symbols, or expressions arranged in rows and columns, used to represent linear transformations, systems of linear equations, and physical states.",
+    {
+      "id": "computational-methods-or-mechanics",
+      "title": "Computational Methods OR Mechanics",
+      "description": "12 working hours",
       "topics": [
-        
-
-       
-       
-
-       
-          {
-          "id": "minors,cofactors,determinants",
-          "title":  "  Matrix 5.2 - Theory: Minors, Cofactors, Determinants   ",
-          "important": true
-        },
         {
-        "id": "evaluate-determinants",
-        "title": "Evaluate Determinants",
-        "important":true
-        },
-         {
-        "id": "without-expand",
-        "title": "Without Expand",
-        "important":true
-        },
-        
-        
-        
-        {
-        "id": "matrix.0001",
-        "title": "Matrix.0001",
-        "important":true
-        },
-         {
-          "id": "matrix-5.2",
-          "title":  "Matrix 5.2",
-          "important": true
-        },
-        {
-          "id": "matrix.5.02",
-          "title":  "  Matrix 5.02     ",
-          "important": true
-        },
-         {
-          "id": "matrix5.2",
-          "title":  "Matrix5.2",
-          "important": true
+          "id": "syllabus-topics",
+          "title": "Computational Methods OR Mechanics — Syllabus Overview"
         }
-        ]
+      ]
     }
   ]
 }

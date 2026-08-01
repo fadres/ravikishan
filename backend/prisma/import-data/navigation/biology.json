@@ -2,74 +2,132 @@
   "name": "Biology",
   "chapters": [
     {
-      "id": "botany",
-      "title": "Botany",
-      "description": "",
+      "id": "unit-1-biomolecules-and-cell-biology",
+      "title": "Unit 1: Biomolecules and Cell Biology",
+      "description": "A: Botany · 15 teaching hours",
       "topics": [
         {
-          "id": "bio-molecules",
-          "title": "Bio-Molecules"
+          "id": "syllabus-topics",
+          "title": "Unit 1: Biomolecules and Cell Biology — Syllabus Overview"
         },
         {
-          "id": "botany5.1",
-          "title":  "Botany5.1"
-        }
-      ]
-    },
-    {
-      "id": "cell-biology",
-      "title": "Cell Biology",
-      "description": "Cell theory, organelles, and cell division.",
-      "topics": [
+          "id": "biomolecules-detail",
+          "title": "Biomolecules & Cell Biology — Detailed Study"
+        },
+        {
+          "id": "cell-division",
+          "title": "Cell Division"
+        },
         {
           "id": "cell-theory-and-cell-organelles",
           "title": "Cell Theory and Cell Organelles"
         },
         {
-          "id": "cell-division",
-          "title": "Cell Division"
-        }
-      ]
-    },
-    {
-      "id": "zoology",
-      "title": "Zoology",
-      "description": "",
-      "topics": [
-        {
-          "id": "protista",
-          "title": "Protista"
-        },
-        {
-          "id": "plasmodium",
-          "title": "Plasmodium"
-        },
-         {
-          "id": "life-cycle",
-          "title": "Life Cycle"
-        },
-         {
-          "id": "similarities-and-differences",
-          "title": "Similarities and Differences"
-        },
-         {
-          "id": "rkn",
-          "title": "Rkn"
-        }
-      ]
-    },
-    {
-      "id": "bio-molecules & chemical basis of life",
-      "title": "Bio-molecules & Chemical Basis of Life",
-      "description": "MCQ practice on bio-molecules.",
-      "topics": [
-        {
           "id": "mcqs1",
-          "title": "Bio-molecules MCQs"
+          "title": "Biomolecules MCQs - Set 1"
+        }
+      ]
+    },
+    {
+      "id": "unit-2-floral-diversity",
+      "title": "Unit 2: Floral Diversity",
+      "description": "A: Botany · 30 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 2: Floral Diversity — Syllabus Overview"
         },
         {
-          "id": "biomolecules-detail",
-          "title": "Biomolecules & Cell Biology — Detailed Study"
+          "id": "botany5.1",
+          "title": "Botany5.1"
+        }
+      ]
+    },
+    {
+      "id": "unit-3-introductory-microbiology",
+      "title": "Unit 3: Introductory Microbiology",
+      "description": "A: Botany · 5 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 3: Introductory Microbiology — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-4-ecology",
+      "title": "Unit 4: Ecology",
+      "description": "A: Botany · 11 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 4: Ecology — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-5-vegetation",
+      "title": "Unit 5: Vegetation",
+      "description": "A: Botany · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 5: Vegetation — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-6-introduction-to-biology",
+      "title": "Unit 6: Introduction to Biology",
+      "description": "B: Zoology · 2 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 6: Introduction to Biology — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-7-evolutionary-biology",
+      "title": "Unit 7: Evolutionary Biology",
+      "description": "B: Zoology · 15 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 7: Evolutionary Biology — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-8-faunal-diversity",
+      "title": "Unit 8: Faunal Diversity",
+      "description": "B: Zoology · 34 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 8: Faunal Diversity — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-9-biota-and-environment",
+      "title": "Unit 9: Biota and Environment",
+      "description": "B: Zoology · 10 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 9: Biota and Environment — Syllabus Overview"
+        }
+      ]
+    },
+    {
+      "id": "unit-10-conservation-biology",
+      "title": "Unit 10: Conservation Biology",
+      "description": "B: Zoology · 3 teaching hours",
+      "topics": [
+        {
+          "id": "syllabus-topics",
+          "title": "Unit 10: Conservation Biology — Syllabus Overview"
         }
       ]
     }

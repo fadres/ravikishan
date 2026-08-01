@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar.jsx';
+import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 
 const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
   { to: '/class/class-11', label: 'Subjects', icon: 'book' },
-  { to: '/practice', label: 'Practice', icon: 'pencil' },
-  { to: '/tests', label: 'Tests', icon: 'clipboard' },
-  { to: '/flashcards', label: 'Flashcards', icon: 'cards' },
-  { to: '/notes', label: 'Notes', icon: 'doc' },
 ];
 
 function NavIcon({ name }) {
@@ -20,12 +17,6 @@ function NavIcon({ name }) {
       return <svg {...common}><path d="M3 10.5L12 3l9 7.5" /><path d="M5 9.5V21h14V9.5" /></svg>;
     case 'book':
       return <svg {...common}><path d="M4 5a4 4 0 0 1 4-4h12v20H8a4 4 0 0 0-4 4z" /><path d="M20 17H8a4 4 0 0 0-4 4" /></svg>;
-    case 'pencil':
-      return <svg {...common}><path d="M17 3l4 4L8 20l-5 1 1-5z" /></svg>;
-    case 'clipboard':
-      return <svg {...common}><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" /><path d="M9 12l2 2 4-4" /></svg>;
-    case 'cards':
-      return <svg {...common}><rect x="3" y="7" width="14" height="14" rx="2" /><path d="M7 3h13a1 1 0 0 1 1 1v13" /></svg>;
     case 'doc':
       return <svg {...common}><path d="M6 2h9l5 5v15H6z" /><path d="M15 2v5h5" /><path d="M9 13h6M9 17h6" /></svg>;
     default:
@@ -39,15 +30,25 @@ export default function Header() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [subjectsOpen, setSubjectsOpen] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [classes, setClasses] = useState([]);
   const themeRef = useRef(null);
+  const subjectsRef = useRef(null);
 
   useEffect(() => {
     const clickAway = (e) => {
       if (themeRef.current && !themeRef.current.contains(e.target)) setThemeOpen(false);
+      if (subjectsRef.current && !subjectsRef.current.contains(e.target)) setSubjectsOpen(false);
     };
     document.addEventListener('mousedown', clickAway);
     return () => document.removeEventListener('mousedown', clickAway);
+  }, []);
+
+  useEffect(() => {
+    api('/api/classes')
+      .then((d) => setClasses(d.classes || []))
+      .catch(() => {});
   }, []);
 
   const handleLogout = async () => {
@@ -76,35 +77,73 @@ export default function Header() {
     </NavLink>
   );
 
-  const navItems = NAV.map((item) => navItem(item));
+  const subjectList = (klass) => klass.subjects.map((s) => (
+    <Link
+      key={s.id}
+      to={`/class/${klass.slug}/subject/${s.slug}`}
+      onClick={() => setSubjectsOpen(false)}
+      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
+    >
+      <span className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold"
+        style={{ background: `${s.themeColor || '#38bdf8'}22`, color: s.themeColor || '#38bdf8' }}>
+        {s.name.slice(0, 2)}
+      </span>
+      <span className="truncate">{s.name}</span>
+    </Link>
+  ));
 
   return (
     <header className="sticky top-0 z-40 shadow-lg">
       {/* Main bar */}
       <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5">
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="Ravikishan's Home">
+        {/* Brand tile */}
+        <Link to="/" className="shrink-0" aria-label="Ravikishan home">
           <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_-4px_#8b5cf6]">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 6c-2.5-2.5-6.5-2.5-9-1v14c2.5-1.5 6.5-1.5 9 1 2.5-2.5 6.5-2.5 9-1V5c-2.5-1.5-6.5-1.5-9 1z" />
               <path d="M12 6v14" />
             </svg>
           </span>
-          <span className="leading-none hidden sm:block">
-            <span className="block text-lg font-extrabold tracking-tight text-white">Ravikishan's Home</span>
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-aqua-300 mt-1">
-              Learn. Practice. Excel.
-            </span>
-          </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1 mx-auto">
-          {navItems}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navItem(NAV[0])}
+          <div className="relative" ref={subjectsRef}>
+            <button
+              onClick={() => setSubjectsOpen((o) => !o)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition"
+            >
+              <NavIcon name="book" />
+              Subjects
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" className={subjectsOpen ? 'rotate-180 transition' : 'transition'}>
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            {subjectsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSubjectsOpen(false)} />
+                <div className="absolute left-0 mt-2 w-64 glass-strong rounded-2xl p-2 z-50 shadow-2xl">
+                  {classes.length === 0 && (
+                    <p className="px-3 py-2 text-sm text-slate-400">Loading subjects…</p>
+                  )}
+                  {classes.map((klass) => (
+                    <div key={klass.id} className={klass !== classes[0] ? 'mt-1 pt-1 border-t border-white/10' : ''}>
+                      <p className="px-3 pt-1.5 pb-0.5 text-[10px] uppercase tracking-wider text-aqua-300 font-bold">
+                        {klass.name}
+                      </p>
+                      {subjectList(klass)}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          {navItem(NAV[2])}
         </nav>
 
         {/* Desktop search */}
-        <div className="hidden md:block w-64 xl:w-80 shrink-0 ml-auto">
+        <div className="hidden md:block w-56 xl:w-72 shrink-0 ml-auto">
           <SearchBar placeholder="Search subjects, chapters or topics…" />
         </div>
 
@@ -167,9 +206,23 @@ export default function Header() {
           )}
         </div>
 
-        {/* Auth area */}
+        {/* Log in / Join — always visible */}
         <div className="flex items-center gap-2 shrink-0">
-          {user ? (
+          <Link
+            to="/login"
+            className="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/10 border border-white/15 transition"
+          >
+            Log in
+          </Link>
+          <Link
+            to="/register"
+            className="px-3 py-1.5 rounded-lg text-sm font-bold bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 hover:brightness-110 transition"
+          >
+            Join
+          </Link>
+
+          {/* Logged-in avatar menu */}
+          {user && (
             <div className="relative">
               <button
                 onClick={() => setMenuOpen((o) => !o)}
@@ -216,21 +269,6 @@ export default function Header() {
                 </>
               )}
             </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Link
-                to="/login"
-                className="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/10 border border-white/15 transition"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                className="px-3 py-1.5 rounded-lg text-sm font-bold bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 hover:brightness-110 transition"
-              >
-                Join
-              </Link>
-            </div>
           )}
 
           {/* Mobile nav toggle */}
@@ -271,6 +309,27 @@ export default function Header() {
               <NavIcon name={item.icon} />
               {item.label}
             </NavLink>
+          ))}
+          {classes.map((klass) => (
+            <div key={klass.id}>
+              <p className="px-4 pt-2 pb-1 text-[10px] uppercase tracking-wider text-aqua-300 font-bold">
+                {klass.name}
+              </p>
+              {klass.subjects.map((s) => (
+                <Link
+                  key={s.id}
+                  to={`/class/${klass.slug}/subject/${s.slug}`}
+                  onClick={() => setMobileNav(false)}
+                  className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm text-slate-300 hover:bg-white/10"
+                >
+                  <span className="text-[11px] font-bold"
+                    style={{ color: s.themeColor || '#38bdf8' }}>
+                    {s.name.slice(0, 2)}
+                  </span>
+                  {s.name}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
       )}
