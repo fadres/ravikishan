@@ -186,12 +186,16 @@ export default function Header() {
     <header className="sticky top-0 z-40 shadow-lg">
       {/* Main bar */}
       <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5 relative">
-        {/* Knowledge is power — small centered motto */}
+        {/* Motivational fire — small centered motto */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden lg:flex items-center justify-center text-[11px] italic tracking-widest text-slate-400"
+          className="pointer-events-none absolute inset-0 hidden lg:flex items-center justify-center gap-1.5 text-[11px] italic tracking-widest text-slate-400"
         >
-          Knowledge is power
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2c2.5 4.5 5 6.5 5 10a5 5 0 1 1-10 0c0-3.5 2.5-5.5 5-10z" />
+            <path d="M12 15c1.5 0 3-1 3-2.5 0-1.5-1.5-2.5-3-4.5-1.5 2-3 3-3 4.5C9 14 10.5 15 12 15z" fill="currentColor" stroke="none" />
+          </svg>
+          Keep the fire burning
         </span>
         {/* Brand tile — premium R */}
         <Link to="/" className="shrink-0 group" aria-label="Ravikishan home">
