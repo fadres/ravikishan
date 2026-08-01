@@ -4,6 +4,29 @@
   "name": "Nepali",
   "chapters": [
     {
+      "id": "nepali-sahitya",
+      "title": "नेपाली भाषा र साहित्य",
+      "description": "नेपाली भाषाको उत्पत्ति, विकास, साहित्यिक कालहरू र विधाहरूको एकीकृत अनुसन्धान।",
+      "topics": [
+        {
+          "id": "bhasha-parichay-ra-utpatti",
+          "title": "नेपाली भाषा: परिचय र उत्पत्ति"
+        },
+        {
+          "id": "sahityik-itihas-ka-kalharu",
+          "title": "साहित्यिक इतिहासका कालहरू"
+        },
+        {
+          "id": "pramukh-sahityik-vidhaharu",
+          "title": "प्रमुख साहित्यिक विधाहरू"
+        },
+        {
+          "id": "vartaman-awastha-ra-chunauti",
+          "title": "वर्तमान अवस्था र चुनौतीहरू"
+        }
+      ]
+    },
+    {
       "id": "bhashatattva",
       "title": "भाषातत्त्व",
       "description": "शब्द स्रोत, स्वर वर्ण, व्यञ्जन वर्ण, र वर्णको वर्गीकरण।",

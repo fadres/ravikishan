@@ -14,7 +14,7 @@ const CLASS_SELECT = {
   slug: true,
   sortOrder: true,
   subjects: {
-    orderBy: { sortOrder: 'asc' },
+    orderBy: { name: 'asc' },
     select: {
       id: true,
       name: true,

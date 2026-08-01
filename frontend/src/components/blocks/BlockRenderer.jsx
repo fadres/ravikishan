@@ -138,7 +138,7 @@ function SymbolsTable({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, subjectType }) {
+export default function BlockRenderer({ block, subjectType, labelOverride }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
@@ -148,7 +148,8 @@ export default function BlockRenderer({ block, subjectType }) {
   if (isEmpty) return null;
 
   const style = BLOCK_STYLE[block.blockType] || BLOCK_STYLE.note_topic;
-  const { color, icon, label } = style;
+  const { color, icon } = style;
+  const label = labelOverride || style.label;
   const glow = block.blockType === 'note_important';
 
   const renderBody = () => {

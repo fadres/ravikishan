@@ -78,11 +78,11 @@ export default function SubjectPage() {
                 className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-extrabold"
                 style={{ background: `${subject.themeColor}1f`, border: `1px solid ${subject.themeColor}44`, color: subject.themeColor }}
               >
-                {idx + 1}
+                C{idx + 1}
               </span>
               <div className="min-w-0">
                 <h3 className="font-bold text-white group-hover:text-aqua-100 transition truncate">
-                  Chapter {idx + 1} · {chapter.title}
+                  {chapter.title}
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
                   {chapter._count.blocks} block{chapter._count.blocks === 1 ? '' : 's'}

@@ -40,7 +40,7 @@ router.post('/requests/:id/approve', async (req, res) => {
     }),
     prisma.user.update({
       where: { id: request.userId },
-      data: { role: 'member', isApproved: true, accessLevel: 2 },
+      data: { role: 'member', isApproved: true, accessLevel: 1 },
     }),
   ]);
   await recordAudit(req.user, 'access.approved', 'AccessRequest', request.id, { userId: request.userId });

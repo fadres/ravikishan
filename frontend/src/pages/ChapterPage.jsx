@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -30,10 +30,11 @@ function buildItems(blocks) {
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [siblings, setSiblings] = useState([]);
+  const [contactEmail, setContactEmail] = useState('');
 
   const load = useCallback(() => {
     setData(null);
@@ -46,11 +47,15 @@ export default function ChapterPage() {
       .catch(() => setSiblings([]));
   }, [subjectSlug, chapterSlug, classSlug]);
 
-  // Refetch when the viewer's access level changes (e.g. after login or when
-  // the owner approves an access request) so locked content opens in place.
   useEffect(() => {
     load();
   }, [load, user?.accessLevel]);
+
+  useEffect(() => {
+    api('/api/meta')
+      .then((d) => setContactEmail(d.contactEmail || ''))
+      .catch(() => {});
+  }, []);
 
   if (error) {
     return (
@@ -71,6 +76,8 @@ export default function ChapterPage() {
 
   const { chapter, subject, blocks: rawBlocks } = data;
   const viewerLevel = chapter.viewerAccessLevel ?? 3;
+  const hasFullAccess = isAdmin || viewerLevel === 1;
+
   const blocks = rawBlocks.filter(
     (b) =>
       Boolean((b.contentRichtext || '').trim()) ||
@@ -79,6 +86,14 @@ export default function ChapterPage() {
       Boolean(b.diagramData) ||
       Boolean(b.title),
   );
+
+  // T1, T2, … numbering for topic blocks, in reading order.
+  const topicLabels = useMemo(() => {
+    const map = new Map();
+    let n = 0;
+    for (const b of blocks) if (b.blockType === 'note_topic') map.set(b.id, ++n);
+    return map;
+  }, [blocks]);
 
   const idx = siblings.findIndex((c) => c.slug === chapterSlug);
   const prevChapter = idx > 0 ? siblings[idx - 1] : null;
@@ -116,62 +131,41 @@ export default function ChapterPage() {
         </Link>
 
         <div className="flex items-center gap-2">
-          {prevChapter ? (
-            <Link
-              to={chapterHref(prevChapter)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
-            >
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 12H5M11 18l-6-6 6-6" />
-              </svg>
-              Back
-            </Link>
-          ) : (
-            <button
-              onClick={() => navigate(`/class/${classSlug}/subject/${subjectSlug}`)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
-            >
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 12H5M11 18l-6-6 6-6" />
-              </svg>
-              Back
-            </button>
-          )}
+          <Link
+            to={prevChapter ? chapterHref(prevChapter) : `/class/${classSlug}/subject/${subjectSlug}`}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+          >
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M11 18l-6-6 6-6" />
+            </svg>
+            Back
+          </Link>
 
-          {nextChapter ? (
-            <Link
-              to={chapterHref(nextChapter)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-            >
-              Next
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </Link>
-          ) : (
-            <Link
-              to={`/class/${classSlug}/subject/${subjectSlug}`}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-            >
-              Done
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </Link>
-          )}
+          <Link
+            to={nextChapter ? chapterHref(nextChapter) : `/class/${classSlug}/subject/${subjectSlug}`}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+          >
+            {nextChapter ? 'Next' : 'Done'}
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
         </div>
       </div>
 
       <div className="space-y-6">
-        {buildItems(blocks).map((item, i) =>
-          item.type === 'divider' ? (
-            <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />
-          ) : (item.block.accessLevel ?? 3) > viewerLevel ? (
-            <LockedBlockCard key={item.block.id} block={item.block} themeColor={subject.themeColor} />
+        {buildItems(blocks).map((item, i) => {
+          if (item.type === 'divider') {
+            return <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />;
+          }
+          const topicLabel = topicLabels.get(item.block.id);
+          const shared = { key: item.block.id, block: item.block, themeColor: subject.themeColor };
+          return hasFullAccess ? (
+            <BlockRenderer {...shared} labelOverride={topicLabel ? `T${topicLabel}` : undefined} />
           ) : (
-            <BlockRenderer key={item.block.id} block={item.block} subjectType={subject.type} />
-          ),
-        )}
+            <LockedBlockCard {...shared} topicLabel={topicLabel ? `T${topicLabel}` : undefined} contactEmail={contactEmail} />
+          );
+        })}
         {blocks.length === 0 && (
           <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
             This chapter has no notes yet.

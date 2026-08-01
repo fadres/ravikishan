@@ -42,7 +42,7 @@ function Shell() {
       <main className="flex-1">
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<><Home /><Footer /></>} />
             <Route path="/class/:classSlug" element={<ClassPage />} />
             <Route path="/class/:classSlug/subject/:subjectSlug" element={<SubjectPage />} />
             <Route
@@ -62,7 +62,6 @@ function Shell() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
     </div>
   );
 }
