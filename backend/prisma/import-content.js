@@ -371,6 +371,7 @@ function convertMindmap(node) {
   if (Array.isArray(node.children) && node.children.length) {
     out.children = node.children.map(convertMindmap);
   }
+  if (Array.isArray(node.legend) && node.legend.length) out.legend = node.legend.slice(0, 12);
   return out;
 }
 
@@ -381,6 +382,153 @@ function flattenMindmap(node, depth = 0) {
   lines.push(`${'  '.repeat(depth)}- ${label}`);
   for (const child of node.children || []) lines.push(...flattenMindmap(child, depth + 1));
   return lines;
+}
+
+// ── Auto diagram generation ───────────────────────────────────────────────
+// Every theoretical topic (notes content) gets a hierarchical diagram even
+// when the content file has no explicit "mindmap" field: the notes' HTML
+// structure is parsed (headings → sections → key points), the central point
+// of each section is marked with ★, and the symbols used in the text are
+// collected into a legend that the frontend renders below the diagram.
+// New content files therefore automatically get diagrams on import.
+
+const GLYPH_MEANINGS = {
+  'Δ': 'change in / difference of a quantity',
+  'Σ': 'sum of a series of terms',
+  '∝': 'proportional to',
+  '√': 'square root of',
+  'θ': 'theta — angle',
+  'λ': 'lambda — wavelength',
+  'π': 'pi ≈ 3.14159 (circle ratio)',
+  '∞': 'infinity',
+  '±': 'plus or minus — uncertainty / tolerance',
+  '⇌': 'reversible reaction',
+  '↑': 'increases / rises',
+  '↓': 'decreases / falls',
+  'Ω': 'ohm — electrical resistance',
+  'µ': 'micro — one millionth (10⁻⁶)',
+  '°': 'degree (angle or temperature)',
+};
+
+const QTY_MEANINGS = {
+  F: 'force', m: 'mass', v: 'velocity', a: 'acceleration', t: 'time',
+  T: 'temperature', E: 'energy', P: 'power / pressure', W: 'work',
+  Q: 'heat / charge', H: 'enthalpy', K: 'equilibrium constant',
+  k: 'constant (spring / Boltzmann)', R: 'gas constant', N: 'normal force / count',
+  n: 'number of moles', g: 'acceleration due to gravity', c: 'speed of light',
+  V: 'potential difference / volume', I: 'electric current', C: 'capacitance',
+  B: 'magnetic field', r: 'radius', d: 'distance / diameter', f: 'frequency',
+};
+
+const SYMBOL_STOPLIST = new Set(['a', 'i', 'u', 'e', 'o', 's']);
+
+function elementText(node) {
+  const parts = [];
+  const walk = (n) => {
+    if (n.type === 'text') parts.push(n.data);
+    else if (n.children) n.children.forEach(walk);
+  };
+  walk(node);
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
+}
+
+function collectSymbolLegend(text) {
+  const legend = [];
+  for (const [glyph, meaning] of Object.entries(GLYPH_MEANINGS)) {
+    if (text.includes(glyph)) {
+      legend.push(`${glyph} = ${meaning}`);
+      if (legend.length >= 7) break;
+    }
+  }
+  const counts = {};
+  for (const token of text.split(/\s+/)) {
+    if (/^[A-Za-z]$/.test(token)) counts[token] = (counts[token] || 0) + 1;
+  }
+  for (const [sym, meaning] of Object.entries(QTY_MEANINGS)) {
+    if (!SYMBOL_STOPLIST.has(sym) && (counts[sym] || 0) >= 3) {
+      legend.push(`${sym} = ${meaning}`);
+      if (legend.length >= 10) break;
+    }
+  }
+  return legend;
+}
+
+function buildAutoMindmap(topic, topicTitle) {
+  const notes = Array.isArray(topic.notes) ? topic.notes : topic.notes ? [topic.notes] : [];
+  const html = notes.filter(Boolean).join('\n');
+  const root = { name: topicTitle, children: [] };
+  let current = root;
+  let firstInSection = true;
+  let starUsed = false;
+
+  const clean = (t) => String(t).replace(/\s+/g, ' ').trim();
+  const trunc = (t, n = 58) => (t.length > n ? `${t.slice(0, n - 1)}…` : t);
+  const pushNode = (name) => {
+    name = clean(name);
+    if (!name || name.length < 2) return null;
+    const cap = current === root ? 20 : 16;
+    if (current.children.length >= cap) return null;
+    const node = { name: trunc(name) };
+    current.children.push(node);
+    return node;
+  };
+  const pushPoint = (name) => {
+    name = clean(name);
+    if (!name) return;
+    if (firstInSection) {
+      starUsed = true;
+      pushNode(`★ ${trunc(name, 56)}`);
+      firstInSection = false;
+    } else {
+      pushNode(name);
+    }
+  };
+
+  const handleChildren = (els) => {
+    for (const el of els || []) {
+      if (el.type !== 'tag') continue;
+      const tag = el.name.toLowerCase();
+      if (tag === 'h1' || tag === 'h2') {
+        const heading = clean(elementText(el));
+        if (tag === 'h1' && heading.toLowerCase() === clean(root.name).toLowerCase()) continue; // repeats the title — skip
+        current = { name: trunc(heading), children: [] };
+        root.children.push(current);
+        firstInSection = true;
+        continue; // content following the heading flows into it until the next heading
+      }
+      if (tag === 'h3') {
+        const sub = pushNode(elementText(el));
+        if (sub) firstInSection = false;
+        continue;
+      }
+      if (tag === 'ul' || tag === 'ol') {
+        const items = [];
+        const collect = (n) => {
+          if (n.type === 'tag' && n.name.toLowerCase() === 'li') items.push(elementText(n));
+          (n.children || []).forEach(collect);
+        };
+        collect(el);
+        for (const item of items) pushPoint(item);
+        continue;
+      }
+      if (tag === 'p' || tag === 'blockquote') {
+        const t = clean(elementText(el));
+        if (!t) continue;
+        pushPoint(t.split(/(?<=[.!?])\s+/)[0]);
+        continue;
+      }
+      if (el.children) handleChildren(el.children);
+    }
+  };
+
+  handleChildren(parseDocument(html).children);
+
+  if (!root.children.length) return null;
+  const legend = ['→ = leads to / flows into'];
+  if (starUsed) legend.push('★ = central / most important point');
+  legend.push(...collectSymbolLegend(html.replace(/<[^>]*>/g, ' ')));
+  if (legend.length) root.legend = legend;
+  return root;
 }
 
 // ── Topic file → blocks ───────────────────────────────────────────────────
@@ -488,6 +636,21 @@ function buildBlocks(topic, subjectType, topicTitle) {
         accessLevel: LEVELS.mindmap,
         mindmapJson: json,
       });
+    }
+  } else if (topic.notes) {
+    // Every theoretical topic gets an auto diagram (hierarchical map + symbol legend).
+    const json = buildAutoMindmap(topic, topicTitle);
+    if (json) {
+      if (subjectType === 'english' || subjectType === 'nepali') {
+        push('mindmap', `Diagram: ${json.name}`, flattenMindmap(json).join('\n'));
+      } else {
+        blocks.push({
+          blockType: BLOCK_TYPES[subjectType].mindmap,
+          title: `Diagram: ${json.name}`,
+          accessLevel: LEVELS.mindmap,
+          mindmapJson: json,
+        });
+      }
     }
   }
 

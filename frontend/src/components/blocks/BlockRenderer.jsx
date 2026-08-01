@@ -152,7 +152,28 @@ export default function BlockRenderer({ block, subjectType }) {
       case 'byakaran':
         return <ByakaranBody block={block} />;
       case 'mindmap':
-        return <MindmapTree data={block.mindmapJson} />;
+        return (
+          <div>
+            <MindmapTree data={block.mindmapJson} />
+            {block.mindmapJson?.legend?.length > 0 && (
+              <div className="mt-4 pt-3 border-t border-white/10">
+                <p className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-2">
+                  Symbols used in this diagram
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {block.mindmapJson.legend.map((entry) => (
+                    <span
+                      key={entry}
+                      className="text-xs text-slate-300 bg-white/5 border border-white/10 rounded-full px-2.5 py-1"
+                    >
+                      {entry}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        );
       case 'diagram_compare':
         return <DiagramCompare data={block.diagramData} />;
       case 'formula':

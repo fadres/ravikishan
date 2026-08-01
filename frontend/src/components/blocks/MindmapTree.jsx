@@ -80,6 +80,7 @@ export default function MindmapTree({ data }) {
               className="cursor-pointer"
               onClick={() => n.hasChildren && toggle(n.key)}
             >
+              <title>{n.name}</title>
               <rect
                 width={NODE_W}
                 height={NODE_H}
@@ -96,7 +97,7 @@ export default function MindmapTree({ data }) {
                 fontSize="12.5"
                 fontWeight={isRoot ? 700 : 500}
               >
-                {n.name.length > 24 ? `${n.name.slice(0, 23)}…` : n.name}
+                {n.name.length > 26 ? `${n.name.slice(0, 25)}…` : n.name}
               </text>
               {n.hasChildren && (
                 <text x={NODE_W - 10} y={NODE_H / 2 + 4} textAnchor="middle" fill="#7dd3fc" fontSize="10">
