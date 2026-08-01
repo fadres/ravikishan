@@ -195,16 +195,30 @@ model DecisionMaker {
   @@index([userId])
 }
 
+enum UploadStatus {
+  pending
+  complete
+  failed
+  deleted
+}
+
 model R2Upload {
-  id          String   @id @default(uuid())
-  key         String
-  contentType String
-  uploadedBy  User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  uploadedById String
-  createdAt   DateTime @default(now())
+  id               String        @id @default(uuid())
+  key              String        @unique
+  originalFilename String
+  fileUrl          String?
+  bucket           String?
+  fileSize         Int?
+  mimeType         String
+  status           UploadStatus  @default(pending)
+  uploadedBy       User          @relation(fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  uploadedById     String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   @@index([uploadedById])
   @@index([createdAt])
+  @@index([status])
 }
 
 model AuditLog {

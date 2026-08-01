@@ -237,6 +237,65 @@ UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-api.onren
 > them, ignore it — always deploy with `prisma migrate deploy`, which runs
 > the SQL files verbatim.
 
+## Cloudflare R2 file storage
+
+The backend supports file uploads via Cloudflare R2 (S3-compatible object storage).
+Files are uploaded directly from the client using presigned URLs — the server never
+handles the file bytes, keeping it lightweight and scalable.
+
+### How it works
+
+1. **Client requests a presigned URL** — `POST /api/upload/presigned-url` with `{ fileName, contentType, fileSize }`
+2. **Server generates a presigned PUT URL** — valid for 5 minutes, stored in R2
+3. **Client uploads directly to R2** — using the presigned URL (no backend proxy)
+4. **Client confirms the upload** — `POST /api/upload/confirm` with `{ key, fileName, contentType, fileSize }`
+5. **Server saves metadata** to the `R2Upload` table and returns the file record
+
+### Setting up a Cloudflare R2 bucket
+
+1. Sign up at [cloudflare.com](https://cloudflare.com) (free tier includes R2).
+2. Go to **R2** → **Create bucket** → choose a name and region.
+3. Go to **Settings → API Tokens** → **Create Token**:
+   - Permissions: `Object: Read, Write, Delete`
+   - Scope: `Account` or specific bucket
+   - Copy the `Access Key ID` and `Secret Access Key`
+4. The bucket endpoint format is `https://<account-id>.r2.cloudflarestorage.com`.
+   Find your account ID in the Cloudflare dashboard → Home → account ID.
+
+### Required environment variables
+
+| Variable | Description | Example |
+|---|---|---|
+| `R2_ENDPOINT` | R2 S3-compatible endpoint | `https://abc123.r2.cloudflarestorage.com` |
+| `R2_ACCESS_KEY_ID` | R2 API key ID | `abc123def456...` |
+| `R2_SECRET_ACCESS_KEY` | R2 API secret key | `xyz789...` |
+| `R2_BUCKET` | R2 bucket name | `ravikishan-uploads` |
+
+### Local development
+
+1. Copy `.env.example` to `.env` and fill in the R2 variables.
+2. The R2 service is a no-op when `R2_ENDPOINT` is empty — upload endpoints return 500 with a clear message.
+3. For local testing with a mock R2, set `R2_ENDPOINT` to a localstack or mock endpoint.
+
+### Production deployment
+
+Add the four R2 env vars to your Render dashboard (or `render.yaml`):
+- `R2_ENDPOINT` — your R2 endpoint URL
+- `R2_ACCESS_KEY_ID` — from Cloudflare API tokens
+- `R2_SECRET_ACCESS_KEY` — from Cloudflare API tokens
+- `R2_BUCKET` — your bucket name
+
+The `render.yaml` blueprint includes all four as `sync: false` (set them in the Render dashboard after deployment).
+
+### File constraints
+
+- **Max file size**: 50 MB
+- **Allowed MIME types**: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/svg+xml`, `application/pdf`, `text/plain`, `text/markdown`, `application/json`, `text/csv`, `audio/mpeg`, `audio/wav`, `video/mp4`
+- **Blocked extensions**: `.exe`, `.bat`, `.cmd`, `.sh`, `.php`, `.py`, `.js`, `.html`, `.css`
+- **Presigned URL expiry**: 300 seconds (5 minutes)
+
+---
+
 ## Security notes
 
 - All write endpoints validate with zod (types, lengths, shapes, allowed
