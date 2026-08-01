@@ -178,6 +178,7 @@ model ContentBlock {
   updatedAt       DateTime       @updatedAt
 
   @@index([chapterId, sortOrder])
+  @@index([sortOrder])
   @@index([accessLevel])
   @@index([blockType])
 }
@@ -203,7 +204,7 @@ model AuditLog {
   detail     Json?
   createdAt  DateTime @default(now())
 
-  @@index([createdAt])
+  @@index([createdAt, targetId])
   @@index([actorId])
   @@index([action])
 }
