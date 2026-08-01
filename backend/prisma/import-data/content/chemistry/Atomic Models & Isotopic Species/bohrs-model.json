@@ -1,0 +1,13 @@
+{
+  "title": "Bohr's Atomic Model & Planck's Quantum Theory",
+  "notes": [
+    "<h2>Bohr's Atomic Model & Planck's Equation</h2><p>Electrons orbit in stationary non-radiating energy shells (K, L, M, N... / n = 1, 2, 3...).<br>Energy changes occur during quantum jumps between ground and excited states.<br><b>Planck's Equation:</b> E = h·ν = hc/λ (h = 6.626×10⁻³⁴ J·s, c = 3×10⁸ m/s).</p>"
+  ],
+  "examples": [],
+  "practice": [],
+  "formulas": [
+    "**Planck's Energy Equation:** E = hc/λ"
+  ],
+  "keyPoints": [],
+  "summary": "Bohr's stationary orbits, quantum jumps, and photon energy."
+}

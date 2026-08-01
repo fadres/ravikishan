@@ -1,0 +1,39 @@
+{
+  "title": "Limits Master Class & Intuition",
+  "notes": [
+    "<b>The Core Philosophy of Limits.</b> A limit asks: as <i>x</i> gets infinitely close to a number, what value is the function heading toward? Sometimes the function has a physical 'hole' at that exact spot — plugging the number in gives 0/0, an <b>Indeterminate Form</b>. This does <u>not</u> mean the limit doesn't exist; the answer is hidden and needs algebra or calculus to reveal it. <b>Direct Substitution</b> is checking the front door: if it's unlocked (gives a real number) you walk right in; if it's locked with a 0/0 sign, you need the right tool to pick the lock.",
+    "<b>Tool 1 — Direct Substitution (The Front Door).</b> When to use: always try this first — for polynomials, basic trig functions, exponentials, or any smooth, continuous function. <i>Intuition:</i> if the graph has no holes, gaps, or vertical asymptotes at your target point, the value <i>at</i> the point equals the value <i>approaching</i> it. Example: lim(x→2) (3x²−5x+1) → replace every x with 2 → 3(4)−10+1 = 3. A clean real number means you're done.",
+    "<b>Tool 2 — Factoring Method (The Common Factor Cleaner).</b> When to use: direct substitution gives 0/0 <i>and</i> the equation is a standard polynomial (like x²−9). <i>Intuition:</i> the 0/0 happens because a 'zero-maker' factor is hiding in both top and bottom — e.g. if x→3, the factor (x−3) causes both to hit zero. Find it, factor it out, and cancel it. Example: lim(x→3) (x²−9)/(x−3) → factor x²−9 = (x−3)(x+3) → cancel (x−3) → lim(x→3)(x+3) = 6.",
+    "<b>Tool 3 — Conjugate Multiplication (The Radical Vaporizer).</b> When to use: direct substitution gives 0/0 <i>and</i> there's a square root attached to a plus/minus sign (like √(x+4) − 2). <i>Intuition:</i> square roots are hard to factor directly, so multiply by the <b>conjugate</b> — for (A−B), that's (A+B) — since (A−B)(A+B) = A²−B², which vaporizes the square root. Example: lim(x→0) (√(x+4)−2)/x → multiply by (√(x+4)+2) → top becomes x → cancel x → lim(x→0) 1/(√(x+4)+2) = 1/4.",
+    "<b>Tool 4 — Standard Trigonometric Limits (The Squeeze Anchors).</b> When to use: sin(x) or tan(x) approaching 0, with direct substitution giving 0/0. <i>Intuition:</i> as an angle x gets very close to 0, the arc length (x) and sin(x) become practically identical, so their ratio approaches 1. Golden Rule: lim(θ→0) sin(θ)/θ = 1. Example: lim(x→0) sin(4x)/x → multiply top and bottom by 4 to match the inner angle → lim(x→0) [sin(4x)/4x · 4] = 1 · 4 = 4.",
+    "<b>Tool 5 — L'Hôpital's Rule (The Nuclear Option).</b> When to use: direct substitution gives 0/0 or ∞/∞, and derivatives are known. <i>Intuition:</i> if a fraction hits 0/0, its limit equals the limit of the derivatives of the top and bottom (their individual rates of change). Rule: if lim f(x)/g(x) = 0/0, then lim f(x)/g(x) = lim f'(x)/g'(x). Example: lim(x→3) (x²−9)/(x−3) → derivative of top is 2x, of bottom is 1 → new limit lim(x→3) 2x/1 = 2(3) = 6 (matches the factoring answer)."
+  ],
+  "examples": [
+    "**Worked Example — Direct Substitution**\n\nlim(x→2) (3x² − 5x + 1)\n\n**Solution:** Replace every x with 2: 3(2)² − 5(2) + 1 = 12 − 10 + 1 = 3. A clean, real number means you're done — no further tools needed.",
+    "**Worked Example — Factoring Method**\n\nlim(x→3) (x² − 9)/(x − 3)\n\n**Solution:** Plugging in 3 gives (3²−9)/(3−3) = 0/0. Factor the numerator as a difference of squares: x²−9 = (x−3)(x+3). Cancel (x−3) from top and bottom, leaving lim(x→3)(x+3) = 3+3 = 6.",
+    "**Worked Example — Conjugate Multiplication**\n\nlim(x→0) (√(x + 4) − 2)/x\n\n**Solution:** Plugging in 0 gives (√4−2)/0 = 0/0. Multiply top and bottom by the conjugate √(x+4)+2. The top becomes (√(x+4))² − 2² = x+4−4 = x. The fraction becomes x / [x(√(x+4)+2)]; cancel x, leaving 1/(√(x+4)+2). Substitute 0: 1/(√4+2) = 1/4.",
+    "**Worked Example — Standard Trig Limit**\n\nlim(x→0) sin(4x)/x\n\n**Solution:** Multiply top and bottom by 4 so the denominator matches the inner angle (4x): lim(x→0) [sin(4x)/4x · 4]. Since sin(4x)/4x → 1 as x→0, the result is 1 · 4 = 4.",
+    "**Worked Example — L'Hôpital's Rule**\n\nlim(x→3) (x² − 9)/(x − 3), solved via derivatives instead of factoring\n\n**Solution:** Direct substitution gives 0/0. Differentiate top and bottom separately: derivative of x²−9 is 2x; derivative of x−3 is 1. New limit: lim(x→3) 2x/1 = 2(3) = 6 — the same answer factoring gave, confirming the rule works."
+  ],
+  "practice": [
+    "Which expression is an indeterminate form, and why does it require further work?",
+    "What is the very first step to attempt for any limit problem, regardless of its form?",
+    "Why is direct substitution valid for lim(x→0) (x + cos(x))?"
+  ],
+  "formulas": [
+    "**Direct Substitution:** lim(x→a) f(x) = f(a), when f is continuous at a",
+    "**Factoring (difference of squares):** x² − a² = (x − a)(x + a)",
+    "**Conjugate Identity:** (A − B)(A + B) = A² − B²",
+    "**Standard Trig Limit (Golden Rule):** lim(θ→0) sin(θ)/θ = 1",
+    "**L'Hôpital's Rule:** if lim f(x)/g(x) = 0/0, then lim f(x)/g(x) = lim f'(x)/g'(x)"
+  ],
+  "keyPoints": [
+    "An indeterminate form (0/0 or ∞/∞) means the answer is hidden, not that the limit doesn't exist.",
+    "Direct Substitution works whenever the function has no holes, gaps, or asymptotes at that point — always try it first.",
+    "Factoring removes a shared 'zero-maker' factor causing the 0/0 in polynomial fractions.",
+    "The conjugate trick turns a subtracted square root into a clean polynomial via (A−B)(A+B) = A²−B².",
+    "sin(θ)/θ → 1 as θ→0 because the arc length and the sine value become practically identical near zero.",
+    "L'Hôpital's Rule differentiates the numerator and denominator independently."
+  ],
+  "summary": "This master class builds the intuition behind each limit-evaluation tool rather than just the mechanics: Direct Substitution, Factoring, Conjugate Multiplication, Trigonometric Limits, and L'Hôpital's Rule."
+}

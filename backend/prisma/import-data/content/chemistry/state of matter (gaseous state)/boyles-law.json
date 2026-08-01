@@ -1,0 +1,16 @@
+{
+  "title": "Boyle's Law & Kinetic Molecular Theory",
+  "notes": [
+    "<h2>Boyle's Law</h2><p>At constant temperature, the volume of a gas is inversely proportional to its pressure: <strong>P₁V₁ = P₂V₂</strong></p><h3>Mnemonic: P.I.G. V. K.I.R.E.</h3><p>Particles, Identical, Gravity-free, Volume negligible, Kinetic energy constant, Instability, Random motion, Elastic collisions</p><h3>The 8 Postulates of KMT</h3><ul><li><strong>Tiny Particles</strong> — gases are made of extremely tiny molecules or atoms.</li><li><strong>Identical Size & Shape</strong> — all molecules of a pure gas are identical.</li><li><strong>No Force</strong> — no gravitational or intermolecular forces act between particles.</li><li><strong>Negligible Volume</strong> — molecule volume is practically zero vs. the container.</li><li><strong>Kinetic Energy</strong> — proportional to absolute temperature.</li><li><strong>Perpetual Motion</strong> — molecules are never at rest.</li><li><strong>Random Path</strong> — straight-line, zigzag motion between collisions.</li><li><strong>Elastic Collisions</strong> — no kinetic energy lost in collisions.</li></ul>"
+  ],
+  "examples": [],
+  "practice": [],
+  "formulas": [
+    "**Boyle's Law Formula:** P₁V₁ = P₂V₂"
+  ],
+  "keyPoints": [
+    "Temperature remains constant.",
+    "P vs V graph forms a rectangular hyperbola."
+  ],
+  "summary": "Pressure-volume relationship and kinetic molecular theory postulates."
+}

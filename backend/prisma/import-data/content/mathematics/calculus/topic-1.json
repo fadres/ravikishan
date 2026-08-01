@@ -1,0 +1,45 @@
+{
+  "title": "Quiz -1 - Limit Evaluation Techniques",
+  "notes": [
+    "<b>The Core Philosophy of Limits.</b> A limit asks: as <i>x</i> gets infinitely close to a number, what value is the function heading toward? Sometimes the function has a 'hole' at that exact spot — plugging the number in directly gives 0/0, called an <b>Indeterminate Form</b>. This does <u>not</u> mean the limit doesn't exist; it means the answer is hidden and needs algebra or calculus to expose it. Think of <b>Direct Substitution</b> as checking the front door: if it's unlocked (gives a real number), you walk right in. If it's locked with a 0/0 sign, you need the right tool to pick the lock.",
+    "<b>Tool 1 — Direct Substitution (The Front Door).</b> When to use: always try this first, for smooth continuous functions. Example: <span class=\"formula\">lim(x→2) (3x² − 5x + 1) = 3(2)² − 5(2) + 1 = 3</span>.",
+    "<b>Tool 2 — Factoring Method (The Common Factor Cleaner).</b> When to use: if direct substitution gives 0/0 and you see polynomial expressions that share a common factor. Example: <span class=\"formula\">lim(x→3) (x² − 9)/(x − 3) = lim(x→3) (x−3)(x+3)/(x−3) = lim(x→3) (x+3) = 6</span>.",
+    "<b>Tool 3 — Conjugate Multiplication (The Radical Vaporizer).</b> When to use: if you get 0/0 and see a square root expression like √A − B. Multiply top and bottom by the conjugate (flip the sign): <span class=\"formula\">(√A − B)(√A + B) = A − B²</span>.",
+    "<b>Tool 4 — Standard Trigonometric Limits (The Squeeze Anchors).</b> When to use: for sin(x) or tan(x) ratios approaching zero. The key rule: <span class=\"formula\">lim(θ→0) sin(θ)/θ = 1</span>.",
+    "<b>Tool 5 — L'Hôpital's Rule (The Nuclear Option).</b> When to use: if you get 0/0 or ∞/∞ and know derivatives. Differentiate the top and bottom <i>separately</i> (not using the quotient rule), then re-evaluate: <span class=\"formula\">lim f(x)/g(x) = lim f'(x)/g'(x)</span>."
+  ],
+  "examples": [
+    "**Q1: Indeterminate Forms**\n\nWhen evaluating a limit, which expression is considered an 'indeterminate form' requiring further algebraic manipulation or calculus — 5/0, 0/5, 5⁰, or 0/0?\n\n**Solution:** Answer: 0/0. An indeterminate form is one where the parts alone don't give enough information to determine the limit. 5/0 is undefined (tends to infinity); 0/5 is exactly 0; 5⁰ is exactly 1. But 0/0 could equal any real number depending on the function — that's what makes it indeterminate.",
+    "**Q2: Direct Substitution — First Step**\n\nFind lim(x→2) (3x² − 5x + 1). What is the very first step you should always attempt?\n\n**Solution:** Answer: substitute x = 2 directly. Never start with factoring or advanced rules — always check if the function is continuous by plugging in the value first. 3(2)² − 5(2) + 1 = 12 − 10 + 1 = 3. Since 3 is a real number, no further work is needed.",
+    "**Q3: Direct Substitution — Continuous Trig**\n\nConsider lim(x→0) (x + cos(x)). Which method should you use?\n\n**Solution:** Answer: Direct Substitution. Substituting x = 0 gives 0 + cos(0) = 0 + 1 = 1. Because the output is a single defined real number, the function is continuous at that point, so direct substitution is valid.",
+    "**Q4: Factoring Method**\n\nEvaluate lim(x→3) (x² − 9)/(x − 3). What method should you try, and what is the result?\n\n**Solution:** Answer: Factoring; result = 6. Step 1: Direct substitution gives (3²−9)/(3−3) = 0/0 — indeterminate, so try another tool. Step 2: Factor the numerator as a difference of squares: x² − 9 = (x−3)(x+3). Step 3: Cancel the common (x−3) factor (valid since x ≠ 3 as we approach the limit), leaving lim(x→3)(x+3). Step 4: Substitute again: 3 + 3 = 6.",
+    "**Q5: Conjugate Multiplication**\n\nEvaluate lim(x→4) (√x − 2)/(x − 4). What tool bypasses this radical roadblock?\n\n**Solution:** Answer: Conjugate Multiplication; result = 1/4. Step 1: Substituting x = 4 gives (√4−2)/(4−4) = 0/0. Step 2: Multiply top and bottom by the conjugate (√x + 2). Step 3: The numerator becomes (√x)² − 2² = x − 4 via the (A−B)(A+B) identity. Step 4: Cancel the matching (x−4) terms, leaving lim(x→4) 1/(√x+2) = 1/(2+2) = 1/4.",
+    "**Q6: Special Trigonometric Limits**\n\nFind lim(x→0) sin(5x)/x.\n\n**Solution:** Answer: 5. Step 1: The base rule is lim(θ→0) sin(θ)/θ = 1. Step 2: The angle inside sine is 5x, but the denominator is only x — multiply top and bottom by 5 to match: 5 · sin(5x)/(5x). Step 3: Pull the constant 5 outside the limit: 5 · [lim(x→0) sin(5x)/5x]. Since x→0 implies 5x→0, the bracketed limit evaluates to 1. Step 4: 5 · 1 = 5.",
+    "**Q7: L'Hôpital's Rule**\n\nEvaluate lim(x→0) (eˣ − 1)/x using L'Hôpital's Rule.\n\n**Solution:** Answer: 1. Step 1: Substituting x = 0 gives (e⁰−1)/0 = 0/0 — indeterminate, so L'Hôpital's Rule applies. Step 2: Differentiate top and bottom separately: d/dx(eˣ−1) = eˣ; d/dx(x) = 1. Step 3: Re-evaluate the new limit: lim(x→0) eˣ/1 = e⁰/1 = 1/1 = 1."
+  ],
+  "practice": [
+    "Which expression is an indeterminate form: 5/0, 0/5, 5⁰, or 0/0?",
+    "What is the first step to attempt for any limit problem?",
+    "Evaluate lim(x→0) (x + cos(x)).",
+    "Evaluate lim(x→3) (x² − 9)/(x − 3).",
+    "Evaluate lim(x→4) (√x − 2)/(x − 4).",
+    "Evaluate lim(x→0) sin(5x)/x.",
+    "Evaluate lim(x→0) (eˣ − 1)/x using L'Hôpital's Rule."
+  ],
+  "formulas": [
+    "**Direct Substitution:** lim(x→a) f(x) = f(a), when f is continuous at a",
+    "**Factoring (difference of squares example):** x² − a² = (x − a)(x + a)",
+    "**Conjugate Identity:** (√A − B)(√A + B) = A − B²",
+    "**Standard Trig Limit:** lim(θ→0) sin(θ)/θ = 1",
+    "**L'Hôpital's Rule:** lim f(x)/g(x) = lim f'(x)/g'(x), for 0/0 or ∞/∞ forms"
+  ],
+  "keyPoints": [
+    "Always try Direct Substitution first — it's the fastest check.",
+    "A result of 0/0 or ∞/∞ means 'indeterminate,' not 'no limit' — it signals you need another tool.",
+    "Factoring works when polynomials share a cancellable common factor.",
+    "Conjugate multiplication is the go-to move whenever a square root creates the 0/0 form.",
+    "sin(θ)/θ → 1 as θ→0 is a memorized anchor — match the angle inside sin to the denominator by multiplying/dividing by a constant.",
+    "L'Hôpital's Rule differentiates numerator and denominator separately (not the quotient rule) — reserve it for when you know derivatives and other tools are slower."
+  ],
+  "summary": "Limits describe the value a function approaches as x nears a point, even if the function isn't actually defined there. Start every problem with Direct Substitution; if it produces an indeterminate form like 0/0, pick the right follow-up tool — Factoring for polynomials, Conjugate Multiplication for square roots, the standard sin(θ)/θ → 1 identity for trig ratios, or L'Hôpital's Rule (differentiating top and bottom separately) when derivatives are available."
+}

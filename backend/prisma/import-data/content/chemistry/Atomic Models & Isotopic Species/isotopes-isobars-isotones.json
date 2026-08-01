@@ -1,0 +1,13 @@
+{
+  "title": "Isotopes, Isobars, Isotones, Isoelectronic & Isodiaphers",
+  "notes": [
+    "<h2>Subatomic Relationship Classes</h2><ul><li><b>Isotopes:</b> Same Z (protons), diff A (neutrons). E.g. ¹H, ²H (Deuterium), ³H (Tritium - radioactive β-emitter).</li><li><b>Isobars:</b> Same A (mass), diff Z. E.g. ¹⁴C and ¹⁴N, ⁴⁰Ar and ⁴⁰Ca.</li><li><b>Isotones:</b> Same number of neutrons (n = A − Z). E.g. ³⁰Si, ³¹P, ³²S (all n = 16).</li><li><b>Isoelectronic:</b> Same electron count. 10-e⁻ series: N³⁻, O²⁻, F⁻, Ne, Na⁺, Mg²⁺, Al³⁺.</li><li><b>Isodiaphers:</b> Same neutron excess (A − 2Z or N − Z). E.g. ³H and ¹⁹F (both excess = 1).</li></ul>"
+  ],
+  "examples": [],
+  "practice": [],
+  "formulas": [
+    "**Isotopic Excess:** Excess = A − 2Z"
+  ],
+  "keyPoints": [],
+  "summary": "Isotopes, Isobars, Isotones, Isoelectronic species, and Isodiaphers."
+}

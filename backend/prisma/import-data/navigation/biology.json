@@ -46,6 +46,17 @@
           "title": "Rkn"
         }
       ]
+    },
+    {
+      "id": "bio-molecules & chemical basis of life",
+      "title": "Bio-molecules & Chemical Basis of Life",
+      "description": "MCQ practice on bio-molecules.",
+      "topics": [
+        {
+          "id": "mcqs1",
+          "title": "Bio-molecules MCQs"
+        }
+      ]
     }
   ]
 }

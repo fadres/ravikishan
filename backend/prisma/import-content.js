@@ -419,6 +419,11 @@ function buildBlocks(topic, subjectType, topicTitle) {
       ? topic.practice
       : Object.values(topic.practice).flat().filter(Boolean);
     list.forEach((item, i) => {
+      if (typeof item === 'string') {
+        const q = truncate(item, 90);
+        push('practice', `Practice ${i + 1}: ${q}`, item);
+        return;
+      }
       const q = truncate(item.question, 90);
       push('practice', `Practice ${i + 1}: ${q}`, `**Question:** ${item.question}\n\n**Answer:** ${item.answer}`);
     });
@@ -438,7 +443,9 @@ function buildBlocks(topic, subjectType, topicTitle) {
     list.forEach((item, i) => {
       const f = String(item).trim();
       if (!f) return;
-      const text = f.includes('\n') ? f : `$$${f.replace(/^\$+|\$+$/g, '')}$$`;
+      // Wrap in display math only for compact math-y lines; keep prose
+      // formulas (e.g. "**Name:** at constant T, P ∝ 1/V") as plain text.
+      const text = /^\S+$/.test(f) && !f.includes('**') ? `$$${f.replace(/^\$+|\$+$/g, '')}$$` : f;
       push('formulas', `Formula ${i + 1}`, text);
     });
   }

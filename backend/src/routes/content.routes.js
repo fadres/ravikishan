@@ -71,10 +71,17 @@ const subjectSelect = {
   },
 };
 
-// GET /api/subjects/:slug — public: chapters + titles + lock state.
+// GET /api/subjects/:slug?class=class-11 — public: chapters + titles + lock state.
+// The optional ?class= param scopes the lookup to one class; without it the
+// first class (lowest sortOrder) wins so same-slug subjects stay unambiguous.
 router.get('/subjects/:slug', async (req, res) => {
+  const classSlug = typeof req.query.class === 'string' ? req.query.class.trim() : '';
   const subject = await prisma.subject.findFirst({
-    where: { slug: req.params.slug },
+    where: {
+      slug: req.params.slug,
+      ...(classSlug ? { class: { slug: classSlug } } : {}),
+    },
+    orderBy: { class: { sortOrder: 'asc' } },
     select: subjectSelect,
   });
   if (!subject) throw new AppError(404, 'Subject not found');
@@ -115,8 +122,13 @@ const blockMetaOnly = (b) => ({
 // Everything else about the subject/chapter is public — visitors see the
 // whole structure, titles and lock state, and only premium *content* is gated.
 router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (req, res) => {
+  const classSlug = typeof req.query.class === 'string' ? req.query.class.trim() : '';
   const subject = await prisma.subject.findFirst({
-    where: { slug: req.params.subjectSlug },
+    where: {
+      slug: req.params.subjectSlug,
+      ...(classSlug ? { class: { slug: classSlug } } : {}),
+    },
+    orderBy: { class: { sortOrder: 'asc' } },
     include: { chapters: { where: { slug: req.params.chapterSlug } } },
   });
   if (!subject) throw new AppError(404, 'Subject not found');

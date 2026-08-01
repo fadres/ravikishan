@@ -1,0 +1,32 @@
+{
+  "title": "Biomolecules MCQs - Set 1",
+  "notes": [
+    "<h2>Introduction to Biomolecules</h2>\n<p>Biomolecules are organic molecules synthesized by living organisms, acting as the fundamental building blocks of life. They are broadly divided into four major classes: <b>Carbohydrates</b> (energy sources), <b>Proteins</b> (structural and catalytic units), <b>Nucleic Acids</b> (genetic blueprint), and <b>Lipids</b> (energy storage and cell membranes).</p>",
+    "<h3>Key Monomer-Polymer Linkages to Remember:</h3>\n<ul>\n  <li><b>Carbohydrates:</b> Monosaccharides linked by <u>Glycosidic bonds</u>.</li>\n  <li><b>Proteins:</b> Amino acids linked by <u>Peptide bonds</u>.</li>\n  <li><b>Nucleic Acids:</b> Nucleotides linked by <u>Phosphodiester bonds</u>.</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Carbohydrate Linkages**\n\nWhich type of bond links individual monosaccharide units together to form a polysaccharide like starch or cellulose?\n\n**Solution:** Answer: Glycosidic bond. A glycosidic bond forms via a dehydration reaction between the hydroxyl groups of two saccharide molecules. Peptide bonds belong to proteins, phosphodiester bonds belong to nucleic acids, and ester linkages are found in lipids.",
+    "**Q2: Amino Acid Structure**\n\nEvery amino acid contains a central carbon atom bonded to a hydrogen atom, an amino group, a carboxyl group, and a variable side chain. What is this variable side chain called?\n\n**Solution:** Answer: R-group (or Side Chain). The R-group specifies the unique identity and chemical behavior of each of the 20 standard amino acids (e.g., whether it is polar, non-polar, acidic, or basic).",
+    "**Q3: Nucleic Acid Components**\n\nA nucleotide is the monomeric unit of nucleic acids (DNA and RNA). What three structural components make up a single nucleotide?\n\n**Solution:** Answer: A pentose sugar, a nitrogenous base, and a phosphate group. If the phosphate group is missing, the molecule is called a nucleoside instead.",
+    "**Q4: Protein Structure Levels**\n\nThe linear sequence of amino acids in a polypeptide chain represents which level of protein structure?\n\n**Solution:** Answer: Primary Structure. The primary structure is determined strictly by covalent peptide bonds. Folding into alpha-helices or beta-pleated sheets forms the secondary structure, while overall 3D structural folding represents the tertiary structure.",
+    "**Q5: RNA vs DNA Bases**\n\nWhich nitrogenous base is unique to RNA molecules and replaces thymine, which is found only in DNA?\n\n**Solution:** Answer: Uracil. Uracil pairs with adenine in RNA, just as thymine pairs with adenine in DNA. Cytosine and guanine are found in both DNA and RNA."
+  ],
+  "practice": [
+    "Which type of bond links individual monosaccharide units together to form a polysaccharide?",
+    "What is the variable side chain in an amino acid structural layout called?",
+    "What three structural components make up a single nucleotide unit?",
+    "The linear sequence of amino acids in a polypeptide chain represents which structural level?",
+    "Which nitrogenous base is unique to RNA molecules and replaces thymine?"
+  ],
+  "formulas": [
+    "**General Carbohydrate Formula:** Cn(H2O)n",
+    "**Amino Acid General Structure:** H2N–CHR–COOH"
+  ],
+  "keyPoints": [
+    "Carbohydrates primarily serve as short-to-medium term energy storage (e.g., glycogen, starch).",
+    "Proteins perform structural support, cellular signaling, transport, and enzymatic catalysis.",
+    "DNA contains deoxyribose sugar and thymine; RNA contains ribose sugar and uracil.",
+    "Lipids are hydrophobic or amphipathic macromolecules that do not form true polymeric chains."
+  ],
+  "summary": "This question set reviews the foundational concepts of Biomolecules—including structural monomer pairings, characteristic chemical bonds, and defining traits separating DNA, RNA, proteins, and carbohydrates."
+}

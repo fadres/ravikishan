@@ -33,7 +33,7 @@ export default function ChapterPage() {
 
   useEffect(() => {
     setData(null);
-    api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}`)
+    api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${classSlug}`)
       .then((d) => setData(d))
       .catch(() => setError('Chapter not found.'));
   }, [subjectSlug, chapterSlug]);

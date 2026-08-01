@@ -1,0 +1,11 @@
+{
+  "title": "Key Gas Properties (GMVTP)",
+  "notes": [
+    "<h2>Key Properties of Gases</h2><div class=\"info-grid\"><div class=\"info-box\"><h4>Gaseous State</h4><p>Intermolecular distance is very high, so molecules are loosely packed. Examples: O₂, H₂, He, NH₃, CO₂.</p></div><div class=\"info-box\"><h4>Mass</h4><p>Measured in grams or kilograms. IUPAC recommends expressing amount in moles.<br><strong>n = mass ÷ molar mass</strong></p></div><div class=\"info-box\"><h4>Volume</h4><p>Equal to the container's volume. Units: mL, cm³, L, dm³.<br>1 L = 1000 mL</p></div><div class=\"info-box\"><h4>Temperature</h4><p>Average kinetic energy is proportional to absolute temperature, measured in Kelvin.</p></div><div class=\"info-box\"><h4>Pressure</h4><p>Force per unit area on container walls (P = F/A).<br>1 atm = 760 mmHg = 1.01325 × 10⁵ Pa</p></div></div>"
+  ],
+  "examples": [],
+  "practice": [],
+  "formulas": [],
+  "keyPoints": [],
+  "summary": "Gaseous state, mass, volume, temperature, and pressure fundamentals."
+}

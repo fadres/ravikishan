@@ -60,7 +60,7 @@ export default function ContentPanel() {
 
   useEffect(() => {
     if (!subjectSlug) return;
-    api(`/api/subjects/${subjectSlug}`)
+    api(`/api/subjects/${subjectSlug}?class=${classSlug}`)
       .then((d) => setSubject(d.subject))
       .catch((e) => setError(e.message));
   }, [subjectSlug]);

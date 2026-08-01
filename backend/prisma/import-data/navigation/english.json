@@ -30,6 +30,59 @@
           "title": "Story Analysis"
         }
       ]
+    },
+    {
+      "id": "grammar & vocabulary syllabus",
+      "title": "Grammar & Vocabulary Syllabus",
+      "description": "Grammar rules and vocabulary study material.",
+      "topics": [
+        {
+          "id": "grammar-rules",
+          "title": "Grammar Rules"
+        },
+        {
+          "id": "vocabulary-study",
+          "title": "Vocabulary Study"
+        }
+      ]
+    },
+    {
+      "id": "writing & literature tasks",
+      "title": "Writing & Literature Tasks",
+      "description": "Writing and literature task groups.",
+      "topics": [
+        {
+          "id": "task-group-1",
+          "title": "Task Group 1"
+        },
+        {
+          "id": "task-group-2",
+          "title": "Task Group 2"
+        }
+      ]
+    },
+    {
+      "id": "subject-verb agreement masterclass",
+      "title": "Subject-Verb Agreement Masterclass",
+      "description": "Master subject-verb agreement rules.",
+      "topics": [
+        {
+          "id": "looks-plural-is-singular",
+          "title": "Looks Plural, Is Singular"
+        },
+        {
+          "id": "looks-singular-is-plural",
+          "title": "Looks Singular, Is Plural"
+        },
+        {
+          "id": "compound-and-subjects",
+          "title": "Compound and Subjects"
+        },
+        {
+          "id": "plural-only-nouns",
+          "title": "Plural-Only Nouns"
+        }
+      ]
     }
   ]
 }

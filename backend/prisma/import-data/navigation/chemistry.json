@@ -96,6 +96,131 @@
           "title": "Numerical"
         }
       ]
+    },
+    {
+      "id": "states of matter",
+      "title": "States of Matter",
+      "description": "Properties of matter and the five states.",
+      "topics": [
+        {
+          "id": "properties",
+          "title": "Properties of Matter"
+        },
+        {
+          "id": "five-states",
+          "title": "Five States of Matter"
+        }
+      ]
+    },
+    {
+      "id": "classification of matter",
+      "title": "Classification of Matter",
+      "description": "Physical/chemical classification, pure substances and mixtures.",
+      "topics": [
+        {
+          "id": "physical-chemical-classification",
+          "title": "Physical & Chemical Classification"
+        },
+        {
+          "id": "pure-substances-mixtures",
+          "title": "Pure Substances and Mixtures"
+        },
+        {
+          "id": "metals-nonmetals-metalloids",
+          "title": "Metals, Non-Metals and Metalloids"
+        },
+        {
+          "id": "organic-inorganic-compounds",
+          "title": "Organic and Inorganic Compounds"
+        }
+      ]
+    },
+    {
+      "id": "compounds & chemical bonding",
+      "title": "Compounds & Chemical Bonding",
+      "description": "How compounds form and bond.",
+      "topics": [
+        {
+          "id": "water",
+          "title": "Water: A Polar Compound"
+        }
+      ]
+    },
+    {
+      "id": "atomic mass & atomic mass unit",
+      "title": "Atomic Mass & Atomic Mass Unit",
+      "description": "Definitions and concepts of atomic mass.",
+      "topics": [
+        {
+          "id": "atomic-mass-def",
+          "title": "Atomic Mass: Definitions"
+        }
+      ]
+    },
+    {
+      "id": "relative molecular mass & formula mass",
+      "title": "Relative Molecular Mass & Formula Mass",
+      "description": "Molecular and formula mass concepts.",
+      "topics": [
+        {
+          "id": "relative-molecular-mass",
+          "title": "Relative Molecular Mass"
+        },
+        {
+          "id": "formula-mass",
+          "title": "Formula Mass"
+        }
+      ]
+    },
+    {
+      "id": "organic chemistry foundations",
+      "title": "Organic Chemistry Foundations",
+      "description": "Carbon classification, hybridization and homologous series.",
+      "topics": [
+        {
+          "id": "carbon-classification",
+          "title": "Classification of Carbon Atoms"
+        },
+        {
+          "id": "vinyl-vinylic-allylic",
+          "title": "Vinyl, Vinylic and Allylic Positions"
+        },
+        {
+          "id": "hybridization",
+          "title": "Hybridization"
+        },
+        {
+          "id": "homologous-series",
+          "title": "Homologous Series"
+        }
+      ]
+    },
+    {
+      "id": "atomic models & isotopic species",
+      "title": "Atomic Models & Isotopic Species",
+      "description": "Dalton's theory, subatomic particles and atomic models.",
+      "topics": [
+        {
+          "id": "daltons-theory",
+          "title": "Dalton's Atomic Theory"
+        },
+        {
+          "id": "subatomic-particles",
+          "title": "Subatomic Particles"
+        },
+        {
+          "id": "rutherfords-model",
+          "title": "Rutherford's Model"
+        },
+        {
+          "id": "bohrs-model",
+          "title": "Bohr's Model"
+        },
+        {
+          "id": "isotopes-isobars-isotones",
+          "title": "Isotopes, Isobars and Isotones"
+        }
+      ]
     }
   ]
 }
