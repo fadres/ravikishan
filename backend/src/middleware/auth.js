@@ -1,20 +1,30 @@
 import { verifyAccessToken } from '../utils/tokens.js';
+import { prisma } from '../config/db.js';
 
 // Attaches req.user when a valid Bearer token is present; never rejects.
-export function authenticate(req, _res, next) {
+// The user row is loaded fresh from the DB so role/accessLevel changes
+// (e.g. an owner approving a member) take effect immediately, and tokens of
+// deleted users stop working.
+export async function authenticate(req, _res, next) {
   const header = req.headers.authorization || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
   if (token) {
     try {
       const payload = verifyAccessToken(token);
-      req.user = {
-        id: payload.sub,
-        email: payload.email,
-        role: payload.role,
-        accessLevel: payload.accessLevel ?? 3,
-      };
+      const user = await prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          role: true,
+          accessLevel: true,
+          isApproved: true,
+        },
+      });
+      if (user) req.user = user;
     } catch {
-      // invalid/expired token → treated as anonymous
+      // invalid/expired token or deleted user → treated as anonymous
     }
   }
   next();

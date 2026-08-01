@@ -49,8 +49,12 @@ const credentialsSchema = z.object({
   password: z.string().min(8).max(128),
 });
 
-router.post('/register', validate(credentialsSchema), async (req, res) => {
-  const { email, password } = req.body;
+const registerSchema = credentialsSchema.extend({
+  displayName: z.string().trim().min(2).max(80).optional(),
+});
+
+router.post('/register', validate(registerSchema), async (req, res) => {
+  const { email, password, displayName } = req.body;
   const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   if (existing) throw new AppError(409, 'An account with this email already exists');
 
@@ -59,6 +63,7 @@ router.post('/register', validate(credentialsSchema), async (req, res) => {
     data: {
       email: email.toLowerCase(),
       passwordHash,
+      displayName: displayName || null,
       role: 'guest',
       isApproved: false,
     },

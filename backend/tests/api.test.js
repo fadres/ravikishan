@@ -321,9 +321,10 @@ test('admin can change a user to level 2 or 3 but cannot grant level 1', async (
   assert.equal(grantOne.status, 403);
 });
 
-test('only the owner can grant level 1, and it takes effect on the next login', async () => {
+test('only the owner can grant level 1, and it takes effect immediately (no re-login)', async () => {
   const ownerLogin = await login('owner@test.ravikishan', 'testpass123');
-  const target = (await login('guest@test.ravikishan', 'testpass123')).body.user;
+  const guestLogin = await login('guest@test.ravikishan', 'testpass123');
+  const target = guestLogin.body.user;
 
   const grantOne = await request(app)
     .patch(`/api/admin/users/${target.id}`)
@@ -332,14 +333,21 @@ test('only the owner can grant level 1, and it takes effect on the next login', 
   assert.equal(grantOne.status, 200);
   assert.equal(grantOne.body.user.accessLevel, 1);
 
+  // The guest's existing token must pick up the new level from the DB.
+  const immediate = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders(guestLogin.body.accessToken));
+  const strategy = immediate.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(strategy.contentRichtext, 'OWNER-ONLY-STRATEGY-CONTENT');
+
   const upgraded = await login('guest@test.ravikishan', 'testpass123');
   assert.equal(upgraded.body.user.accessLevel, 1);
 
   const ownerOnly = await request(app)
     .get('/api/subjects/physics/chapters/kinematics')
     .set(authHeaders(upgraded.body.accessToken));
-  const strategy = ownerOnly.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
-  assert.equal(strategy.contentRichtext, 'OWNER-ONLY-STRATEGY-CONTENT');
+  const strategy2 = ownerOnly.body.blocks.find((b) => b.title === 'Owner Strategy Notes');
+  assert.equal(strategy2.contentRichtext, 'OWNER-ONLY-STRATEGY-CONTENT');
 
   // restore guest level for the other tests
   await request(app)
