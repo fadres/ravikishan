@@ -13,7 +13,7 @@ import 'dotenv/config';
 const prisma = new PrismaClient();
 
 const ownerEmail = (process.env.OWNER_EMAIL || 'owner@ravikishan.com').toLowerCase();
-const ownerPassword = process.env.OWNER_PASSWORD || 'ravikishan-owner-2026';
+const ownerPassword = process.env.OWNER_PASSWORD || 'Ravikishan@2026!';
 
 async function main() {
   const passwordHash = await bcrypt.hash(ownerPassword, 12);
