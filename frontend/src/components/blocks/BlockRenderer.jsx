@@ -143,8 +143,7 @@ export default function BlockRenderer({ block, subjectType, labelOverride }) {
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
     !block.mindmapJson &&
-    !block.diagramData &&
-    !block.title;
+    !block.diagramData;
   if (isEmpty) return null;
 
   const style = BLOCK_STYLE[block.blockType] || BLOCK_STYLE.note_topic;

@@ -39,7 +39,7 @@ function Shell() {
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 pb-safe px-4 sm:px-6">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<><Home /><Footer /></>} />

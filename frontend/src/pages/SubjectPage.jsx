@@ -107,4 +107,3 @@ export default function SubjectPage() {
       </div>
     </div>
   );
-}

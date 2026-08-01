@@ -92,7 +92,9 @@ const BLOCK_TYPES = {
 
 const DATA_DIR = process.env.DATA_DIR || join(HERE, 'import-data');
 const BATCH_SIZE = 500;
-const MAX_BLOCK_CHARS = 9000; // split over-long sections into "Part N" blocks
+const MAX_BLOCK_CHARS = 9000; // hard safety cap for a single section
+const PART_TARGET_CHARS = 2600; // split long sections into ~equal parts of this size
+const MAX_PARTS = 4;            // at most 1.1 … 1.4 for one section
 
 // ── Small helpers ─────────────────────────────────────────────────────────
 
@@ -161,7 +163,7 @@ function renderNode(node, ctx = {}) {
     case 'iframe':
       return '';
     case 'br':
-      return '\n';
+      return '\n\n';
     case 'hr':
       return '\n\n---\n\n';
     case 'b':
@@ -369,6 +371,47 @@ function splitNotes(notesArray, topicTitle, isText) {
   return sections;
 }
 
+// ── Equal-part splitting for long sections ────────────────────────────────
+
+// Re-partition over-long sections into 2–4 roughly equal paragraph groups.
+// Parts keep the original title with a dotted suffix (1.1, 1.2, …); the
+// suffix counter runs across the whole topic so numbers never repeat.
+function splitLongSections(sections, topicTitle) {
+  const out = [];
+  let partNo = 0;
+  for (const section of sections) {
+    const total = section.content.length;
+    if (total <= PART_TARGET_CHARS) {
+      out.push(section);
+      continue;
+    }
+    const paragraphs = section.content.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+    if (paragraphs.length <= 1) {
+      out.push(section);
+      continue;
+    }
+    const parts = Math.min(MAX_PARTS, Math.max(2, Math.ceil(total / PART_TARGET_CHARS)));
+    const base = section.title.replace(/\s*—\s*Part \d+$/, '') || topicTitle;
+    const target = total / parts;
+    const groups = Array.from({ length: parts }, () => []);
+    let gi = 0;
+    let acc = 0;
+    for (const p of paragraphs) {
+      groups[gi].push(p);
+      acc += p.length + 2;
+      if (acc >= target && gi < parts - 1) {
+        gi += 1;
+        acc = 0;
+      }
+    }
+    groups.filter((g) => g.length).forEach((g) => {
+      partNo += 1;
+      out.push({ title: `${base} 1.${partNo}`, content: g.join('\n\n') });
+    });
+  }
+  return out;
+}
+
 // ── Mindmap helpers ───────────────────────────────────────────────────────
 
 function convertMindmap(node) {
@@ -552,7 +595,7 @@ function buildBlocks(topic, subjectType, topicTitle) {
   const isText = notes.length > 0 && !isHtml(notes.join(''));
   const canUseStatement = subjectType === 'science_math' || subjectType === 'biology';
   if (notes.length) {
-    const sections = splitNotes(notes, topicTitle, isText);
+    const sections = splitLongSections(splitNotes(notes, topicTitle, isText), topicTitle);
     sections.forEach((s, i) => {
       const title = s.title || (i === 0 ? topicTitle : `${topicTitle} — Part ${i + 1}`);
       const topicLike = title.split(/\s+/).length <= 8 && !/[.?!…]$/.test(title) && !title.includes(',');

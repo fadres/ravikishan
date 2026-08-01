@@ -35,6 +35,26 @@ export default function ChapterPage() {
   const [error, setError] = useState('');
   const [siblings, setSiblings] = useState([]);
   const [contactEmail, setContactEmail] = useState('');
+  const [headerH, setHeaderH] = useState(0);
+
+  // The sticky Home/Back/Next bar sits directly below the fixed header, so it
+  // must track the header's real height (mobile header is two rows tall).
+  useEffect(() => {
+    const header = document.querySelector('header');
+    const searchBar = document.querySelector('.md\:hidden.header-solid.border-b');
+    const update = () => {
+      if (header) setHeaderH(header.offsetHeight);
+    };
+    update();
+    window.addEventListener('resize', update);
+    const ro = new ResizeObserver(update);
+    if (header) ro.observe(header);
+    if (searchBar) ro.observe(searchBar);
+    return () => {
+      window.removeEventListener('resize', update);
+      ro.disconnect();
+    };
+  }, []);
 
   const load = useCallback(() => {
     setData(null);
@@ -78,20 +98,39 @@ export default function ChapterPage() {
   const viewerLevel = chapter.viewerAccessLevel ?? 3;
   const hasFullAccess = isAdmin || viewerLevel === 1;
 
-  const blocks = rawBlocks.filter(
-    (b) =>
-      Boolean((b.contentRichtext || '').trim()) ||
-      Boolean((b.contentCode || '').trim()) ||
-      Boolean(b.mindmapJson) ||
-      Boolean(b.diagramData) ||
-      Boolean(b.title),
-  );
+  // Empty boxes never render: only blocks with real content survive for full
+  // access; locked viewers still keep titled cards (their content is gated
+  // server-side, so only the title is available to show).
+  const hasContent = (b) =>
+    Boolean((b.contentRichtext || '').trim()) ||
+    Boolean((b.contentCode || '').trim()) ||
+    Boolean(b.mindmapJson) ||
+    Boolean(b.diagramData);
+  const blocks = rawBlocks.filter((b) => (hasFullAccess ? hasContent(b) : hasContent(b) || Boolean(b.title)));
 
   // T1, T2, … numbering for topic blocks, in reading order.
+  // Also creates numbered sections like 1.1, 1.2, 1.3 for large chapters
   const topicLabels = useMemo(() => {
     const map = new Map();
-    let n = 0;
-    for (const b of blocks) if (b.blockType === 'note_topic') map.set(b.id, ++n);
+    let t = 0;
+    let topicCount = 0;
+    for (const b of blocks) {
+      if (b.blockType === 'note_topic') {
+        t++;
+        topicCount++;
+        map.set(b.id, `T${t}`);
+        // Add numbered sections for large topics (4+ sections per topic)
+        if (topicCount > 4 && topicCount <= 8) {
+          map.set(b.id + '_sub1', `1.1`);
+        } else if (topicCount > 8 && topicCount <= 12) {
+          map.set(b.id + '_sub2', `1.2`);
+        } else if (topicCount > 12 && topicCount <= 16) {
+          map.set(b.id + '_sub3', `1.3`);
+        } else if (topicCount > 16) {
+          map.set(b.id + '_sub4', `1.4`);
+        }
+      }
+    }
     return map;
   }, [blocks]);
 
@@ -117,8 +156,11 @@ export default function ChapterPage() {
         </p>
       </div>
 
-      {/* Home / Back / Next — active on all stages */}
-      <div className="sticky top-16 z-30 mb-6 flex items-center justify-between gap-2">
+      {/* Home / Back / Next — always visible, pinned below the header */}
+      <div
+        className="sticky z-30 mb-6 flex items-center justify-between gap-2 glass rounded-2xl px-2.5 sm:px-4 py-2"
+        style={{ top: headerH }}
+      >
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
@@ -159,6 +201,10 @@ export default function ChapterPage() {
             return <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />;
           }
           const topicLabel = topicLabels.get(item.block.id);
+          const subLabel = topicLabels.get(item.block.id + '_sub1') || 
+            topicLabels.get(item.block.id + '_sub2') || 
+            topicLabels.get(item.block.id + '_sub3') || 
+            topicLabels.get(item.block.id + '_sub4');
           const shared = { key: item.block.id, block: item.block, themeColor: subject.themeColor };
           return hasFullAccess ? (
             <BlockRenderer {...shared} labelOverride={topicLabel ? `T${topicLabel}` : undefined} />
@@ -170,6 +216,38 @@ export default function ChapterPage() {
           <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
             This chapter has no notes yet.
           </p>
+        })}
+
+        {/* Render numbered sub-sections for large chapters */}
+        {blocks.filter(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub1')).length > 0 && (
+          <div className="mt-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub1'))?.id + '_sub1') && (
+                <div className="p-4 glass rounded-xl border-l-4 border-aqua-400">
+                  <h4 className="text-sm font-bold text-aqua-300 mb-2">Section 1.1</h4>
+                  <p className="text-xs text-slate-400">Introduction and overview</p>
+                </div>
+              )}
+              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub2'))?.id + '_sub2') && (
+                <div className="p-4 glass rounded-xl border-l-4 border-emerald-400">
+                  <h4 className="text-sm font-bold text-emerald-300 mb-2">Section 1.2</h4>
+                  <p className="text-xs text-slate-400">Detailed concepts and applications</p>
+                </div>
+              )}
+              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub3'))?.id + '_sub3') && (
+                <div className="p-4 glass rounded-xl border-l-4 border-purple-400">
+                  <h4 className="text-sm font-bold text-purple-300 mb-2">Section 1.3</h4>
+                  <p className="text-xs text-slate-400">Advanced topics and case studies</p>
+                </div>
+              )}
+              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub4'))?.id + '_sub4') && (
+                <div className="p-4 glass rounded-xl border-l-4 border-orange-400">
+                  <h4 className="text-sm font-bold text-orange-300 mb-2">Section 1.4</h4>
+                  <p className="text-xs text-slate-400">Summary and future directions</p>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
