@@ -38,6 +38,19 @@ const IDIOMS = [
   { text: 'Start where you are; use what you have; do what you can.', author: 'Arthur Ashe' },
   { text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
   { text: 'Better late than never.', author: 'Proverb' },
+  { text: 'A little progress each day adds up to big results.', author: 'Proverb' },
+  { text: 'Dream big, work hard, stay focused.', author: 'Proverb' },
+  { text: 'The roots of education are bitter, but the fruit is sweet.', author: 'Aristotle' },
+  { text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs' },
+  { text: "Believe you can and you're halfway there.", author: 'Theodore Roosevelt' },
+  { text: 'Success is the sum of small efforts repeated daily.', author: 'Robert Collier' },
+  { text: 'The future belongs to those who prepare for it today.', author: 'Malcolm X' },
+  { text: 'Teach a man to fish and you feed him for a lifetime.', author: 'Proverb' },
+  { text: 'Knowledge shared is knowledge doubled.', author: 'Proverb' },
+  { text: 'Everything you want is on the other side of fear.', author: 'George Addair' },
+  { text: 'You learn something new every day.', author: 'Proverb' },
+  { text: 'The pen is mightier than the sword.', author: 'Edward Bulwer-Lytton' },
+  { text: 'Wisdom begins in wonder.', author: 'Socrates' },
 ];
 
 function IdiomsStrip() {
@@ -63,15 +76,19 @@ function IdiomsStrip() {
 }
 
 // Growing tree with leaves — "Improvement is Life".
-function TreeIcon({ size = 34 }) {
+function TreeIcon({ size = 46 }) {
   return (
     <svg viewBox="0 0 64 64" width={size} height={size} fill="none" aria-hidden="true">
-      <path d="M32 58V36" stroke="#34d399" strokeWidth="5" strokeLinecap="round" />
+      <path d="M32 58V36" stroke="#34d399" strokeWidth="5.5" strokeLinecap="round" />
       <path d="M32 42c-2.2 4-2.2 7.4 0 10.6 2.2-3.2 2.2-6.6 0-10.6z" fill="#6ee7b7" />
       <path d="M22 30c-7.5-3-10.6-8.5-9.5-14 6.4-1 12 1 15 6.5 1.2-7.2 5.4-12.6 12-13.6 2.2 6.2-1 11.8-6.5 14.8 6.4 1.7 9.8 6.2 9.8 11.8-7.8.8-14.2-1.6-18.8-5.5" fill="#22c55e" />
       <path d="M20 33c-8.8 1-13 6.5-12 12 8.6 0 14.2-3.2 17-8.6 2.4 7.4 7.8 11.6 15.5 11.6 0-7.6-3.4-13-9-15.4" fill="#10b981" />
       <circle cx="45" cy="11" r="4.4" fill="#4ade80" />
       <path d="M11 59h42" stroke="#475569" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="24" cy="21" r="3" fill="#bbf7d0" opacity="0.85" />
+      <circle cx="39" cy="30" r="2.5" fill="#bbf7d0" opacity="0.75" />
+      <circle cx="28" cy="36" r="2" fill="#a7f3d0" opacity="0.7" />
+      <path d="M51 37c4-2 7-6 6-10-4 0-8 3-9 7l-1 3 4 0z" fill="#86efac" />
     </svg>
   );
 }
@@ -428,8 +445,13 @@ export default function Home() {
           style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.35), transparent 70%)' }}
         />
         <div className="relative z-10">
-          <span className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 items-center justify-center shadow-lg shadow-emerald-500/25">
-            <TreeIcon size={36} />
+          <span className="relative inline-flex w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 items-center justify-center shadow-lg shadow-emerald-400/40 ring-4 ring-emerald-400/15">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 rounded-2xl opacity-60"
+              style={{ background: 'radial-gradient(circle at 50% 30%, rgba(190,242,100,0.55), transparent 70%)' }}
+            />
+            <TreeIcon size={50} />
           </span>
           <h1 className="mt-3 text-xl sm:text-2xl font-extrabold text-white">
             Improvement is Life

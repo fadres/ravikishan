@@ -15,7 +15,7 @@ export default function Footer() {
             © {year} Direction by → <span className="font-semibold text-purple-400">Creator ~ Owner: Ravikishan</span> ✦
           </p>
           <p className="text-xs text-slate-500">
-           &amp; Made with curiosity by Ravikishan. <br /> All rights reserved.
+           Made with curiosity by Ravikishan. <br /> All rights reserved.
           </p>
         </div>
       </div>

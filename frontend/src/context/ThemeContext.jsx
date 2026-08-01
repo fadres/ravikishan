@@ -10,6 +10,11 @@ export const WALLPAPERS = [
   { id: 'ocean', name: 'Ocean' },
   { id: 'forest', name: 'Forest' },
   { id: 'sunset', name: 'Sunset' },
+  { id: 'river', name: 'River' },
+  { id: 'waterfall', name: 'Waterfall' },
+  { id: 'meadow', name: 'Meadow' },
+  { id: 'aurora', name: 'Aurora' },
+  { id: 'night', name: 'Night' },
 ];
 
 export function storedWallpaperId() {

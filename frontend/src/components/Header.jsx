@@ -58,6 +58,54 @@ function WallpaperPreview({ id }) {
           <path d="M0,16 H28 V20 H0 Z" fill="#123d75" />
         </svg>
       );
+    case 'river':
+      return (
+        <svg {...common}>
+          <circle cx="6" cy="6" r="2.2" fill="#fbbf24" opacity="0.7" />
+          <path d="M15,2 C12,8 18,13 14,20 H21 C17,13 23,8 18,2 Z" fill="#38bdf8" opacity="0.6" />
+          <polygon points="0,20 5,12 10,20" fill="#0a2447" />
+          <polygon points="18,20 24,10 28,20" fill="#0a2447" />
+        </svg>
+      );
+    case 'waterfall':
+      return (
+        <svg {...common}>
+          <path d="M0,6 H12 V20 H0 Z" fill="#0a2447" />
+          <path d="M3,6 C4,9 2,11 3.5,14 L4.5,20 H9 C8,14 9.5,11 8.5,6 Z" fill="#38bdf8" opacity="0.6" />
+          <ellipse cx="8" cy="18.5" rx="8" ry="2.2" fill="#38bdf8" opacity="0.5" />
+          <polygon points="15,6 18,2 21,6" fill="#0e3060" />
+        </svg>
+      );
+    case 'meadow':
+      return (
+        <svg {...common}>
+          <circle cx="5" cy="6" r="2.4" fill="#fbbf24" opacity="0.6" />
+          <path d="M0,14 Q8,11 16,14 T28,14 V20 H0 Z" fill="#0e3060" />
+          <path d="M9,14 v4" stroke="#34d399" strokeWidth="1.2" />
+          <circle cx="9" cy="13" r="1.4" fill="#f472b6" />
+          <path d="M20,15 v4" stroke="#34d399" strokeWidth="1.2" />
+          <circle cx="20" cy="14" r="1.4" fill="#fbbf24" />
+        </svg>
+      );
+    case 'aurora':
+      return (
+        <svg {...common}>
+          <path d="M0,6 C6,1 11,8 17,4 C22,1 25,7 28,4 V20 H0 Z" fill="#34d399" opacity="0.2" />
+          <path d="M0,10 C8,4 13,11 20,7 C24,5 26,9 28,7 V20 H0 Z" fill="#22d3ee" opacity="0.15" />
+          <polygon points="0,20 8,14 15,20" fill="#0a2447" />
+          <polygon points="11,20 20,12 28,20" fill="#071a33" />
+        </svg>
+      );
+    case 'night':
+      return (
+        <svg {...common}>
+          <circle cx="22" cy="5" r="2.6" fill="#e2e8f0" opacity="0.85" />
+          <polygon points="0,20 8,13 16,20" fill="#071a33" />
+          <polygon points="10,20 20,11 28,20" fill="#0a2447" />
+          <rect x="16.5" y="10" width="4" height="4.5" fill="#0e3060" />
+          <rect x="17.5" y="12" width="1" height="1.2" fill="#fbbf24" />
+        </svg>
+      );
     default:
       return <svg {...common}><path d="M6 5l16 10M22 5L6 15" stroke="#64748b" strokeWidth="2" /></svg>;
   }

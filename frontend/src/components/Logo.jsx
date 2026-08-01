@@ -41,15 +41,15 @@ export default function Logo({ size = 36, className = '' }) {
       <circle cx="46" cy="22" r="1.5" fill="#e0f7ff" opacity="0.7" />
       <text
         x="32"
-        y="41"
+        y="42"
         textAnchor="middle"
         fontFamily="Arial, Helvetica, sans-serif"
-        fontSize="26"
+        fontSize="34"
         fontWeight="800"
         fill="url(#rk-text)"
         letterSpacing="1"
       >
-        RK
+        R
       </text>
     </svg>
   );
