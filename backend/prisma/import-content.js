@@ -568,6 +568,19 @@ async function main() {
     });
 
     const chapterSlug = slugify(group.chapterName);
+    const navChapter = nav?.chapters?.find((c) => slugify(c.id) === chapterSlug);
+    if (navChapter?.topics?.length) {
+      // Files in navigation order; topics missing from navigation follow after.
+      const order = new Map(navChapter.topics.map((t, i) => [slugify(t.id), i]));
+      group.files.sort((a, b) => {
+        const ia = order.get(slugify(basename(a, extname(a))));
+        const ib = order.get(slugify(basename(b, extname(b))));
+        if (ia !== undefined && ib !== undefined) return ia - ib;
+        if (ia !== undefined) return -1;
+        if (ib !== undefined) return 1;
+        return 0;
+      });
+    }
     const chapter = await prisma.chapter.upsert({
       where: { subjectId_slug: { subjectId: subject.id, slug: chapterSlug } },
       update: { title: chapterTitle(group.chapterName, nav), sortOrder: 1 },
