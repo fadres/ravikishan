@@ -1,0 +1,17 @@
+{
+  "title": "Limits",
+  "notes": [
+    "<h1>The Core Philosophy of Limits</h1>",
+    "<p>A limit asks: as <i>x</i> gets infinitely close to a number, what value is the function heading toward? Sometimes the function has a 'hole' at that exact spot — plugging the number in directly gives 0/0, called an <b>Indeterminate Form</b>. This does <u>not</u> mean the limit doesn't exist; it means the answer is hidden and needs algebra or calculus to expose it. Think of <b>Direct Substitution</b> as checking the front door: if it's unlocked (gives a real number), you walk right in. If it's locked with a 0/0 sign, you need the right tool to pick the lock.</p>",
+    "<h2>Tool 1 — Direct Substitution (The Front Door)</h2>",
+    "<p>When to use: always try this first, for smooth continuous functions. Example: <span class=\"formula\">lim(x→2) (3x² − 5x + 1) = 3(2)² − 5(2) + 1 = 3</span>.</p>",
+    "<h2>Tool 2 — Factoring Method (The Common Factor Cleaner)</h2>",
+    "<p>When to use: if direct substitution gives 0/0 and you see polynomial expressions that share a common factor. Example: <span class=\"formula\">lim(x→3) (x² − 9)/(x − 3) = lim(x→3) (x−3)(x+3)/(x−3) = lim(x→3) (x+3) = 6</span>.</p>",
+    "<h2>Tool 3 — Conjugate Multiplication (The Radical Vaporizer)</h2>",
+    "<p>When to use: if you get 0/0 and see a square root expression like √A − B. Multiply top and bottom by the conjugate (flip the sign): <span class=\"formula\">(√A − B)(√A + B) = A − B²</span>.</p>",
+    "<h2>Tool 4 — Standard Trigonometric Limits (The Squeeze Anchors)</h2>",
+    "<p>When to use: for sin(x) or tan(x) ratios approaching zero. The key rule: <span class=\"formula\">lim(θ→0) sin(θ)/θ = 1</span>.</p>",
+    "<h2>Tool 5 — L'Hôpital's Rule (The Nuclear Option)</h2>",
+    "<p>When to use: if you get 0/0 or ∞/∞ and know derivatives. Differentiate the top and bottom <i>separately</i> (not using the quotient rule), then re-evaluate: <span class=\"formula\">lim f(x)/g(x) = lim f'(x)/g'(x)</span>.</p>"
+  ]
+}

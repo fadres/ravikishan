@@ -1,0 +1,86 @@
+{
+  "title": "Numerical P",
+  "notes": [
+    "<h2>Worked Example: Density Calculation with Significant Figures</h2>",
+    "<p>Mass of an object is measured to be 4.237 kg (four significant figures) and its volume is measured to be 2.51 m³ (three significant figures), then its density is given by</p>",
+    "$$\\text{Density} = \\frac{\\text{Mass}}{\\text{Volume}} = \\frac{4.237}{2.51} = 1.6880 \\text{ kg m}^{-3}$$",
+    "<p>Here 1.6880 kg m⁻³ has five significant figures but according to rule it should be expressed to only three significant figures i.e. 1.69 kg m⁻³.</p>",
+    "<p>One must remember that in general, the final result should not have more significant figures than the original data from which it was obtained.</p>",
+    "<p>Area of an object is measured to be (2.51 m³) as five significant figures but the least precise measurement must also be expressed to the 0.1 decimal place so our final result should be expressed to the 0.1 decimal place, giving us 106.3 kg.</p>",
+    "<p>But the least precise measurement is 103.9. This measurement is expressed to the 0.1 decimal place. Thus, the answer is rounded to the tenths place, giving us 106.319 kg = 106.3 kg.</p>",
+
+    "<h2>NUMERICAL EXAMPLES</h2>",
+
+    "<h3>Example 1: The density of lead is 11.3 gcm⁻³. What is this value in kilo-grams per cubic meter?</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "$$\\text{Density }(\\rho) = 11.3 \\text{ gcm}^{-3} = \\frac{11.3 \\times 10^{-3} \\text{ Kg}}{(10^{-2}\\text{m})^3} = \\frac{11.3 \\times 10^{-3}}{10^{-6}} \\text{ kgm}^{-3}$$",
+    "$$= 11.3 \\times 10^3 \\text{ kgm}^{-3}$$",
+    "<p>So, 11.3 gcm⁻³ = 11.3 × 10³ kgm⁻³</p>",
+
+    "<h3>Example 2: How many nanoseconds does it take light to travel 1.00 ft in vacuum? (This result is a useful quantity to remember.)</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "<p>Speed of light (c) = 3 × 10⁸ ms⁻¹</p>",
+    "<p>d = 1 ft = 0.3048 m</p>",
+    "<p>t = ?</p>",
+    "$$t = \\frac{d}{c} = \\frac{0.3048}{3 \\times 10^8} = 1.02 \\times 10^{-9}\\text{s} = 1.02 \\text{ ns}$$",
+
+    "<h3>Example 3: According to the label on a bottle of salad dressing, the volume of the contents is 0.473 liter (L). Using only the conversions 1 L = 1000 cm³ and 1 in. = 2.54 cm, express this volume in cubic inches.</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "$$0.473 \\text{ L} = 0.473 \\times 10^3 \\text{ cm}^3$$",
+    "$$1 \\text{ L} = 10^3 \\text{ cm}^3, \\; 1 \\text{ in} = 2.54 \\text{ cm}$$",
+    "$$1 \\text{ L} = \\frac{0.473 \\times 10^3}{(2.54)^3} \\text{ (inch)}^3 = 28.9 \\text{ in}^3$$",
+    "<p>So, 0.473 L = 28.9 in³</p>",
+
+    "<h3>Example 4: The most powerful engine available for the classic 1963 Chevrolet Corvette Sting Ray developed 360 horsepower and had a displacement of 327 cubic inches. Express this displacement in liters (L) by using only the conversions 1 in. = 2.54 cm and 1 L = 1000 cm³.</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "$$1 \\text{ in} = 2.54 \\text{ cm}, \\; 1 \\text{ L} = 1000 \\text{ cm}^3$$",
+    "$$327 \\text{ in}^3 = 327 \\times (2.54 \\text{ cm})^3 = 5,358.57 \\text{ cm}^3$$",
+    "$$= \\frac{5,358.57}{10^3}\\text{ L} = 5.36 \\text{ L}$$",
+    "<p>So, 327 cubic inches = 5.36 L</p>",
+
+    "<h3>Example 5: How many years older will you be 1.00 billion seconds from now? (Assume a 365-day year.)</h3>",
+    "<p><b>Answer:</b> 1 billion seconds = 1 × 10⁹ s</p>",
+    "$$1 \\times 10^9 \\text{s} \\times \\frac{1\\text{ h}}{3600\\text{ s}} \\times \\frac{1 \\text{ day}}{24 \\text{ h}} \\times \\frac{1 \\text{ y}}{365 \\text{ day}} = 31.75 \\text{ years}$$",
+    "<p>So, 1 billion seconds = 31.75 years from now.</p>",
+
+    "<h3>Example 6: The volume per second of a liquid flowing through a horizontal pipe of length l is given by πpr⁴/8ηl, where p is the excess pressure between two ends, r is the radius of dimensions, η is the coefficient of viscosity of the liquid and this relation, find the dimensions of η.</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "$$\\text{Volume per second (V/t)} = \\text{kpar}^4/\\eta l$$",
+    "<p>Writing the dimensions of each physical quantity of this relation, we get</p>",
+    "$$[M^0L^3T^{-1}] = \\left[\\frac{ML^{-1}T^{-2} \\times L^4}{\\eta \\times L}\\right]$$",
+    "$$\\eta = \\frac{[ML^{-1}T^{-2} \\times L^4]}{L \\times [M^0L^3T^{-1}]} = [M^1L^{-1}T^{-1}]$$",
+    "<p>Total surface area of a cube (A) = 6 × (7.203)² = 311.299 m²</p>",
+
+    "<h3>Example 7: Find the value of 10 joule on a system which has 10 g, 100 s and 30 cm as the fundamental units.</h3>",
+    "<p><b>Answer:</b> Let 10 joule = N₂ new units.</p>",
+    "<p>Joule is the S.I. unit of energy and dimensional formula of energy is [ML²T⁻²].</p>",
+    "<p>According to conversional formula, we have</p>",
+    "$$N_2 = N_1 \\left[\\frac{M_1}{M_2}\\right]^a \\left[\\frac{L_1}{L_2}\\right]^b \\left[\\frac{T_1}{T_2}\\right]^c$$",
+    "<p>Here a=1, b=2, c=-2. S.I. unit: N₁ = 10, M₁ = 1 kg, L₁ = 1 m, T₁ = 1 s. New units: N₂ = ?, M₂ = 100 gm, L₂ = 30 cm, T₂ = 30 s</p>",
+    "$$N_2 = 10 \\times \\left[\\frac{1\\text{ kg}}{100\\text{ gm}}\\right] \\times \\left[\\frac{1\\text{ m}}{30\\text{ cm}}\\right]^2 \\times \\left[\\frac{1\\text{ s}}{30\\text{ s}}\\right]^{-2}$$",
+    "$$= 10 \\times \\left[\\frac{10^3\\text{ gm}}{100\\text{ gm}}\\right] \\times \\left[\\frac{10^2\\text{ cm}}{30\\text{ cm}}\\right]^2 \\times \\left(\\frac{1}{30}\\right)^{-2}$$",
+    "$$= 10 \\times 10 \\times \\frac{10^4}{9 \\times 10^2} \\times 30^2 = 9 \\times 10^6$$",
+    "<p>Putting these values in above equation, we get N₂ = 9 × 10⁶ new units.</p>",
+
+    "<h3>Example 8: The length of a field are measured as: l = 311.3 m² area, if the total surface area of each side of a cube is 7.203 m², what is the total surface area and the volume of the cube to appropriate significant figures?</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "<p>A = 311.3 m². Volume of a cube (V) = ?</p>",
+    "<p>Area of a cube face (A) = 6l², so l² = A/6 = 7.203/6 = 1.2005, l = 1.0956 m</p>",
+    "$$\\text{Volume of a cube } (V) = l^3 = (7.203)^{3/2}$$",
+    "<p>The number of significant figures in area is four. Volume of a cube (V) = ? Total surface area of a cube (A) = 6l² = 6 × (7.203)² = 311.299 m²</p>",
+
+    "<h3>Example 9: Two rods are of lengths 5.234 ± 0.4 cm and 2.123 ± 0.2 cm. Calculate their combined length.</h3>",
+    "<p><b>Answer:</b> Given</p>",
+    "<p>l₁ = 5.234 ± 0.4, l₂ = 2.123 ± 0.2</p>",
+    "<p>Combined length (l) = ?</p>",
+    "$$l = l_1 + l_2 = (5.234 \\pm 0.4) + (2.123 \\pm 0.2)$$",
+    "$$= 7.347 \\pm 0.6 \\text{ cm}$$",
+
+    "<h3>Example 10: A car speedometer has a 5% uncertainty. What is the range of possible speeds when it reads 90 km/h.</h3>",
+    "<p><b>Answer:</b> Given Percent uncertainty = 5%</p>",
+    "<p>For reading of speed = 90 km/h, range of possible speeds = ?</p>",
+    "$$\\%\\text{ uncertainty} = \\frac{\\Delta v}{v} \\times 100\\% \\text{ or } 5\\% = \\frac{\\Delta v}{90} \\times 100\\%$$",
+    "$$\\Delta v = 4.50 \\text{ ms}^{-1}$$",
+    "<p>So, measured value of speed then we can write range of possible speeds = 90 ± 4.50 km/h or 5% = 85.50 to 94.50 km/h.</p>"
+  ]
+}

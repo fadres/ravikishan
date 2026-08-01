@@ -1,0 +1,35 @@
+{
+  "name": "English",
+  "chapters": [
+    {
+      "id": "grammar",
+      "title": "Grammar",
+      "description": "",
+      "topics": [
+        {
+          "id": "parts of speech",
+          "title": "Parts of Speech"
+        },
+        {
+          "id": "tenses",
+          "title": "Tenses"
+        }
+      ]
+    },
+    {
+      "id": "literature",
+      "title": "Literature",
+      "description": "",
+      "topics": [
+        {
+          "id": "poetry",
+          "title": "Poetry"
+        },
+        {
+          "id": "story analysis",
+          "title": "Story Analysis"
+        }
+      ]
+    }
+  ]
+}

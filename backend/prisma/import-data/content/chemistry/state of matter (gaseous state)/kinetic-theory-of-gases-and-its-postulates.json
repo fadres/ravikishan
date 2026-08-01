@@ -1,0 +1,142 @@
+{
+  "title": "Kinetic Theory of Gases and Its Postulates",
+  "notes": [
+    "<h2>Introduction</h2>",
+    "<p>The <b>kinetic molecular theory of gases</b> explains the physical behaviour of gases (pressure, volume, temperature) in terms of the motion of their molecules. It treats a gas as a large collection of tiny, rapidly moving particles in constant random motion.</p>",
+    "<h2>Postulates of the Kinetic Theory of Gases</h2>",
+    "<p>1. A gas consists of a very large number of <b>tiny particles (molecules)</b> which are identical in mass and size for a given gas.</p>",
+    "<p>2. The volume of the individual gas molecules is <b>negligible</b> compared to the total volume occupied by the gas. The molecules are point masses.</p>",
+    "<p>3. The molecules are in a state of <b>continuous, rapid, random motion</b> in all directions. Between collisions they move in straight lines.</p>",
+    "<p>4. The molecules exert <b>no attractive or repulsive forces</b> on one another except during collisions. Between collisions they move freely.</p>",
+    "<p>5. Collisions between molecules and with the walls of the container are <b>perfectly elastic</b> — kinetic energy and momentum are conserved, though individual molecular speeds may change.</p>",
+    "<p>6. The <b>duration of a collision</b> is negligible compared to the time between collisions.</p>",
+    "<p>7. The <b>pressure of a gas</b> is caused by the bombardment of the container walls by the molecules. The force per unit area exerted on the walls is the pressure.</p>",
+    "<p>8. The <b>average kinetic energy</b> of the gas molecules is <b>directly proportional to the absolute temperature</b> of the gas: $KE_{avg} = \\frac{3}{2}kT$, where $k$ is Boltzmann's constant. At the same temperature, all gases have the same average kinetic energy per molecule.</p>",
+    "<h2>Important Result — Pressure of an Ideal Gas</h2>",
+    "<p>From the postulates, the pressure of an ideal gas is derived as:</p>",
+    "$$P = \\frac{1}{3}\\rho \\bar{v}^2$$",
+    "<p>where $\\rho$ is the density of the gas and $\\bar{v}$ is the root mean square speed of the molecules. Also:</p>",
+    "$$P = \\frac{1}{3}\\frac{mN}{V}\\bar{v}^2, \\quad \\text{and} \\quad \\bar{v} = \\sqrt{\\frac{3RT}{M}}$$",
+    "<h2>Limitations</h2>",
+    "<p>The theory works well for <b>ideal gases</b> at low pressure and high temperature. At high pressure or low temperature, real gases deviate because intermolecular forces and molecular volume can no longer be ignored.</p>"
+  ],
+  "summary": "The kinetic theory of gases models a gas as a large number of tiny, identical molecules in rapid random motion, with negligible volume and no intermolecular forces, colliding perfectly elastically. Gas pressure arises from molecular bombardment of the container walls, and the average kinetic energy of molecules is directly proportional to the absolute temperature (KE_avg = (3/2)kT). It yields P = (1/3)ρv̄² and explains gas laws and deviations of real gases.",
+  "formulas": [
+    "P = (1/3)ρv̄²",
+    "v̄ (rms) = √(3RT/M)",
+    "KE_avg = (3/2)kT"
+  ],
+  "examples": [
+    "Gas pressure increases when a balloon is heated: the molecular speed rises, so molecules strike the walls harder and more often.",
+    "A gas fills the whole of its container because molecules move randomly in all directions with no intermolecular attraction."
+  ],
+  "practice": [
+    {
+      "question": "Why do gas molecules exert no force on each other except during collision?",
+      "answer": "Because intermolecular attractive/repulsive forces are negligible — molecules are far apart and the gas is assumed ideal."
+    },
+    {
+      "question": "What is the average translational kinetic energy of a molecule at temperature T?",
+      "answer": "KE_avg = (3/2)kT, where k is Boltzmann's constant."
+    }
+  ],
+  "keyPoints": [
+    "Gas molecules are point masses — their own volume is negligible.",
+    "Intermolecular forces are negligible except at collisions.",
+    "Collisions are perfectly elastic; momentum and kinetic energy are conserved.",
+    "Pressure is due to molecular bombardment of the container walls.",
+    "Average KE of molecules ∝ absolute temperature.",
+    "The theory explains Boyle's, Charles' and Dalton's laws and the ideal gas equation."
+  ],
+  "flashcards": [
+    {
+      "front": "Why can gas molecules be treated as point masses?",
+      "back": "The volume of the molecules is negligible compared to the volume of the gas."
+    },
+    {
+      "front": "What is the nature of molecular collisions in an ideal gas?",
+      "back": "Perfectly elastic"
+    },
+    {
+      "front": "What causes gas pressure?",
+      "back": "The bombardment of the container walls by gas molecules"
+    },
+    {
+      "front": "How does the average kinetic energy of molecules depend on temperature?",
+      "back": "KE_avg = (3/2)kT — directly proportional to absolute temperature"
+    },
+    {
+      "front": "Formula for pressure of an ideal gas?",
+      "back": "P = (1/3)ρv̄²"
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Collisions between gas molecules are:",
+      "options": ["Inelastic", "Perfectly elastic", "Partially elastic", "Randomly elastic"],
+      "answer": 1
+    },
+    {
+      "question": "The average kinetic energy of a gas molecule is directly proportional to its:",
+      "options": ["Volume", "Pressure", "Absolute temperature", "Mass"],
+      "answer": 2
+    },
+    {
+      "question": "The volume occupied by gas molecules themselves is considered:",
+      "options": ["Large", "Negligible", "Equal to the container volume", "Infinite"],
+      "answer": 1
+    },
+    {
+      "question": "Gas pressure is caused by:",
+      "options": ["Molecular collisions with each other", "Molecular bombardment of the walls", "Gravitational force", "Thermal expansion"],
+      "answer": 1
+    },
+    {
+      "question": "At the same temperature, the average kinetic energy per molecule of different gases is:",
+      "options": ["Different", "The same", "Zero", "Proportional to molar mass"],
+      "answer": 1
+    }
+  ],
+  "mindmap": {
+    "title": "Kinetic Theory of Gases",
+    "children": [
+      {
+        "title": "Assumptions",
+        "children": [
+          { "title": "Tiny identical molecules" },
+          { "title": "Negligible molecular volume" },
+          { "title": "No intermolecular forces" },
+          { "title": "Perfectly elastic collisions" }
+        ]
+      },
+      {
+        "title": "Motion",
+        "children": [
+          { "title": "Continuous random motion" },
+          { "title": "Straight lines between collisions" }
+        ]
+      },
+      {
+        "title": "Pressure",
+        "children": [
+          { "title": "P = (1/3)ρv̄²", "details": "Molecular bombardment of walls" }
+        ]
+      },
+      {
+        "title": "Temperature",
+        "children": [
+          { "title": "KE_avg = (3/2)kT", "details": "Same for all gases at same T" }
+        ]
+      }
+    ]
+  },
+  "relatedTopics": [
+    {
+      "id": "boyles-law-(gas-laws)",
+      "title": "Boyles Law (Gas Laws)"
+    }
+  ],
+  "readingTime": "6 min",
+  "level": "Beginner",
+  "updatedAt": "2026-07-31"
+}

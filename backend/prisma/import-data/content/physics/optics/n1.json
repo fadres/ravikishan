@@ -1,0 +1,52 @@
+{
+  "title": "N1",
+  "notes": [
+    "<h2>Sign Conventions for Spherical Mirrors</h2>",
+    "<h3>Standard Cartesian Convention</h3>",
+    "<p>Think of the mirror as the center of a math graph. <b>Left is negative, Right is positive. Up is positive, Down is negative.</b></p>",
+    "<p><b>Real images</b> are always on the left and upside down → v is negative, m is negative.</p>",
+    "<p><b>Virtual images</b> are always on the right and upright → v is positive, m is positive.</p>",
+
+    "<h3>What Does \"Real is Positive\" (RIP) Mean?</h3>",
+    "<p>Some textbooks use an alternative, non-Cartesian system called the <b>\"Real-is-Positive\" (RIP)</b> sign convention.</p>",
+    "<p><b>Distance rule:</b> Distances to real things (real object, real focus, real image) are given a <b>plus (+)</b> sign.</p>",
+    "<p><b>Virtual rule:</b> Distances to virtual things (virtual focus, virtual image) are given a <b>minus (−)</b> sign.</p>",
+    "<p><b>The catch:</b> This rule applies strictly to <b>distances</b> (u, v, f), <b>not</b> to the magnification's orientation meaning. Even under RIP, a real image is still physically upside down.</p>",
+
+    "<h3>Summary Comparison Table</h3>",
+    "<table><tr><th>Image Nature</th><th>Standard Convention</th><th>Real-is-Positive (RIP) System</th></tr><tr><td>Real & Inverted</td><td>−m (Negative)</td><td>+m (Positive)</td></tr><tr><td>Virtual & Erect</td><td>+m (Positive)</td><td>−m (Negative)</td></tr></table>",
+    "<p><b>Rule:</b> In the RIP system, <b>−m</b> means a <b>Virtual, Erect</b> image. <b>+m</b> means a <b>Real, Inverted</b> image.</p>",
+
+    "<h3>Magnification Formula Differs Between Systems</h3>",
+    "<p><b>Standard Convention:</b> m = −v/u</p>",
+    "<p><b>Real-is-Positive (RIP) System:</b> m = v/u <i>(the minus sign is dropped from the formula)</i></p>",
+
+    "<h3>How the Sign of m is Determined in RIP</h3>",
+    "<p>Because the formula is m = v/u, the sign of m depends entirely on whether the image is real or virtual:</p>",
+    "<p><b>Real Image:</b> object distance (u) is real (+), image distance (v) is real (+). Therefore, m = +v/+u = <b>Positive (+m)</b>.</p>",
+    "<p><b>Virtual Image:</b> object distance (u) is real (+), image distance (v) is virtual (−). Therefore, m = −v/+u = <b>Negative (−m)</b>.</p>",
+
+    "<h3>The Core Point of Confusion</h3>",
+    "<p>The confusion happens because the <b>same physical image</b> is described with completely opposite math signs depending on which system you choose.</p>",
+    "<p>Let's look at a <b>Real, Inverted Image</b> formed by a concave mirror: in the real world, the image is physically <b>upside down</b> and <b>in front of the mirror</b>.</p>",
+    "<table><tr><th>Feature</th><th>Standard Cartesian System</th><th>Real-is-Positive (RIP) System</th></tr><tr><td>Why it's named</td><td>Based on an X-Y graph axis</td><td>Based on whether the light is real or fake</td></tr><tr><td>Object Distance (u)</td><td>Negative (Left side of graph)</td><td>Positive (Object is real)</td></tr><tr><td>Image Distance (v)</td><td>Negative (Left side of graph)</td><td>Positive (Image is real)</td></tr><tr><td>Focal Length (f)</td><td>Negative (Left side of graph)</td><td>Positive (Focus is real)</td></tr><tr><td>Magnification formula</td><td>m = −v/u</td><td>m = v/u</td></tr><tr><td>Magnification sign</td><td>Negative (Because it points down)</td><td>Positive (Because both v and u are positive)</td></tr></table>",
+
+    "<h3>How to Solve Problems Without Confusion</h3>",
+    "<p><b>1. If your school uses the Standard System:</b></p>",
+    "<p>Think of the mirror as the center of a math graph. Left is negative, Right is positive. Up is positive, Down is negative. Real images are always on the left and upside down → v is negative, m is negative. Virtual images are always on the right and upright → v is positive, m is positive.</p>",
+    "<p><b>2. If your school uses the Real-is-Positive System:</b></p>",
+    "<p>Forget about the graph completely. Just ask: \"Is this real or virtual?\" Real images can be caught on a sheet of paper → v is positive, m is positive. Virtual images only look like they are inside the mirror → v is negative, m is negative.</p>",
+
+    "<h3>Solved Numerical: Question 1</h3>",
+    "<p><b>Problem:</b> The radius of curvature of a convex mirror is 20 cm and it forms the image of an object kept on its principal axis, at a distance of 5 cm from the pole of the mirror. Find the distance of the object from the pole.</p>",
+    "<p><b>Solution:</b></p>",
+    "<p>Convex mirror radius of curvature (R) = +20 cm</p>",
+    "<p>Focal length (f) = R/2 = +20/2 = +10 cm</p>",
+    "<p>Convex mirrors always form virtual images behind the mirror, so image distance (v) = +5 cm</p>",
+    "$$\\frac{1}{f} = \\frac{1}{v} + \\frac{1}{u}$$",
+    "$$\\frac{1}{10} = \\frac{1}{5} + \\frac{1}{u}$$",
+    "$$\\frac{1}{u} = \\frac{1}{10} - \\frac{1}{5} = \\frac{1-2}{10} = -\\frac{1}{10}$$",
+    "$$u = -10 \\text{ cm}$$",
+    "<p><b>Answer:</b> The object is at a distance of 10 cm from the pole.</p>"
+  ]
+}

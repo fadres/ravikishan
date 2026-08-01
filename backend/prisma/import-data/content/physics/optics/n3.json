@@ -1,0 +1,80 @@
+{
+  "title": "N3",
+  "notes": [
+    "<h2>Missing Magnification Clues (Signless Quantities)</h2>",
+    "<p><b>\"The size of the image is half the size of the object\"</b></p>",
+    "<p>Meaning: the numerical value of magnification is |m| = 0.5.</p>",
+    "<p>How to decide the sign: if the mirror is convex, it must be a virtual image (Cartesian: m = +0.5, RIP: m = −0.5). If the mirror is concave, it must be a real image (Cartesian: m = −0.5, RIP: m = +0.5) because concave mirrors only produce diminished images when the object is beyond the center of curvature, which always results in a real image.</p>",
+
+    "<h3>Hints about Magnification Sizes</h3>",
+    "<p><b>\"Magnified\" / \"Enlarged\"</b> → |m| > 1 (can only be produced by a Concave mirror).</p>",
+    "<p><b>\"Diminished\" / \"Smaller\"</b> → |m| < 1 (can be produced by both, but if virtual, it must be Convex).</p>",
+    "<p><b>\"Same size as the object\"</b> → |m| = 1 (object at Center of Curvature C of a Concave mirror; u = 2f).</p>",
+
+    "<h3>Hints Embedded in Practical Applications</h3>",
+    "<p><b>\"A dentist holds a small mirror...\"</b> — Meaning: it is a concave mirror. Hidden Hint: dentists use these to see an enlarged, upright view of teeth, meaning the object (tooth) is placed between the focus and pole (u < f), creating a virtual, magnified image.</p>",
+    "<p><b>\"Used as a solar furnace / solar cooker mirror\"</b> — Meaning: it is a concave mirror. Hidden Hint: sunlight comes from infinity (u = ∞); the mirror converges parallel rays to a point, so the heat/cooker must be placed exactly at the focus (v = f).</p>",
+
+    "<h3>Multi-Step Physical Changes</h3>",
+    "<p><b>\"An object is moved closer to the mirror by 10 cm...\"</b> — Meaning: implies a two-state problem where u₂ = u₁ − 10. How to solve: find the initial focal length or object distance using the first scenario before mathematically altering the distance for the second scenario.</p>",
+
+    "<h2>Object Position vs. Image Behavior (Concave Mirror)</h2>",
+    "<table><tr><th>If Object Position (u) is...</th><th>Image Nature</th><th>Image Location (v)</th><th>Magnification (m)</th></tr><tr><td>At Infinity (u = ∞)</td><td>Real & Inverted</td><td>Exactly at Focus (v = f)</td><td>Highly diminished (m ≈ 0)</td></tr><tr><td>Beyond Center (u > 2f)</td><td>Real & Inverted</td><td>Between f and 2f</td><td>Diminished (|m| < 1)</td></tr><tr><td>At Center (u = 2f)</td><td>Real & Inverted</td><td>Exactly at Center (v = 2f)</td><td>Same size (|m| = 1)</td></tr><tr><td>Between C and F (f < u < 2f)</td><td>Real & Inverted</td><td>Beyond Center (v > 2f)</td><td>Magnified (|m| > 1)</td></tr><tr><td>At Focus (u = f)</td><td>Real & Inverted</td><td>At Infinity (v = ∞)</td><td>Highly magnified (m → ∞)</td></tr><tr><td>Between F and Pole (u < f)</td><td>Virtual & Erect</td><td>Behind Mirror</td><td>Magnified (|m| > 1)</td></tr></table>",
+
+    "<h2>The Strict Constraints of Convex Mirrors</h2>",
+    "<p>Convex mirrors have only <b>one</b> behavioral mode for any real object placed anywhere in front of them:</p>",
+    "<p><b>Condition:</b> u can be anywhere from the pole to infinity.</p>",
+    "<p><b>Resulting Image Location:</b> the image must always form behind the mirror, specifically between the Pole and the Focus (v < f).</p>",
+    "<p><b>Resulting Magnification:</b> the image is always virtual, erect, and diminished (|m| < 1).</p>",
+    "<p><b>Rule:</b> if you calculate an image for a convex mirror that is real, inverted, or magnified, your math is incorrect.</p>",
+
+    "<h2>Absolute Mathematical Conditions (Sanity Checks)</h2>",
+    "<p><b>The Real Object Condition:</b> in real-world physics problems, the object is always real and placed in front of the mirror. Standard System: u must always be negative. RIP System: u must always be positive.</p>",
+    "<p><b>The Concave Mirror Virtual Exception:</b> a concave mirror can only form a virtual image if the object is placed closer than the focal length (u < |f|). If your problem states the image is virtual and you're using a concave mirror, your calculated u must come out smaller than f.</p>",
+    "<p><b>The Focal Length Consistency:</b> the focal length (f) is a physical property of the glass. It cannot change within the same problem unless the mirror is physically swapped. In two-step problems, calculate f in part 1, and plug that same value into part 2.</p>",
+
+    "<h3>Zero and Infinite Edge Conditions</h3>",
+    "<p><b>Condition for Zero Size:</b> an image has zero size (m = 0) only when the object is infinitely far away (u = ∞).</p>",
+    "<p><b>Condition for Infinite Size:</b> an image becomes infinitely large (m = ∞) only when the object is placed exactly on the focus (u = f).</p>",
+    "<p><b>Condition for Equal Distance:</b> the image distance equals the object distance (|v| = |u|) only when the object is at the Center of Curvature (u = 2f).</p>",
+
+    "<h2>Absolute Mathematical Formulas Summary</h2>",
+    "<table><tr><th>System</th><th>Mirror Formula</th><th>Magnification Formula</th></tr><tr><td>Standard Cartesian</td><td>1/f = 1/v + 1/u</td><td>m = −v/u = hᵢ/hₒ</td></tr><tr><td>Real-is-Positive (RIP)</td><td>1/f = 1/v + 1/u</td><td>m = v/u = −hᵢ/hₒ</td></tr></table>",
+    "<p><i>Note: in the RIP system, m = v/u yields a positive sign for real/inverted images, which means a negative sign must be applied if relating it to the physical downward height ratio hᵢ/hₒ.</i></p>",
+
+    "<h3>Alternative Variable Names</h3>",
+    "<p><b>dₒ, p, or s</b> → alternative symbols for Object Distance (u). <b>dᵢ, q, or s'</b> → alternative symbols for Image Distance (v). <b>hₒ or h</b> → Height of the Object. <b>hᵢ or h'</b> → Height of the Image.</p>",
+
+    "<h3>Tricky Physical Conditions</h3>",
+    "<p><b>\"The mirror is partially covered / blacked out\"</b> — Meaning: if half of a concave mirror is covered with black paper, the full image is still formed. Hidden Hint: position, size, and nature of the image remain unchanged, but brightness/intensity decreases because less light is reflected.</p>",
+    "<p><b>\"Object size is negligible / point object\"</b> — Meaning: the object is treated as a single point on the principal axis; only u and v matter, linear magnification heights (hᵢ) are ignored.</p>",
+    "<p><b>\"A plane mirror is placed next to the spherical mirror...\"</b> — Meaning: a two-surface problem. The plane mirror forms a virtual image exactly as far behind it as the object is in front. Hidden Hint: questions will say \"the two images coincide\" — find where the plane mirror creates its image, then use that exact spatial location as the target value for the spherical mirror's image distance (v).</p>",
+
+    "<h2>Common Exam Question Tricks</h2>",
+
+    "<h3>1. The \"Double Magnification\" Trick</h3>",
+    "<p><b>The Trick:</b> The question states: \"A concave mirror forms an image 3 times the size of the object.\" It does not say if it is real or virtual.</p>",
+    "<p><b>The Trap:</b> Students only calculate one position.</p>",
+    "<p><b>The Defeat:</b> Concave mirrors can form both a real-magnified image (inverted) and a virtual-magnified image (erect). Solve twice — Case 1: take m as real (e.g. m = −3 in Cartesian). Case 2: take m as virtual (e.g. m = +3 in Cartesian).</p>",
+
+    "<h3>2. The \"Convex Mirror Magnification\" Trap</h3>",
+    "<p><b>The Trick:</b> The question states: \"A convex mirror forms an image magnified 2 times...\"</p>",
+    "<p><b>The Trap:</b> Students start calculating using m = 2.</p>",
+    "<p><b>The Defeat:</b> This is a conceptual trick question. Convex mirrors can never magnify a real object; they only form smaller (diminished) images. The answer is immediately \"Not physically possible\" or \"No such position exists.\"</p>",
+
+    "<h3>3. The \"Distance Between Object and Image\" Trick</h3>",
+    "<p><b>The Trick:</b> The question says: \"The distance between the object and its image is 10 cm.\"</p>",
+    "<p><b>The Trap:</b> Students write down v − u = 10 or v = 10.</p>",
+    "<p><b>The Defeat:</b> This means the absolute gap |v − u| = 10. Use the mirror type to figure out which is further away: for a convex mirror, the image is always closer to the mirror than the object, so (−u) − v = 10. For a concave mirror forming a real image, if the object is beyond C, the object is further away (u > v), so (−u) − (−v) = 10.</p>",
+
+    "<h3>4. The \"Liquid Immersion\" Trick</h3>",
+    "<p><b>The Trick:</b> \"A concave mirror of focal length 20 cm is completely immersed in a tank of water. Find its new focal length.\"</p>",
+    "<p><b>The Trap:</b> Students use the refractive index of water (μ = 4/3) to change the focal length.</p>",
+    "<p><b>The Defeat:</b> Mirrors do not change focal length in liquids. The focal length depends purely on the radius of curvature (f = R/2); this only applies to lenses. The focal length remains exactly 20 cm.</p>",
+
+    "<h3>5. The \"Object Shift\" Trick</h3>",
+    "<p><b>The Trick:</b> An object is at 30 cm, then it is \"shifted by 10 cm towards the mirror.\"</p>",
+    "<p><b>The Trap:</b> Students miscalculate the new object distance.</p>",
+    "<p><b>The Defeat:</b> Old distance: u₁ = −30 cm. New distance: shifted towards means it is closer, so u₂ = −(30−10) = −20 cm. Tip: always find the focal length (f) from the first scenario first, as it stays constant for the second scenario.</p>"
+  ]
+}

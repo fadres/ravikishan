@@ -1,0 +1,119 @@
+{
+  "name": "Mathematics",
+  "chapters": [
+    {
+      "id": "algebra",
+      "title": "Algebra",
+      "description": "",
+      "topics": [
+        {
+          "id": "linear equations",
+          "title": "Linear Equations"
+        },
+        {
+          "id": "quadratic equations",
+          "title": "Quadratic Equations"
+        }
+      ]
+    },
+    {
+      "id": "analytical-geometry",
+      "title": "Analytical Geometry",
+      "description": "",
+      "topics": [
+        {
+          "id": "geometry.9-1",
+          "title": "Geometry 9-1"
+        },
+        {
+          "id": "circles",
+          "title": "Circles"
+        }
+      ]
+    },
+    {
+      "id": "calculus",
+      "title": "Calculus",
+      "description": "Calculus is a branch of mathematics focused on limits, functions, derivatives, integrals, and infinite series.",
+      "topics": [
+        {
+        "id": "limits",
+        "title": "Limits"
+        },
+        {
+          "id": "limits5.1",
+          "title":  "Limits5.1"
+        },
+         {
+          "id": "limits5.2",
+          "title":  "Limits5.2"
+         },
+          {
+          "id": "limits5.3",
+          "title":  "Limits5.3"
+         },
+         { "id": "limit5.01",
+           "title":"LIMITS — Infinite Limits, Indeterminate Forms & Evaluation of Limits (Step-by-Step)",
+            "important":true
+
+         },
+         {
+        "id": "limitc",
+        "title": "TRIGONOMETRIC LIMITS — First-Principle Substitution Method (x → a type problems)",
+        "important":true
+        }
+        ]
+    },
+     {
+      "id": "matrix (algebra)",
+      "title": "Matrix (Algebra)",
+      "description": "A rectangular array or grid of numbers, symbols, or expressions arranged in rows and columns, used to represent linear transformations, systems of linear equations, and physical states.",
+      "topics": [
+        
+
+       
+       
+
+       
+          {
+          "id": "minors,cofactors,determinants",
+          "title":  "  Matrix 5.2 - Theory: Minors, Cofactors, Determinants   ",
+          "important": true
+        },
+        {
+        "id": "evaluate-determinants",
+        "title": "Evaluate Determinants",
+        "important":true
+        },
+         {
+        "id": "without-expand",
+        "title": "Without Expand",
+        "important":true
+        },
+        
+        
+        
+        {
+        "id": "matrix.0001",
+        "title": "Matrix.0001",
+        "important":true
+        },
+         {
+          "id": "matrix-5.2",
+          "title":  "Matrix 5.2",
+          "important": true
+        },
+        {
+          "id": "matrix.5.02",
+          "title":  "  Matrix 5.02     ",
+          "important": true
+        },
+         {
+          "id": "matrix5.2",
+          "title":  "Matrix5.2",
+          "important": true
+        }
+        ]
+    }
+  ]
+}

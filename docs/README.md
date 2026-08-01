@@ -70,6 +70,8 @@ ravikishan/
 │   ├── prisma/
 │   │   ├── schema.prisma          # models + enums
 │   │   ├── migrations/            # versioned SQL migrations (incl. tsvector)
+│   │   ├── import-data/           # content source of truth (navigation + topic JSONs)
+│   │   ├── import-content.js      # pushes import-data/ into the DB (idempotent)
 │   │   └── seed.js                # demo content skeleton (idempotent)
 │   ├── src/
 │   │   ├── server.js / app.js     # entry, middleware, rate limits
@@ -113,8 +115,9 @@ cd backend
 cp .env.example .env            # fill in DATABASE_URL + JWT secrets
 npm install
 npx prisma migrate deploy       # apply migrations
+npm run migrate                 # = migrations + content import (idempotent)
 npm run seed                    # owner + demo content (idempotent)
-npm test                        # 41 tests — auth, access levels, classifier
+npm test                        # 45 tests — auth, access levels, classifier
 npm run dev                     # API on http://localhost:4000
 
 # 3. Frontend
@@ -168,9 +171,16 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
    - `CORS_ORIGIN` → `https://<your-site>.netlify.app` (your frontend URL;
      comma-separate multiple origins if needed)
    - `OWNER_EMAIL`, `OWNER_PASSWORD` → **auto-bootstrapped**: the server
-     creates the owner account on startup if it doesn't exist (no one-off
-     seed needed). `npm run seed` is only for optional demo content.
+      creates the owner account on startup if it doesn't exist (no one-off
+      seed needed). `npm run seed` is only for optional demo content.
    - `NODE_ENV=production`
+4. Content: `npm run migrate` also runs `prisma/import-content.js`, which
+   upserts Class 11 subjects/chapters from `prisma/import-data/` and refreshes
+   their blocks on every deploy (idempotent, ~1–2 min). To publish new or
+   edited content, update the JSON files under `backend/prisma/import-data/`,
+   commit, and redeploy — never edit imported blocks by hand (they are
+   recreated from the files). Manual blocks added via the admin panel to
+   non-imported chapters are untouched.
 4. Note the API URL (e.g. `https://ravikishan-api.onrender.com`). On the free
    plan the service sleeps after ~15 min idle — step 4 keeps it warm.
 
@@ -209,9 +219,10 @@ UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-api.onren
 
 | Task | Command |
 |---|---|
-| Apply migrations (prod/local) | `cd backend && npx prisma migrate deploy` |
+| Apply migrations + import content (prod/local) | `cd backend && npm run migrate` |
 | New migration (local dev only) | `cd backend && npx prisma migrate dev --name <name>` |
 | Regenerate Prisma client | `cd backend && npx prisma generate` |
+| Re-import content from `import-data/` | `cd backend && npm run content:import` |
 | Re-seed demo content | `cd backend && npm run seed` |
 | Run tests | `cd backend && npm test` |
 | Build frontend | `cd frontend && npm run build` |

@@ -1,0 +1,38 @@
+
+
+{
+  "name": "Nepali",
+  "chapters": [
+    {
+      "id": "bhashatattva",
+      "title": "भाषातत्त्व",
+      "description": "शब्द स्रोत, स्वर वर्ण, व्यञ्जन वर्ण, र वर्णको वर्गीकरण।",
+      "topics": [
+        {
+          "id": "shabda-srot",
+          "title": "शब्द स्रोत"
+        },
+        {
+          "id": "tadbhav-shabda",
+          "title": "तद्भव शब्द"
+        },
+        {
+          "id": "aagantuk-shabda",
+          "title": "आगन्तुक शब्द"
+        },
+        {
+          "id": "swar-varna",
+          "title": "स्वर वर्ण"
+        },
+        {
+          "id": "vyanjan-varna",
+          "title": "व्यञ्जन वर्ण"
+        },
+        {
+          "id": "vyanjan-vargikaran",
+          "title": "नेपाली व्यञ्जनको वर्गीकरण"
+        }
+      ]
+    }
+  ]
+}

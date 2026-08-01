@@ -1,0 +1,194 @@
+{
+  "title": "Vector",
+  "notes": [
+    "<h2>Introduction</h2>",
+    "<p>A <b>vector quantity</b> has both <b>magnitude</b> and <b>direction</b> and obeys the triangle law of addition. Examples: displacement, velocity, acceleration, force, momentum. A <b>scalar quantity</b> has only magnitude. Examples: mass, time, temperature, speed, work.</p>",
+    "<h2>Types of Vectors</h2>",
+    "<p><b>Equal vectors</b>: same magnitude and same direction. <b>Negative vector</b>: same magnitude, opposite direction. <b>Null vector</b>: zero magnitude (its direction is undefined). <b>Unit vector</b>: a vector of magnitude 1 along a given direction, written as $\\hat{a} = \\frac{\\vec{a}}{|\\vec{a}|}$. <b>Parallel and antiparallel vectors</b>: vectors along the same line (same or opposite sense). <b>Position vector</b>: vector joining the origin to a point. <b>Collinear vectors</b>: vectors along the same straight line.</p>",
+    "<h2>Addition of Vectors — Triangle and Parallelogram Law</h2>",
+    "<p>If two vectors $\\vec{a}$ and $\\vec{b}$ act at an angle $\\theta$, the magnitude of their resultant $\\vec{R} = \\vec{a} + \\vec{b}$ is:</p>",
+    "$$R = \\sqrt{a^2 + b^2 + 2ab\\cos\\theta}$$",
+    "<p>and its direction is given by $\\tan\\alpha = \\frac{b\\sin\\theta}{a + b\\cos\\theta}$, where $\\alpha$ is the angle made by the resultant with $\\vec{a}$. Special cases: parallel ($\\theta = 0°$) gives $R = a + b$; antiparallel ($\\theta = 180°$) gives $R = |a - b|$; perpendicular ($\\theta = 90°$) gives $R = \\sqrt{a^2 + b^2}$.</p>",
+    "<h2>Resolution of Vectors</h2>",
+    "<p>Any vector $\\vec{A}$ can be resolved into two perpendicular components:</p>",
+    "$$A_x = A\\cos\\theta, \\quad A_y = A\\sin\\theta$$",
+    "<p>with $A = \\sqrt{A_x^2 + A_y^2}$ and $\\tan\\theta = \\frac{A_y}{A_x}$. In unit vector notation, $\\vec{A} = A_x\\hat{i} + A_y\\hat{j}$.</p>",
+    "<h2>Scalar (Dot) Product</h2>",
+    "<p>$\\vec{a} \\cdot \\vec{b} = ab\\cos\\theta$. The result is a scalar. $\\vec{a} \\cdot \\vec{b} = 0$ when the vectors are perpendicular. For unit vectors: $\\hat{i}\\cdot\\hat{i} = \\hat{j}\\cdot\\hat{j} = \\hat{k}\\cdot\\hat{k} = 1$ and $\\hat{i}\\cdot\\hat{j} = 0$.</p>",
+    "<h2>Vector (Cross) Product</h2>",
+    "<p>$|\\vec{a} \\times \\vec{b}| = ab\\sin\\theta$, directed perpendicular to the plane of the two vectors (right-hand rule). $\\vec{a} \\times \\vec{b} = 0$ when the vectors are parallel. The cross product is used for torque ($\\vec{\\tau} = \\vec{r} \\times \\vec{F}$) and angular momentum ($\\vec{L} = \\vec{r} \\times \\vec{p}$).</p>"
+  ],
+  "numericals": [
+    {
+      "question": "Two vectors of magnitudes 5 and 12 units act at right angles to each other. Find the magnitude of the resultant.",
+      "solution": [
+        "For θ = 90°, R = √(a² + b²)",
+        "R = √(5² + 12²) = √(25 + 144)",
+        "R = √169 = 13 units"
+      ],
+      "answer": "13 units"
+    },
+    {
+      "question": "Find the resultant of two forces of 8 N and 6 N acting at an angle of 60°.",
+      "solution": [
+        "R² = a² + b² + 2ab cos θ",
+        "R² = 8² + 6² + 2 × 8 × 6 × cos 60°",
+        "R² = 64 + 36 + 96 × 0.5 = 148",
+        "R = √148 ≈ 12.17 N"
+      ],
+      "answer": "12.17 N"
+    },
+    {
+      "question": "A vector A has components Ax = 3 and Ay = 4. Find its magnitude and the angle it makes with the x-axis.",
+      "solution": [
+        "A = √(Ax² + Ay²) = √(9 + 16) = 5",
+        "tan θ = Ay/Ax = 4/3",
+        "θ = tan⁻¹(4/3) ≈ 53.13°"
+      ],
+      "answer": "Magnitude 5 units at 53.13° to the x-axis"
+    },
+    {
+      "question": "If a = 3 and b = 4, and the angle between them is 30°, find the scalar product a·b.",
+      "solution": [
+        "a·b = ab cos θ",
+        "a·b = 3 × 4 × cos 30°",
+        "a·b = 12 × 0.866 ≈ 10.39"
+      ],
+      "answer": "10.39"
+    }
+  ],
+  "summary": "A vector has both magnitude and direction. Vectors are added by the triangle or parallelogram law, giving R = √(a² + b² + 2ab cos θ). A vector can be resolved into perpendicular components Ax = A cos θ and Ay = A sin θ. The dot product a·b = ab cos θ gives a scalar, while the cross product has magnitude ab sin θ and points perpendicular to both vectors.",
+  "formulas": [
+    "R = √(a² + b² + 2ab cos θ)",
+    "tan α = b sin θ / (a + b cos θ)",
+    "Ax = A cos θ, Ay = A sin θ",
+    "A = √(Ax² + Ay²)",
+    "a·b = ab cos θ",
+    "|a × b| = ab sin θ"
+  ],
+  "examples": [
+    "A boat crossing a river is a classic vector addition problem: the velocity of the boat relative to water added to the velocity of the river current.",
+    "Walking 3 km east then 4 km north gives a resultant displacement of 5 km north-east."
+  ],
+  "practice": [
+    {
+      "question": "Find the angle between two vectors of equal magnitude whose resultant has the same magnitude as either vector.",
+      "answer": "120° (R² = a² + a² + 2a² cos θ = a² ⇒ cos θ = −1/2)"
+    },
+    {
+      "question": "Two forces of 10 N and 10 N act at 120°. Find the resultant.",
+      "answer": "R = √(100 + 100 + 2×100×cos 120°) = √100 = 10 N"
+    }
+  ],
+  "keyPoints": [
+    "Vectors obey the triangle law of addition; scalars do not.",
+    "A unit vector has magnitude 1 and no unit.",
+    "The resultant of two perpendicular vectors is √(a² + b²).",
+    "The dot product of perpendicular vectors is zero.",
+    "The cross product of parallel vectors is zero.",
+    "Torque and angular momentum are expressed with cross products."
+  ],
+  "flashcards": [
+    {
+      "front": "What is a unit vector?",
+      "back": "A vector of magnitude 1 along a given direction, â = a/|a|"
+    },
+    {
+      "front": "Resultant of two perpendicular vectors?",
+      "back": "R = √(a² + b²)"
+    },
+    {
+      "front": "When is a·b = 0?",
+      "back": "When the vectors are perpendicular (θ = 90°)"
+    },
+    {
+      "front": "When is |a × b| = 0?",
+      "back": "When the vectors are parallel (θ = 0° or 180°)"
+    },
+    {
+      "front": "Formula for resultant of two vectors at angle θ?",
+      "back": "R = √(a² + b² + 2ab cos θ)"
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is a vector quantity?",
+      "options": ["Mass", "Speed", "Force", "Temperature"],
+      "answer": 2
+    },
+    {
+      "question": "The magnitude of the resultant of two perpendicular vectors of magnitude 3 and 4 is:",
+      "options": ["5", "7", "1", "12"],
+      "answer": 0
+    },
+    {
+      "question": "The dot product of two perpendicular vectors is:",
+      "options": ["Maximum", "Zero", "Negative", "Equal to the product of magnitudes"],
+      "answer": 1
+    },
+    {
+      "question": "If |a + b| = |a| + |b|, the angle between the vectors is:",
+      "options": ["0°", "90°", "180°", "60°"],
+      "answer": 0
+    },
+    {
+      "question": "The direction of the cross product a × b is:",
+      "options": ["Along a", "Along b", "Perpendicular to both a and b", "In the plane of a and b"],
+      "answer": 2
+    }
+  ],
+  "mindmap": {
+    "title": "Vector",
+    "children": [
+      {
+        "title": "Scalar vs Vector",
+        "children": [
+          { "title": "Scalar: magnitude only" },
+          { "title": "Vector: magnitude + direction" }
+        ]
+      },
+      {
+        "title": "Types",
+        "children": [
+          { "title": "Equal / negative / null vectors" },
+          { "title": "Unit vector â = a/|a|" },
+          { "title": "Position & collinear vectors" }
+        ]
+      },
+      {
+        "title": "Addition",
+        "children": [
+          { "title": "Triangle law" },
+          { "title": "Parallelogram law", "details": "R = √(a² + b² + 2ab cos θ)" }
+        ]
+      },
+      {
+        "title": "Resolution",
+        "children": [
+          { "title": "Ax = A cos θ" },
+          { "title": "Ay = A sin θ" }
+        ]
+      },
+      {
+        "title": "Products",
+        "children": [
+          { "title": "Dot product: scalar, ab cos θ" },
+          { "title": "Cross product: vector, ab sin θ", "details": "Used for torque and angular momentum" }
+        ]
+      }
+    ]
+  },
+  "relatedTopics": [
+    {
+      "id": "physical-quantity",
+      "title": "Physical Quantity"
+    },
+    {
+      "id": "dimensions",
+      "title": "Dimensions"
+    }
+  ],
+  "readingTime": "8 min",
+  "level": "Beginner",
+  "updatedAt": "2026-07-31"
+}

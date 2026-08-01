@@ -1,0 +1,101 @@
+{
+  "name": "Chemistry",
+  "chapters": [
+    {
+      "id": "foundation and fundamentals",
+      "title": "Foundation and Fundamentals",
+      "description": "",
+      "topics": [
+        {
+          "id": "introduction-to-chemistry",
+          "title": "Introduction to Chemistry"
+        },
+        {
+          "id": "importance-and-scope-of-chemistry",
+          "title": "Importance and Scope of Chemistry"
+        }
+      ]
+    },
+    {
+      "id": "chemical bonding and shapes od molecules",
+      "title": "Chemical Bonding and Shapes of Molecules",
+      "description": "",
+      "topics": [
+        {
+          "id": "ionic bonding",
+          "title": "Ionic Bonding"
+        },
+        {
+          "id": "covalent bonding",
+          "title": "Covalent Bonding"
+        }
+      ]
+    },
+    {
+      "id": "atomic structure",
+      "title": "Atomic Structure",
+      "description": "",
+      "topics": [
+        {
+          "id": "rutherford's-atomic-model",
+          "title": "Rutherford's Atomic Model",
+          "important":true
+        
+        },
+        {
+          "id": "limitations-of-rutherford's-atomic-model",
+          "title": "Limitations of Rutherford's Atomic Model"
+        },
+        {
+          "id": "postulates-of-bohr's-atomic-model",
+          "title":  "Postulates of Bohr's Atomic Model"
+        },
+         {
+          "id": "spectrum-of-hydrogen-atom",
+          "title":  "Spectrum of Hydrogen Atom"
+        }
+
+
+
+      ]
+    },
+    {
+      "id": "state of matter (gaseous state)",
+      "title": "State of Matter(Gaseous State)",
+      "description": "",
+      "topics": [
+        {
+          "id": "kinetic-theory-of-gases-and-its-postulates",
+          "title": "Kinetic Theory of Gases and Its Postulates"
+        },
+        {
+          "id": "boyles-law-(gas-laws)",
+          "title": "Boyles Law (Gas Laws)",
+          "important": true
+        }
+      ]
+    },
+       {
+      "id": "gaseous-state",
+      "title": "Gaseous State",
+      "description": "",
+      "topics": [
+        {
+          "id": "gas-state",
+          "title": "Gas State"
+        }
+      ]
+    },
+       {
+      "id": "stoichiometry",
+      "title": "Stoichiometry",
+      "description": "",
+      "topics": [
+        {
+          "id": "numerical",
+          "title": "Numerical"
+        }
+      ]
+    }
+  ]
+}

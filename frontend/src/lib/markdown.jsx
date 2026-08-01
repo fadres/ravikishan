@@ -83,6 +83,53 @@ function InlineBlock({ children, key }) {
   return <p key={key} className="leading-relaxed">{children}</p>;
 }
 
+// Nested list renderer: builds a tree from indented "- " / "1. " lines.
+function ListGroup({ items, keyPrefix }) {
+  const buildTree = () => {
+    const root = { children: [] };
+    const stack = [{ indent: -1, node: root }];
+    for (const line of items) {
+      const m = line.match(/^(\s*)(-|\d+\.)\s+(.*)$/);
+      const indent = m[1].length;
+      const ordered = m[2] !== '-';
+      while (stack.length > 1 && indent <= stack[stack.length - 1].indent) stack.pop();
+      if (indent <= stack[stack.length - 1].indent) stack.pop();
+      const node = { text: m[3], ordered, children: [] };
+      stack[stack.length - 1].node.children.push(node);
+      stack.push({ indent, node });
+    }
+    return root.children;
+  };
+
+  const renderLevel = (nodes, depth) => {
+    const out = [];
+    let idx = 0;
+    while (idx < nodes.length) {
+      const ordered = nodes[idx].ordered;
+      const group = [nodes[idx]];
+      while (idx + 1 < nodes.length && nodes[idx + 1].ordered === ordered) group.push(nodes[++idx]);
+      const Tag = ordered ? 'ol' : 'ul';
+      out.push(
+        <Tag
+          key={`${keyPrefix}-l${depth}-${idx}`}
+          className={`my-1.5 space-y-1 ${ordered ? 'list-decimal' : 'list-disc'} ${depth ? 'ml-5' : 'list-inside'}`}
+        >
+          {group.map((node, gi) => (
+            <li key={`${keyPrefix}-i${depth}-${gi}`} className={depth ? 'ml-2' : ''}>
+              {renderText(node.text, `${keyPrefix}-t${depth}-${gi}`)}
+              {node.children.length > 0 && renderLevel(node.children, depth + 1)}
+            </li>
+          ))}
+        </Tag>,
+      );
+      idx += 1;
+    }
+    return out;
+  };
+
+  return <div>{renderLevel(buildTree(), 0)}</div>;
+}
+
 // Block parser: handles paragraphs, #/##/### headings, > quotes,
 // - and 1. lists (with nested indentation), $$ display math, --- rules.
 export default function Markdown({ content, className = '' }) {
@@ -139,20 +186,57 @@ export default function Markdown({ content, className = '' }) {
       continue;
     }
 
-    // lists
+    // table (consecutive "| … |" lines)
+    if (/^\s*\|/.test(line)) {
+      const rows = [];
+      while (i < lines.length && /^\s*\|/.test(lines[i])) {
+        rows.push(lines[i]);
+        i += 1;
+      }
+      const parseRow = (l) =>
+        l
+          .trim()
+          .replace(/^\|/, '')
+          .replace(/\|$/, '')
+          .split('|')
+          .map((c) => c.trim());
+      const isSep = (r) => /^[\s:|-]+$/.test(r.replace(/\s/g, ''));
+      const header = parseRow(rows[0]);
+      let body = rows.slice(1);
+      if (body.length && isSep(body[0])) body = body.slice(1);
+      out.push(
+        <div key={nextKey()} className="my-3 overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="text-left text-[11px] uppercase tracking-wider text-aqua-300 bg-aqua-400/10 border-b border-white/10">
+                {header.map((c, j) => (
+                  <th key={j} className="px-3 py-2 font-bold whitespace-nowrap">{renderText(c, nextKey())}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {body.map((r, ri) => (
+                <tr key={ri} className="border-b border-white/5 last:border-0">
+                  {parseRow(r).map((c, j) => (
+                    <td key={j} className="px-3 py-2 text-slate-300 align-top">{renderText(c, nextKey())}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+
+    // lists (flat or nested via indentation)
     if (/^\s*(-|\d+\.)\s+/.test(line)) {
       const items = [];
       while (i < lines.length && /^\s*(-|\d+\.)\s+/.test(lines[i])) {
-        const indent = lines[i].match(/^\s*/)[0].length;
-        const text = lines[i].replace(/^\s*(-|\d+\.)\s+/, '');
-        items.push(
-          <li key={nextKey()} className={indent > 0 ? 'ml-5 list-disc' : ''}>
-            {renderText(text, nextKey())}
-          </li>,
-        );
+        items.push(lines[i]);
         i += 1;
       }
-      out.push(<ul key={nextKey()} className="my-2 space-y-1.5 list-disc list-inside">{items}</ul>);
+      out.push(<ListGroup key={nextKey()} items={items} keyPrefix={nextKey()} />);
       continue;
     }
 

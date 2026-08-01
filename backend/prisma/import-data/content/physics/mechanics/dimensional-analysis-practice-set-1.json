@@ -1,0 +1,45 @@
+{
+  "title": "Dimensional Analysis - Practice Set 1",
+  "notes": [
+    "<h2>Q1. Find the dimensional formula of Force.</h2>",
+    "<p><b>Solution:</b> Force = mass × acceleration = mass × velocity/time = mass × (length/time)/time</p>",
+    "$$[F] = [M][LT^{-2}] = [MLT^{-2}]$$",
+    "<p><b>Answer:</b> [F] = [MLT⁻²]</p>",
+
+    "<h2>Q2. Find the dimensional formula of Work and Energy.</h2>",
+    "<p><b>Solution:</b> Work = Force × Distance</p>",
+    "$$[W] = [MLT^{-2}][L] = [ML^2T^{-2}]$$",
+    "<p><b>Answer:</b> [W] = [E] = [ML²T⁻²]</p>",
+
+    "<h2>Q3. Find the dimensional formula of Power.</h2>",
+    "<p><b>Solution:</b> Power = Work/Time</p>",
+    "$$[P] = \\frac{[ML^2T^{-2}]}{[T]} = [ML^2T^{-3}]$$",
+    "<p><b>Answer:</b> [P] = [ML²T⁻³]</p>",
+
+    "<h2>Q4. Find the dimensional formula of Pressure.</h2>",
+    "<p><b>Solution:</b> Pressure = Force/Area</p>",
+    "$$[P] = \\frac{[MLT^{-2}]}{[L^2]} = [ML^{-1}T^{-2}]$$",
+    "<p><b>Answer:</b> [P] = [ML⁻¹T⁻²]</p>",
+
+    "<h2>Q5. Using the principle of homogeneity, verify whether the equation v = u + at is dimensionally correct.</h2>",
+    "<p><b>Solution:</b></p>",
+    "$$[\\text{L.H.S.}] = [v] = [LT^{-1}]$$",
+    "$$[\\text{R.H.S.}] = [u] + [at] = [LT^{-1}] + [LT^{-2}][T] = [LT^{-1}] + [LT^{-1}]$$",
+    "<p>Since both terms of R.H.S. have the same dimension [LT⁻¹], addition is valid.</p>",
+    "$$[\\text{L.H.S.}] = [\\text{R.H.S.}] = [LT^{-1}]$$",
+    "<p><b>Answer:</b> The equation is dimensionally correct.</p>",
+
+    "<h2>Q6. Check the dimensional correctness of s = ut + ½at².</h2>",
+    "<p><b>Solution:</b></p>",
+    "$$[\\text{L.H.S.}] = [s] = [L]$$",
+    "$$[\\text{R.H.S.}] = [ut] + [at^2] = [LT^{-1}][T] + [LT^{-2}][T^2] = [L] + [L]$$",
+    "<p>Both terms reduce to [L], and ½ is a dimensionless constant, so it doesn't affect the check.</p>",
+    "<p><b>Answer:</b> [L.H.S.] = [R.H.S.] = [L]. The equation is dimensionally correct.</p>",
+
+    "<h2>Q7. Check whether the equation for kinetic energy, KE = ½mv², is dimensionally correct.</h2>",
+    "<p><b>Solution:</b></p>",
+    "$$[\\text{L.H.S.}] = [KE] = [ML^2T^{-2}]$$",
+    "$$[\\text{R.H.S.}] = [m][v^2] = [M][LT^{-1}]^2 = [ML^2T^{-2}]$$",
+    "<p><b>Answer:</b> [L.H.S.] = [R.H.S.]. The equation is dimensionally correct.</p>"
+  ]
+}

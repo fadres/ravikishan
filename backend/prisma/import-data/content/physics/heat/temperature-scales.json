@@ -1,0 +1,180 @@
+{
+  "title": "Temperature Scales",
+  "notes": [
+    "<h2>Introduction</h2>",
+    "<p>A <b>temperature scale</b> is a calibration of a thermometer based on two fixed reference points. The three most common scales in physics are <b>Celsius (°C)</b>, <b>Fahrenheit (°F)</b> and <b>Kelvin (K)</b>.</p>",
+    "<h2>Fixed Points</h2>",
+    "<p>Every scale is defined using the freezing point and boiling point of water:</p>",
+    "<table style=\"border-collapse:collapse;width:100%;text-align:center;\"><tr><td style=\"border:1px solid #cbd5e1;padding:8px;\"><b>Scale</b></td><td style=\"border:1px solid #cbd5e1;padding:8px;\"><b>Freezing point</b></td><td style=\"border:1px solid #cbd5e1;padding:8px;\"><b>Boiling point</b></td></tr><tr><td style=\"border:1px solid #cbd5e1;padding:8px;\">Celsius</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">0°C</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">100°C</td></tr><tr><td style=\"border:1px solid #cbd5e1;padding:8px;\">Fahrenheit</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">32°F</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">212°F</td></tr><tr><td style=\"border:1px solid #cbd5e1;padding:8px;\">Kelvin</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">273.15 K</td><td style=\"border:1px solid #cbd5e1;padding:8px;\">373.15 K</td></tr></table>",
+    "<h2>Kelvin — The SI Scale</h2>",
+    "<p>Kelvin is the SI unit of thermodynamic temperature. It is an <b>absolute scale</b> starting at <b>absolute zero (0 K)</b>, the lowest possible temperature where molecular motion theoretically stops. We write 273 K, never °K or degree Kelvin.</p>",
+    "<h2>Relation Between Scales</h2>",
+    "<p>The general relation between the three scales is:</p>",
+    "$$\\frac{C}{100} = \\frac{F - 32}{180} = \\frac{K - 273.15}{100}$$",
+    "<p>From this, the most useful conversion formulas are:</p>",
+    "$$F = \\frac{9}{5}C + 32$$",
+    "$$C = \\frac{5}{9}(F - 32)$$",
+    "$$K = C + 273.15$$"
+  ],
+  "numericals": [
+    {
+      "question": "Convert 40°C to Fahrenheit.",
+      "solution": [
+        "Use the formula: F = (9/5)C + 32",
+        "F = (9/5) × 40 + 32",
+        "F = 72 + 32",
+        "F = 104"
+      ],
+      "answer": "104°F"
+    },
+    {
+      "question": "Convert 98.6°F (normal body temperature) to Celsius.",
+      "solution": [
+        "Use the formula: C = (5/9)(F − 32)",
+        "C = (5/9) × (98.6 − 32)",
+        "C = (5/9) × 66.6",
+        "C = 37"
+      ],
+      "answer": "37°C"
+    },
+    {
+      "question": "At what temperature do the Celsius and Fahrenheit scales read the same value?",
+      "solution": [
+        "Set C = F = x and use F = (9/5)C + 32",
+        "x = (9/5)x + 32",
+        "x − (9/5)x = 32",
+        "−(4/5)x = 32",
+        "x = −40"
+      ],
+      "answer": "−40° (both scales read −40)"
+    }
+  ],
+  "flashcards": [
+    {
+      "front": "What is the SI unit of temperature?",
+      "back": "Kelvin (K)"
+    },
+    {
+      "front": "What are the freezing and boiling points of water in Celsius?",
+      "back": "0°C and 100°C"
+    },
+    {
+      "front": "What is absolute zero in Celsius?",
+      "back": "−273.15°C (0 K)"
+    },
+    {
+      "front": "Formula to convert Celsius to Fahrenheit?",
+      "back": "F = (9/5)C + 32"
+    },
+    {
+      "front": "Formula to convert Celsius to Kelvin?",
+      "back": "K = C + 273.15"
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is the SI unit of temperature?",
+      "options": ["Celsius", "Fahrenheit", "Kelvin", "Rankine"],
+      "answer": 2
+    },
+    {
+      "question": "Normal human body temperature is approximately:",
+      "options": ["37°C", "32°C", "39°C", "42°C"],
+      "answer": 0
+    },
+    {
+      "question": "Convert 100°C to Kelvin.",
+      "options": ["173 K", "273 K", "373 K", "473 K"],
+      "answer": 2
+    },
+    {
+      "question": "At what temperature do Celsius and Fahrenheit scales read the same value?",
+      "options": ["0°", "−40°", "32°", "−273°"],
+      "answer": 1
+    }
+  ],
+  "videos": [
+    {
+      "title": "Temperature Conversions: Kelvin, Celsius and Fahrenheit",
+      "url": "https://www.youtube.com/watch?v=PKz03RFoB2g",
+      "description": "Step-by-step examples converting between Kelvin, Celsius and Fahrenheit, including the rule of thumb for quick mental conversions."
+    }
+  ],
+  "mindmap": {
+    "title": "Temperature Scales",
+    "children": [
+      {
+        "title": "Celsius (°C)",
+        "children": [
+          { "title": "Freezing: 0°C" },
+          { "title": "Boiling: 100°C" }
+        ]
+      },
+      {
+        "title": "Fahrenheit (°F)",
+        "children": [
+          { "title": "Freezing: 32°F" },
+          { "title": "Boiling: 212°F" }
+        ]
+      },
+      {
+        "title": "Kelvin (K) — SI unit",
+        "children": [
+          { "title": "Absolute zero: 0 K" },
+          { "title": "K = C + 273.15", "details": "No degree symbol, no negatives" }
+        ]
+      },
+      {
+        "title": "Conversions",
+        "children": [
+          { "title": "F = (9/5)C + 32" },
+          { "title": "C = (5/9)(F − 32)" },
+          { "title": "C/100 = (F−32)/180 = (K−273.15)/100" }
+        ]
+      }
+    ]
+  },
+  "summary": "Temperature scales are defined using the freezing and boiling points of water. Celsius sets them at 0°C and 100°C, Fahrenheit at 32°F and 212°F, and Kelvin is an absolute scale starting at 0 K. Kelvin is the SI unit and all thermodynamic calculations use it.",
+  "formulas": [
+    "F = (9/5)C + 32",
+    "C = (5/9)(F − 32)",
+    "K = C + 273.15",
+    "C/100 = (F − 32)/180 = (K − 273.15)/100"
+  ],
+  "examples": [
+    "Ice cream melts at about −3°C, which is about 26.6°F.",
+    "Oven baking at 350°F equals about 176.7°C."
+  ],
+  "practice": [
+    {
+      "question": "Convert −40°C to Fahrenheit.",
+      "answer": "−40°F (the scales coincide here)"
+    },
+    {
+      "question": "Convert 300 K to Celsius.",
+      "answer": "300 − 273.15 = 26.85°C"
+    }
+  ],
+  "keyPoints": [
+    "Kelvin is the SI unit of temperature and is an absolute scale.",
+    "0 K is absolute zero; Kelvin values are never negative.",
+    "A change of 1 K equals a change of 1°C.",
+    "We say 273 K, not 273°K.",
+    "Celsius and Fahrenheit read the same value at −40°."
+  ],
+  "relatedTopics": [
+    {
+      "id": "heat-and-temperature",
+      "title": "Heat and Temperature"
+    }
+  ],
+  "references": [
+    {
+      "title": "Temperature Conversions (Step by Step Science)",
+      "url": "https://www.youtube.com/watch?v=PKz03RFoB2g"
+    }
+  ],
+  "readingTime": "6 min",
+  "level": "Beginner",
+  "updatedAt": "2026-07-31"
+}

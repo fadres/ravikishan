@@ -1,0 +1,52 @@
+{
+  "title": "M,P Errors",
+  "notes": [
+    "<h2>Mean Value of a Set of Measurements</h2>",
+    "<p>If A₁, A₂, ..... A<sub>n</sub> be the values calculated in the measurement then their mean value as a real value is given by</p>",
+    "$$\\bar{A} = \\frac{A_1 + A_2 + ..... + A_n}{n} = \\frac{1}{n}\\sum_{i=1}^{n} A_i \\quad ....(1.10)$$",
+
+    "<h3>Absolute Errors</h3>",
+    "<p>Thus, absolute errors are given by</p>",
+    "<p>ΔA₁ = Ā − A₁</p>",
+    "<p>ΔA₂ = Ā − A₂</p>",
+    "<p>.....</p>",
+    "<p>ΔA<sub>n</sub> = Ā − A<sub>n</sub></p>",
+
+    "<h3>Mean Absolute Error</h3>",
+    "<p>The mean absolute error is given by</p>",
+    "$$\\overline{\\Delta A} = \\frac{|\\Delta A_1| + |\\Delta A_2| + .... + |\\Delta A_n|}{n} = \\frac{1}{n}\\sum_{i=1}^{n}|\\Delta A_i| \\quad ....(1.11)$$",
+    "<p>When arithmetic mean is taken, only magnitudes of the absolute errors are taken into account.</p>",
+
+    "<h3>Relative Error and Percentage Error</h3>",
+    "<p><b>Relative error:</b> The ratio of mean absolute error to the real value of the measured quantity is called relative error.</p>",
+    "$$\\text{Relative error} = \\frac{\\overline{\\Delta A}}{\\bar{A}} \\quad ....(1.12)$$",
+    "<p>If the relative error is expressed in percentage, then it is called <b>percentage error</b>. Obviously, the percentage error is simply the ratio of the error to the measured value, multiplied by 100%.</p>",
+    "$$\\text{Percentage error} = \\frac{\\overline{\\Delta A}}{\\bar{A}} \\times 100\\% \\quad ....(1.13)$$",
+    "<p>With the help of percentage error, we can judge the accuracy of the result.</p>",
+
+    "<h3>Test Your Concept 1.2</h3>",
+    "<p><b>Q:</b> What is the percentage error in the measurement 2.26 ± 0.25 m²?</p>",
+    "<p><b>Answer:</b> In the measurement 2.26 ± 0.25 m, the error is ± 0.25 m. The percentage error is simply the ratio of error to the measured value multiplied by 100.</p>",
+    "$$\\text{Therefore, } \\% \\text{ error} = \\frac{0.25}{2.26} \\times 100\\% = 11.06\\%$$",
+
+    "<h3>Self Test Opportunity 1.2</h3>",
+    "<p>The temperatures of two bodies measured by a thermometer are T₁ = (20 ± 0.5)°C and T₂ = (50 ± 0.5)°C. Calculate the temperature difference and the error therein.</p>",
+    "<p><b>Ans:</b> (30 ± 1)°C</p>",
+
+    "<h2>Accuracy and Precision in Measurement</h2>",
+    "<p><b>Accuracy</b> is not the same as accuracy. Both accuracy and precision reflect how close a measurement is to an actual value, but accuracy reflects how close a measurement is to a known or accepted value, while precision reflects how reproducible measurements are, even if they are far from the accepted value.</p>",
+    "<p>The term 'Accuracy' denotes closeness of an experimental value to an experimental value of set or standard value.</p>",
+    "<p><b>Accuracy = Mean value − True value</b></p>",
+    "<p>Smaller the difference between the mean value and the true value, the larger is the accuracy.</p>",
+    "<p>For example, a student measured the mean value and he found the mean value 9.20 m/s². The standard value of g is 9.80 m/s²: Thus, accuracy = 9.80 − 9.20 = 0.60 m/s².</p>",
+    "<p>The accuracy of an instrument depends on how well its performance compares to a currently accepted standard. Uncertainties in measurement affect the accuracy of a measurement. Precision, however, is not affected because the accuracy depends on how well its performance compares to a currently accepted standard. The accuracy of an instrument is based on the accuracy of a measurement.</p>",
+    "<p>The term <b>'Precision'</b> refers to how closely two or more measurements agree with one another. Precision is determined by the least count of the measuring instrument. The smaller the least count, the greater the precision.</p>",
+    "<p>For example, least count of Vernier calipers is often 0.01 cm and least count of a screw gauge is often 0.001 cm. So, measurement of small length using a screw gauge is more precise than a Vernier calipers.</p>",
+    "<p>Precision = individual value − mean value − Arithmetic mean value</p>",
+    "<p>In other words, precision gives the extent of agreement between the individual values of measurements.</p>",
+    "<p>This means that precision the difference between the individual values of repeated measurements, the smaller is the precision.</p>",
+    "<p>For example, a student was conducting an experiment to determine the value of g. He has taken many readings and the values are ranging from 9.80 m/s² to 9.802 m/s² with an average of 9.801 m/s².</p>",
+    "<p>Precision = least count of the measuring instrument. The smaller the least count, the greater the precision.</p>",
+    "<p>Thus, precision = 9.801 − 9.80 = 0.001 m/s².</p>"
+  ]
+}

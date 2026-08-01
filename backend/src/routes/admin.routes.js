@@ -175,6 +175,7 @@ router.get('/audit', async (req, res) => {
 const BLOCK_TYPE_VALUES = [
   'note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important',
   'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
+  'formula', 'symbols',
 ];
 
 const blockSchema = z.object({

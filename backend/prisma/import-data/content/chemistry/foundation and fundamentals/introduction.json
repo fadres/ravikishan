@@ -1,0 +1,15 @@
+{
+  "title": "Introduction to Chemistry",
+  "notes": "Chemistry is the branch of science that studies matter, its properties, composition, and changes.",
+  "examples": [
+    "Water changing from liquid to gas is a physical change.",
+    "Iron reacting with oxygen to form rust is a chemical change."
+  ],
+  "formulas": [],
+  "practice": [
+    {
+      "question": "What does chemistry study?",
+      "answer": "Chemistry studies matter and its properties."
+    }
+  ]
+}

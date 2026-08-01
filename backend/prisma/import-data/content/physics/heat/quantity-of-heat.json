@@ -1,0 +1,192 @@
+{
+  "title": "Quantity of Heat",
+  "notes": [
+    "<h2>Heat and Temperature</h2>",
+    "<p><b>Heat</b> is the energy transferred between two bodies due to a temperature difference. It flows from a hotter body to a colder body. <b>Temperature</b> is a measure of the average kinetic energy of the molecules of a body; it decides the direction of heat flow. The SI unit of heat is the <b>joule (J)</b>; the practical unit is the <b>calorie (cal)</b>, where $1\\,cal = 4.186\\,J$.</p>",
+    "<h2>Heat Capacity and Specific Heat Capacity</h2>",
+    "<p>The <b>heat capacity (C)</b> of a body is the quantity of heat required to raise its temperature by 1°C (or 1 K): $C = \\frac{Q}{\\Delta\\theta}$, unit J/K.</p>",
+    "<p>The <b>specific heat capacity (s or c)</b> is the heat required to raise the temperature of unit mass of a substance by 1°C:</p>",
+    "$$Q = ms\\Delta\\theta$$",
+    "<p>where $m$ is the mass, $s$ is the specific heat capacity, and $\\Delta\\theta$ is the rise in temperature. The SI unit is $J\\,kg^{-1}\\,K^{-1}$. For water, $s = 4200\\,J\\,kg^{-1}\\,K^{-1} = 1\\,cal\\,g^{-1}\\,°C^{-1}$.</p>",
+    "<h2>Molar Heat Capacity</h2>",
+    "<p>The heat required to raise the temperature of 1 mole of a substance by 1 K: $C = \\frac{1}{n}\\frac{Q}{\\Delta\\theta}$. For gases there are two values: $C_p$ (at constant pressure) and $C_v$ (at constant volume), with $C_p - C_v = R$ (Mayer's relation).</p>",
+    "<h2>Water Equivalent</h2>",
+    "<p>The <b>water equivalent</b> of a body is the mass of water that would require the same quantity of heat as the body to raise its temperature by the same amount: $W = m s$ (mass of water), unit gram or kilogram.</p>",
+    "<h2>Latent Heat and Change of State</h2>",
+    "<p>During a change of state (melting, boiling), temperature remains constant while heat is absorbed. The <b>latent heat (L)</b> is the heat required to change the state of unit mass of a substance without changing its temperature:</p>",
+    "$$Q = mL$$",
+    "<p>For water: latent heat of fusion $L_f = 3.36 \\times 10^5\\,J\\,kg^{-1}$ and latent heat of vaporisation $L_v = 2.26 \\times 10^6\\,J\\,kg^{-1}$.</p>",
+    "<h2>Calorimetry — Principle of Heat Exchange</h2>",
+    "<p>When hot and cold bodies are mixed, the heat lost by the hot body equals the heat gained by the cold body (if no heat is lost to the surroundings):</p>",
+    "$$\\text{Heat lost} = \\text{Heat gained}$$",
+    "<p>This principle is used in a <b>calorimeter</b> to measure specific heat capacities.</p>"
+  ],
+  "numericals": [
+    {
+      "question": "How much heat is required to raise the temperature of 2 kg of water from 20°C to 80°C? (Specific heat of water = 4200 J kg⁻¹ K⁻¹)",
+      "solution": [
+        "Q = msΔθ",
+        "Q = 2 × 4200 × (80 − 20)",
+        "Q = 2 × 4200 × 60",
+        "Q = 504000 J = 504 kJ"
+      ],
+      "answer": "504 kJ"
+    },
+    {
+      "question": "A piece of metal of mass 0.5 kg absorbs 12,600 J of heat and its temperature rises from 30°C to 90°C. Find its specific heat capacity.",
+      "solution": [
+        "s = Q/(mΔθ)",
+        "s = 12600/(0.5 × 60)",
+        "s = 12600/30",
+        "s = 420 J kg⁻¹ K⁻¹"
+      ],
+      "answer": "420 J kg⁻¹ K⁻¹"
+    },
+    {
+      "question": "Calculate the heat needed to melt 100 g of ice at 0°C. (Latent heat of fusion of ice = 3.36 × 10⁵ J kg⁻¹)",
+      "solution": [
+        "Q = mL",
+        "Q = 0.1 × 3.36 × 10⁵",
+        "Q = 3.36 × 10⁴ J"
+      ],
+      "answer": "33,600 J"
+    },
+    {
+      "question": "1 kg of water at 90°C is mixed with 2 kg of water at 30°C. Find the final temperature of the mixture.",
+      "solution": [
+        "Heat lost by hot water = Heat gained by cold water",
+        "1 × 4200 × (90 − T) = 2 × 4200 × (T − 30)",
+        "90 − T = 2T − 60",
+        "3T = 150, T = 50°C"
+      ],
+      "answer": "50°C"
+    }
+  ],
+  "summary": "Heat is energy in transit due to a temperature difference, measured in joules or calories. The heat required to change the temperature of a body is Q = msΔθ, where s is the specific heat capacity. During a change of state the temperature stays constant and the heat absorbed is Q = mL. Calorimetry uses the principle that heat lost equals heat gained.",
+  "formulas": [
+    "Q = msΔθ",
+    "C = Q/Δθ (heat capacity)",
+    "Q = mL (latent heat)",
+    "C_p − C_v = R (Mayer's relation)",
+    "1 cal = 4.186 J"
+  ],
+  "examples": [
+    "Water has a very high specific heat capacity (4200 J kg⁻¹ K⁻¹), which is why seas heat up and cool down slowly compared to land.",
+    "Steam at 100°C causes more severe burns than boiling water at 100°C because it releases additional latent heat (2.26 × 10⁶ J kg⁻¹) on condensing."
+  ],
+  "practice": [
+    {
+      "question": "How much ice at 0°C can be melted by 168,000 J of heat?",
+      "answer": "m = Q/L = 168000/(3.36 × 10⁵) = 0.5 kg"
+    },
+    {
+      "question": "What is the water equivalent of a copper vessel of mass 0.2 kg? (s of copper = 400 J kg⁻¹ K⁻¹)",
+      "answer": "W = ms = 0.2 × 400 = 80 g of water"
+    }
+  ],
+  "keyPoints": [
+    "Heat is energy in transit; temperature measures average kinetic energy of molecules.",
+    "SI unit of heat is the joule; 1 cal = 4.186 J.",
+    "Q = msΔθ only when there is no change of state.",
+    "Latent heat is absorbed/released at constant temperature.",
+    "Heat lost = Heat gained in calorimetry.",
+    "Water has a high specific heat capacity of 4200 J kg⁻¹ K⁻¹."
+  ],
+  "flashcards": [
+    {
+      "front": "SI unit of heat?",
+      "back": "Joule (J); 1 cal = 4.186 J"
+    },
+    {
+      "front": "Formula for heat when temperature changes?",
+      "back": "Q = msΔθ"
+    },
+    {
+      "front": "Heat absorbed during change of state?",
+      "back": "Q = mL, at constant temperature"
+    },
+    {
+      "front": "Specific heat of water?",
+      "back": "4200 J kg⁻¹ K⁻¹ or 1 cal g⁻¹ °C⁻¹"
+    },
+    {
+      "front": "Principle of calorimetry?",
+      "back": "Heat lost by hot body = heat gained by cold body"
+    }
+  ],
+  "quiz": [
+    {
+      "question": "The SI unit of specific heat capacity is:",
+      "options": ["J kg⁻¹", "J K⁻¹", "J kg⁻¹ K⁻¹", "cal g⁻¹ °C⁻¹"],
+      "answer": 2
+    },
+    {
+      "question": "Heat required to change the state of a substance without changing temperature is:",
+      "options": ["Specific heat", "Latent heat", "Heat capacity", "Water equivalent"],
+      "answer": 1
+    },
+    {
+      "question": "1 calorie is equal to:",
+      "options": ["4.186 J", "41.86 J", "0.4186 J", "418.6 J"],
+      "answer": 0
+    },
+    {
+      "question": "During melting of ice at 0°C, the temperature of the ice-water mixture:",
+      "options": ["Increases", "Decreases", "Remains constant", "First increases then decreases"],
+      "answer": 2
+    },
+    {
+      "question": "Which body has a higher specific heat capacity?",
+      "options": ["Water", "Iron", "Copper", "Mercury"],
+      "answer": 0
+    }
+  ],
+  "mindmap": {
+    "title": "Quantity of Heat",
+    "children": [
+      {
+        "title": "Heat vs Temperature",
+        "children": [
+          { "title": "Heat: energy in transit", "details": "1 cal = 4.186 J" },
+          { "title": "Temperature: average kinetic energy" }
+        ]
+      },
+      {
+        "title": "Q = msΔθ",
+        "children": [
+          { "title": "s: specific heat capacity", "details": "Water: 4200 J kg⁻¹ K⁻¹" },
+          { "title": "C = Q/Δθ: heat capacity" },
+          { "title": "W = ms: water equivalent" }
+        ]
+      },
+      {
+        "title": "Change of state",
+        "children": [
+          { "title": "Q = mL, constant temperature" },
+          { "title": "L_f (ice) = 3.36 × 10⁵ J kg⁻¹" },
+          { "title": "L_v (water) = 2.26 × 10⁶ J kg⁻¹" }
+        ]
+      },
+      {
+        "title": "Calorimetry",
+        "children": [
+          { "title": "Heat lost = Heat gained" },
+          { "title": "Used to find specific heat" }
+        ]
+      }
+    ]
+  },
+  "relatedTopics": [
+    {
+      "id": "heat-and-temperature",
+      "title": "Heat and Temperature"
+    },
+    {
+      "id": "temperature-scales",
+      "title": "Temperature Scales"
+    }
+  ],
+  "readingTime": "7 min",
+  "level": "Beginner",
+  "updatedAt": "2026-07-31"
+}

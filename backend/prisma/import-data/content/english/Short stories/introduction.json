@@ -1,0 +1,119 @@
+{
+  "title": "Introduction to Short Stories",
+  "notes": [
+    "<h2>What is a Short Story?</h2>",
+    "<p>A <b>short story</b> is a brief work of prose fiction that can normally be read in one sitting. It focuses on a <b>single incident, character, or idea</b>, and develops it with economy of language. Unlike a novel, a short story usually has a limited number of characters, one central conflict, and one main effect.</p>",
+    "<h2>Key Elements of a Short Story</h2>",
+    "<p><b>Plot</b>: the sequence of events in the story — exposition, rising action, climax, falling action and resolution. <b>Character</b>: the people (or animals, or forces) in the story; they can be <b>round</b> (well developed, changing) or <b>flat</b> (simple, unchanging). <b>Setting</b>: the time and place of the action, which influences mood and conflict. <b>Theme</b>: the central idea or message of the story — what the story means beyond its events. <b>Point of view</b>: the perspective from which the story is told — first person (I), second person (you), or third person (he/she/they; limited or omniscient). <b>Conflict</b>: the struggle at the heart of the story — internal (man vs self) or external (man vs man, man vs nature, man vs society).</p>",
+    "<h2>How a Short Story is Built</h2>",
+    "<p>A good short story starts with a <b>hook</b> that creates curiosity, moves through rising tension to a <b>climax</b> (the turning point), and ends with a <b>resolution</b> — which may be closed (everything is settled) or open (leaving the reader to decide). Writers often use <b>foreshadowing</b> (hints of what will come) and <b>symbolism</b> (objects or actions standing for larger ideas) to deepen meaning.</p>",
+    "<h2>Short Stories in the NEB English Syllabus</h2>",
+    "<p>In the NEB (Nepal Education Board) English curriculum, short stories are studied to develop skills of comprehension, analysis and interpretation. Students are expected to identify the elements above, explain the theme in their own words, relate the story to real life, and answer questions about character, setting, plot and moral values.</p>"
+  ],
+  "summary": "A short story is a concise work of prose fiction centred on a single incident or idea. Its essential elements are plot, character, setting, theme, point of view and conflict. Studying short stories trains students to analyse how writers build meaning through structure, character and language, and to connect the theme with real life.",
+  "examples": [
+    "In many NEB stories, a small village setting creates an internal conflict in a character who must choose between tradition and change — the conflict and setting together reveal the theme.",
+    "A story told in first person makes the reader experience the narrator's emotions directly, while a third-person omniscient narrator can reveal the thoughts of every character."
+  ],
+  "practice": [
+    {
+      "question": "Identify the four main stages of a plot.",
+      "answer": "Exposition, rising action, climax (turning point), falling action/resolution."
+    },
+    {
+      "question": "What is the difference between theme and plot?",
+      "answer": "Plot is what happens in the story; theme is the underlying message or idea the events convey."
+    }
+  ],
+  "keyPoints": [
+    "A short story is complete in one sitting and has one main effect.",
+    "Plot = exposition, rising action, climax, resolution.",
+    "Characters may be round (developed) or flat (simple).",
+    "Setting covers both time and place and shapes mood and conflict.",
+    "Conflict may be internal (man vs self) or external (man vs man, nature, society).",
+    "Point of view controls how much the reader knows."
+  ],
+  "flashcards": [
+    {
+      "front": "What is plot?",
+      "back": "The sequence of events in a story: exposition, rising action, climax, resolution"
+    },
+    {
+      "front": "What is a round character?",
+      "back": "A well-developed character who changes during the story"
+    },
+    {
+      "front": "What does setting include?",
+      "back": "The time and place of the action"
+    },
+    {
+      "front": "What is theme?",
+      "back": "The central idea or message of the story"
+    },
+    {
+      "front": "Name the two main types of conflict.",
+      "back": "Internal (man vs self) and external (man vs man, man vs nature, man vs society)"
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which element refers to the time and place of the story?",
+      "options": ["Plot", "Setting", "Theme", "Point of view"],
+      "answer": 1
+    },
+    {
+      "question": "The turning point of a story is called the:",
+      "options": ["Exposition", "Rising action", "Climax", "Resolution"],
+      "answer": 2
+    },
+    {
+      "question": "A story told by a character using 'I' is written in:",
+      "options": ["Second person", "Third person", "First person", "Omniscient point of view"],
+      "answer": 2
+    },
+    {
+      "question": "A flat character is:",
+      "options": ["Well developed", "Simple and unchanging", "The narrator", "Always the villain"],
+      "answer": 1
+    },
+    {
+      "question": "The central message or idea of a story is its:",
+      "options": ["Conflict", "Plot", "Theme", "Climax"],
+      "answer": 2
+    }
+  ],
+  "mindmap": {
+    "title": "Short Story",
+    "children": [
+      {
+        "title": "Definition",
+        "children": [
+          { "title": "Brief prose fiction" },
+          { "title": "Single incident / one main effect" }
+        ]
+      },
+      {
+        "title": "Elements",
+        "children": [
+          { "title": "Plot", "details": "Exposition → climax → resolution" },
+          { "title": "Character", "details": "Round or flat" },
+          { "title": "Setting", "details": "Time and place" },
+          { "title": "Theme", "details": "Central message" },
+          { "title": "Point of view", "details": "First, second or third person" },
+          { "title": "Conflict", "details": "Internal or external" }
+        ]
+      },
+      {
+        "title": "Techniques",
+        "children": [
+          { "title": "Foreshadowing" },
+          { "title": "Symbolism" },
+          { "title": "Hook and open/closed ending" }
+        ]
+      }
+    ]
+  },
+  "readingTime": "5 min",
+  "level": "Beginner",
+  "updatedAt": "2026-07-31"
+}
