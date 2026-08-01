@@ -1,0 +1,41 @@
+{
+  "title": "Scalar (Dot) Product of Two Vectors",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The product of two vectors that gives a scalar quantity is called scalar/dot product, defined as A·B = ABcosθ.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Work done W = F·d</li>\n  <li>î·î = 1, î·ĵ = 0</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define scalar (dot) product.**\n\n**Answer:** The product of two vectors that results in a scalar quantity, A·B = ABcosθ.",
+    "**Q2: Write the formula for dot product.**\n\n**Answer:** A·B = AB cosθ.",
+    "**Q3: What is î·î equal to?**\n\n**Answer:** 1.",
+    "**Q4: What is î·ĵ equal to?**\n\n**Answer:** 0.",
+    "**Q5: What is ĵ·ĵ equal to?**\n\n**Answer:** 1.",
+    "**Q6: What is k̂·k̂ equal to?**\n\n**Answer:** 1.",
+    "**Q7: If A = 4î − ĵ + 3k̂ and B = 7î + 5ĵ + k̂, find A·B.**\n\n**Answer:** A·B = 28 − 5 + 3 = 26.",
+    "**Q8: How do you find the angle between two vectors using the dot product?**\n\n**Answer:** θ = cos⁻¹[(A·B)/(|A||B|)].",
+    "**Q9: If force F = 2î + ĵ − 3k̂ acts on a body with displacement D = î − 2ĵ − 3k̂, find work done.**\n\n**Answer:** W = F·D = 2 − 2 + 9 = 9 Joule.",
+    "**Q10: What is the dot product of two perpendicular vectors?**\n\n**Answer:** Zero, since cos90° = 0.",
+    "**Q11: What is the dot product of two parallel vectors A and B?**\n\n**Answer:** AB (maximum value), since cos0° = 1.",
+    "**Q12: Is the dot product commutative? (A·B = B·A?)**\n\n**Answer:** Yes, dot product is commutative.",
+    "**Q13: What physical quantity is defined using the dot product of force and displacement?**\n\n**Answer:** Work done.",
+    "**Q14: If |A×B| = A·B, what is the angle between A and B?**\n\n**Answer:** 45°.",
+    "**Q15: Derive: if ABsinθ = ABcosθ, what is tanθ?**\n\n**Answer:** tanθ = 1, so θ = 45°.",
+    "**Q16: If A = 4î − ĵ + 3k̂, find |A|.**\n\n**Answer:** |A| = √(16+1+9) = √26.",
+    "**Q17: If B = 7î + 5ĵ + k̂, find |B|.**\n\n**Answer:** |B| = √(49+25+1) = √75.",
+    "**Q18: Using A·B = |A||B|cosθ, find θ for A=4î−ĵ+3k̂ and B=7î+5ĵ+k̂.**\n\n**Answer:** cosθ = 26/√(26×75) ≈ 0.58, so θ ≈ 54°.",
+    "**Q19: Is dot product a vector or scalar result?**\n\n**Answer:** Scalar.",
+    "**Q20: What is A·A equal to?**\n\n**Answer:** |A|² (the square of the magnitude of A).",
+    "**Q21: If A·B = 0 and neither A nor B is a null vector, what can you conclude?**\n\n**Answer:** A and B are perpendicular to each other.",
+    "**Q22: Give the general formula for work done by a force F causing displacement D.**\n\n**Answer:** W = F·D = FDcosθ.",
+    "**Q23: If F = 10N and D = 5m at 60° to each other, find work done.**\n\n**Answer:** W = 10×5×cos60° = 25 Joule.",
+    "**Q24: Is power related to dot product? How?**\n\n**Answer:** Yes, instantaneous power P = F·v (force dot velocity).",
+    "**Q25: What does a negative dot product indicate about the angle between two vectors?**\n\n**Answer:** The angle is obtuse (between 90° and 180°).",
+    "**Q26: What is the distributive property of dot product?**\n\n**Answer:** A·(B+C) = A·B + A·C."
+  ],
+  "keyPoints": [
+    "- **Definition:** The product of two vectors that gives a scalar quantity is called scalar/dot product, defined as A·B = ABcosθ.",
+    "- **Example:** Work done W = F·d",
+    "- **Example:** î·î = 1, î·ĵ = 0"
+  ],
+  "summary": "The product of two vectors that gives a scalar quantity is called scalar/dot product, defined as A·B = ABcosθ. Key examples include Work done W = F·d; î·î = 1, î·ĵ = 0. Includes 26 short-answer practice questions."
+}

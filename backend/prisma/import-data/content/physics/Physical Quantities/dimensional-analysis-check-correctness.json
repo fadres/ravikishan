@@ -1,0 +1,42 @@
+{
+  "title": "Uses of Dimensional Equation — Checking Correctness of Physical Relations",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Dimensional analysis checks whether a physical equation is correct by verifying that the dimensions of LHS and RHS are equal (principle of homogeneity).</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>F = ma → LHS = RHS, correct</li>\n  <li>KE = ½mv² → LHS = RHS, correct</li>\n  <li>T = 2π√(g/l) → LHS ≠ RHS, incorrect (should be √(l/g))</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: What principle is used to check correctness of a physical equation?**\n\n**Answer:** Principle of homogeneity of dimensions — LHS dimension must equal RHS dimension.",
+    "**Q2: Check whether F = ma is dimensionally correct.**\n\n**Answer:** Yes, LHS [M1L1T-2] = RHS [M1L1T-2].",
+    "**Q3: Check whether KE = ½mv² is dimensionally correct.**\n\n**Answer:** Yes, LHS [M1L2T-2] = RHS [M1L2T-2].",
+    "**Q4: Check whether T = 2π√(g/l) is dimensionally correct.**\n\n**Answer:** No, LHS [T1] ≠ RHS [T-1]; the correct relation is T = 2π√(l/g).",
+    "**Q5: Check whether PE = mgh is dimensionally correct.**\n\n**Answer:** Yes, LHS [M1L2T-2] = RHS [M1L2T-2].",
+    "**Q6: Check whether S = vt + ½at² is dimensionally correct.**\n\n**Answer:** Yes, LHS [M0L1T0] = RHS [M0L1T0].",
+    "**Q7: A student writes F = mv² for centripetal force — is this dimensionally correct?**\n\n**Answer:** No, LHS [M1L1T-2] ≠ RHS [M1L2T-2]; the student is dimensionally wrong.",
+    "**Q8: What does 'LHS = RHS' mean in dimensional checking?**\n\n**Answer:** The left-hand side and right-hand side of the equation have identical dimensional formulas.",
+    "**Q9: Check density formula s = 3g/(4πRG) for dimensional consistency.**\n\n**Answer:** It is dimensionally correct — both sides give [M1L-3T0].",
+    "**Q10: What is the dimension of g used in checking s = 3g/(4πRG)?**\n\n**Answer:** [M0L1T-2].",
+    "**Q11: What is the dimension of G used in checking s = 3g/(4πRG)?**\n\n**Answer:** [M-1L3T-2].",
+    "**Q12: What is the dimension of R (radius) used in the same check?**\n\n**Answer:** [M0L1T0].",
+    "**Q13: Why is π ignored in dimensional analysis?**\n\n**Answer:** Because it is a pure (dimensionless) number.",
+    "**Q14: If LHS ≠ RHS for an equation, what can we conclude?**\n\n**Answer:** The equation is dimensionally incorrect (though it doesn't confirm correctness if LHS = RHS either).",
+    "**Q15: Does dimensional correctness guarantee the equation is physically 100% correct?**\n\n**Answer:** No, dimensional correctness only checks dimensional consistency, not numerical constants or physical validity.",
+    "**Q16: Check whether V = √(R/2Gm) (escape velocity formula written by a student) is correct.**\n\n**Answer:** No, it is dimensionally incorrect; correct dimension of V should be [M0L1T-1], but this gives [M0L-1T1].",
+    "**Q17: What is the correct escape velocity formula, dimensionally speaking?**\n\n**Answer:** V = √(2Gm/R).",
+    "**Q18: In checking t = k·mᵃ·lᵇ·gᶜ, what does comparing LHS and RHS give?**\n\n**Answer:** The values of exponents a, b, c that make the equation dimensionally consistent.",
+    "**Q19: State the dimension of time period t.**\n\n**Answer:** [M0L0T1].",
+    "**Q20: Why is dimensional checking a fast tool for spotting errors in derived formulas?**\n\n**Answer:** Because any dimensional mismatch immediately signals an error without needing experimental verification.",
+    "**Q21: Can dimensional analysis catch an error in a purely numerical constant (like using 3 instead of 2)?**\n\n**Answer:** No, since dimensionless constants don't affect the dimension check.",
+    "**Q22: Is F = ma² a valid dimensionally consistent formula for force?**\n\n**Answer:** No, it is dimensionally incorrect (extra L1T-2 compared to actual F = ma).",
+    "**Q23: What is meant by 'Hence, the given equation is dimensionally correct'?**\n\n**Answer:** It means LHS and RHS dimensions matched exactly after simplification.",
+    "**Q24: If two quantities cannot be added because their dimensions differ, what does this violate?**\n\n**Answer:** The principle of homogeneity of dimensions.",
+    "**Q25: Check S = vt + ½at²: what is the dimension of the 'vt' term alone?**\n\n**Answer:** [M0L1T0].",
+    "**Q26: Check S = vt + ½at²: what is the dimension of the '½at²' term alone?**\n\n**Answer:** [M0L1T0]."
+  ],
+  "keyPoints": [
+    "- **Definition:** Dimensional analysis checks whether a physical equation is correct by verifying that the dimensions of LHS and RHS are equal (principle of homogeneity).",
+    "- **Example:** F = ma → LHS = RHS, correct",
+    "- **Example:** KE = ½mv² → LHS = RHS, correct",
+    "- **Example:** T = 2π√(g/l) → LHS ≠ RHS, incorrect (should be √(l/g))"
+  ],
+  "summary": "Dimensional analysis checks whether a physical equation is correct by verifying that the dimensions of LHS and RHS are equal (principle of homogeneity). Key examples include F = ma → LHS = RHS, correct; KE = ½mv² → LHS = RHS, correct; T = 2π√(g/l) → LHS ≠ RHS, incorrect (should be √(l/g)). Includes 26 short-answer practice questions."
+}

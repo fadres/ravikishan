@@ -1,0 +1,43 @@
+{
+  "title": "Fundamental Quantities",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Physical quantities that are independent of other quantities are called fundamental quantities.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Mass (kg)</li>\n  <li>Length (m)</li>\n  <li>Time (s)</li>\n  <li>Current (A)</li>\n  <li>Temperature (K)</li>\n  <li>Luminous Intensity (cd)</li>\n  <li>Amount of substance (mol)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define fundamental quantities.**\n\n**Answer:** Quantities independent of other quantities, e.g. mass, length, time.",
+    "**Q2: How many fundamental quantities are there?**\n\n**Answer:** Seven.",
+    "**Q3: List all seven fundamental quantities.**\n\n**Answer:** Mass, Length, Time, Current, Temperature, Luminous Intensity, Amount of substance.",
+    "**Q4: What is the SI unit of mass?**\n\n**Answer:** Kilogram (kg).",
+    "**Q5: What is the SI unit of length?**\n\n**Answer:** Metre (m).",
+    "**Q6: What is the SI unit of time?**\n\n**Answer:** Second (s).",
+    "**Q7: What is the SI unit of electric current?**\n\n**Answer:** Ampere (A).",
+    "**Q8: What is the SI unit of temperature?**\n\n**Answer:** Kelvin (K).",
+    "**Q9: What is the SI unit of luminous intensity?**\n\n**Answer:** Candela (cd).",
+    "**Q10: What is the SI unit of amount of substance?**\n\n**Answer:** Mole (mol).",
+    "**Q11: Why is mass called a fundamental quantity?**\n\n**Answer:** Because it does not depend on any other physical quantity.",
+    "**Q12: Is force a fundamental quantity? Why not?**\n\n**Answer:** No, because it depends on mass and acceleration.",
+    "**Q13: Which fundamental quantity is measured in Kelvin?**\n\n**Answer:** Temperature.",
+    "**Q14: Which fundamental quantity is measured in Ampere?**\n\n**Answer:** Electric current.",
+    "**Q15: Name the fundamental quantity used to measure brightness of light.**\n\n**Answer:** Luminous intensity.",
+    "**Q16: Which fundamental quantity's unit is mol?**\n\n**Answer:** Amount of substance.",
+    "**Q17: Give the symbol used for the dimension of length.**\n\n**Answer:** L.",
+    "**Q18: Give the symbol used for the dimension of mass.**\n\n**Answer:** M.",
+    "**Q19: Give the symbol used for the dimension of time.**\n\n**Answer:** T.",
+    "**Q20: Are fundamental quantities interdependent?**\n\n**Answer:** No, they are independent of each other.",
+    "**Q21: How many supplementary quantities exist alongside the 7 fundamental ones?**\n\n**Answer:** Two: plane angle and solid angle.",
+    "**Q22: State one everyday device used to measure a fundamental quantity.**\n\n**Answer:** A stopwatch measures time (a fundamental quantity).",
+    "**Q23: Why can't 'volume' be a fundamental quantity?**\n\n**Answer:** Because it depends on length (length × breadth × height).",
+    "**Q24: Which fundamental quantity has the unit 'kg'?**\n\n**Answer:** Mass.",
+    "**Q25: Which fundamental quantity has the unit 's'?**\n\n**Answer:** Time.",
+    "**Q26: State the number of base SI units.**\n\n**Answer:** Seven, corresponding to the seven fundamental quantities."
+  ],
+  "keyPoints": [
+    "- **Definition:** Physical quantities that are independent of other quantities are called fundamental quantities.",
+    "- **Example:** Mass (kg)",
+    "- **Example:** Length (m)",
+    "- **Example:** Time (s)",
+    "- **Example:** Current (A)"
+  ],
+  "summary": "Physical quantities that are independent of other quantities are called fundamental quantities. Key examples include Mass (kg); Length (m); Time (s); Current (A); Temperature (K); Luminous Intensity (cd); Amount of substance (mol). Includes 26 short-answer practice questions."
+}

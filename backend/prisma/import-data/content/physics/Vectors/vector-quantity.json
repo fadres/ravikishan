@@ -1,0 +1,43 @@
+{
+  "title": "Vector Quantity",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Physical quantities that have both magnitude and direction are called vector quantities; added/subtracted by the rule of vector addition.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Velocity</li>\n  <li>Force</li>\n  <li>Displacement</li>\n  <li>Acceleration</li>\n  <li>Momentum</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define vector quantity.**\n\n**Answer:** A physical quantity having both magnitude and direction, added by the rule of vector addition.",
+    "**Q2: Give 3 examples of vector quantities.**\n\n**Answer:** Velocity, force, displacement.",
+    "**Q3: How is a vector represented graphically?**\n\n**Answer:** By a straight line with an arrow at one end; length shows magnitude, arrow shows direction.",
+    "**Q4: What does the length of a vector's arrow represent?**\n\n**Answer:** Its magnitude.",
+    "**Q5: What does the arrowhead of a vector represent?**\n\n**Answer:** Its direction.",
+    "**Q6: Is force a scalar or a vector?**\n\n**Answer:** Vector.",
+    "**Q7: Is displacement a scalar or a vector?**\n\n**Answer:** Vector.",
+    "**Q8: Is acceleration a vector quantity?**\n\n**Answer:** Yes.",
+    "**Q9: Is momentum a vector quantity?**\n\n**Answer:** Yes, since it equals mass (scalar) × velocity (vector).",
+    "**Q10: How are vector quantities added?**\n\n**Answer:** According to the rule of vector addition (triangle or parallelogram law), not ordinary algebra.",
+    "**Q11: Why can't vectors be added algebraically like scalars?**\n\n**Answer:** Because they also have direction, which must be accounted for.",
+    "**Q12: What is the notation used for a vector labeled OA?**\n\n**Answer:** An arrow over OA, e.g. →OA, with O as tail and A as head.",
+    "**Q13: In the vector diagram O→A, which point is called the 'tail'?**\n\n**Answer:** Point O.",
+    "**Q14: In the vector diagram O→A, which point is the 'head' (arrow tip)?**\n\n**Answer:** Point A.",
+    "**Q15: Is weight a vector quantity?**\n\n**Answer:** Yes, since it's a force with direction (toward Earth's center).",
+    "**Q16: Is electric field a vector quantity?**\n\n**Answer:** Yes.",
+    "**Q17: Can two vectors be equal even if drawn at different locations?**\n\n**Answer:** Yes, if they have the same magnitude and direction.",
+    "**Q18: State the essential condition for adding two vectors.**\n\n**Answer:** They must represent physical quantities of the same nature.",
+    "**Q19: Give an example vector quantity in fluid mechanics.**\n\n**Answer:** Fluid velocity.",
+    "**Q20: Why is torque considered a vector quantity?**\n\n**Answer:** Because it has both magnitude and a direction (axis of rotation).",
+    "**Q21: Is 'electric current' a vector quantity despite having direction?**\n\n**Answer:** No, it doesn't obey vector addition rules, so it's treated as scalar.",
+    "**Q22: How does a vector differ visually from a scalar in diagrams?**\n\n**Answer:** A vector is shown as an arrow; a scalar has no such directional representation.",
+    "**Q23: Can the resultant of two vectors be zero?**\n\n**Answer:** Yes, if they have equal magnitude but opposite direction (or in general per resultant rules).",
+    "**Q24: Give an example of a vector quantity involving rotational motion.**\n\n**Answer:** Angular velocity.",
+    "**Q25: Why is it important to specify direction for vector quantities in physics problems?**\n\n**Answer:** Because the outcome of physical interactions (like force effects) depends on the direction, not just magnitude.",
+    "**Q26: State one key difference between scalar and vector quantities.**\n\n**Answer:** Scalars have only magnitude; vectors have magnitude and direction, and follow different addition rules."
+  ],
+  "keyPoints": [
+    "- **Definition:** Physical quantities that have both magnitude and direction are called vector quantities; added/subtracted by the rule of vector addition.",
+    "- **Example:** Velocity",
+    "- **Example:** Force",
+    "- **Example:** Displacement",
+    "- **Example:** Acceleration"
+  ],
+  "summary": "Physical quantities that have both magnitude and direction are called vector quantities; added/subtracted by the rule of vector addition. Key examples include Velocity; Force; Displacement; Acceleration; Momentum. Includes 26 short-answer practice questions."
+}

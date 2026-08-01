@@ -1,0 +1,64 @@
+{
+  "title": "Topic Map — Physical Quantities",
+  "mindmap": {
+    "name": "Physical Quantities",
+    "children": [
+      {
+        "name": "Physical Quantities (Measurable & Non-measurable)"
+      },
+      {
+        "name": "Fundamental Quantities"
+      },
+      {
+        "name": "Supplementary Quantities"
+      },
+      {
+        "name": "Derived Quantities"
+      },
+      {
+        "name": "Dimension of a Physical Quantity"
+      },
+      {
+        "name": "Precise Measurement"
+      },
+      {
+        "name": "Accurate Measurement"
+      },
+      {
+        "name": "Significant Figure"
+      },
+      {
+        "name": "Error in Measurement",
+        "children": [
+          {
+            "name": "Systematic Error"
+          },
+          {
+            "name": "Random Error"
+          },
+          {
+            "name": "Least Count Error"
+          },
+          {
+            "name": "Gross Error"
+          }
+        ]
+      },
+      {
+        "name": "Uses of Dimensional Analysis — Finding Dimensions of Derived Quantities"
+      },
+      {
+        "name": "Uses of Dimensional Equation — Unit Conversion"
+      },
+      {
+        "name": "Uses of Dimensional Equation — Checking Correctness of Physical Relations"
+      },
+      {
+        "name": "Uses of Dimensional Equation — Finding Dimension of Constants"
+      },
+      {
+        "name": "Uses of Dimensional Equation — Deriving Relations Between Physical Quantities"
+      }
+    ]
+  }
+}

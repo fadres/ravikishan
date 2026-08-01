@@ -1,0 +1,40 @@
+{
+  "title": "Negative of a Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Two vectors having the same magnitude but acting in opposite directions are called negative vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>A and −A</li>\n  <li>A force and its equal but opposite reaction force</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define the negative of a vector.**\n\n**Answer:** A vector with the same magnitude as the original but acting in the opposite direction.",
+    "**Q2: How is the negative of vector A denoted?**\n\n**Answer:** −A.",
+    "**Q3: If A = 5î, what is −A?**\n\n**Answer:** −5î.",
+    "**Q4: What is A + (−A) equal to?**\n\n**Answer:** 0→ (null vector).",
+    "**Q5: Is −A parallel or anti-parallel to A?**\n\n**Answer:** Anti-parallel (opposite direction).",
+    "**Q6: Do A and −A have the same magnitude?**\n\n**Answer:** Yes, only the direction is reversed.",
+    "**Q7: How is vector subtraction related to the negative vector concept?**\n\n**Answer:** A − B is defined as A + (−B).",
+    "**Q8: If A = 3î + 4ĵ, what is −A?**\n\n**Answer:** −3î − 4ĵ.",
+    "**Q9: Give a physical example of negative vectors.**\n\n**Answer:** Newton's third law: action force and reaction force are equal in magnitude but opposite (negative of each other).",
+    "**Q10: What angle exists between a vector and its negative?**\n\n**Answer:** 180°.",
+    "**Q11: Is the magnitude of −A the same as the magnitude of A?**\n\n**Answer:** Yes, |−A| = |A|.",
+    "**Q12: How would you graphically represent −A given A?**\n\n**Answer:** Draw an arrow of the same length as A, but pointing in the exact opposite direction.",
+    "**Q13: If displacement A = 10m east, what is −A?**\n\n**Answer:** 10m west.",
+    "**Q14: Is −A the same as a null vector?**\n\n**Answer:** No, −A has full magnitude, just reversed direction; the null vector has zero magnitude.",
+    "**Q15: Why is understanding negative vectors essential for vector subtraction?**\n\n**Answer:** Because subtraction is performed by adding the negative of the vector being subtracted.",
+    "**Q16: If A and B are negative vectors of each other, what is |A + B|?**\n\n**Answer:** 0 (since they cancel out completely).",
+    "**Q17: Give an example involving velocity and its negative.**\n\n**Answer:** A car moving north at 60km/h has a negative vector representing 60km/h south.",
+    "**Q18: If F is a 10N force to the right, what does −F represent?**\n\n**Answer:** A 10N force to the left.",
+    "**Q19: Is (−A) + (−B) equal to −(A+B)?**\n\n**Answer:** Yes, by distributive property of vector negation over addition.",
+    "**Q20: What happens when you take the negative of the negative of a vector, i.e., −(−A)?**\n\n**Answer:** You get back the original vector A.",
+    "**Q21: Do negative vectors have to be collinear with the original vector?**\n\n**Answer:** Yes, since same line of action but opposite direction implies collinearity.",
+    "**Q22: How is the negative vector concept used in equilibrium problems?**\n\n**Answer:** The net force on a body in equilibrium equals the negative of the sum of all other forces.",
+    "**Q23: If two teams pull a rope with equal force in opposite directions, what vector relationship exists?**\n\n**Answer:** Each team's force vector is the negative of the other's.",
+    "**Q24: Can −A ever equal A?**\n\n**Answer:** Only if A is the null vector (zero magnitude).",
+    "**Q25: State the formula relating vector subtraction to negative vectors.**\n\n**Answer:** A − B = A + (−B)."
+  ],
+  "keyPoints": [
+    "- **Definition:** Two vectors having the same magnitude but acting in opposite directions are called negative vectors.",
+    "- **Example:** A and −A",
+    "- **Example:** A force and its equal but opposite reaction force"
+  ],
+  "summary": "Two vectors having the same magnitude but acting in opposite directions are called negative vectors. Key examples include A and −A; A force and its equal but opposite reaction force. Includes 25 short-answer practice questions."
+}

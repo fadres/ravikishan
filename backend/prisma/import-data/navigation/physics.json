@@ -112,8 +112,162 @@
         },
         {
           "id": "h-and-t",
-          "title": "HEAT AND TEMPERATURE — Chapter 9, Class 11 Physics (Concepts, All 5 Scales & Step-by-Step Numericals)",
+          "title": "HEAT AND TEMPERATURE — Chapter 9, Class 11 Physics (Concepts, All 5 Scales & Step-by-Step Numericalals)",
           "important": true
+        }
+      ]
+    },
+    {
+      "id": "physical-quantities",
+      "title": "Unit 1: Physical Quantities",
+      "description": "18 topics, 474 practice questions.",
+      "topics": [
+        {
+          "id": "physical-quantity-types",
+          "title": "Physical Quantities (Measurable & Non-measurable)"
+        },
+        {
+          "id": "fundamental-quantities",
+          "title": "Fundamental Quantities"
+        },
+        {
+          "id": "supplementary-quantities",
+          "title": "Supplementary Quantities"
+        },
+        {
+          "id": "derived-quantities",
+          "title": "Derived Quantities"
+        },
+        {
+          "id": "dimension",
+          "title": "Dimension"
+        },
+        {
+          "id": "precise-measurement",
+          "title": "Precise Measurement"
+        },
+        {
+          "id": "accurate-measurement",
+          "title": "Accurate Measurement"
+        },
+        {
+          "id": "significant-figure",
+          "title": "Significant Figures"
+        },
+        {
+          "id": "error-in-measurement",
+          "title": "Error in Measurement"
+        },
+        {
+          "id": "systematic-error",
+          "title": "Systematic Error"
+        },
+        {
+          "id": "random-error",
+          "title": "Random Error"
+        },
+        {
+          "id": "least-count-error",
+          "title": "Least Count Error"
+        },
+        {
+          "id": "gross-error",
+          "title": "Gross Error"
+        },
+        {
+          "id": "dimensional-analysis-check-correctness",
+          "title": "Dimensional Analysis - Checking Correctness"
+        },
+        {
+          "id": "dimensional-analysis-derived-dimensions",
+          "title": "Dimensional Analysis - Derived Dimensions"
+        },
+        {
+          "id": "dimensional-analysis-derive-relations",
+          "title": "Dimensional Analysis - Deriving Relations"
+        },
+        {
+          "id": "dimensional-analysis-find-constants",
+          "title": "Dimensional Analysis - Finding Constants"
+        },
+        {
+          "id": "dimensional-analysis-unit-conversion",
+          "title": "Dimensional Analysis - Unit Conversion"
+        }
+      ]
+    },
+    {
+      "id": "vectors",
+      "title": "Unit 2: Vectors",
+      "description": "17 topics, 446 practice questions.",
+      "topics": [
+        {
+          "id": "scalar-quantity",
+          "title": "Scalar Quantity"
+        },
+        {
+          "id": "vector-quantity",
+          "title": "Vector Quantity"
+        },
+        {
+          "id": "triangle-law",
+          "title": "Triangle Law of Vectors"
+        },
+        {
+          "id": "parallelogram-law",
+          "title": "Parallelogram Law of Vectors"
+        },
+        {
+          "id": "types-of-vector",
+          "title": "Types of Vectors"
+        },
+        {
+          "id": "unit-vector",
+          "title": "Unit Vector"
+        },
+        {
+          "id": "null-vector",
+          "title": "Null Vector"
+        },
+        {
+          "id": "parallel-vector",
+          "title": "Parallel Vectors"
+        },
+        {
+          "id": "equal-vector",
+          "title": "Equal Vectors"
+        },
+        {
+          "id": "negative-vector",
+          "title": "Negative Vector"
+        },
+        {
+          "id": "collinear-vector",
+          "title": "Collinear Vectors"
+        },
+        {
+          "id": "coplanar-vector",
+          "title": "Coplanar Vectors"
+        },
+        {
+          "id": "product-of-two-vectors",
+          "title": "Product of Two Vectors"
+        },
+        {
+          "id": "scalar-dot-product",
+          "title": "Scalar (Dot) Product"
+        },
+        {
+          "id": "vector-cross-product",
+          "title": "Vector (Cross) Product"
+        },
+        {
+          "id": "resolution-of-vector",
+          "title": "Resolution of a Vector"
+        },
+        {
+          "id": "vector-numerical-problems",
+          "title": "Vector Numerical Problems"
         }
       ]
     }

@@ -10,10 +10,11 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "migrate": "prisma migrate deploy && node prisma/import-content.js",
+    "migrate": "prisma migrate deploy && node prisma/ensure-owner.js && node prisma/import-content.js",
     "migrate:dev": "prisma migrate dev",
     "generate": "prisma generate",
     "seed": "node prisma/seed.js",
+    "ensure-owner": "node prisma/ensure-owner.js",
     "content:import": "node prisma/import-content.js",
     "test": "node --test \"tests/*.test.js\""
   },

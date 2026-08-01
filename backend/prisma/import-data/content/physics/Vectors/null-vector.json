@@ -1,0 +1,40 @@
+{
+  "title": "Null (or Zero) Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>A vector whose magnitude is zero is called a null vector, represented by 0→; it can have any direction.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>A − A = 0 (null vector)</li>\n  <li>Resultant of equal and opposite vectors</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define null vector.**\n\n**Answer:** A vector with magnitude zero, represented by 0→.",
+    "**Q2: Why does a null vector have arbitrary direction?**\n\n**Answer:** Because its magnitude is zero, so no specific direction can be defined.",
+    "**Q3: Give the mathematical example of a null vector from the notes.**\n\n**Answer:** A − A = 0→.",
+    "**Q4: What is the purpose of introducing a null vector?**\n\n**Answer:** To give meaning to operations like A − A = 0.",
+    "**Q5: If two equal and opposite vectors are added, what is the result?**\n\n**Answer:** A null (zero) vector.",
+    "**Q6: Is a null vector the same as the number zero?**\n\n**Answer:** No, it's a vector with zero magnitude, distinct from the scalar zero, though both represent 'nothing' in their respective contexts.",
+    "**Q7: Can a null vector be added to any vector without changing it?**\n\n**Answer:** Yes, adding a null vector doesn't change the original vector, similar to adding zero in scalar algebra.",
+    "**Q8: Give an example of three vectors whose resultant is a null vector.**\n\n**Answer:** Three vectors representing sides of a closed triangle taken in order.",
+    "**Q9: If A = 5î and B = −5î, what is A + B?**\n\n**Answer:** 0→ (null vector).",
+    "**Q10: Is velocity zero the same as a null vector?**\n\n**Answer:** Yes, if an object is at rest, its velocity vector is null.",
+    "**Q11: What is the magnitude of a null vector?**\n\n**Answer:** Zero.",
+    "**Q12: Does a null vector obey the triangle law of vector addition?**\n\n**Answer:** Yes, e.g., when vectors form a closed polygon, their resultant is the null vector.",
+    "**Q13: Can the resultant of many non-zero vectors be a null vector?**\n\n**Answer:** Yes, if they cancel out geometrically (form a closed figure).",
+    "**Q14: What symbol is used to denote a null vector?**\n\n**Answer:** 0→ (zero with an arrow over it).",
+    "**Q15: Why is null vector important in vector subtraction operations?**\n\n**Answer:** It allows defining and validating operations like A − A.",
+    "**Q16: If a car returns to its starting point, what is its net displacement vector?**\n\n**Answer:** A null vector (zero displacement).",
+    "**Q17: Is the null vector a special case of a unit vector?**\n\n**Answer:** No, a unit vector has magnitude 1; a null vector has magnitude 0 — they are opposite extremes.",
+    "**Q18: Can a null vector have a defined direction like î or ĵ?**\n\n**Answer:** No, its direction is indeterminate/arbitrary.",
+    "**Q19: State whether A + 0 = A is true for vectors.**\n\n**Answer:** Yes, adding a null vector leaves any vector A unchanged.",
+    "**Q20: Give a physical example where the resultant force is a null vector.**\n\n**Answer:** An object in equilibrium under balanced forces.",
+    "**Q21: Why can't a null vector be assigned any single specific direction?**\n\n**Answer:** Because a direction is meaningless without a nonzero magnitude to point in.",
+    "**Q22: Is 0→ used differently from the scalar 0 in physics equations?**\n\n**Answer:** Yes, it explicitly denotes a vector quantity with zero magnitude, not just a number.",
+    "**Q23: If three forces form a closed triangle, what is their vector sum?**\n\n**Answer:** Zero (null vector), as per the law of vector addition for closed polygons.",
+    "**Q24: Can resultant of three coplanar vectors be zero?**\n\n**Answer:** Yes, if resultant of any two is equal in magnitude but opposite in direction to the third.",
+    "**Q25: State the answer from the short-answer notes: can resultant of three vectors be zero?**\n\n**Answer:** Yes, if resultant of any two coplanar vectors equals in magnitude but is opposite in direction to the third vector."
+  ],
+  "keyPoints": [
+    "- **Definition:** A vector whose magnitude is zero is called a null vector, represented by 0→; it can have any direction.",
+    "- **Example:** A − A = 0 (null vector)",
+    "- **Example:** Resultant of equal and opposite vectors"
+  ],
+  "summary": "A vector whose magnitude is zero is called a null vector, represented by 0→; it can have any direction. Key examples include A − A = 0 (null vector); Resultant of equal and opposite vectors. Includes 25 short-answer practice questions."
+}

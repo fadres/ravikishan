@@ -1,0 +1,41 @@
+{
+  "title": "Resolution of a Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The process of splitting a vector into its components is called resolution of a vector.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Ax = Acosθ, Ay = Asinθ (Case I)</li>\n  <li>Ax = Asinθ, Ay = Acosθ (Case II)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define resolution of a vector.**\n\n**Answer:** The process of splitting a vector into its components.",
+    "**Q2: In Case I, what is Ax equal to?**\n\n**Answer:** Ax = Acosθ.",
+    "**Q3: In Case I, what is Ay equal to?**\n\n**Answer:** Ay = Asinθ.",
+    "**Q4: In Case II, what is Ax equal to?**\n\n**Answer:** Ax = Asinθ.",
+    "**Q5: In Case II, what is Ay equal to?**\n\n**Answer:** Ay = Acosθ.",
+    "**Q6: If A = 10N and θ = 30° (Case I), find Ax.**\n\n**Answer:** Ax = 10cos30° ≈ 8.66N.",
+    "**Q7: If A = 10N and θ = 30° (Case I), find Ay.**\n\n**Answer:** Ay = 10sin30° = 5N.",
+    "**Q8: Why is resolving a vector into components useful?**\n\n**Answer:** It simplifies vector addition/analysis by allowing algebraic addition of components along fixed axes.",
+    "**Q9: What is the relationship between A, Ax, and Ay?**\n\n**Answer:** A² = Ax² + Ay² (Pythagorean relation).",
+    "**Q10: If Ax = 3 and Ay = 4, find |A|.**\n\n**Answer:** |A| = √(9+16) = 5.",
+    "**Q11: What angle formula relates θ, Ax, and Ay in Case I?**\n\n**Answer:** tanθ = Ay/Ax.",
+    "**Q12: In Case I, what trigonometric ratio gives cosθ?**\n\n**Answer:** cosθ = Ax/A (adjacent/hypotenuse).",
+    "**Q13: In Case I, what trigonometric ratio gives sinθ?**\n\n**Answer:** sinθ = Ay/A (opposite/hypotenuse).",
+    "**Q14: Why does resolving into components help in adding multiple vectors?**\n\n**Answer:** Because component-wise (x and y) addition is simple algebraic addition, unlike direct vector addition of the full vectors.",
+    "**Q15: If A = 20N at 60° above x-axis, find its x-component.**\n\n**Answer:** Ax = 20cos60° = 10N.",
+    "**Q16: If A = 20N at 60° above x-axis, find its y-component.**\n\n**Answer:** Ay = 20sin60° ≈ 17.32N.",
+    "**Q17: What is the physical meaning of the x-component of a vector?**\n\n**Answer:** The projection/effect of the vector along the x-axis.",
+    "**Q18: What is the physical meaning of the y-component of a vector?**\n\n**Answer:** The projection/effect of the vector along the y-axis.",
+    "**Q19: If a vector lies entirely along the x-axis, what is its y-component?**\n\n**Answer:** Zero.",
+    "**Q20: If a vector lies entirely along the y-axis, what is its x-component?**\n\n**Answer:** Zero.",
+    "**Q21: Give a real-world application of vector resolution.**\n\n**Answer:** Resolving the weight of an object on an inclined plane into components parallel and perpendicular to the plane.",
+    "**Q22: If Ax = Acosθ and θ = 90°, what is Ax?**\n\n**Answer:** 0, since cos90° = 0.",
+    "**Q23: If Ay = Asinθ and θ = 90°, what is Ay?**\n\n**Answer:** A, since sin90° = 1 (the full magnitude lies along y).",
+    "**Q24: How would you resolve a force of 50N acting at 45° into its two rectangular components?**\n\n**Answer:** Fx = 50cos45° ≈ 35.36N, Fy = 50sin45° ≈ 35.36N.",
+    "**Q25: Why are Case I and Case II different in the notes?**\n\n**Answer:** They correspond to different reference angle placements (angle measured from x-axis vs from y-axis), swapping which component uses sine vs cosine.",
+    "**Q26: What geometric shape is used (ΔOPQ) to derive the resolution formulas?**\n\n**Answer:** A right-angled triangle formed by the vector and its two perpendicular components."
+  ],
+  "keyPoints": [
+    "- **Definition:** The process of splitting a vector into its components is called resolution of a vector.",
+    "- **Example:** Ax = Acosθ, Ay = Asinθ (Case I)",
+    "- **Example:** Ax = Asinθ, Ay = Acosθ (Case II)"
+  ],
+  "summary": "The process of splitting a vector into its components is called resolution of a vector. Key examples include Ax = Acosθ, Ay = Asinθ (Case I); Ax = Asinθ, Ay = Acosθ (Case II). Includes 26 short-answer practice questions."
+}

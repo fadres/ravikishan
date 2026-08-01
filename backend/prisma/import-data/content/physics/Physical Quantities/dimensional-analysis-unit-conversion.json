@@ -1,0 +1,43 @@
+{
+  "title": "Uses of Dimensional Equation — Unit Conversion",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Dimensional equations are used to convert the value of a physical quantity from one system of units to another using n1u1 = n2u2.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>1 Joule = 10⁷ erg</li>\n  <li>1 Newton = 10⁵ dyne</li>\n  <li>10 Newton = 10⁶ dyne</li>\n  <li>1 gm/cm³ = 1000 kg/m³</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: What formula is used for unit conversion using dimensions?**\n\n**Answer:** n1u1 = n2u2, where n is numerical value and u is unit.",
+    "**Q2: Convert 1 Joule into erg.**\n\n**Answer:** 1 Joule = 10⁷ erg.",
+    "**Q3: Convert 1 Newton into dyne.**\n\n**Answer:** 1 Newton = 10⁵ dyne.",
+    "**Q4: Convert 10 Newton into dyne.**\n\n**Answer:** 10 Newton = 10⁶ dyne.",
+    "**Q5: Convert 5 Joule into erg.**\n\n**Answer:** 5 Joule = 5×10⁷ erg.",
+    "**Q6: Convert density 1 gm/cm³ into kg/m³.**\n\n**Answer:** 1 gm/cm³ = 1000 kg/m³ (10³ kg/m³).",
+    "**Q7: Convert 10 erg into Joule.**\n\n**Answer:** 10 erg = 10⁻⁶ Joule.",
+    "**Q8: What is the dimensional formula of work/energy used for Joule-erg conversion?**\n\n**Answer:** [M1L2T-2].",
+    "**Q9: What is the dimensional formula of force used for Newton-dyne conversion?**\n\n**Answer:** [M1L1T-2].",
+    "**Q10: In SI system, what are M1, L1, T1 taken as for conversions?**\n\n**Answer:** kg, m, s respectively.",
+    "**Q11: In CGS system, what are M2, L2, T2 taken as?**\n\n**Answer:** g, cm, s respectively.",
+    "**Q12: Why is 1kg = 1000g used in the conversion formula?**\n\n**Answer:** Because it relates the mass units of the SI and CGS systems.",
+    "**Q13: Why is 1m = 100cm used in the conversion formula?**\n\n**Answer:** Because it relates the length units of the SI and CGS systems.",
+    "**Q14: What power is used for mass in the Joule-erg conversion?**\n\n**Answer:** Power 1 (mass appears to the first power in work's dimension).",
+    "**Q15: What power is used for length in the Joule-erg conversion?**\n\n**Answer:** Power 2 (length appears squared in work's dimension).",
+    "**Q16: What power is used for time in the Joule-erg conversion?**\n\n**Answer:** Power −2.",
+    "**Q17: Is time unit the same (second) in both SI and CGS systems?**\n\n**Answer:** Yes, so the time ratio term becomes 1.",
+    "**Q18: Why does the time factor not change the numeric value in Joule-erg conversion?**\n\n**Answer:** Because both systems use seconds, so (T1/T2)⁻² = 1.",
+    "**Q19: What is the dimensional formula used for density conversion?**\n\n**Answer:** [M1L-3T0].",
+    "**Q20: What power is used for length in the density conversion?**\n\n**Answer:** Power −3.",
+    "**Q21: How do you convert 10 Newton to dyne using the formula?**\n\n**Answer:** n2 = 10×(1000g/1g)¹×(100cm/1cm)¹×(1s/1s)⁻² = 10×10⁶ = 10⁷... using force dimension [MLT⁻²] gives 10⁶ dyne.",
+    "**Q22: State the general principle behind unit conversion using dimensions.**\n\n**Answer:** The physical quantity's magnitude stays the same; only the numerical value and unit change between systems, following n1u1 = n2u2.",
+    "**Q23: Why must the dimensional formula of the quantity be known first before conversion?**\n\n**Answer:** Because the powers a, b, c of M, L, T determine how each unit ratio is raised in the conversion formula.",
+    "**Q24: Convert 1 gm/cm³ using the general formula n2 = n1(M1/M2)(L1/L2)⁻³.**\n\n**Answer:** n2 = 1×(1/1000)×(1/100)⁻³ = 1000 kg/m³.",
+    "**Q25: Is unit conversion possible without knowing the quantity's dimensional formula?**\n\n**Answer:** No, the dimensional formula is essential to correctly set up the conversion.",
+    "**Q26: Which quantity's conversion needs a cube power for length: work or density?**\n\n**Answer:** Density (power −3 for length)."
+  ],
+  "keyPoints": [
+    "- **Definition:** Dimensional equations are used to convert the value of a physical quantity from one system of units to another using n1u1 = n2u2.",
+    "- **Example:** 1 Joule = 10⁷ erg",
+    "- **Example:** 1 Newton = 10⁵ dyne",
+    "- **Example:** 10 Newton = 10⁶ dyne",
+    "- **Example:** 1 gm/cm³ = 1000 kg/m³"
+  ],
+  "summary": "Dimensional equations are used to convert the value of a physical quantity from one system of units to another using n1u1 = n2u2. Key examples include 1 Joule = 10⁷ erg; 1 Newton = 10⁵ dyne; 10 Newton = 10⁶ dyne; 1 gm/cm³ = 1000 kg/m³. Includes 26 short-answer practice questions."
+}

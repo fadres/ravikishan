@@ -18,23 +18,9 @@ export default function Header() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [day, setDay] = useState(1);
-  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     setDay(streakDay());
-  }, []);
-
-  // Hide the header while scrolling down, reveal it while scrolling up —
-  // gives more room for reading without losing navigation.
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setHidden(y > lastY && y > 120);
-      lastY = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleLogout = async () => {
@@ -46,11 +32,7 @@ export default function Header() {
   const initial = user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'G';
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-transform duration-300 ${
-        hidden ? '-translate-y-full' : 'translate-y-0'
-      }`}
-    >
+    <header className="sticky top-0 z-40">
       {/* Warm off-white streak bar */}
       <div className="topbar-warm text-xs sm:text-sm flex items-center justify-between px-3 sm:px-6 py-1.5 shadow-sm">
         <span className="font-medium text-ink flex items-center gap-1.5">
@@ -59,18 +41,13 @@ export default function Header() {
           </svg>
           Day {day} streak
         </span>
-        <span className="text-ink/70 hidden sm:block">
-          {user ? `Namaste, ${user.displayName || user.email}` : 'Ravikishan Study Board'}
-        </span>
+        {user && <span className="text-ink/70 hidden sm:block">Namaste, {user.displayName || user.email}</span>}
       </div>
 
-      {/* Main bar */}
-      <div className="glass-strong border-x-0 border-t-0 flex items-center gap-3 px-3 sm:px-6 py-2.5">
-        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+      {/* Main bar — solid so the search bar stays opaque while scrolling */}
+      <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5">
+        <Link to="/" className="shrink-0" aria-label="Ravikishan home">
           <Logo size={34} />
-          <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white leading-none">
-            Ravikishan
-          </span>
         </Link>
 
         <div className="flex-1 max-w-xl mx-auto hidden md:block">

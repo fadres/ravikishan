@@ -1,0 +1,40 @@
+{
+  "title": "Error in Measurement",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The difference between the true value and measured value of a quantity is called error.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Error = True value − Measured value</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define error in measurement.**\n\n**Answer:** The difference between the true value and the measured value of a quantity.",
+    "**Q2: Write the formula for error.**\n\n**Answer:** Error = True Value − Measured Value.",
+    "**Q3: How many types of error are listed in the notes?**\n\n**Answer:** Four — systematic, random, least count, and gross error.",
+    "**Q4: Name the four types of error.**\n\n**Answer:** Systematic error, random error, least count error, gross error.",
+    "**Q5: Can error be positive or negative?**\n\n**Answer:** Yes, depending on whether measured value is less than or more than true value.",
+    "**Q6: What causes systematic error?**\n\n**Answer:** Instrumental defects, technique imperfections, personal bias, or external conditions.",
+    "**Q7: What causes random error?**\n\n**Answer:** Irregular, chance variations in the observer's attention while taking readings.",
+    "**Q8: What is least count error?**\n\n**Answer:** Error arising from the smallest value measurable by the instrument (its resolution).",
+    "**Q9: What is gross error?**\n\n**Answer:** Errors due to carelessness of the person or improper adjustment of the apparatus.",
+    "**Q10: Which error occurs consistently in one direction?**\n\n**Answer:** Systematic error.",
+    "**Q11: Which error occurs irregularly and unpredictably?**\n\n**Answer:** Random error.",
+    "**Q12: Which error is tied to the resolution of the measuring instrument?**\n\n**Answer:** Least count error.",
+    "**Q13: Give an example of a systematic error.**\n\n**Answer:** A thermometer under the armpit always reading lower than actual body temperature.",
+    "**Q14: Give an example of gross error.**\n\n**Answer:** Misreading the scale due to improper apparatus setup.",
+    "**Q15: Give an example of a random error.**\n\n**Answer:** Slight fluctuation in stopwatch reaction time across repeated trials.",
+    "**Q16: Is the true value always exactly known in practice?**\n\n**Answer:** Not always; it's often approximated by the accepted standard value.",
+    "**Q17: Can errors be completely eliminated?**\n\n**Answer:** No, but they can be minimized with careful technique and calibration.",
+    "**Q18: Which type of error can be corrected by calibration?**\n\n**Answer:** Systematic error (instrumental).",
+    "**Q19: Which type of error is reduced by taking multiple readings and averaging?**\n\n**Answer:** Random error.",
+    "**Q20: If a measured value is always 2 units higher than true value, what type of error is this?**\n\n**Answer:** Systematic error.",
+    "**Q21: What is the source category called 'instrumental errors'?**\n\n**Answer:** A subtype of systematic error caused by imperfect design of the measuring instrument.",
+    "**Q22: What is the source category called 'personal errors'?**\n\n**Answer:** A subtype of systematic error caused by inexperience of the observer.",
+    "**Q23: What external conditions can cause systematic error?**\n\n**Answer:** Changes in temperature, pressure, humidity during the experiment.",
+    "**Q24: Why is it important to identify the type of error?**\n\n**Answer:** So the appropriate correction method can be applied.",
+    "**Q25: If True Value = 10 and Measured Value = 9.5, what is the error?**\n\n**Answer:** Error = 10 − 9.5 = 0.5.",
+    "**Q26: True or False: Random errors always occur in the same direction.**\n\n**Answer:** False, they occur irregularly in magnitude and direction."
+  ],
+  "keyPoints": [
+    "- **Definition:** The difference between the true value and measured value of a quantity is called error.",
+    "- **Example:** Error = True value − Measured value"
+  ],
+  "summary": "The difference between the true value and measured value of a quantity is called error. Key examples include Error = True value − Measured value. Includes 26 short-answer practice questions."
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Product of Two Vectors",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Two vectors can be multiplied in two ways — scalar (dot) product giving a scalar result, and vector (cross) product giving a vector result.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Scalar product: A·B = ABcosθ</li>\n  <li>Vector product: A×B = ABsinθ</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: How many types of vector products are there?**\n\n**Answer:** Two — scalar (dot) product and vector (cross) product.",
+    "**Q2: Name the two types of vector products.**\n\n**Answer:** Scalar product (dot product) and vector product (cross product).",
+    "**Q3: Which product results in a scalar quantity?**\n\n**Answer:** Scalar (dot) product.",
+    "**Q4: Which product results in a vector quantity?**\n\n**Answer:** Vector (cross) product.",
+    "**Q5: Write the general formula for scalar product.**\n\n**Answer:** A·B = ABcosθ.",
+    "**Q6: Write the general formula for vector product.**\n\n**Answer:** A×B = ABsinθ (with direction via right-hand rule).",
+    "**Q7: Which trigonometric function is used in dot product?**\n\n**Answer:** Cosine (cosθ).",
+    "**Q8: Which trigonometric function is used in cross product?**\n\n**Answer:** Sine (sinθ).",
+    "**Q9: Give a physical quantity defined by dot product.**\n\n**Answer:** Work done, W = F·d.",
+    "**Q10: Give a physical quantity defined by cross product.**\n\n**Answer:** Torque, τ = r×F.",
+    "**Q11: Is dot product commutative?**\n\n**Answer:** Yes, A·B = B·A.",
+    "**Q12: Is cross product commutative?**\n\n**Answer:** No, A×B = −B×A.",
+    "**Q13: What is î·î equal to, and what is î×î equal to?**\n\n**Answer:** î·î = 1; î×î = 0.",
+    "**Q14: What is î·ĵ equal to, and what is î×ĵ equal to?**\n\n**Answer:** î·ĵ = 0; î×ĵ = k̂.",
+    "**Q15: If θ = 90°, what is the dot product value?**\n\n**Answer:** Zero, since cos90° = 0.",
+    "**Q16: If θ = 90°, what is the cross product magnitude?**\n\n**Answer:** Maximum, ABsin90° = AB.",
+    "**Q17: If θ = 0°, what is the dot product value?**\n\n**Answer:** Maximum, ABcos0° = AB.",
+    "**Q18: If θ = 0°, what is the cross product magnitude?**\n\n**Answer:** Zero, since sin0° = 0.",
+    "**Q19: Which product is used to test if two vectors are perpendicular?**\n\n**Answer:** Dot product — if A·B = 0, vectors are perpendicular.",
+    "**Q20: Which product is used to test if two vectors are parallel?**\n\n**Answer:** Cross product — if A×B = 0, vectors are parallel.",
+    "**Q21: Given |A×B| = A·B, find the angle between A and B.**\n\n**Answer:** θ = 45°, from tanθ=1.",
+    "**Q22: State the type of result (scalar/vector) for angular momentum L = r×p.**\n\n**Answer:** Vector, since it is defined via cross product.",
+    "**Q23: State the type of result (scalar/vector) for power P = F·v.**\n\n**Answer:** Scalar, since it is defined via dot product.",
+    "**Q24: Why are both product types necessary in physics?**\n\n**Answer:** Because some physical quantities (like work) are inherently scalar, while others (like torque) are inherently vector, requiring different multiplication rules.",
+    "**Q25: What does the direction of A×B represent physically?**\n\n**Answer:** A direction perpendicular to the plane of A and B, determined by the right-hand rule."
+  ],
+  "keyPoints": [
+    "- **Definition:** Two vectors can be multiplied in two ways — scalar (dot) product giving a scalar result, and vector (cross) product giving a vector result.",
+    "- **Example:** Scalar product: A·B = ABcosθ",
+    "- **Example:** Vector product: A×B = ABsinθ"
+  ],
+  "summary": "Two vectors can be multiplied in two ways — scalar (dot) product giving a scalar result, and vector (cross) product giving a vector result. Key examples include Scalar product: A·B = ABcosθ; Vector product: A×B = ABsinθ. Includes 25 short-answer practice questions."
+}

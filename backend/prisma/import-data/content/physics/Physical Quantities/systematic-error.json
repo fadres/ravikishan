@@ -1,0 +1,42 @@
+{
+  "title": "Systematic Error",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The error which tends to occur in one direction, either positive or negative, is called systematic error.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Instrumental errors</li>\n  <li>Imperfection in experimental technique</li>\n  <li>Personal errors</li>\n  <li>Errors due to external cause</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define systematic error.**\n\n**Answer:** Error that tends to occur consistently in one direction (positive or negative).",
+    "**Q2: Name the four sources of systematic error.**\n\n**Answer:** Instrumental errors, imperfection in experimental technique, personal errors, errors due to external cause.",
+    "**Q3: What causes instrumental errors?**\n\n**Answer:** Imperfect design of the measuring instrument.",
+    "**Q4: Give the classic example of imperfection in experimental technique from the notes.**\n\n**Answer:** A thermometer under the armpit gives a lower reading than actual body temperature.",
+    "**Q5: What causes personal errors?**\n\n**Answer:** Inexperience of the observer, e.g., lack of proper apparatus setting.",
+    "**Q6: What external conditions cause systematic errors?**\n\n**Answer:** Changes in temperature, pressure, humidity during the experiment.",
+    "**Q7: Is systematic error random in direction?**\n\n**Answer:** No, it consistently occurs in one direction.",
+    "**Q8: Can systematic error be corrected?**\n\n**Answer:** Yes, by calibration or correcting the technique/instrument.",
+    "**Q9: Give an example of an instrumental error.**\n\n**Answer:** A weighing scale that always shows 100g extra due to a manufacturing defect.",
+    "**Q10: How is systematic error different from random error?**\n\n**Answer:** Systematic error is consistent/directional; random error is irregular and unpredictable.",
+    "**Q11: Which subtype of systematic error relates to the observer's skill?**\n\n**Answer:** Personal errors.",
+    "**Q12: Which subtype relates to environmental conditions?**\n\n**Answer:** Errors due to external cause.",
+    "**Q13: Which subtype relates to flaws in the device itself?**\n\n**Answer:** Instrumental errors.",
+    "**Q14: Which subtype relates to the method/procedure used?**\n\n**Answer:** Imperfection in experimental technique.",
+    "**Q15: If a scale is always 1kg heavier due to a fault, what type of error is this?**\n\n**Answer:** Systematic (instrumental) error.",
+    "**Q16: If humidity changes affect a reading consistently, what error type is this?**\n\n**Answer:** Systematic error due to external cause.",
+    "**Q17: Can systematic errors be reduced by increasing the number of trials?**\n\n**Answer:** No, unlike random error, averaging does not remove systematic error.",
+    "**Q18: What word describes the direction consistency of systematic error?**\n\n**Answer:** One-directional (either always positive or always negative).",
+    "**Q19: Give a personal error example besides the one in the notes.**\n\n**Answer:** Consistently misreading a scale due to parallax by an inexperienced observer.",
+    "**Q20: Why is a zero error in an instrument a systematic error?**\n\n**Answer:** Because it shifts every reading in the same direction by a fixed amount.",
+    "**Q21: How can instrumental errors be minimized?**\n\n**Answer:** By properly calibrating or servicing the instrument.",
+    "**Q22: How can personal errors be minimized?**\n\n**Answer:** By training the observer and following correct procedure.",
+    "**Q23: How can errors due to external cause be minimized?**\n\n**Answer:** By controlling the environment (temperature, pressure, humidity).",
+    "**Q24: Is body temperature measurement via armpit thermometer typically over or under actual value?**\n\n**Answer:** Under (lower than actual body temperature).",
+    "**Q25: Name one real scenario combining two subtypes of systematic error.**\n\n**Answer:** A poorly calibrated instrument (instrumental) used by an untrained observer (personal) in a hot room (external cause)."
+  ],
+  "keyPoints": [
+    "- **Definition:** The error which tends to occur in one direction, either positive or negative, is called systematic error.",
+    "- **Example:** Instrumental errors",
+    "- **Example:** Imperfection in experimental technique",
+    "- **Example:** Personal errors",
+    "- **Example:** Errors due to external cause"
+  ],
+  "summary": "The error which tends to occur in one direction, either positive or negative, is called systematic error. Key examples include Instrumental errors; Imperfection in experimental technique; Personal errors; Errors due to external cause. Includes 25 short-answer practice questions."
+}

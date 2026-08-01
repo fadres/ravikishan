@@ -1,0 +1,39 @@
+{
+  "title": "Random Error",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Errors which occur irregularly and at random in magnitude are called random errors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Slight variation in observer's attention while taking readings</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define random error.**\n\n**Answer:** Errors which occur irregularly and at random in magnitude.",
+    "**Q2: What causes random errors?**\n\n**Answer:** Chance, arising from slight variation in the attention of the observer while taking readings.",
+    "**Q3: Is random error predictable in direction?**\n\n**Answer:** No, it can be positive or negative unpredictably.",
+    "**Q4: How can random error be minimized?**\n\n**Answer:** By taking multiple readings and calculating the average/mean.",
+    "**Q5: Give an example of random error.**\n\n**Answer:** Small differences in stopwatch readings due to reaction time variation.",
+    "**Q6: Does random error occur consistently in one direction?**\n\n**Answer:** No, unlike systematic error, it varies irregularly.",
+    "**Q7: Why can't random error be corrected by calibration?**\n\n**Answer:** Because it is unpredictable and not caused by a fixed instrument fault.",
+    "**Q8: Which statistical method helps reduce the effect of random error?**\n\n**Answer:** Taking the mean of several repeated readings.",
+    "**Q9: Is random error due to observer inattentiveness only?**\n\n**Answer:** Mainly, but can also arise from unpredictable environmental fluctuations.",
+    "**Q10: Compare random error with systematic error in terms of predictability.**\n\n**Answer:** Random error is unpredictable; systematic error is consistent and predictable in direction.",
+    "**Q11: Give a real-life analogy for random error.**\n\n**Answer:** Darts thrown at a target landing scattered around the bullseye rather than all in the same spot.",
+    "**Q12: Can random error be completely eliminated?**\n\n**Answer:** No, but its effect can be reduced through repeated measurements.",
+    "**Q13: If readings scatter both above and below the true value, what type of error is present?**\n\n**Answer:** Random error.",
+    "**Q14: Does random error affect precision or accuracy more directly?**\n\n**Answer:** Precision (it causes scatter in repeated readings).",
+    "**Q15: What is the key trigger of random error according to the notes?**\n\n**Answer:** Slight variation in the observer's attention.",
+    "**Q16: Is random error a subtype of systematic error?**\n\n**Answer:** No, they are separate, distinct categories of error.",
+    "**Q17: Give an example unrelated to timing that shows random error.**\n\n**Answer:** Small fluctuations in a voltmeter reading due to electrical noise.",
+    "**Q18: Why do scientists repeat experiments multiple times?**\n\n**Answer:** To average out random errors and improve reliability of results.",
+    "**Q19: Which type of error benefits most from statistical averaging?**\n\n**Answer:** Random error.",
+    "**Q20: True or False: Random error always increases with more trials.**\n\n**Answer:** False, more trials help reduce its overall effect via averaging.",
+    "**Q21: Can a skilled observer eliminate random error entirely?**\n\n**Answer:** No, some random error is inherent and cannot be fully eliminated.",
+    "**Q22: Give an example of random error in length measurement.**\n\n**Answer:** Slightly different readings each time due to minor hand shake while aligning a ruler.",
+    "**Q23: Is random error the same every time an experiment is repeated?**\n\n**Answer:** No, it varies randomly each time.",
+    "**Q24: How does random error differ from gross error?**\n\n**Answer:** Random error is a natural, unavoidable variation; gross error is due to carelessness or mistakes.",
+    "**Q25: State one method (other than averaging) to reduce random error effects.**\n\n**Answer:** Using more precise instruments or better experimental control."
+  ],
+  "keyPoints": [
+    "- **Definition:** Errors which occur irregularly and at random in magnitude are called random errors.",
+    "- **Example:** Slight variation in observer's attention while taking readings"
+  ],
+  "summary": "Errors which occur irregularly and at random in magnitude are called random errors. Key examples include Slight variation in observer's attention while taking readings. Includes 25 short-answer practice questions."
+}

@@ -1,0 +1,41 @@
+{
+  "title": "Gross Error",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Errors that occur due to the carelessness of the person or improper adjustment of the apparatus are called gross errors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Misreading a scale</li>\n  <li>Recording wrong values</li>\n  <li>Improper apparatus setup</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define gross error.**\n\n**Answer:** Errors occurring due to carelessness of the observer or improper adjustment of the apparatus.",
+    "**Q2: What are the two main causes of gross error?**\n\n**Answer:** Carelessness of the person and improper adjustment of the apparatus.",
+    "**Q3: Give an example of gross error.**\n\n**Answer:** Misreading a scale or recording the wrong digit.",
+    "**Q4: Is gross error avoidable?**\n\n**Answer:** Yes, largely avoidable through careful practice and proper setup.",
+    "**Q5: How is gross error different from random error?**\n\n**Answer:** Gross error is due to carelessness/mistakes; random error is due to natural, unavoidable variation.",
+    "**Q6: How is gross error different from systematic error?**\n\n**Answer:** Gross error is a mistake/blunder; systematic error is a consistent, direction-based bias.",
+    "**Q7: Can gross error be completely eliminated?**\n\n**Answer:** Yes, with careful observation and proper apparatus handling, it can largely be avoided.",
+    "**Q8: Give an example of improper apparatus adjustment causing gross error.**\n\n**Answer:** Not zeroing a weighing scale before use.",
+    "**Q9: Why is gross error considered a 'blunder' rather than a natural error?**\n\n**Answer:** Because it stems from human mistakes, not inherent limitations of measurement.",
+    "**Q10: How can gross errors be detected?**\n\n**Answer:** By repeating the measurement and checking for outlier/inconsistent values.",
+    "**Q11: Give an example of a gross error in recording data.**\n\n**Answer:** Writing 15.2 instead of 51.2 due to a transcription mistake.",
+    "**Q12: Does gross error follow a predictable pattern?**\n\n**Answer:** No, it is due to random human mistakes, not a consistent pattern.",
+    "**Q13: How can gross errors be minimized in a lab setting?**\n\n**Answer:** By training students to follow correct procedures and double-check readings.",
+    "**Q14: Is gross error the same as least count error?**\n\n**Answer:** No, least count error is instrument-related; gross error is observer/setup-related.",
+    "**Q15: Give a scenario of gross error from an improperly set apparatus.**\n\n**Answer:** Using a tilted measuring cylinder leading to incorrect volume readings.",
+    "**Q16: Why should outlier readings caused by gross error be excluded from analysis?**\n\n**Answer:** Because they don't represent the true measurement and would skew the results.",
+    "**Q17: What action helps catch a gross error before it affects final results?**\n\n**Answer:** Reviewing/re-checking readings immediately after recording them.",
+    "**Q18: Can gross error happen even with a perfectly calibrated instrument?**\n\n**Answer:** Yes, because it stems from the observer, not the instrument.",
+    "**Q19: What is a common gross error in reading a burette?**\n\n**Answer:** Misreading the meniscus level due to parallax or carelessness.",
+    "**Q20: Should a gross error reading be included when calculating the mean?**\n\n**Answer:** No, it should typically be identified and discarded.",
+    "**Q21: Is gross error more common in experienced or inexperienced observers?**\n\n**Answer:** More common in inexperienced or careless observers.",
+    "**Q22: What distinguishes gross error from all other error types?**\n\n**Answer:** It arises purely from human mistake or apparatus misuse, not from inherent measurement limitations.",
+    "**Q23: Give an example of improper apparatus setup leading to gross error.**\n\n**Answer:** Not leveling a spirit level-dependent instrument before taking readings.",
+    "**Q24: Can training reduce the occurrence of gross errors?**\n\n**Answer:** Yes, significantly.",
+    "**Q25: Is gross error a 'systematic' or a 'random' type conceptually?**\n\n**Answer:** Neither — it is its own separate category, caused by mistakes."
+  ],
+  "keyPoints": [
+    "- **Definition:** Errors that occur due to the carelessness of the person or improper adjustment of the apparatus are called gross errors.",
+    "- **Example:** Misreading a scale",
+    "- **Example:** Recording wrong values",
+    "- **Example:** Improper apparatus setup"
+  ],
+  "summary": "Errors that occur due to the carelessness of the person or improper adjustment of the apparatus are called gross errors. Key examples include Misreading a scale; Recording wrong values; Improper apparatus setup. Includes 25 short-answer practice questions."
+}

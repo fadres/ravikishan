@@ -1,0 +1,43 @@
+{
+  "title": "Uses of Dimensional Analysis — Finding Dimensions of Derived Quantities",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Dimensional analysis is used to derive the dimensional formula of a derived physical quantity from its defining equation.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Density D = mass/volume → [M1L-3T0]</li>\n  <li>Momentum p = mv → [M1L1T-1]</li>\n  <li>Frequency f = 1/T → [T-1]</li>\n  <li>Work w = F×d → [M1L2T-2]</li>\n  <li>Power P = w/t → [M1L2T-3]</li>\n  <li>sinθ = length/length → dimensionless</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Find the dimension of density.**\n\n**Answer:** [M1L-3T0], since D = mass/volume.",
+    "**Q2: Find the dimension of momentum.**\n\n**Answer:** [M1L1T-1], since p = mass × velocity.",
+    "**Q3: Find the dimension of frequency.**\n\n**Answer:** [M0L0T-1], since f = 1/time period.",
+    "**Q4: Find the dimension of work.**\n\n**Answer:** [M1L2T-2], since work = force × distance.",
+    "**Q5: Find the dimension of power.**\n\n**Answer:** [M1L2T-3], since power = work/time.",
+    "**Q6: What is the dimension of sinθ?**\n\n**Answer:** [M0L0T0], dimensionless since it's a ratio of two lengths.",
+    "**Q7: What formula is used to find density's dimension?**\n\n**Answer:** D = mass/volume = [M1]/[L3] = [M1L-3T0].",
+    "**Q8: Derive the dimension of momentum step by step.**\n\n**Answer:** p = m×v = [M1]×[L1T-1] = [M1L1T-1].",
+    "**Q9: Derive the dimension of work step by step.**\n\n**Answer:** W = F×d = [M1L1T-2]×[L1] = [M1L2T-2].",
+    "**Q10: Derive the dimension of power step by step.**\n\n**Answer:** P = W/t = [M1L2T-2]/[T1] = [M1L2T-3].",
+    "**Q11: Why is frequency's dimension the inverse of time?**\n\n**Answer:** Because frequency = 1/time period, so its dimension is [T-1].",
+    "**Q12: Why is sinθ dimensionless?**\n\n**Answer:** Because it equals perpendicular/hypotenuse — a ratio of two lengths cancels dimension.",
+    "**Q13: What is the dimension of acceleration used in the work derivation?**\n\n**Answer:** [M0L1T-2].",
+    "**Q14: What general steps are followed to find a dimension using dimensional analysis?**\n\n**Answer:** Write the formula, substitute known dimensions of each quantity, then simplify using laws of exponents.",
+    "**Q15: What is the dimension of velocity used in momentum derivation?**\n\n**Answer:** [M0L1T-1].",
+    "**Q16: Is 'mass' dimension included in frequency's formula?**\n\n**Answer:** No, frequency depends only on time, so mass exponent is 0.",
+    "**Q17: What is the dimension of volume used in density?**\n\n**Answer:** [M0L3T0].",
+    "**Q18: How many fundamental dimensions appear in the formula for power?**\n\n**Answer:** All three — M, L, and T.",
+    "**Q19: Which of these (density, momentum, frequency, work, power, sinθ) is dimensionless?**\n\n**Answer:** sinθ.",
+    "**Q20: Why is dimensional analysis useful for finding these dimensions?**\n\n**Answer:** It allows systematic derivation of a quantity's dimension purely from its defining formula.",
+    "**Q21: What is the general dimension format used?**\n\n**Answer:** [MaLbTc] where a, b, c are the powers.",
+    "**Q22: Find the dimension of force used as an intermediate step for work.**\n\n**Answer:** [M1L1T-2].",
+    "**Q23: If a quantity's formula is a ratio of two lengths, what is its dimension?**\n\n**Answer:** Zero (dimensionless), like sinθ.",
+    "**Q24: What is the physical significance of a negative time exponent (e.g., T-2 in force)?**\n\n**Answer:** It indicates the quantity involves 'per unit time squared', related to acceleration-like behavior.",
+    "**Q25: Find the dimension of energy (same as work).**\n\n**Answer:** [M1L2T-2].",
+    "**Q26: Why must mass, length, and time dimensions be combined using multiplication/division (not addition) when deriving dimensions?**\n\n**Answer:** Because the defining formulas of physical quantities involve products/quotients, and dimensions follow the same algebraic operations."
+  ],
+  "keyPoints": [
+    "- **Definition:** Dimensional analysis is used to derive the dimensional formula of a derived physical quantity from its defining equation.",
+    "- **Example:** Density D = mass/volume → [M1L-3T0]",
+    "- **Example:** Momentum p = mv → [M1L1T-1]",
+    "- **Example:** Frequency f = 1/T → [T-1]",
+    "- **Example:** Work w = F×d → [M1L2T-2]"
+  ],
+  "summary": "Dimensional analysis is used to derive the dimensional formula of a derived physical quantity from its defining equation. Key examples include Density D = mass/volume → [M1L-3T0]; Momentum p = mv → [M1L1T-1]; Frequency f = 1/T → [T-1]; Work w = F×d → [M1L2T-2]; Power P = w/t → [M1L2T-3]; sinθ = length…. Includes 26 short-answer practice questions."
+}

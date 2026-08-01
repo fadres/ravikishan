@@ -47,6 +47,11 @@ body {
   -webkit-backdrop-filter: blur(18px);
 }
 
+/* Fully opaque header bar — keeps the search bar solid while scrolling */
+.header-solid {
+  background: linear-gradient(180deg, #0a2447 0%, #081a33 100%);
+}
+
 /* Warm off-white top bar (streak bar) */
 .topbar-warm {
   background: linear-gradient(180deg, #fbf7ef 0%, #f6efe3 100%);

@@ -1,0 +1,39 @@
+{
+  "title": "Equal Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Two vectors having the same magnitude and direction are called equal vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Two arrows of identical length and orientation drawn at different locations</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define equal vectors.**\n\n**Answer:** Two vectors having the same magnitude and direction.",
+    "**Q2: What two conditions must be satisfied for vectors to be equal?**\n\n**Answer:** Same magnitude and same direction.",
+    "**Q3: Can equal vectors be located at different starting points?**\n\n**Answer:** Yes, position doesn't matter for vector equality, only magnitude and direction.",
+    "**Q4: If A = 3î + 4ĵ and B = 3î + 4ĵ, are A and B equal?**\n\n**Answer:** Yes, both magnitude and direction (components) are identical.",
+    "**Q5: If A = 3î + 4ĵ and B = 4î + 3ĵ, are they equal?**\n\n**Answer:** No, even though magnitudes may match, the direction (component ratio) differs.",
+    "**Q6: Do equal vectors need to be parallel?**\n\n**Answer:** Yes, equal vectors are always parallel, since direction must match.",
+    "**Q7: Is every pair of parallel vectors also equal?**\n\n**Answer:** No, parallel vectors can differ in magnitude; equal vectors must match in both magnitude and direction.",
+    "**Q8: How is vector equality denoted?**\n\n**Answer:** A = B (using the equals sign between vector symbols).",
+    "**Q9: If |A| = |B| but they point in different directions, are they equal?**\n\n**Answer:** No, equal vectors require matching direction as well as magnitude.",
+    "**Q10: Give a real-life example of equal vectors.**\n\n**Answer:** Two identical cars traveling at the same speed in the same direction on parallel lanes.",
+    "**Q11: What is A − B if A and B are equal vectors?**\n\n**Answer:** 0→ (a null vector).",
+    "**Q12: Can equal vectors be used interchangeably in vector equations?**\n\n**Answer:** Yes, since they represent the same vector quantity, just possibly drawn at different locations.",
+    "**Q13: If two displacement vectors have equal magnitude but opposite directions, are they equal vectors?**\n\n**Answer:** No, they are negative vectors of each other, not equal.",
+    "**Q14: How would you verify numerically if two 3D vectors are equal?**\n\n**Answer:** Check if all their respective x, y, z components are identical.",
+    "**Q15: If A = 5N at 30° and B = 5N at 30°, are A and B equal?**\n\n**Answer:** Yes, same magnitude and same direction.",
+    "**Q16: If A = 5N at 30° and B = 5N at 45°, are A and B equal?**\n\n**Answer:** No, directions differ.",
+    "**Q17: Is the concept of equal vectors used in vector addition proofs?**\n\n**Answer:** Yes, especially in geometric constructions like the parallelogram law where opposite sides are equal vectors.",
+    "**Q18: Can two equal vectors have different units?**\n\n**Answer:** No, they must represent the same physical quantity with the same unit to be compared as equal.",
+    "**Q19: If vector A is translated (moved) without rotation, is the new vector equal to A?**\n\n**Answer:** Yes, translation preserves magnitude and direction, so it remains equal.",
+    "**Q20: Does scaling a vector by a factor of 1 change it?**\n\n**Answer:** No, multiplying by 1 keeps the vector equal to itself.",
+    "**Q21: If A = 2î and B = 2î + 0ĵ, are they equal?**\n\n**Answer:** Yes, they represent the same vector (0ĵ doesn't change anything).",
+    "**Q22: Why is the concept of equal vectors fundamental to vector algebra?**\n\n**Answer:** It allows vectors to be freely moved (as free vectors) for graphical addition/subtraction without changing their value.",
+    "**Q23: Give an example of equal force vectors in engineering.**\n\n**Answer:** Two identical support beams each exerting exactly the same upward force in the same direction.",
+    "**Q24: If A and B are equal, what is A + B equal to?**\n\n**Answer:** 2A (twice the vector, since B = A).",
+    "**Q25: State the key distinguishing feature between equal vectors and parallel vectors.**\n\n**Answer:** Equal vectors require identical magnitude AND direction; parallel vectors only require the same direction."
+  ],
+  "keyPoints": [
+    "- **Definition:** Two vectors having the same magnitude and direction are called equal vectors.",
+    "- **Example:** Two arrows of identical length and orientation drawn at different locations"
+  ],
+  "summary": "Two vectors having the same magnitude and direction are called equal vectors. Key examples include Two arrows of identical length and orientation drawn at different locations. Includes 25 short-answer practice questions."
+}

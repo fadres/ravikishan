@@ -1,0 +1,43 @@
+{
+  "title": "Types of Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Vectors are classified into several types based on magnitude, direction, and position — unit, null, parallel, equal, negative, collinear, and coplanar vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Unit Vector</li>\n  <li>Null Vector</li>\n  <li>Parallel Vector</li>\n  <li>Equal Vector</li>\n  <li>Negative Vector</li>\n  <li>Collinear Vector</li>\n  <li>Coplanar Vector</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: How many types of vectors are listed in the notes?**\n\n**Answer:** Seven — unit, null, parallel, equal, negative, collinear, and coplanar vectors.",
+    "**Q2: Name all seven types of vectors.**\n\n**Answer:** Unit vector, null vector, parallel vector, equal vector, negative of a vector, collinear vector, coplanar vector.",
+    "**Q3: Which vector type has magnitude exactly one?**\n\n**Answer:** Unit vector.",
+    "**Q4: Which vector type has magnitude exactly zero?**\n\n**Answer:** Null (zero) vector.",
+    "**Q5: Which vector type shares the same direction but can differ in magnitude?**\n\n**Answer:** Parallel vector.",
+    "**Q6: Which vector type must match in both magnitude and direction?**\n\n**Answer:** Equal vector.",
+    "**Q7: Which vector type has the same magnitude but opposite direction?**\n\n**Answer:** Negative of a vector.",
+    "**Q8: Which vector type acts along parallel straight lines?**\n\n**Answer:** Collinear vector.",
+    "**Q9: Which vector type lies on the same plane?**\n\n**Answer:** Coplanar vector.",
+    "**Q10: Is a unit vector always dimensionless?**\n\n**Answer:** Yes, it purely represents direction.",
+    "**Q11: Can a null vector be considered parallel to any vector?**\n\n**Answer:** By convention, yes, since its direction is arbitrary/undefined.",
+    "**Q12: How does equal vector differ from parallel vector?**\n\n**Answer:** Equal vectors require the same magnitude too, not just direction.",
+    "**Q13: How does negative vector differ from equal vector?**\n\n**Answer:** Negative vectors have same magnitude but opposite (not same) direction.",
+    "**Q14: Is every equal vector also a parallel vector?**\n\n**Answer:** Yes, since equal vectors share the same direction, they are automatically parallel.",
+    "**Q15: Is every parallel vector also an equal vector?**\n\n**Answer:** No, parallel vectors can have different magnitudes.",
+    "**Q16: Is every collinear vector also coplanar?**\n\n**Answer:** Yes, since a line lies within a plane.",
+    "**Q17: Is every coplanar vector also collinear?**\n\n**Answer:** No, coplanar vectors need not lie along the same line, just the same plane.",
+    "**Q18: Give a real-world example of a unit vector.**\n\n**Answer:** î, ĵ, k̂ representing unit directions along the x, y, z axes.",
+    "**Q19: Give a real-world example of negative vectors.**\n\n**Answer:** Action and reaction forces (Newton's third law).",
+    "**Q20: Which vector types would you use to describe two ropes pulling in the exact same direction with different force?**\n\n**Answer:** Parallel vectors.",
+    "**Q21: Which vector type describes two identical forces acting at the same angle and magnitude?**\n\n**Answer:** Equal vectors.",
+    "**Q22: Which vector type is used when defining A − A = 0?**\n\n**Answer:** Null vector.",
+    "**Q23: Which vector type is relevant to torque and moment calculations along a beam?**\n\n**Answer:** Collinear (forces along the same line) or coplanar (forces in the beam's plane), depending on setup.",
+    "**Q24: Why is classifying vectors into types useful in solving physics problems?**\n\n**Answer:** It helps quickly identify relationships (e.g., resultant behavior, special-case simplifications) between multiple vectors in a system.",
+    "**Q25: State two vector types that both involve 'same direction'.**\n\n**Answer:** Parallel vector and equal vector (equal vector additionally requires equal magnitude).",
+    "**Q26: State two vector types that both involve zero or maximal special magnitudes.**\n\n**Answer:** Unit vector (magnitude 1) and null vector (magnitude 0)."
+  ],
+  "keyPoints": [
+    "- **Definition:** Vectors are classified into several types based on magnitude, direction, and position — unit, null, parallel, equal, negative, collinear, and coplanar vectors.",
+    "- **Example:** Unit Vector",
+    "- **Example:** Null Vector",
+    "- **Example:** Parallel Vector",
+    "- **Example:** Equal Vector"
+  ],
+  "summary": "Vectors are classified into several types based on magnitude, direction, and position — unit, null, parallel, equal, negative, collinear, and coplanar vectors. Key examples include Unit Vector; Null Vector; Parallel Vector; Equal Vector; Negative Vector; Collinear Vector; Coplanar Vector. Includes 26 short-answer practice questions."
+}

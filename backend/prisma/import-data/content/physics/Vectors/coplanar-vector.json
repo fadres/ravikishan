@@ -1,0 +1,39 @@
+{
+  "title": "Coplanar Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Vectors lying on the same plane are called coplanar vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Three vectors drawn on the same flat sheet of paper</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define coplanar vectors.**\n\n**Answer:** Vectors lying on the same plane.",
+    "**Q2: Can coplanar vectors have different magnitudes and directions?**\n\n**Answer:** Yes, the only requirement is that they lie in the same plane.",
+    "**Q3: Are two vectors always coplanar?**\n\n**Answer:** Yes, any two vectors can always be contained within some common plane.",
+    "**Q4: When does the concept of coplanarity become meaningful?**\n\n**Answer:** When dealing with three or more vectors, since two vectors are always trivially coplanar.",
+    "**Q5: Give an example of three coplanar vectors.**\n\n**Answer:** Three force vectors all lying flat on a table's surface.",
+    "**Q6: Give an example of vectors that are NOT coplanar.**\n\n**Answer:** Three mutually perpendicular vectors along x, y, and z axes (3D, non-coplanar).",
+    "**Q7: Are î and ĵ coplanar?**\n\n**Answer:** Yes, they lie in the xy-plane.",
+    "**Q8: Are î, ĵ, and k̂ coplanar?**\n\n**Answer:** No, they span three dimensions and are not coplanar.",
+    "**Q9: How is coplanarity of vectors tested mathematically (for 3 vectors)?**\n\n**Answer:** Using the scalar triple product; if it equals zero, the vectors are coplanar.",
+    "**Q10: Is the concept of coplanar vectors related to the short-answer question about three vectors summing to zero?**\n\n**Answer:** Yes, if the resultant of three coplanar vectors is zero, the third vector must balance the resultant of the other two, all lying in the same plane.",
+    "**Q11: Give a real-world example of coplanar forces.**\n\n**Answer:** Three forces acting on a flat signboard, all in the plane of the board.",
+    "**Q12: Can coplanar vectors be collinear as well?**\n\n**Answer:** Yes, collinear vectors are a special case of coplanar vectors (lying along the same line within a plane).",
+    "**Q13: Is every set of collinear vectors automatically coplanar?**\n\n**Answer:** Yes, since a line lies within infinitely many planes, but specifically all collinear vectors share at least one common plane.",
+    "**Q14: Why is the coplanar condition important in structural mechanics?**\n\n**Answer:** Because many equilibrium problems in 2D analysis assume all forces lie within a single plane.",
+    "**Q15: What geometric shape do 3 coplanar vectors typically form when added head-to-tail and returning to start?**\n\n**Answer:** A closed triangle or polygon in that plane.",
+    "**Q16: If three coplanar forces are in equilibrium, what is their vector sum?**\n\n**Answer:** Zero (null vector).",
+    "**Q17: Is the term 'coplanar' used only for vectors, or also for points and lines?**\n\n**Answer:** It's a general geometric term applicable to points, lines, and vectors that lie within the same plane.",
+    "**Q18: Can four vectors be coplanar?**\n\n**Answer:** Yes, any number of vectors can be coplanar if they all lie in the same plane.",
+    "**Q19: Give an example of two coplanar velocity vectors in projectile motion.**\n\n**Answer:** Horizontal and vertical velocity components of a projectile, both lying in the vertical plane of motion.",
+    "**Q20: Is coplanarity a stricter or looser condition than collinearity?**\n\n**Answer:** Looser — collinear vectors are always coplanar, but coplanar vectors need not be collinear.",
+    "**Q21: How would you show three given vectors A, B, C are coplanar using components?**\n\n**Answer:** Show that A·(B×C) = 0 (scalar triple product is zero).",
+    "**Q22: Why are most basic vector addition problems (triangle/parallelogram law) implicitly assumed coplanar?**\n\n**Answer:** Because triangle and parallelogram laws are 2D geometric constructions requiring the vectors to lie in one plane.",
+    "**Q23: Give a physics example where non-coplanar vectors must be considered.**\n\n**Answer:** 3D motion analysis, such as a drone moving in x, y, and z directions simultaneously.",
+    "**Q24: If A and B lie in the xy-plane and C lies along the z-axis, are all three coplanar?**\n\n**Answer:** No, C is not in the same plane as A and B.",
+    "**Q25: State one key application of coplanar vector concepts in exams.**\n\n**Answer:** Solving equilibrium problems where all forces acting on a body lie in a single plane."
+  ],
+  "keyPoints": [
+    "- **Definition:** Vectors lying on the same plane are called coplanar vectors.",
+    "- **Example:** Three vectors drawn on the same flat sheet of paper"
+  ],
+  "summary": "Vectors lying on the same plane are called coplanar vectors. Key examples include Three vectors drawn on the same flat sheet of paper. Includes 25 short-answer practice questions."
+}

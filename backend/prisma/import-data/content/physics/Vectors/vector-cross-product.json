@@ -1,0 +1,41 @@
+{
+  "title": "Vector (Cross) Product of Two Vectors",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The product of two vectors that gives a vector quantity is called vector/cross product, defined as A×B = ABsinθ (direction perpendicular to both).</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Torque τ = r×F</li>\n  <li>î×î = 0, î×ĵ = k̂</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define vector (cross) product.**\n\n**Answer:** The product of two vectors resulting in a vector quantity, A×B = ABsinθ n̂.",
+    "**Q2: Write the formula for cross product magnitude.**\n\n**Answer:** |A×B| = AB sinθ.",
+    "**Q3: What is î×î equal to?**\n\n**Answer:** 0.",
+    "**Q4: What is î×ĵ equal to?**\n\n**Answer:** k̂.",
+    "**Q5: What is ĵ×î equal to?**\n\n**Answer:** −k̂.",
+    "**Q6: What is ĵ×k̂ equal to?**\n\n**Answer:** î.",
+    "**Q7: What is k̂×ĵ equal to?**\n\n**Answer:** −î.",
+    "**Q8: What is k̂×î equal to?**\n\n**Answer:** ĵ.",
+    "**Q9: What is î×k̂ equal to?**\n\n**Answer:** −ĵ.",
+    "**Q10: Is the cross product commutative?**\n\n**Answer:** No, A×B = −(B×A) — it's anti-commutative.",
+    "**Q11: What is the cross product of two parallel vectors?**\n\n**Answer:** Zero, since sin0° = 0.",
+    "**Q12: What is the cross product of two perpendicular vectors A and B?**\n\n**Answer:** AB (maximum magnitude), since sin90° = 1.",
+    "**Q13: What direction does A×B point in?**\n\n**Answer:** Perpendicular to the plane containing A and B, given by the right-hand rule.",
+    "**Q14: Give a physical example of cross product.**\n\n**Answer:** Torque, τ = r × F.",
+    "**Q15: If |A×B| = A·B, find the angle between A and B.**\n\n**Answer:** θ = 45° (since tanθ=1).",
+    "**Q16: State the rule used to determine direction of A×B.**\n\n**Answer:** The right-hand rule.",
+    "**Q17: Give another physical quantity defined using cross product besides torque.**\n\n**Answer:** Angular momentum, L = r × p.",
+    "**Q18: Is A×A equal to zero?**\n\n**Answer:** Yes, since the angle between a vector and itself is 0°, and sin0°=0.",
+    "**Q19: If A×B = 0 and neither vector is null, what can be concluded?**\n\n**Answer:** A and B are parallel (or anti-parallel) to each other.",
+    "**Q20: How does cross product relate to the area of a parallelogram formed by two vectors?**\n\n**Answer:** |A×B| equals the area of the parallelogram formed by A and B as adjacent sides.",
+    "**Q21: What is the cross product result's nature — scalar or vector?**\n\n**Answer:** Vector.",
+    "**Q22: If A and B are in the same plane, what direction is A×B?**\n\n**Answer:** Perpendicular to that plane.",
+    "**Q23: Is cross product distributive over addition?**\n\n**Answer:** Yes, A×(B+C) = A×B + A×C.",
+    "**Q24: Give the cross product formula in determinant form for A=(A1,A2,A3), B=(B1,B2,B3).**\n\n**Answer:** A×B = determinant of [î ĵ k̂; A1 A2 A3; B1 B2 B3].",
+    "**Q25: Why is cross product useful for finding a vector perpendicular to two given vectors?**\n\n**Answer:** Because the result of A×B is, by definition, always perpendicular to both A and B.",
+    "**Q26: State one key difference between dot product and cross product.**\n\n**Answer:** Dot product gives a scalar and uses cosθ; cross product gives a vector and uses sinθ, with a direction from the right-hand rule."
+  ],
+  "keyPoints": [
+    "- **Definition:** The product of two vectors that gives a vector quantity is called vector/cross product, defined as A×B = ABsinθ (direction perpendicular to both).",
+    "- **Example:** Torque τ = r×F",
+    "- **Example:** î×î = 0, î×ĵ = k̂"
+  ],
+  "summary": "The product of two vectors that gives a vector quantity is called vector/cross product, defined as A×B = ABsinθ (direction perpendicular to both). Key examples include Torque τ = r×F; î×î = 0, î×ĵ = k̂. Includes 26 short-answer practice questions."
+}

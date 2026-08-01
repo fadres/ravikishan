@@ -1,0 +1,41 @@
+{
+  "title": "Triangle Law of Vector Addition",
+  "notes": [
+    "<h1>Definition</h1>\n<p>If two vectors are represented as two sides of a triangle taken in order, the resultant is represented by the third side taken in the opposite order.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>R = P + Q, with R = √(P² + 2PQcosθ + Q²)</li>\n  <li>Direction: φ = tan⁻¹(QsinΘ/(P+QcosΘ))</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: State the triangle law of vector addition.**\n\n**Answer:** If two vectors are represented as two sides of a triangle in order, the resultant is the third side taken in the opposite order.",
+    "**Q2: Write the formula for magnitude of resultant vector using triangle law.**\n\n**Answer:** R = √(P² + 2PQcosθ + Q²).",
+    "**Q3: Write the formula for direction of the resultant vector.**\n\n**Answer:** φ = tan⁻¹[QsinΘ/(P+QcosΘ)].",
+    "**Q4: In triangle law, what does side OB represent?**\n\n**Answer:** The resultant vector R, in both magnitude and direction.",
+    "**Q5: Two forces P=2N and Q=2N act at 90°. Find the resultant magnitude.**\n\n**Answer:** R = √(4+4) = 2√2 N.",
+    "**Q6: Two forces P=2N and Q=2N act at 90°. Find the direction.**\n\n**Answer:** α = tan⁻¹(Q/P) = tan⁻¹(1) = 45°.",
+    "**Q7: Two forces P=2N and Q=2N act at 180°. Find the resultant.**\n\n**Answer:** R = √(8-8) = 0 N.",
+    "**Q8: What does it mean physically when the resultant is zero (θ=180°)?**\n\n**Answer:** The two equal and opposite forces cancel each other out completely.",
+    "**Q9: Derive step 1: What is OB² equal to in triangle OCB?**\n\n**Answer:** OB² = OC² + CB².",
+    "**Q10: In the derivation, what is AC equal to in terms of Q and θ?**\n\n**Answer:** AC = QcosΘ.",
+    "**Q11: In the derivation, what is BC equal to in terms of Q and θ?**\n\n**Answer:** BC = QsinΘ.",
+    "**Q12: If P = 3N, Q = 4N, θ = 90°, find R.**\n\n**Answer:** R = √(9+16+0) = 5N.",
+    "**Q13: If P = 5N, Q = 5N, θ = 60°, find R.**\n\n**Answer:** R = √(25+25+2×5×5×0.5) = √75 ≈ 8.66N.",
+    "**Q14: If θ = 0° (vectors in same direction), what does R simplify to?**\n\n**Answer:** R = P + Q (maximum possible resultant).",
+    "**Q15: If θ = 180° (vectors opposite), what does R simplify to?**\n\n**Answer:** R = |P − Q| (minimum possible resultant).",
+    "**Q16: What angle gives maximum resultant of two vectors?**\n\n**Answer:** 0° (vectors in the same direction).",
+    "**Q17: What angle gives minimum resultant of two vectors?**\n\n**Answer:** 180° (vectors in opposite directions).",
+    "**Q18: In the triangle OAB, which side is drawn first — P or Q?**\n\n**Answer:** P is drawn first (OA), then Q (AB) is drawn from the tip of P.",
+    "**Q19: What angle is used at vertex A in the triangle law diagram?**\n\n**Answer:** The angle (180°−θ), supplementary to θ, since it's the angle between AB extended and AC.",
+    "**Q20: State one real-world use of triangle law.**\n\n**Answer:** Finding the resultant force when two forces act on a body at an angle, e.g., in structural engineering.",
+    "**Q21: If two forces of 6N and 8N act at 90°, find the resultant.**\n\n**Answer:** R = √(36+64) = 10N.",
+    "**Q22: For the above case (6N, 8N, 90°), find the direction from the 6N force.**\n\n**Answer:** φ = tan⁻¹(8/6) ≈ 53.13°.",
+    "**Q23: Why can't scalar addition be used for the two forces P and Q?**\n\n**Answer:** Because they have directions, so their combined effect depends on the angle between them, not just magnitude.",
+    "**Q24: What trigonometric identity is used in deriving R² = P² + 2PQcosθ + Q²?**\n\n**Answer:** sin²θ + cos²θ = 1.",
+    "**Q25: Give the general form of the triangle law formula for R with vectors P and Q at angle θ.**\n\n**Answer:** R = √(P² + Q² + 2PQcosθ).",
+    "**Q26: What does φ represent in the triangle law formula?**\n\n**Answer:** The angle the resultant vector makes with vector P (or the direction of R)."
+  ],
+  "keyPoints": [
+    "- **Definition:** If two vectors are represented as two sides of a triangle taken in order, the resultant is represented by the third side taken in the opposite order.",
+    "- **Example:** R = P + Q, with R = √(P² + 2PQcosθ + Q²)",
+    "- **Example:** Direction: φ = tan⁻¹(QsinΘ/(P+QcosΘ))"
+  ],
+  "summary": "If two vectors are represented as two sides of a triangle taken in order, the resultant is represented by the third side taken in the opposite order. Key examples include R = P + Q, with R = √(P² + 2PQcosθ + Q²); Direction: φ = tan⁻¹(QsinΘ/(P+QcosΘ)). Includes 26 short-answer practice questions."
+}

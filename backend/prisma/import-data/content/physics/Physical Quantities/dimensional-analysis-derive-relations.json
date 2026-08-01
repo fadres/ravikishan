@@ -1,0 +1,42 @@
+{
+  "title": "Uses of Dimensional Equation — Deriving Relations Between Physical Quantities",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Dimensional analysis can be used to derive an expression relating physical quantities when the quantities involved are known but the exact formula is not.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Time period of simple pendulum: T = 2π√(l/g)</li>\n  <li>Centripetal force: F = mv²/r</li>\n  <li>Frequency of vibrating string: n ∝ (1/L)√(F/m)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Derive the relation for time period of a simple pendulum using dimensional analysis.**\n\n**Answer:** T = 2π√(l/g), where l is length and g is acceleration due to gravity.",
+    "**Q2: In deriving pendulum's time period, what is assumed as the proportionality?**\n\n**Answer:** t ∝ lᵃmᵇgᶜ.",
+    "**Q3: What are the values of a, b, c found for the pendulum time period?**\n\n**Answer:** a = 1/2, b = 0, c = -1/2.",
+    "**Q4: Why does mass not appear in the pendulum's time period formula?**\n\n**Answer:** Because the exponent b was found to be 0.",
+    "**Q5: Derive the expression for centripetal force using dimensional analysis.**\n\n**Answer:** F = mv²/r.",
+    "**Q6: What proportionality is assumed for centripetal force?**\n\n**Answer:** F ∝ mᵃvᵇrᶜ.",
+    "**Q7: What are the values of a, b, c for centripetal force?**\n\n**Answer:** a = 1, b = 2, c = -1.",
+    "**Q8: Derive the frequency of vibration of a stretched string using dimensional analysis.**\n\n**Answer:** n ∝ (1/L)√(F/M), where F is tension, L is length, M is mass per unit length.",
+    "**Q9: What proportionality is assumed for the frequency of a vibrating string?**\n\n**Answer:** n ∝ Fᵃ Lᵇ Mᶜ.",
+    "**Q10: What are the values of a, b, c for the vibrating string frequency?**\n\n**Answer:** a = 1/2, b = -1, c = -1/2.",
+    "**Q11: What experimentally-found constant is used in the pendulum formula?**\n\n**Answer:** k = 2π.",
+    "**Q12: Why can't dimensional analysis determine the numerical constant k?**\n\n**Answer:** Because dimensionless constants have no dimension to compare/equate; they must be found experimentally.",
+    "**Q13: What is the general method used to derive such relations?**\n\n**Answer:** Assume proportionality with unknown exponents, equate dimensions on both sides, solve for exponents using the principle of homogeneity.",
+    "**Q14: In the pendulum derivation, what equation results from equating exponents of L?**\n\n**Answer:** 0 = a + c (or similar depending on variable assignment).",
+    "**Q15: In the pendulum derivation, what equation results from equating exponents of T?**\n\n**Answer:** 1 = -2c.",
+    "**Q16: In the pendulum derivation, what equation results from equating exponents of M?**\n\n**Answer:** 0 = b.",
+    "**Q17: What is the final derived formula for centripetal force?**\n\n**Answer:** F = mv²/r.",
+    "**Q18: What is the final derived formula for the frequency of a vibrating string?**\n\n**Answer:** n ∝ (1/L)√(F/M).",
+    "**Q19: Why must the dimensionless constant k be introduced in these derivations?**\n\n**Answer:** Because dimensional analysis alone cannot fix pure numbers, only the powers of the variables.",
+    "**Q20: Can dimensional analysis derive a relation with more than 3 unknown quantities using only M, L, T?**\n\n**Answer:** Not reliably — it can only solve for as many unknowns as there are independent dimensional equations (usually 3).",
+    "**Q21: State one limitation of using dimensional analysis to derive relations.**\n\n**Answer:** It cannot determine dimensionless constants or verify whether the assumed quantities are the only ones involved.",
+    "**Q22: What assumption is made about the quantities before starting the derivation?**\n\n**Answer:** That the quantity is proportional to some product of powers of the relevant physical quantities.",
+    "**Q23: How is the final formula obtained after finding exponents a, b, c?**\n\n**Answer:** By substituting the exponent values back into the original proportionality relation.",
+    "**Q24: Why is this method also called the 'method of dimensions'?**\n\n**Answer:** Because it relies purely on matching dimensional formulas to derive relationships.",
+    "**Q25: In deriving centripetal force, which exponent corresponds to velocity?**\n\n**Answer:** b = 2.",
+    "**Q26: In deriving centripetal force, which exponent corresponds to radius?**\n\n**Answer:** c = -1."
+  ],
+  "keyPoints": [
+    "- **Definition:** Dimensional analysis can be used to derive an expression relating physical quantities when the quantities involved are known but the exact formula is not.",
+    "- **Example:** Time period of simple pendulum: T = 2π√(l/g)",
+    "- **Example:** Centripetal force: F = mv²/r",
+    "- **Example:** Frequency of vibrating string: n ∝ (1/L)√(F/m)"
+  ],
+  "summary": "Dimensional analysis can be used to derive an expression relating physical quantities when the quantities involved are known but the exact formula is not. Key examples include Time period of simple pendulum: T = 2π√(l/g); Centripetal force: F = mv²/r; Frequency of vibrating string: n ∝ (1/L)√(F/m). Includes 26 short-answer practice questions."
+}

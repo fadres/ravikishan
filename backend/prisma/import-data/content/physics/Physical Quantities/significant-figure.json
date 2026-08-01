@@ -1,0 +1,39 @@
+{
+  "title": "Significant Figure",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The meaningful digits of a number are called significant figures; they depend on the least count of the measuring device.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Rod length readings 10.2cm, 10.3cm, 10.3cm → mean 10.266666cm → taken as 10.2cm or 10.3cm (3 sig figs)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define significant figure.**\n\n**Answer:** The meaningful digits of a number.",
+    "**Q2: What does significant figure depend on?**\n\n**Answer:** The least count of the measuring device.",
+    "**Q3: In the rod example, what were the three readings?**\n\n**Answer:** 10.2 cm, 10.3 cm, and 10.3 cm.",
+    "**Q4: What was the calculated mean length in the rod example?**\n\n**Answer:** 10.266666 cm.",
+    "**Q5: Why isn't 10.266666 cm the final reported value?**\n\n**Answer:** Because not all digits are significant; only the first three are meaningful.",
+    "**Q6: What is the rod length finally taken as?**\n\n**Answer:** 10.2 cm or 10.3 cm.",
+    "**Q7: How many significant figures were considered meaningful in the rod example?**\n\n**Answer:** Three.",
+    "**Q8: Why can't we report unlimited decimal places from a calculation?**\n\n**Answer:** Because the precision of the original measuring instrument limits meaningful digits.",
+    "**Q9: What instrument was used to measure the rod?**\n\n**Answer:** A ruler.",
+    "**Q10: If a ruler has a least count of 0.1cm, how many decimal places should the reading have?**\n\n**Answer:** One decimal place (e.g., 10.2 cm).",
+    "**Q11: Do trailing digits from division always represent real precision?**\n\n**Answer:** No, they may be mathematically generated but not physically meaningful.",
+    "**Q12: Why is significant figure concept important in reporting results?**\n\n**Answer:** It ensures reported precision matches actual measurement capability.",
+    "**Q13: Is 10.266666 cm dimensionally correct?**\n\n**Answer:** Yes dimensionally, but not correct in terms of significant figures.",
+    "**Q14: How many readings were averaged in the rod example?**\n\n**Answer:** Three readings.",
+    "**Q15: What mathematical operation was used to find the mean?**\n\n**Answer:** Addition of all three values divided by 3.",
+    "**Q16: If a device's least count is 0.01mm, how many decimal digits should its readings show?**\n\n**Answer:** Two decimal places.",
+    "**Q17: Does more decimal places always mean better measurement?**\n\n**Answer:** No, only if the instrument's precision supports it.",
+    "**Q18: What is the relationship between least count and significant figures?**\n\n**Answer:** Significant figures are limited by the least count of the device.",
+    "**Q19: If readings were 10.20, 10.31, 10.29 cm, how many significant figures would the mean have?**\n\n**Answer:** Typically limited to the same number of decimal places as the original readings (2 decimal places here).",
+    "**Q20: Why do scientists round off calculated averages?**\n\n**Answer:** To match the precision level of the original measurements.",
+    "**Q21: Give an example device with a small least count producing many significant figures.**\n\n**Answer:** A vernier caliper or micrometer screw gauge.",
+    "**Q22: True or False: Zeros at the end of a decimal number are always significant.**\n\n**Answer:** True, if they come after the decimal point (e.g., 10.20 has 4 sig figs).",
+    "**Q23: Are leading zeros in 0.0025 significant?**\n\n**Answer:** No, leading zeros are not significant.",
+    "**Q24: Why is understanding significant figures important for engineers?**\n\n**Answer:** It avoids reporting false precision in measurements/calculations.",
+    "**Q25: What was the rod's mean length rounded to?**\n\n**Answer:** 10.2 cm or 10.3 cm."
+  ],
+  "keyPoints": [
+    "- **Definition:** The meaningful digits of a number are called significant figures; they depend on the least count of the measuring device.",
+    "- **Example:** Rod length readings 10.2cm, 10.3cm, 10.3cm → mean 10.266666cm → taken as 10.2cm or 10.3cm (3 sig figs)"
+  ],
+  "summary": "The meaningful digits of a number are called significant figures; they depend on the least count of the measuring device. Key examples include Rod length readings 10.2cm, 10.3cm, 10.3cm → mean 10.266666cm → taken as 10.2cm or 10.3cm (3 sig figs). Includes 25 short-answer practice questions."
+}

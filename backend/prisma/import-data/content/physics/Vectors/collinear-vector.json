@@ -1,0 +1,39 @@
+{
+  "title": "Collinear Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Vectors having equal or unequal magnitude but acting along the parallel straight lines are called collinear vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Vectors on the same line, in same or opposite direction</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define collinear vectors.**\n\n**Answer:** Vectors having equal or unequal magnitude but acting along parallel straight lines.",
+    "**Q2: Do collinear vectors need equal magnitude?**\n\n**Answer:** No, magnitude can be equal or unequal.",
+    "**Q3: Can collinear vectors point in opposite directions?**\n\n**Answer:** Yes, they act along parallel lines, which includes both same and opposite directions.",
+    "**Q4: Is every pair of parallel vectors also collinear?**\n\n**Answer:** Generally yes, since they lie along parallel (or the same) lines.",
+    "**Q5: Give an example of two collinear vectors with unequal magnitude in the same direction.**\n\n**Answer:** A = 3î and B = 7î.",
+    "**Q6: Give an example of two collinear vectors with equal magnitude but opposite directions.**\n\n**Answer:** A = 5î and B = −5î.",
+    "**Q7: Are A and −A collinear vectors?**\n\n**Answer:** Yes, they lie along the same line, just opposite directions.",
+    "**Q8: How is collinear vector concept useful in physics?**\n\n**Answer:** It's used when analyzing forces or motions acting along a single straight line, like in 1D motion problems.",
+    "**Q9: If two forces act along the same rope, are they collinear?**\n\n**Answer:** Yes, since they act along the same straight line.",
+    "**Q10: Is the term 'collinear' related to points or vectors here?**\n\n**Answer:** Vectors — specifically, vectors that lie along the same or parallel straight lines.",
+    "**Q11: If A = 2î and B = 2ĵ, are they collinear?**\n\n**Answer:** No, they act along different (perpendicular) lines.",
+    "**Q12: Can three or more vectors be collinear simultaneously?**\n\n**Answer:** Yes, if they all lie along the same or parallel lines.",
+    "**Q13: What distinguishes collinear vectors from equal vectors?**\n\n**Answer:** Collinear vectors can differ in magnitude or direction (as long as on parallel lines); equal vectors must match exactly in both magnitude and direction.",
+    "**Q14: Give a real-life example of collinear vectors.**\n\n**Answer:** A tug-of-war rope where both teams' forces act along the same line.",
+    "**Q15: If vector A acts along the x-axis and vector B also acts along the x-axis (different magnitude, same direction), are they collinear?**\n\n**Answer:** Yes.",
+    "**Q16: Are anti-parallel vectors also collinear?**\n\n**Answer:** Yes, anti-parallel vectors are a subset of collinear vectors.",
+    "**Q17: Can collinear vectors be added using simple algebra along that line?**\n\n**Answer:** Yes, since they lie along the same line, their magnitudes can be added/subtracted algebraically considering sign for direction.",
+    "**Q18: If A = 4N along a rope and B = 6N along the same rope, opposite direction, what is the resultant?**\n\n**Answer:** 2N in the direction of B (6−4=2).",
+    "**Q19: Is the concept of collinear vectors important in 1D kinematics?**\n\n**Answer:** Yes, since motion in a straight line involves collinear velocity/acceleration vectors.",
+    "**Q20: How do you check if two given vectors are collinear mathematically?**\n\n**Answer:** If one vector is a scalar multiple of the other (positive or negative).",
+    "**Q21: If A = 2î + 4ĵ and B = 4î + 8ĵ, are they collinear?**\n\n**Answer:** Yes, since B = 2A.",
+    "**Q22: If A = 2î + 4ĵ and B = 4î + 6ĵ, are they collinear?**\n\n**Answer:** No, ratios of components are not equal (2/4 ≠ 4/6).",
+    "**Q23: Give one difference between collinear and coplanar vectors.**\n\n**Answer:** Collinear vectors lie along the same/parallel line; coplanar vectors lie in the same plane (a broader condition).",
+    "**Q24: Why might engineers analyze collinear force vectors separately from general 2D/3D vectors?**\n\n**Answer:** Because collinear systems can be simplified to algebraic (signed) addition instead of full vector addition.",
+    "**Q25: Is a single vector considered trivially collinear with itself?**\n\n**Answer:** Yes, trivially."
+  ],
+  "keyPoints": [
+    "- **Definition:** Vectors having equal or unequal magnitude but acting along the parallel straight lines are called collinear vectors.",
+    "- **Example:** Vectors on the same line, in same or opposite direction"
+  ],
+  "summary": "Vectors having equal or unequal magnitude but acting along the parallel straight lines are called collinear vectors. Key examples include Vectors on the same line, in same or opposite direction. Includes 25 short-answer practice questions."
+}

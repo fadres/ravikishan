@@ -1,0 +1,39 @@
+{
+  "title": "Accurate Measurement",
+  "notes": [
+    "<h1>Definition</h1>\n<p>A measurement in which the observed value is closer to the standard value of that physical quantity is called accurate measurement.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>g standard = 9.8 m/s²; measured value 9.79 m/s² is more accurate than 9.67 m/s²</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define accurate measurement.**\n\n**Answer:** A measurement whose observed value is closer to the standard value of the physical quantity.",
+    "**Q2: What is the standard value of g used in the example?**\n\n**Answer:** 9.8 m/s².",
+    "**Q3: Which measured value is more accurate: 9.67 m/s² or 9.79 m/s²?**\n\n**Answer:** 9.79 m/s², since it is closer to the standard value 9.8 m/s².",
+    "**Q4: Does accuracy depend on closeness to the true value or closeness among readings?**\n\n**Answer:** Closeness to the true/standard value.",
+    "**Q5: What is the difference between accuracy and precision?**\n\n**Answer:** Accuracy is closeness to the true value; precision is closeness among repeated readings.",
+    "**Q6: Can a measurement be accurate without being precise?**\n\n**Answer:** Yes, if the average of scattered readings happens to equal the true value.",
+    "**Q7: What is the SI standard value of g used commonly in labs?**\n\n**Answer:** 9.8 m/s².",
+    "**Q8: If a measured value is 9.75 m/s², how accurate is it compared to 9.79 m/s²?**\n\n**Answer:** 9.79 m/s² is more accurate since it's closer to 9.8 m/s².",
+    "**Q9: What determines the 'standard value' of a quantity?**\n\n**Answer:** It is the accepted reference/true value determined by precise standard methods.",
+    "**Q10: Give a real-life example of accurate measurement.**\n\n**Answer:** A calibrated thermometer reading 36.9°C when body temperature is truly 37°C.",
+    "**Q11: Why is accuracy important in scientific experiments?**\n\n**Answer:** It ensures results reflect the true value of the quantity being measured.",
+    "**Q12: Is a well-calibrated instrument more likely to give accurate results?**\n\n**Answer:** Yes.",
+    "**Q13: Can systematic errors reduce accuracy?**\n\n**Answer:** Yes, systematic errors shift readings consistently away from the true value.",
+    "**Q14: Between two readings of g, 9.9 and 9.5, which is more accurate if true value is 9.8?**\n\n**Answer:** 9.9 m/s², since it is closer to 9.8.",
+    "**Q15: Does accuracy require multiple readings?**\n\n**Answer:** Not necessarily, but comparison to the standard value is required.",
+    "**Q16: What term is used for a measurement far from the standard value?**\n\n**Answer:** Inaccurate measurement.",
+    "**Q17: Which is generally harder to achieve: high accuracy or high precision?**\n\n**Answer:** Both require care, but accuracy also requires correct calibration, not just consistency.",
+    "**Q18: Can an instrument be precise but inaccurate due to a zero error?**\n\n**Answer:** Yes, a zero error shifts all readings consistently, hurting accuracy but not precision.",
+    "**Q19: Is 9.8 m/s² considered the 'true value' of g in this context?**\n\n**Answer:** Yes, it is used as the standard/true value.",
+    "**Q20: How is accuracy typically improved?**\n\n**Answer:** By calibrating instruments and eliminating systematic errors.",
+    "**Q21: State one way to check if a measurement is accurate.**\n\n**Answer:** Compare it to a known standard or reference value.",
+    "**Q22: Is accuracy a comparison to other readings or to the true value?**\n\n**Answer:** To the true value.",
+    "**Q23: Give an example of an inaccurate but precise thermometer.**\n\n**Answer:** One consistently reading 2°C high every time due to a calibration error.",
+    "**Q24: Why might a scientist prefer accuracy over precision in critical measurements?**\n\n**Answer:** Because accuracy reflects correctness relative to the actual quantity.",
+    "**Q25: What word describes readings that are both precise and accurate?**\n\n**Answer:** Reliable/valid measurements."
+  ],
+  "keyPoints": [
+    "- **Definition:** A measurement in which the observed value is closer to the standard value of that physical quantity is called accurate measurement.",
+    "- **Example:** g standard = 9.8 m/s²; measured value 9.79 m/s² is more accurate than 9.67 m/s²"
+  ],
+  "summary": "A measurement in which the observed value is closer to the standard value of that physical quantity is called accurate measurement. Key examples include g standard = 9.8 m/s²; measured value 9.79 m/s² is more accurate than 9.67 m/s². Includes 25 short-answer practice questions."
+}

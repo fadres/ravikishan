@@ -1,0 +1,39 @@
+{
+  "title": "Precise Measurement",
+  "notes": [
+    "<h1>Definition</h1>\n<p>A measurement whose observed value can be reproduced again and again by repeated experiment is called precise measurement.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Thickness readings 2.43mm, 2.44mm, 2.45mm are precise (close to each other)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define precise measurement.**\n\n**Answer:** A measurement in which the observed value can be reproduced again and again by repeated experiment.",
+    "**Q2: What makes readings 'precise'?**\n\n**Answer:** If the readings are very close to each other.",
+    "**Q3: Give the example of precise measurement from the notes.**\n\n**Answer:** Thickness of glass plate: 2.43mm, 2.44mm, 2.45mm — very close to each other.",
+    "**Q4: Does precision guarantee accuracy?**\n\n**Answer:** No, precise readings can still be far from the true/standard value.",
+    "**Q5: Which instrument was used to measure the glass plate thickness in the example?**\n\n**Answer:** A spherometer.",
+    "**Q6: If three readings are 5.01, 5.02, 5.00 — are they precise?**\n\n**Answer:** Yes, because they are close to each other.",
+    "**Q7: What does precision depend on?**\n\n**Answer:** The consistency/reproducibility of repeated measurements.",
+    "**Q8: Can a measurement be precise but not accurate?**\n\n**Answer:** Yes, if readings cluster together but away from the true value.",
+    "**Q9: What is the opposite concept related to precision?**\n\n**Answer:** Accuracy.",
+    "**Q10: Why is repeatability important for precise measurement?**\n\n**Answer:** It shows the measuring process consistently gives similar results.",
+    "**Q11: If readings vary widely (e.g., 2.1, 5.6, 9.3), are they precise?**\n\n**Answer:** No, they are not precise.",
+    "**Q12: Is precision a property of the instrument, the observer, or both?**\n\n**Answer:** Both — instrument quality and careful technique affect precision.",
+    "**Q13: Give a real-life example of precise measurement.**\n\n**Answer:** A digital weighing scale giving 60.01kg, 60.02kg, 60.01kg on repeated weighings.",
+    "**Q14: How many readings were taken in the glass plate example?**\n\n**Answer:** Three readings.",
+    "**Q15: What was the least count concept related to in this context?**\n\n**Answer:** The spherometer's resolution/least count affects precision of the readings.",
+    "**Q16: Are precise readings always identical?**\n\n**Answer:** Not necessarily identical, but very close in value.",
+    "**Q17: State a key term used to describe closely clustered readings.**\n\n**Answer:** Precise readings.",
+    "**Q18: Which comes first in good experimental practice: precision or accuracy?**\n\n**Answer:** Both matter, but precision alone (without accuracy) can still be misleading.",
+    "**Q19: Can random errors affect precision?**\n\n**Answer:** Yes, random errors cause scatter and reduce precision.",
+    "**Q20: What term describes measurements far from the true value but close to each other?**\n\n**Answer:** Precise but not accurate.",
+    "**Q21: Why is precise measurement important in scientific experiments?**\n\n**Answer:** It ensures reliability and reproducibility of results.",
+    "**Q22: What is the unit used in the glass plate example?**\n\n**Answer:** Millimetre (mm).",
+    "**Q23: If a ruler gives readings 10.2cm, 10.3cm, 10.2cm repeatedly, is it precise?**\n\n**Answer:** Yes, the readings are close together.",
+    "**Q24: Does higher precision always mean a better instrument?**\n\n**Answer:** Generally yes, but it must also be checked for accuracy.",
+    "**Q25: Name one factor that can reduce precision.**\n\n**Answer:** Random errors or observer inconsistency."
+  ],
+  "keyPoints": [
+    "- **Definition:** A measurement whose observed value can be reproduced again and again by repeated experiment is called precise measurement.",
+    "- **Example:** Thickness readings 2.43mm, 2.44mm, 2.45mm are precise (close to each other)"
+  ],
+  "summary": "A measurement whose observed value can be reproduced again and again by repeated experiment is called precise measurement. Key examples include Thickness readings 2.43mm, 2.44mm, 2.45mm are precise (close to each other). Includes 25 short-answer practice questions."
+}

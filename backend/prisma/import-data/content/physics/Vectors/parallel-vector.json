@@ -1,0 +1,39 @@
+{
+  "title": "Parallel Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Two vectors having the same direction are called parallel vectors.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>A and B pointing the same way, even with different magnitudes</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define parallel vectors.**\n\n**Answer:** Two vectors having the same direction.",
+    "**Q2: Do parallel vectors need to have the same magnitude?**\n\n**Answer:** No, only the same direction is required.",
+    "**Q3: Give the notation example from the notes for parallel vectors.**\n\n**Answer:** A and B are parallel vectors.",
+    "**Q4: Can two parallel vectors have different lengths on a diagram?**\n\n**Answer:** Yes, magnitude can differ; only direction must match.",
+    "**Q5: Is a vector always parallel to itself?**\n\n**Answer:** Yes, trivially, since it has the same direction as itself.",
+    "**Q6: If A = 2î and B = 5î, are they parallel?**\n\n**Answer:** Yes, both point in the same direction (positive x-axis).",
+    "**Q7: If A = 2î and B = −5î, are they parallel?**\n\n**Answer:** No, they point in opposite directions (they are anti-parallel).",
+    "**Q8: What is the angle between two parallel vectors?**\n\n**Answer:** 0°.",
+    "**Q9: How is the concept of parallel vectors useful in physics?**\n\n**Answer:** It helps identify forces or velocities acting along the same line of action.",
+    "**Q10: Are collinear vectors always parallel?**\n\n**Answer:** Not necessarily identical concept, but collinear vectors act along the same line, which includes both parallel and anti-parallel cases.",
+    "**Q11: Give a real-life example of parallel vectors.**\n\n**Answer:** Two ropes pulling a box in exactly the same direction.",
+    "**Q12: If two vectors are parallel, what does their cross product equal?**\n\n**Answer:** Zero, since sin(0°) = 0.",
+    "**Q13: If two vectors are parallel, is their dot product maximum or minimum?**\n\n**Answer:** Maximum (since cos(0°) = 1, giving A·B = AB).",
+    "**Q14: Can parallel vectors belong to different physical quantities (like force and velocity)?**\n\n**Answer:** Typically the concept applies to vectors of the same nature to be physically meaningful, though the geometric definition just requires same direction.",
+    "**Q15: If A is parallel to B, and B is parallel to C, is A parallel to C?**\n\n**Answer:** Yes, parallelism is transitive.",
+    "**Q16: Do parallel vectors necessarily start from the same point?**\n\n**Answer:** No, they can be located anywhere as long as directions match.",
+    "**Q17: What is the resultant magnitude of two parallel vectors A and B added together?**\n\n**Answer:** A + B (since θ = 0°, R = A+B).",
+    "**Q18: Is the zero vector considered parallel to every vector?**\n\n**Answer:** By convention, the null vector's direction is arbitrary, so it's often treated as parallel to any vector.",
+    "**Q19: Give an example of parallel force vectors in construction.**\n\n**Answer:** Two cranes lifting a beam vertically in the same upward direction.",
+    "**Q20: How can you check numerically if two vectors are parallel?**\n\n**Answer:** If one vector is a scalar multiple of the other (same direction ratios).",
+    "**Q21: If A = 4î + 2ĵ and B = 8î + 4ĵ, are they parallel?**\n\n**Answer:** Yes, since B = 2A (same direction ratio).",
+    "**Q22: If A = 4î + 2ĵ and B = 8î + 5ĵ, are they parallel?**\n\n**Answer:** No, the ratios of components (4/8 ≠ 2/5) are not equal.",
+    "**Q23: What visual feature identifies parallel vectors in a diagram?**\n\n**Answer:** Arrows pointing in the exact same direction, regardless of length.",
+    "**Q24: Does the term 'parallel vector' include vectors of unequal magnitude in the same direction?**\n\n**Answer:** Yes, magnitude doesn't need to be equal.",
+    "**Q25: Why is understanding parallel vectors important before learning vector addition?**\n\n**Answer:** Because special addition results (max resultant, simple addition) occur specifically when vectors are parallel."
+  ],
+  "keyPoints": [
+    "- **Definition:** Two vectors having the same direction are called parallel vectors.",
+    "- **Example:** A and B pointing the same way, even with different magnitudes"
+  ],
+  "summary": "Two vectors having the same direction are called parallel vectors. Key examples include A and B pointing the same way, even with different magnitudes. Includes 25 short-answer practice questions."
+}

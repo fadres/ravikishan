@@ -1,0 +1,41 @@
+{
+  "title": "Uses of Dimensional Equation — Finding Dimension of Constants",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Dimensional analysis can determine the dimensional formula of an unknown constant appearing in a physical relation.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Gravitational constant G = [M-1L3T-2]</li>\n  <li>Gas constant R = [M1L2T-2mol-1K-1]</li>\n  <li>Constants a, b in P=(b-x²)/at</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Find the dimension of gravitational constant G.**\n\n**Answer:** [M-1L3T-2].",
+    "**Q2: What formula is used to find G's dimension?**\n\n**Answer:** F = Gm1m2/d² → G = Fd²/(m1m2).",
+    "**Q3: Find the dimension of gas constant R.**\n\n**Answer:** [M1L2T-2mol-1K-1].",
+    "**Q4: What formula is used to find R's dimension?**\n\n**Answer:** PV = nRT → R = PV/(nT).",
+    "**Q5: In P = (b−x²)/(at), find the dimension of constant 'a'.**\n\n**Answer:** [M-1L0T2].",
+    "**Q6: In P = (b−x²)/(at), find the dimension of constant 'b'.**\n\n**Answer:** [M1L2T0].",
+    "**Q7: In y = a + bt + ct², find the dimension of 'a'.**\n\n**Answer:** [M0L1T0], same as y (distance).",
+    "**Q8: In y = a + bt + ct², find the dimension of 'b'.**\n\n**Answer:** [M0L1T-1].",
+    "**Q9: In y = a + bt + ct², find the dimension of 'c'.**\n\n**Answer:** [M0L1T-2].",
+    "**Q10: What principle allows finding each constant's dimension separately in y = a + bt + ct²?**\n\n**Answer:** Principle of homogeneity — each term added must have the same dimension as y.",
+    "**Q11: What is the dimension of pressure P used in finding R?**\n\n**Answer:** [M1L-1T-2].",
+    "**Q12: What is the dimension of volume V used in finding R?**\n\n**Answer:** [M0L3T0].",
+    "**Q13: Why does 'n' (number of moles) not appear in the dimension formula of R directly as M, L, or T?**\n\n**Answer:** Because mole is treated as its own base unit, appearing as mol⁻¹ in R's dimension.",
+    "**Q14: Why is K (kelvin) present in R's dimension?**\n\n**Answer:** Because R relates energy to temperature via T (temperature), giving K⁻¹ in its formula.",
+    "**Q15: How is the dimension of G derived from Newton's law of gravitation?**\n\n**Answer:** By rearranging F = Gm1m2/d² to G = Fd²/(m1m2) and substituting dimensions.",
+    "**Q16: What is the final numeric-dimension answer for a in P=(b-x²)/(at)?**\n\n**Answer:** [M-1L0T2].",
+    "**Q17: What is the final dimension answer for b in P=(b-x²)/(at)?**\n\n**Answer:** [M1L2T0].",
+    "**Q18: Why must x² and b have the same dimension in P=(b-x²)/(at)?**\n\n**Answer:** Because they are added/subtracted, so by homogeneity principle they must share the same dimension.",
+    "**Q19: Given F = kaˣsʸvᶻ, how is the method of dimensions used to find x, y, z?**\n\n**Answer:** By equating the dimension of F [MLT⁻²] to [Mᵧ L^(x-3y+z) T⁻ᶻ] and solving for x, y, z.",
+    "**Q20: In F = kaˣsʸvᶻ (retarding force on sphere), what are the values of x, y, z?**\n\n**Answer:** x = 2, y = 1, z = 2.",
+    "**Q21: Why is k treated as dimensionless in F = kaˣsʸvᶻ?**\n\n**Answer:** Because it's specified as a non-dimensional coefficient in the problem.",
+    "**Q22: What method is generally used to determine dimensions of unknown constants?**\n\n**Answer:** Rearranging the equation to isolate the constant, then substituting known dimensions of the other quantities.",
+    "**Q23: Why is finding a constant's dimension useful in physics?**\n\n**Answer:** It helps verify units, ensures equation consistency, and aids in converting or deriving new relations.",
+    "**Q24: What is the SI dimension unit combination for R in terms of base units?**\n\n**Answer:** kg·m²·s⁻²·mol⁻¹·K⁻¹.",
+    "**Q25: Can the dimension of a constant be found without knowing the constant's governing equation?**\n\n**Answer:** No, its governing formula/equation is required to derive the dimension."
+  ],
+  "keyPoints": [
+    "- **Definition:** Dimensional analysis can determine the dimensional formula of an unknown constant appearing in a physical relation.",
+    "- **Example:** Gravitational constant G = [M-1L3T-2]",
+    "- **Example:** Gas constant R = [M1L2T-2mol-1K-1]",
+    "- **Example:** Constants a, b in P=(b-x²)/at"
+  ],
+  "summary": "Dimensional analysis can determine the dimensional formula of an unknown constant appearing in a physical relation. Key examples include Gravitational constant G = [M-1L3T-2]; Gas constant R = [M1L2T-2mol-1K-1]; Constants a, b in P=(b-x²)/at. Includes 25 short-answer practice questions."
+}

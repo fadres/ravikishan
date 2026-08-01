@@ -1,0 +1,41 @@
+{
+  "title": "Supplementary Quantities",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Two additional quantities — plane angle and solid angle — used alongside the seven fundamental quantities.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Plane angle — radian (rad)</li>\n  <li>Solid angle — steradian (sr)</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Name the two supplementary quantities.**\n\n**Answer:** Plane angle and solid angle.",
+    "**Q2: What is the unit of plane angle?**\n\n**Answer:** Radian (rad).",
+    "**Q3: What is the unit of solid angle?**\n\n**Answer:** Steradian (sr).",
+    "**Q4: Are supplementary quantities part of the 7 fundamental quantities?**\n\n**Answer:** No, they are listed separately.",
+    "**Q5: Give an everyday example involving plane angle.**\n\n**Answer:** The angle between the hands of a clock.",
+    "**Q6: Give an everyday example involving solid angle.**\n\n**Answer:** The angular spread of light from a torch.",
+    "**Q7: Which supplementary quantity's unit ends with 'radian'?**\n\n**Answer:** Both — plane angle (radian) and solid angle (steradian).",
+    "**Q8: Is plane angle a dimensionless quantity?**\n\n**Answer:** Yes, its dimension is [M0L0T0].",
+    "**Q9: Is solid angle dimensionless too?**\n\n**Answer:** Yes, like plane angle, it has no dimension.",
+    "**Q10: How is plane angle defined mathematically?**\n\n**Answer:** Arc length divided by radius.",
+    "**Q11: How is solid angle defined mathematically?**\n\n**Answer:** Area divided by radius squared.",
+    "**Q12: Why are angle quantities called 'supplementary' rather than 'fundamental'?**\n\n**Answer:** Because they are ratios of two lengths/areas, not independent base measurements.",
+    "**Q13: What symbol commonly represents radian?**\n\n**Answer:** rad.",
+    "**Q14: What symbol commonly represents steradian?**\n\n**Answer:** sr.",
+    "**Q15: Which of the two supplementary quantities is used in 2D geometry problems?**\n\n**Answer:** Plane angle.",
+    "**Q16: Which of the two supplementary quantities is used in 3D geometry problems?**\n\n**Answer:** Solid angle.",
+    "**Q17: Can supplementary quantities be derived quantities?**\n\n**Answer:** They are treated as a separate category, distinct from both fundamental and derived quantities.",
+    "**Q18: What is 1 full circle in radians?**\n\n**Answer:** 2π radians.",
+    "**Q19: What is 1 full sphere in steradians?**\n\n**Answer:** 4π steradians.",
+    "**Q20: True or False: Plane angle has a unit of metre.**\n\n**Answer:** False, its unit is radian.",
+    "**Q21: True or False: Solid angle has a unit of steradian.**\n\n**Answer:** True.",
+    "**Q22: Which supplementary quantity would you use to describe the beam spread of a flashlight?**\n\n**Answer:** Solid angle.",
+    "**Q23: Which supplementary quantity would you use to describe the angle of a triangle?**\n\n**Answer:** Plane angle.",
+    "**Q24: Do supplementary quantities have separate base dimensions like mass or length?**\n\n**Answer:** No, they are dimensionless.",
+    "**Q25: Name one instrument-related use of plane angle in physics.**\n\n**Answer:** Measuring angle of incidence/reflection in optics.",
+    "**Q26: Why are supplementary quantities important in physics?**\n\n**Answer:** They allow angular measurements to be handled systematically alongside linear quantities."
+  ],
+  "keyPoints": [
+    "- **Definition:** Two additional quantities — plane angle and solid angle — used alongside the seven fundamental quantities.",
+    "- **Example:** Plane angle — radian (rad)",
+    "- **Example:** Solid angle — steradian (sr)"
+  ],
+  "summary": "Two additional quantities — plane angle and solid angle — used alongside the seven fundamental quantities. Key examples include Plane angle — radian (rad); Solid angle — steradian (sr). Includes 26 short-answer practice questions."
+}

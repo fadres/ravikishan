@@ -1,0 +1,43 @@
+{
+  "title": "Scalar Quantity",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Physical quantities that have magnitude but no direction are called scalar quantities; added/subtracted by ordinary algebra.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Temperature</li>\n  <li>Pressure</li>\n  <li>Time</li>\n  <li>Work</li>\n  <li>Distance</li>\n  <li>Mass</li>\n  <li>Speed</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define scalar quantity.**\n\n**Answer:** A physical quantity having magnitude only, no direction, added by ordinary algebra.",
+    "**Q2: Give 5 examples of scalar quantities.**\n\n**Answer:** Temperature, pressure, time, work, distance.",
+    "**Q3: How are scalar quantities added?**\n\n**Answer:** According to the rules of ordinary algebra.",
+    "**Q4: Is mass a scalar or vector?**\n\n**Answer:** Scalar.",
+    "**Q5: Is speed a scalar or vector?**\n\n**Answer:** Scalar.",
+    "**Q6: Is temperature a scalar quantity?**\n\n**Answer:** Yes.",
+    "**Q7: Can scalars be subtracted algebraically?**\n\n**Answer:** Yes, using ordinary subtraction rules.",
+    "**Q8: Does a scalar quantity require direction to be fully specified?**\n\n**Answer:** No, only magnitude is required.",
+    "**Q9: Give an example of a scalar quantity used in thermodynamics.**\n\n**Answer:** Temperature or heat.",
+    "**Q10: Is work a scalar or a vector?**\n\n**Answer:** Scalar.",
+    "**Q11: Is energy a scalar quantity?**\n\n**Answer:** Yes.",
+    "**Q12: Why is time considered a scalar quantity?**\n\n**Answer:** Because it has magnitude only and no direction.",
+    "**Q13: Give an example of two scalars being added: 5kg + 3kg = ?**\n\n**Answer:** 8 kg, using simple algebraic addition.",
+    "**Q14: Is density a scalar quantity?**\n\n**Answer:** Yes.",
+    "**Q15: Is volume a scalar quantity?**\n\n**Answer:** Yes.",
+    "**Q16: Can two scalar quantities of different physical nature be added?**\n\n**Answer:** No, only quantities of the same nature (same units/dimension) can be added.",
+    "**Q17: True or False: Scalars can be added using vector addition rules.**\n\n**Answer:** False, scalars follow ordinary algebra, not vector addition.",
+    "**Q18: Give an example of a scalar quantity in electricity.**\n\n**Answer:** Electric charge or electric potential.",
+    "**Q19: Is distance the same as displacement?**\n\n**Answer:** No, distance is scalar; displacement is vector.",
+    "**Q20: Why can distance never be negative?**\n\n**Answer:** Because it's a scalar magnitude representing path length, which cannot be negative.",
+    "**Q21: Give an example combining two scalar temperatures: 20°C + 5°C = ?**\n\n**Answer:** 25°C, by simple addition (note: this is illustrative; temperature addition needs care in physics).",
+    "**Q22: Is power a scalar or vector quantity?**\n\n**Answer:** Scalar.",
+    "**Q23: Name a scalar quantity related to sound.**\n\n**Answer:** Frequency or intensity (as a magnitude).",
+    "**Q24: Does a scalar quantity change if you rotate your reference frame?**\n\n**Answer:** No, scalar magnitude is invariant of direction/orientation.",
+    "**Q25: Give 3 more examples of scalar quantities not listed in the notes.**\n\n**Answer:** Charge, energy, and speed.",
+    "**Q26: Why are scalar quantities simpler to handle mathematically than vectors?**\n\n**Answer:** Because they only require magnitude and follow standard algebraic rules, unlike vectors which need direction."
+  ],
+  "keyPoints": [
+    "- **Definition:** Physical quantities that have magnitude but no direction are called scalar quantities; added/subtracted by ordinary algebra.",
+    "- **Example:** Temperature",
+    "- **Example:** Pressure",
+    "- **Example:** Time",
+    "- **Example:** Work"
+  ],
+  "summary": "Physical quantities that have magnitude but no direction are called scalar quantities; added/subtracted by ordinary algebra. Key examples include Temperature; Pressure; Time; Work; Distance; Mass; Speed. Includes 26 short-answer practice questions."
+}

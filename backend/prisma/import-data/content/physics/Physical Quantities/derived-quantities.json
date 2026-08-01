@@ -1,0 +1,43 @@
+{
+  "title": "Derived Quantities",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Quantities that depend on fundamental quantities are called derived quantities.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Area</li>\n  <li>Volume</li>\n  <li>Force</li>\n  <li>Velocity</li>\n  <li>Density</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define derived quantities.**\n\n**Answer:** Quantities that depend on other fundamental quantities.",
+    "**Q2: Give five examples of derived quantities.**\n\n**Answer:** Area, volume, force, velocity, density.",
+    "**Q3: What are units of derived quantities called?**\n\n**Answer:** Derived units.",
+    "**Q4: What is the formula for force in terms of fundamental quantities?**\n\n**Answer:** Force = Mass × Acceleration.",
+    "**Q5: What is the dimension of force?**\n\n**Answer:** [M1L1T-2].",
+    "**Q6: What is the SI unit of force?**\n\n**Answer:** kg·m·s⁻² (Newton).",
+    "**Q7: What is the SI unit of density?**\n\n**Answer:** kg·m⁻³.",
+    "**Q8: Is velocity a fundamental or derived quantity?**\n\n**Answer:** Derived (depends on length and time).",
+    "**Q9: Give the formula for density.**\n\n**Answer:** Density = Mass / Volume.",
+    "**Q10: What quantities does area depend on?**\n\n**Answer:** Length only (length × length).",
+    "**Q11: What quantities does volume depend on?**\n\n**Answer:** Length (length × length × length).",
+    "**Q12: What is the dimension of area?**\n\n**Answer:** [M0L2T0].",
+    "**Q13: What is the dimension of volume?**\n\n**Answer:** [M0L3T0].",
+    "**Q14: What is the dimension of density?**\n\n**Answer:** [M1L-3T0].",
+    "**Q15: Why is force considered a derived quantity?**\n\n**Answer:** Because it is obtained from mass and acceleration, both of which trace back to fundamental quantities.",
+    "**Q16: Are units of fundamental quantities called fundamental units?**\n\n**Answer:** Yes.",
+    "**Q17: State an example where a derived unit combines two fundamental units.**\n\n**Answer:** Unit of force, kg·m·s⁻², combines mass, length, time units.",
+    "**Q18: Is 'speed' fundamental or derived?**\n\n**Answer:** Derived.",
+    "**Q19: Give the unit of speed.**\n\n**Answer:** m/s.",
+    "**Q20: How many fundamental quantities combine to form the unit of pressure?**\n\n**Answer:** Three — mass, length, and time.",
+    "**Q21: What is the dimension of pressure?**\n\n**Answer:** [M1L-1T-2].",
+    "**Q22: True or False: Derived quantities can exist without fundamental quantities.**\n\n**Answer:** False, they always depend on fundamental quantities.",
+    "**Q23: Is momentum a derived quantity?**\n\n**Answer:** Yes, momentum = mass × velocity.",
+    "**Q24: Give the dimension of momentum.**\n\n**Answer:** [M1L1T-1].",
+    "**Q25: Name a derived quantity that depends on all three of mass, length, and time.**\n\n**Answer:** Force, work, power, or pressure.",
+    "**Q26: Why can't a derived quantity be measured independently of fundamental units?**\n\n**Answer:** Because its definition is built from combinations of fundamental quantities."
+  ],
+  "keyPoints": [
+    "- **Definition:** Quantities that depend on fundamental quantities are called derived quantities.",
+    "- **Example:** Area",
+    "- **Example:** Volume",
+    "- **Example:** Force",
+    "- **Example:** Velocity"
+  ],
+  "summary": "Quantities that depend on fundamental quantities are called derived quantities. Key examples include Area; Volume; Force; Velocity; Density. Includes 26 short-answer practice questions."
+}

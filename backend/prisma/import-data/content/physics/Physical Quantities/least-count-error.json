@@ -1,0 +1,40 @@
+{
+  "title": "Least Count Error",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The smallest value that can be measured by the measuring instrument is called least count; the associated error is the least count error.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Least count of a ruler is usually 0.1cm</li>\n  <li>Least count of a vernier caliper is usually 0.01cm</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define least count error.**\n\n**Answer:** Error associated with the resolution of the instrument — the smallest value it can measure.",
+    "**Q2: What is 'least count' of an instrument?**\n\n**Answer:** The smallest value that can be measured by the measuring instrument.",
+    "**Q3: What is least count error associated with?**\n\n**Answer:** The resolution of the instrument.",
+    "**Q4: Give the typical least count of a simple ruler.**\n\n**Answer:** 0.1 cm (1 mm).",
+    "**Q5: Give the typical least count of a vernier caliper.**\n\n**Answer:** 0.01 cm.",
+    "**Q6: Give the typical least count of a screw gauge.**\n\n**Answer:** 0.001 cm (0.01 mm).",
+    "**Q7: How does a smaller least count affect measurement quality?**\n\n**Answer:** It allows more precise (finer) measurements.",
+    "**Q8: Can least count error be eliminated completely?**\n\n**Answer:** No, it is inherent to the instrument's design/resolution.",
+    "**Q9: Which instrument gives finer measurement: ruler or vernier caliper?**\n\n**Answer:** Vernier caliper (smaller least count).",
+    "**Q10: Is least count error a type of systematic or random error?**\n\n**Answer:** It is treated as its own category, related to instrument resolution, distinct from both.",
+    "**Q11: How can least count error be reduced?**\n\n**Answer:** By using an instrument with a smaller least count (finer resolution).",
+    "**Q12: If a ruler's least count is 0.1cm, what is the smallest reliable difference it can detect?**\n\n**Answer:** 0.1 cm.",
+    "**Q13: Why is least count important in choosing an instrument?**\n\n**Answer:** It determines the maximum precision achievable in a measurement.",
+    "**Q14: Give an example of a measurement task requiring very small least count.**\n\n**Answer:** Measuring the diameter of a thin wire using a screw gauge.",
+    "**Q15: What happens if you use an instrument with a large least count for a small object?**\n\n**Answer:** The measurement may be imprecise or lose important detail.",
+    "**Q16: Does least count error depend on the observer's skill?**\n\n**Answer:** No, it is inherent to the instrument itself.",
+    "**Q17: Is least count the same as accuracy?**\n\n**Answer:** No, least count relates to resolution/precision capability, not correctness relative to true value.",
+    "**Q18: What is the least count of a stopwatch typically?**\n\n**Answer:** 0.1 second (or 0.01s for digital stopwatches).",
+    "**Q19: Can two instruments with the same least count give different accuracy?**\n\n**Answer:** Yes, accuracy also depends on calibration, not just least count.",
+    "**Q20: How is least count error typically reported in a reading?**\n\n**Answer:** As ± half the least count of the instrument.",
+    "**Q21: Why is least count error unavoidable?**\n\n**Answer:** Because every instrument has a finite resolution limit.",
+    "**Q22: Give an everyday example of least count.**\n\n**Answer:** A digital kitchen scale that only shows weight to the nearest gram.",
+    "**Q23: How does least count error relate to significant figures?**\n\n**Answer:** It determines how many significant figures a measurement can meaningfully have.",
+    "**Q24: If a thermometer has a least count of 0.5°C, can it detect a 0.1°C change?**\n\n**Answer:** No, changes smaller than the least count cannot be reliably detected.",
+    "**Q25: What is the relationship between least count and instrument sensitivity?**\n\n**Answer:** Smaller least count generally means higher sensitivity."
+  ],
+  "keyPoints": [
+    "- **Definition:** The smallest value that can be measured by the measuring instrument is called least count; the associated error is the least count error.",
+    "- **Example:** Least count of a ruler is usually 0.1cm",
+    "- **Example:** Least count of a vernier caliper is usually 0.01cm"
+  ],
+  "summary": "The smallest value that can be measured by the measuring instrument is called least count; the associated error is the least count error. Key examples include Least count of a ruler is usually 0.1cm; Least count of a vernier caliper is usually 0.01cm. Includes 25 short-answer practice questions."
+}

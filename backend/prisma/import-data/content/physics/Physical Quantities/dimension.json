@@ -1,0 +1,42 @@
+{
+  "title": "Dimension of a Physical Quantity",
+  "notes": [
+    "<h1>Definition</h1>\n<p>The dimension of a physical quantity is the power raised to the fundamental quantities in its expression.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Dimension of Force = (1,1,-2) i.e. [M1L1T-2]</li>\n  <li>Dimension of Area = (0,2,0) i.e. [M0L2T0]</li>\n  <li>Dimension of Density = (1,-3,0) i.e. [M1L-3T0]</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define dimension of a physical quantity.**\n\n**Answer:** The power raised to the fundamental quantities in its expression.",
+    "**Q2: What is the dimension of force?**\n\n**Answer:** [M1L1T-2].",
+    "**Q3: What is the dimension of area?**\n\n**Answer:** [M0L2T0].",
+    "**Q4: What is the dimension of density?**\n\n**Answer:** [M1L-3T0].",
+    "**Q5: What is the dimension of velocity?**\n\n**Answer:** [M0L1T-1].",
+    "**Q6: What is the dimension of acceleration?**\n\n**Answer:** [M0L1T-2].",
+    "**Q7: What is the dimension of work?**\n\n**Answer:** [M1L2T-2].",
+    "**Q8: What is the dimension of power?**\n\n**Answer:** [M1L2T-3].",
+    "**Q9: What is the dimension of momentum?**\n\n**Answer:** [M1L1T-1].",
+    "**Q10: What is the dimension of frequency?**\n\n**Answer:** [M0L0T-1].",
+    "**Q11: What is dimensional formula written in?**\n\n**Answer:** Square brackets, e.g. [M1L2T-2].",
+    "**Q12: Why is dimension analysis useful?**\n\n**Answer:** It helps check correctness of equations, convert units, and derive relations.",
+    "**Q13: What is the dimension of a dimensionless quantity like angle?**\n\n**Answer:** [M0L0T0].",
+    "**Q14: What is the dimension of gravitational constant G?**\n\n**Answer:** [M-1L3T-2].",
+    "**Q15: What is the dimension of gas constant R?**\n\n**Answer:** [M1L2T-2mol-1K-1].",
+    "**Q16: How many fundamental dimensions does mechanics typically use?**\n\n**Answer:** Three — M, L, and T.",
+    "**Q17: What is the dimension of pressure?**\n\n**Answer:** [M1L-1T-2].",
+    "**Q18: What is the dimension of latent heat?**\n\n**Answer:** [L2T-2].",
+    "**Q19: What is the dimension of specific heat capacity?**\n\n**Answer:** [L2T-2K-1].",
+    "**Q20: What is the dimensional formula of time period?**\n\n**Answer:** [M0L0T1].",
+    "**Q21: How do you find the dimension of a derived quantity from its formula?**\n\n**Answer:** Substitute the dimensions of its component quantities and simplify using powers.",
+    "**Q22: Why does sinθ have zero dimension?**\n\n**Answer:** Because it is a ratio of two lengths (perpendicular/hypotenuse).",
+    "**Q23: State the dimensional formula of mass.**\n\n**Answer:** [M1L0T0].",
+    "**Q24: State the dimensional formula of length.**\n\n**Answer:** [M0L1T0].",
+    "**Q25: State the dimensional formula of time.**\n\n**Answer:** [M0L0T1].",
+    "**Q26: What principle states LHS and RHS must have same dimension?**\n\n**Answer:** The principle of homogeneity of dimensions."
+  ],
+  "keyPoints": [
+    "- **Definition:** The dimension of a physical quantity is the power raised to the fundamental quantities in its expression.",
+    "- **Example:** Dimension of Force = (1,1,-2) i.e. [M1L1T-2]",
+    "- **Example:** Dimension of Area = (0,2,0) i.e. [M0L2T0]",
+    "- **Example:** Dimension of Density = (1,-3,0) i.e. [M1L-3T0]"
+  ],
+  "summary": "The dimension of a physical quantity is the power raised to the fundamental quantities in its expression. Key examples include Dimension of Force = (1,1,-2) i.e. [M1L1T-2]; Dimension of Area = (0,2,0) i.e. [M0L2T0]; Dimension of Density = (1,-3,0) i.e. [M1L-3T0]. Includes 26 short-answer practice questions."
+}

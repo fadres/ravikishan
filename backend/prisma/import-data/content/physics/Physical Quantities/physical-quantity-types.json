@@ -1,0 +1,41 @@
+{
+  "title": "Physical Quantities (Measurable & Non-measurable)",
+  "notes": [
+    "<h1>Definition</h1>\n<p>A physical quantity is anything that can be measured; it is classed as measurable (physical) or non-measurable (like love, beauty).</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Measurable: mass, length, time, temperature</li>\n  <li>Non-measurable: happiness, beauty, honesty</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: What are the two types of quantities?**\n\n**Answer:** Measurable quantities and non-measurable quantities.",
+    "**Q2: Define physical quantity.**\n\n**Answer:** A quantity that can be measured is called a physical quantity.",
+    "**Q3: Into how many classes are physical quantities categorized?**\n\n**Answer:** Two classes: fundamental quantities and derived quantities.",
+    "**Q4: Name the two classes of physical quantities.**\n\n**Answer:** Fundamental quantities and derived quantities.",
+    "**Q5: Is 'beauty' a physical quantity? Why?**\n\n**Answer:** No, because it cannot be measured numerically.",
+    "**Q6: Is 'mass' a physical quantity? Why?**\n\n**Answer:** Yes, because it can be measured using a balance.",
+    "**Q7: Give two examples of measurable quantities.**\n\n**Answer:** Length and time.",
+    "**Q8: Give two examples of non-measurable quantities.**\n\n**Answer:** Love and honesty.",
+    "**Q9: Is temperature measurable?**\n\n**Answer:** Yes, using a thermometer.",
+    "**Q10: Can all physical quantities be expressed in numbers with units?**\n\n**Answer:** Yes, that is the defining property of a physical quantity.",
+    "**Q11: Why is 'intelligence' not treated as a physical quantity in physics?**\n\n**Answer:** Because it has no standard unit or direct measuring instrument.",
+    "**Q12: State whether 'pressure' is measurable.**\n\n**Answer:** Yes, it is measurable and is a physical quantity.",
+    "**Q13: State whether 'sadness' is measurable.**\n\n**Answer:** No, it is a non-measurable quantity.",
+    "**Q14: What distinguishes a physical quantity from a non-physical one?**\n\n**Answer:** The ability to be measured with a definite unit.",
+    "**Q15: Is electric current a physical quantity?**\n\n**Answer:** Yes, it is measurable using an ammeter.",
+    "**Q16: Give an example of a quantity that seems physical but is actually subjective.**\n\n**Answer:** Comfort level (depends on perception, not a fixed measurable standard).",
+    "**Q17: Which branch of science primarily deals with physical quantities?**\n\n**Answer:** Physics.",
+    "**Q18: Can a physical quantity exist without a unit?**\n\n**Answer:** No, every physical quantity must have an associated unit.",
+    "**Q19: Is 'luminous intensity' measurable?**\n\n**Answer:** Yes, it is a fundamental physical quantity.",
+    "**Q20: What is the opposite category of measurable quantities?**\n\n**Answer:** Non-measurable quantities.",
+    "**Q21: Name one derived physical quantity.**\n\n**Answer:** Force (or velocity, area, etc.).",
+    "**Q22: Name one fundamental physical quantity.**\n\n**Answer:** Mass (or length, time, etc.).",
+    "**Q23: Why must physical quantities be quantified precisely?**\n\n**Answer:** So they can be compared, calculated, and used in laws of physics.",
+    "**Q24: Give an example of a quantity that depends on other quantities.**\n\n**Answer:** Density (depends on mass and volume).",
+    "**Q25: Is 'volume' fundamental or derived?**\n\n**Answer:** Derived.",
+    "**Q26: True or False: All measurable quantities are fundamental.**\n\n**Answer:** False, measurable quantities can be either fundamental or derived."
+  ],
+  "keyPoints": [
+    "- **Definition:** A physical quantity is anything that can be measured; it is classed as measurable (physical) or non-measurable (like love, beauty).",
+    "- **Example:** Measurable: mass, length, time, temperature",
+    "- **Example:** Non-measurable: happiness, beauty, honesty"
+  ],
+  "summary": "A physical quantity is anything that can be measured; it is classed as measurable (physical) or non-measurable (like love, beauty). Key examples include Measurable: mass, length, time, temperature; Non-measurable: happiness, beauty, honesty. Includes 26 short-answer practice questions."
+}

@@ -77,7 +77,7 @@ export default function SearchBar({ autoFocus = false }) {
           onFocus={() => (results.length || recommendations.length) && setOpen(true)}
           autoFocus={autoFocus}
           placeholder="Search notes… e.g. kinematics, sandhi, mole"
-          className="w-full rounded-full bg-white/10 border border-white/15 pl-9 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60 focus:bg-white/15 transition"
+          className="w-full rounded-full bg-white/15 border border-white/20 pl-9 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60 focus:bg-white/20 transition"
         />
         {loading && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-aqua-400/40 border-t-aqua-400 rounded-full animate-spin" />

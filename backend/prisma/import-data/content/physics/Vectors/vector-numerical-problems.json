@@ -1,0 +1,42 @@
+{
+  "title": "Vector Numerical Problems (Applications)",
+  "notes": [
+    "<h1>Definition</h1>\n<p>Applied numerical problems combining dot product, cross product, and resultant vector concepts.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Finding angle between vectors given |A×B|=A·B</li>\n  <li>Finding angle when resultant equals vector magnitude</li>\n  <li>Work done from F and D vectors</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: If |A×B| = A·B, find the angle between A and B.**\n\n**Answer:** θ = 45° (tanθ=1).",
+    "**Q2: Two vectors of equal magnitude have resultant also equal in magnitude. Find the angle between them.**\n\n**Answer:** 120°.",
+    "**Q3: If A = 4î − ĵ + 3k̂ and B = 7î + 5ĵ + k̂, find the angle between A and B.**\n\n**Answer:** θ ≈ 54° (cosθ ≈ 0.58).",
+    "**Q4: If F = 2î + ĵ − 3k̂ and displacement D = î − 2ĵ − 3k̂, find work done.**\n\n**Answer:** W = 9 Joule.",
+    "**Q5: If A − B = C and A − B = C (magnitudes), find the angle between A and B.**\n\n**Answer:** 0° (they are parallel/in the same direction, per the derivation shown).",
+    "**Q6: Why can vectors not be added algebraically?**\n\n**Answer:** Because apart from magnitude, they also have direction, so simple algebra doesn't apply.",
+    "**Q7: State the essential condition for addition of vectors.**\n\n**Answer:** They must represent physical quantities of the same nature.",
+    "**Q8: Can the resultant of three vectors be zero?**\n\n**Answer:** Yes, if the resultant of any two coplanar vectors is equal in magnitude but opposite in direction to the third.",
+    "**Q9: Is electric current a vector? Explain.**\n\n**Answer:** No, though it has magnitude and direction, it doesn't obey vector addition laws, so it's treated as scalar.",
+    "**Q10: Is a quantity with magnitude and direction necessarily a vector?**\n\n**Answer:** No, it must also obey the rules of vector algebra (like electric current does not).",
+    "**Q11: Two forces of 2N each act at 90°. Find the resultant.**\n\n**Answer:** 2√2 N ≈ 2.83N.",
+    "**Q12: Two forces of 2N each act at 90°. Find the direction relative to the first force.**\n\n**Answer:** 45°.",
+    "**Q13: Two forces of 2N each act at 180°. Find the resultant.**\n\n**Answer:** 0N.",
+    "**Q14: If two equal vectors P have resultant R equal to P, derive cosθ.**\n\n**Answer:** cosθ = −1/2, so θ = 120°.",
+    "**Q15: Using A=4î−ĵ+3k̂, find Ax, Ay, Az.**\n\n**Answer:** Ax=4, Ay=−1, Az=3.",
+    "**Q16: Using B=7î+5ĵ+k̂, find Bx, By, Bz.**\n\n**Answer:** Bx=7, By=5, Bz=1.",
+    "**Q17: Compute A·B for A=4î−ĵ+3k̂ and B=7î+5ĵ+k̂ step by step.**\n\n**Answer:** (4×7)+(−1×5)+(3×1) = 28−5+3 = 26.",
+    "**Q18: Compute |A| for A=4î−ĵ+3k̂.**\n\n**Answer:** √(16+1+9)=√26.",
+    "**Q19: Compute |B| for B=7î+5ĵ+k̂.**\n\n**Answer:** √(49+25+1)=√75.",
+    "**Q20: Find cosθ for the above A and B.**\n\n**Answer:** cosθ = 26/(√26×√75) = 26/√1950 ≈ 0.588.",
+    "**Q21: Find θ from cosθ ≈ 0.588.**\n\n**Answer:** θ ≈ 54°.",
+    "**Q22: If F=2î+ĵ−3k̂, what are Fx, Fy, Fz?**\n\n**Answer:** Fx=2, Fy=1, Fz=−3.",
+    "**Q23: If D=î−2ĵ−3k̂, what are Dx, Dy, Dz?**\n\n**Answer:** Dx=1, Dy=−2, Dz=−3.",
+    "**Q24: Compute F·D step by step.**\n\n**Answer:** (2×1)+(1×−2)+(−3×−3) = 2−2+9 = 9.",
+    "**Q25: What is the unit of work done in the F·D example?**\n\n**Answer:** Joule.",
+    "**Q26: Why is work done calculated using dot product and not cross product?**\n\n**Answer:** Because work is a scalar quantity, and dot product yields a scalar result matching the physical nature of work."
+  ],
+  "keyPoints": [
+    "- **Definition:** Applied numerical problems combining dot product, cross product, and resultant vector concepts.",
+    "- **Example:** Finding angle between vectors given |A×B|=A·B",
+    "- **Example:** Finding angle when resultant equals vector magnitude",
+    "- **Example:** Work done from F and D vectors"
+  ],
+  "summary": "Applied numerical problems combining dot product, cross product, and resultant vector concepts. Key examples include Finding angle between vectors given |A×B|=A·B; Finding angle when resultant equals vector magnitude; Work done from F and D vectors. Includes 26 short-answer practice questions."
+}

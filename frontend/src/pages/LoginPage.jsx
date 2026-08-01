@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ApiError } from '../api/client.js';
@@ -7,12 +7,19 @@ import { ApiError } from '../api/client.js';
 export default function LoginPage() {
   const { login, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
+  const next = new URLSearchParams(location.search).get('next');
+  const afterLogin = (role) => {
+    if (role === 'owner' || role === 'admin') return '/admin';
+    return next || '/';
+  };
+
   if (user) {
-    navigate(user.role === 'owner' || user.role === 'admin' ? '/admin' : '/', { replace: true });
+    navigate(afterLogin(user.role), { replace: true });
     return null;
   }
 
@@ -22,7 +29,7 @@ export default function LoginPage() {
     setError('');
     try {
       const logged = await login(form.email, form.password);
-      navigate(logged.role === 'owner' || logged.role === 'admin' ? '/admin' : '/', { replace: true });
+      navigate(afterLogin(logged.role), { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Login failed — please try again.');
     } finally {

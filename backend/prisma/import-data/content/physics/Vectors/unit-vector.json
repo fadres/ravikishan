@@ -1,0 +1,41 @@
+{
+  "title": "Unit Vector",
+  "notes": [
+    "<h1>Definition</h1>\n<p>A vector which has magnitude one (unity) is called a unit vector, denoted by a letter with a cap (^) over it.</p>",
+    "<h2>Examples</h2>\n<ul>\n  <li>Â is the unit vector of vector A</li>\n  <li>î, ĵ, k̂ are unit vectors along x, y, z axes</li>\n</ul>"
+  ],
+  "examples": [
+    "**Q1: Define unit vector.**\n\n**Answer:** A vector with magnitude equal to one (unity).",
+    "**Q2: How is a unit vector denoted?**\n\n**Answer:** By an alphabetical letter with a cap (^) over it, e.g., Â.",
+    "**Q3: What is the unit vector of vector A called?**\n\n**Answer:** Â (A-hat).",
+    "**Q4: Name the three standard unit vectors along the x, y, z axes.**\n\n**Answer:** î, ĵ, k̂.",
+    "**Q5: What is î·î equal to?**\n\n**Answer:** 1 (since cos0°=1).",
+    "**Q6: What is î×î equal to?**\n\n**Answer:** 0 (since sin0°=0).",
+    "**Q7: What is î×ĵ equal to?**\n\n**Answer:** k̂.",
+    "**Q8: What is ĵ×î equal to?**\n\n**Answer:** −k̂.",
+    "**Q9: What is ĵ×k̂ equal to?**\n\n**Answer:** î.",
+    "**Q10: What is k̂×ĵ equal to?**\n\n**Answer:** −î.",
+    "**Q11: What is k̂×î equal to?**\n\n**Answer:** ĵ.",
+    "**Q12: What is î×k̂ equal to?**\n\n**Answer:** −ĵ.",
+    "**Q13: How do you find the unit vector of a vector A?**\n\n**Answer:** Â = A / |A| (vector A divided by its magnitude).",
+    "**Q14: If A = 3î + 4ĵ, find |A|.**\n\n**Answer:** |A| = √(9+16) = 5.",
+    "**Q15: If A = 3î + 4ĵ, find the unit vector Â.**\n\n**Answer:** Â = (3/5)î + (4/5)ĵ.",
+    "**Q16: Why is the unit vector concept useful in physics?**\n\n**Answer:** It helps express the direction of any vector independently of its magnitude.",
+    "**Q17: What is ĵ·ĵ equal to?**\n\n**Answer:** 1.",
+    "**Q18: What is k̂·k̂ equal to?**\n\n**Answer:** 1.",
+    "**Q19: What is î·ĵ equal to?**\n\n**Answer:** 0 (since they're perpendicular, cos90°=0).",
+    "**Q20: Can a unit vector have units (like meters)?**\n\n**Answer:** No, a unit vector is dimensionless and only represents direction.",
+    "**Q21: If |A| = 10 and A = 6î + 8ĵ, verify the magnitude.**\n\n**Answer:** |A| = √(36+64) = √100 = 10 ✓.",
+    "**Q22: What does multiplying a unit vector by a scalar magnitude give?**\n\n**Answer:** The original vector, e.g., A = |A|·Â.",
+    "**Q23: Is î a scalar or vector quantity?**\n\n**Answer:** Vector (it's a unit vector with direction along x-axis).",
+    "**Q24: What is the magnitude of any unit vector?**\n\n**Answer:** Always 1.",
+    "**Q25: Give the unit vector along the negative y-axis.**\n\n**Answer:** −ĵ.",
+    "**Q26: Why are î, ĵ, k̂ mutually perpendicular?**\n\n**Answer:** Because they represent the three orthogonal (independent) spatial axes x, y, z."
+  ],
+  "keyPoints": [
+    "- **Definition:** A vector which has magnitude one (unity) is called a unit vector, denoted by a letter with a cap (^) over it.",
+    "- **Example:** Â is the unit vector of vector A",
+    "- **Example:** î, ĵ, k̂ are unit vectors along x, y, z axes"
+  ],
+  "summary": "A vector which has magnitude one (unity) is called a unit vector, denoted by a letter with a cap (^) over it. Key examples include Â is the unit vector of vector A; î, ĵ, k̂ are unit vectors along x, y, z axes. Includes 26 short-answer practice questions."
+}

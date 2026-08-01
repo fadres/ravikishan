@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api, ApiError } from '../api/client.js';
 
@@ -8,6 +9,8 @@ const LEVEL_LABELS = { 1: 'Premium', 2: 'Members', 3: 'Free' };
 // content is replaced by a "request access" prompt with the owner's contact.
 export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
   const { user, requestAccess } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [contactEmail, setContactEmail] = useState('');
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
@@ -96,15 +99,27 @@ export default function LockedBlockCard({ block, themeColor = '#38bdf8' }) {
                 Contact owner
               </a>
             )}
-            <button
-              onClick={() => setOpen(true)}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
-            >
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-              </svg>
-              Request access
-            </button>
+            {user ? (
+              <button
+                onClick={() => setOpen(true)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                </svg>
+                Request access
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate(`/login?next=${encodeURIComponent(location.pathname)}`)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                </svg>
+                Get access
+              </button>
+            )}
           </div>
         )}
 
