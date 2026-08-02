@@ -7,6 +7,9 @@ const TYPE_LABELS = {
   mindmap: 'Mind map', diagram_compare: 'Compare', summary: 'Summary',
   keywords: 'Keywords', important_points: 'Important points', byakaran: 'Byakaran',
   formula: 'Formula', symbols: 'Symbols',
+  learning_outcome: 'Learning outcome', mind_recall: 'Mind recall', pyq: 'Past year question',
+  solved_example: 'Solved example', premium_expansion: 'Advanced learning',
+  reference: 'Reference', revision_summary: 'Revision summary',
 };
 
 // Full block editor: markdown body, code + language picker, mindmap JSON,
@@ -100,7 +103,6 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
     }
   };
 
-  const showCode = Boolean(form.contentCode) || ['code'].includes(form.blockType);
   const showMindmap = form.blockType === 'mindmap';
   const showDiagram = form.blockType === 'diagram_compare';
 

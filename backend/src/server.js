@@ -5,18 +5,52 @@ import { prisma } from './config/db.js';
 import { startScheduler, stopScheduler } from './services/scheduler.js';
 import { ensureBadges } from './services/badges.js';
 
-// Ensure the owner account exists (idempotent). Uses OWNER_EMAIL /
-// OWNER_PASSWORD from the environment — the same values seed.js uses, so
-// production needs no one-off seed run to get an admin. Silently skipped when
-// no password is configured (e.g. tests). Only creates if missing — it never
-// demotes or re-points an existing account.
+// Ensure the owner account exists and can always log in (idempotent). Uses
+// OWNER_EMAIL / OWNER_PASSWORD from the environment — the same values seed.js
+// uses, so production needs no one-off seed run to get an admin. Silently
+// skipped when no password is configured (e.g. tests). Repairs an existing
+// account too: missing hashes are created, and a non-owner email is upgraded,
+// so the owner can never be locked out by a half-finished migration.
 async function ensureOwner() {
   if (!env.ownerPassword) return;
   const email = env.ownerEmail.toLowerCase();
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({
+    where: { email },
+    include: {
+      passwordHashes: {
+        where: { expiresAt: { gt: new Date() } },
+        orderBy: { createdAt: 'desc' },
+      },
+    },
+  });
   if (existing) {
-    if (existing.role !== 'owner') {
-      console.warn(`Owner email ${email} already exists with role "${existing.role}" — leaving it untouched.`);
+    const patch = {};
+    if (existing.role !== 'owner') patch.role = 'owner';
+    if (!existing.isApproved) patch.isApproved = true;
+    if (!existing.emailVerified) patch.emailVerified = true;
+    if (existing.accessLevel !== 1) patch.accessLevel = 1;
+    // Only bootstrap a hash when the account has none at all — the root cause
+    // of lock-outs. Once hashes exist (owner changed the password via the UI)
+    // we never clobber them: login picks the newest hash.
+    const hasAnyHash = existing.passwordHashes.length > 0;
+    if (Object.keys(patch).length > 0 || !hasAnyHash) {
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: {
+          ...patch,
+          ...(hasAnyHash
+            ? {}
+            : {
+                passwordHashes: {
+                  create: {
+                    hash: await bcrypt.hash(env.ownerPassword, 12),
+                    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                  },
+                },
+              }),
+        },
+      });
+      console.log(`Owner account ${email} repaired (role/perms/hash verified).`);
     }
     return;
   }
@@ -26,8 +60,9 @@ async function ensureOwner() {
       email,
       role: 'owner',
       isApproved: true,
-      displayName: 'Ravikishan',
+      emailVerified: true,
       accessLevel: 1,
+      displayName: 'Ravikishan',
       passwordHashes: {
         create: { hash, expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) },
       },

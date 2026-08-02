@@ -4,6 +4,7 @@
 // KaTeX handles $...$ math; unknown math falls back to plain text.
 
 import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (c) => ({

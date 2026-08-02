@@ -4,8 +4,10 @@
 export const TYPE_META = {
   note_topic: { label: 'Topic', color: '#38bdf8' },
   note_concept: { label: 'Concept', color: '#2dd4bf' },
+  note_statement: { label: 'Statement', color: '#818cf8' },
   note_example: { label: 'Example', color: '#a78bfa' },
   note_important: { label: 'Key Points', color: '#fbbf24' },
+  important_points: { label: 'Important Points', color: '#f97316' },
   numerical: { label: 'Numerical', color: '#fb923c' },
   formula: { label: 'Formula', color: '#f472b6' },
   mindmap: { label: 'Mindmap', color: '#34d399' },
@@ -13,6 +15,16 @@ export const TYPE_META = {
   quiz: { label: 'Quiz', color: '#60a5fa' },
   code: { label: 'Code', color: '#94a3b8' },
   byakaran: { label: 'Byakaran', color: '#fb7185' },
+  summary: { label: 'Summary', color: '#818cf8' },
+  keywords: { label: 'Keywords', color: '#f59e0b' },
+  learning_outcome: { label: 'Learning Outcomes', color: '#4ade80' },
+  mind_recall: { label: 'Mind Recall', color: '#facc15' },
+  pyq: { label: 'Past Year Questions', color: '#f87171' },
+  solved_example: { label: 'Solved Example', color: '#fb923c' },
+  premium_expansion: { label: 'Advanced Learning', color: '#e879f9' },
+  reference: { label: 'Reference', color: '#94a3b8' },
+  revision_summary: { label: 'Revision Summary', color: '#34d399' },
+  symbols: { label: 'Symbols', color: '#c084fc' },
 };
 
 export function typeMeta(blockType) {

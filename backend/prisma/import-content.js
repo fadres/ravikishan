@@ -16,6 +16,14 @@ import { join, basename, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
 import { notifyMembersImport } from '../src/services/mailer.js';
+import {
+  sectionIndexForBlockType,
+  sectionKeyForBlockType,
+  sectionLabelForBlockType,
+} from '../src/lib/sections.js';
+import { structureTopic } from '../src/services/classifier.js';
+import { validateBlocks, serializeReport } from '../src/services/contentValidator.js';
+import { defaultBlockMetadata, defaultTopicMetadata } from '../src/ai/contentTemplate.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -141,6 +149,28 @@ function collapseBlankLines(text) {
   return String(text).replace(/\n{3,}/g, '\n\n').trim();
 }
 
+// ── Paragraph flow ─────────────────────────────────────────────────────────
+//
+// Conceptual paragraphs: one empty line between paragraphs, and the text of a
+// paragraph flows continuously ("leaving a line empty, start writing from the
+// previous end"). Hard line breaks inside a paragraph are joined with a space
+// so no sentence is ever split mid-flow. Structural lines (lists, tables,
+// headings, code fences, blockquotes) keep their own line structure.
+
+const STRUCTURAL_LINE_RE = /^\s*(?:[-*•]\s|\d+[.)]\s|#+\s|\|.*\|$|`{3}|>\s)/;
+
+function flowParagraphs(text) {
+  return String(text)
+    .split(/\n{2,}/)
+    .map((paragraph) => {
+      const lines = paragraph.split('\n');
+      if (lines.length <= 1) return paragraph;
+      if (lines.some((l) => STRUCTURAL_LINE_RE.test(l))) return paragraph;
+      return lines.map((l) => l.trim()).join(' ').replace(/\s+/g, ' ');
+    })
+    .join('\n\n');
+}
+
 // ── HTML → markdown (htmlparser2) ─────────────────────────────────────────
 
 const BLOCK_TAGS = new Set(['p', 'div', 'section', 'article', 'header', 'footer', 'center', 'figure', 'blockquote', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'form']);
@@ -163,7 +193,7 @@ function renderNode(node, ctx = {}) {
     case 'iframe':
       return '';
     case 'br':
-      return '\n\n';
+      return '\n';
     case 'hr':
       return '\n\n---\n\n';
     case 'b':
@@ -280,7 +310,7 @@ function renderTable(node) {
 function htmlToMarkdown(html) {
   const doc = parseDocument(fixMojibake(html), { decodeEntities: true });
   const md = (doc.children || []).map((n) => renderNode(n, { listDepth: 0 })).join('');
-  return collapseBlankLines(md);
+  return collapseBlankLines(flowParagraphs(md));
 }
 
 // ── Plain-text normalization (text-only source files) ─────────────────────
@@ -294,7 +324,7 @@ function normalizeText(raw) {
     if (/^\s*\|/.test(line) && out.length && out[out.length - 1].trim() !== '') out.push('');
     out.push(line);
   }
-  return collapseBlankLines(out.join('\n'));
+  return collapseBlankLines(flowParagraphs(out.join('\n')));
 }
 
 // ── Section splitting for large notes arrays ──────────────────────────────
@@ -580,27 +610,113 @@ function buildAutoMindmap(topic, topicTitle) {
   return root;
 }
 
+// Fallback diagram for topics with no notes (numerical-only, quiz-only, GK
+// cards…): the hierarchy is derived from the topic's own blocks — section
+// label as the middle tier, then the block titles as leaves. Symbols and a
+// legend are included so the diagram stays consistent with notes-based maps.
+function buildBlockDiagram(topicTitle, blocks) {
+  const bySection = new Map();
+  for (const b of blocks) {
+    const key = sectionKeyForBlockType(b.blockType);
+    if (!bySection.has(key)) bySection.set(key, []);
+    bySection.get(key).push(b);
+  }
+  const root = { name: truncate(topicTitle, 60), children: [] };
+  let starUsed = false;
+  for (const [key, group] of bySection) {
+    const label = sectionLabelForBlockType(group[0].blockType);
+    const sectionNode = { name: label, children: [] };
+    group.slice(0, 10).forEach((b, i) => {
+      const name = truncate(String(b.title || 'Untitled').replace(/\s+/g, ' ').trim(), 52);
+      if (!name) return;
+      if (i === 0 && !starUsed) {
+        starUsed = true;
+        sectionNode.children.push({ name: `★ ${name}` });
+      } else {
+        sectionNode.children.push({ name });
+      }
+    });
+    if (sectionNode.children.length) root.children.push(sectionNode);
+  }
+  if (!root.children.length) return null;
+  const legend = ['→ = leads to / flows into', 'Grouped by section of the topic'];
+  if (starUsed) legend.push('★ = first / most important item in the section');
+  root.legend = legend;
+  return root;
+}
+
 // ── Topic file → blocks ───────────────────────────────────────────────────
 
+// Returns { blocks, topicMeta } where blocks already carry sectionIndex and
+// topicMeta carries the topic-level metadata (tags, outcomes, difficulty).
 function buildBlocks(topic, subjectType, topicTitle) {
   const blocks = [];
+  const topicMeta = defaultTopicMetadata({});
   const push = (kind, title, content, extra = {}) => {
     const text = String(content || '').trim();
     if (!text) return;
     const blockType = BLOCK_TYPES[subjectType][kind];
-    blocks.push({ blockType, title, contentRichtext: text, accessLevel: LEVELS[kind], ...extra });
+    const sectionIndex = sectionIndexForBlockType(blockType);
+    blocks.push({
+      blockType,
+      title,
+      contentRichtext: text,
+      accessLevel: LEVELS[kind],
+      sectionIndex,
+      metadata: defaultBlockMetadata({ source: 'import' }),
+      ...extra,
+    });
   };
+
+  // Keywords from keyPoints/tags feed search + topic metadata.
+  if (Array.isArray(topic.keyPoints)) {
+    topicMeta.tags = topic.keyPoints
+      .map((k) => String(k).replace(/^[-•*]\s*/, '').replace(/\*\*/g, '').trim())
+      .filter((k) => k && k.length < 40)
+      .slice(0, 12);
+  }
 
   const notes = Array.isArray(topic.notes) ? topic.notes : topic.notes ? [topic.notes] : [];
   const isText = notes.length > 0 && !isHtml(notes.join(''));
   const canUseStatement = subjectType === 'science_math' || subjectType === 'biology';
   if (notes.length) {
-    const sections = splitLongSections(splitNotes(notes, topicTitle, isText), topicTitle);
-    sections.forEach((s, i) => {
-      const title = s.title || (i === 0 ? topicTitle : `${topicTitle} — Part ${i + 1}`);
-      const topicLike = title.split(/\s+/).length <= 8 && !/[.?!…]$/.test(title) && !title.includes(',');
-      push('notes', title, s.content, topicLike || !canUseStatement ? {} : { blockType: 'note_statement' });
-    });
+    // Every notes blob is run through the classifier so the canonical section
+    // structure is enforced automatically (headings → sections → blocks).
+    // HTML blobs are converted to markdown first so heading detection and the
+    // stored content stay clean.
+    const raw = isText ? normalizeText(notes.join('\n\n')) : htmlToMarkdown(notes.join('\n\n'));
+    const structured = structureTopic(topicTitle, raw);
+    if (structured.length) {
+      structured.forEach((s, i) => {
+        const blockType = s.blockType;
+        const sectionIndex = s.sectionIndex;
+        const block = {
+          blockType,
+          title: s.title || (i === 0 ? topicTitle : `${topicTitle} — Part ${i + 1}`),
+          contentRichtext: s.content,
+          accessLevel: sectionIndex <= 1 ? 3 : sectionIndex <= 4 ? 2 : 1,
+          sectionIndex,
+          metadata: { ...defaultBlockMetadata({ source: 'import' }), classifiedReason: s.classifiedReason },
+        };
+        blocks.push(block);
+      });
+    } else {
+      const sections = splitLongSections(splitNotes(notes, topicTitle, isText), topicTitle);
+      sections.forEach((s, i) => {
+        const title = s.title || (i === 0 ? topicTitle : `${topicTitle} — Part ${i + 1}`);
+        const topicLike = title.split(/\s+/).length <= 8 && !/[.?!…]$/.test(title) && !title.includes(',');
+        const blockType = topicLike || !canUseStatement ? BLOCK_TYPES[subjectType].notes : 'note_statement';
+        const sectionIndex = sectionIndexForBlockType(blockType);
+        blocks.push({
+          blockType,
+          title,
+          contentRichtext: s.content,
+          accessLevel: sectionIndex <= 1 ? 3 : sectionIndex <= 4 ? 2 : 1,
+          sectionIndex,
+          metadata: { ...defaultBlockMetadata({ source: 'import' }), classifiedReason: 'legacy-split' },
+        });
+      });
+    }
   }
 
   if (topic.numericals) {
@@ -608,7 +724,15 @@ function buildBlocks(topic, subjectType, topicTitle) {
     list.forEach((item, i) => {
       const q = truncate(item.question, 90);
       const solution = Array.isArray(item.solution) ? item.solution.join('\n') : item.solution || '';
-      push('numericals', `Numerical ${i + 1}: ${q}`, `**Question:** ${item.question}\n\n**Solution:**\n${solution}\n\n**Answer:** ${item.answer}`);
+      const blockType = subjectType === 'science_math' ? 'numerical' : 'solved_example';
+      blocks.push({
+        blockType,
+        title: `Solved ${i + 1}: ${q}`,
+        contentRichtext: `**Question:** ${item.question}\n\n**Solution:**\n${solution}\n\n**Answer:** ${item.answer}`,
+        accessLevel: 2,
+        sectionIndex: sectionIndexForBlockType(blockType),
+        metadata: { ...defaultBlockMetadata({ source: 'import' }), classifiedReason: 'numerical-section' },
+      });
     });
   }
 
@@ -683,12 +807,22 @@ function buildBlocks(topic, subjectType, topicTitle) {
         blockType: BLOCK_TYPES[subjectType].mindmap,
         title: `Mind map: ${json.name}`,
         accessLevel: LEVELS.mindmap,
+        sectionIndex: sectionIndexForBlockType('mindmap'),
+        metadata: { ...defaultBlockMetadata({ source: 'import' }), classifiedReason: 'mindmap-section' },
         mindmapJson: json,
       });
     }
-  } else if (topic.notes) {
-    // Every theoretical topic gets an auto diagram (hierarchical map + symbol legend).
-    const json = buildAutoMindmap(topic, topicTitle);
+  } else {
+    // EVERY topic gets a hierarchical diagram in the premium-only diagram
+    // section: from the notes when available, otherwise derived from the
+    // topic's own blocks. The symbol legend rides along in both cases.
+    let json = null;
+    if (topic.notes) {
+      json = buildAutoMindmap(topic, topicTitle);
+      if (!json) json = buildBlockDiagram(topicTitle, blocks);
+    } else {
+      json = buildBlockDiagram(topicTitle, blocks);
+    }
     if (json) {
       if (subjectType === 'english' || subjectType === 'nepali') {
         push('mindmap', `Diagram: ${json.name}`, flattenMindmap(json).join('\n'));
@@ -697,6 +831,8 @@ function buildBlocks(topic, subjectType, topicTitle) {
           blockType: BLOCK_TYPES[subjectType].mindmap,
           title: `Diagram: ${json.name}`,
           accessLevel: LEVELS.mindmap,
+          sectionIndex: sectionIndexForBlockType('mindmap'),
+          metadata: { ...defaultBlockMetadata({ source: 'import' }), classifiedReason: 'auto-diagram' },
           mindmapJson: json,
         });
       }
@@ -707,7 +843,7 @@ function buildBlocks(topic, subjectType, topicTitle) {
     for (const b of blocks) b.subLevel = topicTitle;
   }
 
-  return blocks;
+  return { blocks, topicMeta };
 }
 
 // ── File discovery ────────────────────────────────────────────────────────
@@ -777,6 +913,19 @@ async function main() {
   });
 
   const chapterGroups = listContentFiles();
+
+  // Syllabus ordering: chapters come from the navigation JSONs (the syllabus
+  // defines the order). Groups are sorted by nav index, then assigned that
+  // index as sortOrder so the API renders chapters exactly as the syllabus.
+  for (const group of chapterGroups) {
+    const nav = existsSync(join(DATA_DIR, 'navigation', `${group.subjectId}.json`))
+      ? loadJson(join(DATA_DIR, 'navigation', `${group.subjectId}.json`))
+      : null;
+    group.navIndex = nav?.chapters?.findIndex((c) => slugify(c.id) === slugify(group.chapterName));
+    group.navIndex = group.navIndex !== undefined && group.navIndex >= 0 ? group.navIndex : Number.MAX_SAFE_INTEGER;
+  }
+  chapterGroups.sort((a, b) => a.navIndex - b.navIndex);
+
   const stats = { blocks: 0, byLevel: { 1: 0, 2: 0, 3: 0 }, chapters: 0 };
   const changedChapters = [];
 
@@ -790,8 +939,8 @@ async function main() {
 
     const subject = await prisma.subject.upsert({
       where: { classId_slug: { classId: klass.id, slug: group.subjectId } },
-      update: subjectCfg,
-      create: { ...subjectCfg, classId: klass.id, slug: group.subjectId },
+      update: { ...subjectCfg, status: 'published' },
+      create: { ...subjectCfg, classId: klass.id, slug: group.subjectId, status: 'published' },
     });
 
     // Default custom subjects per section (seeded once — renames are preserved
@@ -823,47 +972,99 @@ async function main() {
     }
     const chapter = await prisma.chapter.upsert({
       where: { subjectId_slug: { subjectId: subject.id, slug: chapterSlug } },
-      update: { title: chapterTitle(group.chapterName, nav), sortOrder: 1 },
+      update: {
+        title: chapterTitle(group.chapterName, nav),
+        sortOrder: group.navIndex === Number.MAX_SAFE_INTEGER ? stats.chapters : group.navIndex,
+        status: 'published',
+      },
       create: {
         subjectId: subject.id,
         title: chapterTitle(group.chapterName, nav),
         slug: chapterSlug,
-        sortOrder: 1,
+        sortOrder: group.navIndex === Number.MAX_SAFE_INTEGER ? stats.chapters : group.navIndex,
         isLocked: true,
+        status: 'published',
       },
     });
 
     const beforeCount = await prisma.contentBlock.count({ where: { chapterId: chapter.id } });
+    const beforeTopics = await prisma.topic.count({ where: { chapterId: chapter.id } });
     await prisma.contentBlock.deleteMany({ where: { chapterId: chapter.id } });
+    await prisma.topic.deleteMany({ where: { chapterId: chapter.id } });
 
     const chapterBlocks = [];
+    const chapterTopics = [];
+    let fileIndex = 0;
     for (const file of group.files) {
       const topic = loadJson(file);
       if (!topic) continue;
       const title = topicTitle(file, nav, chapterSlug);
-      const blocks = buildBlocks(topic, subjectCfg.subjectType, title);
-      blocks.forEach((b) => chapterBlocks.push(b));
+      const { blocks, topicMeta } = buildBlocks(topic, subjectCfg.subjectType, title);
+      if (!blocks.length) continue;
+
+      const slug = slugify(title);
+      let topicRow = chapterTopics.find((t) => t.slug === slug);
+      if (!topicRow) {
+        topicRow = {
+          title,
+          slug,
+          sortOrder: fileIndex,
+          metadata: topicMeta,
+          status: 'published',
+          blocks: [],
+        };
+        chapterTopics.push(topicRow);
+      }
+      topicRow.blocks.push(...blocks.map((b, i) => ({ ...b, sortOrder: topicRow.blocks.length + i })));
+      fileIndex += 1;
     }
 
-    for (let i = 0; i < chapterBlocks.length; i += BATCH_SIZE) {
-      const batch = chapterBlocks
+    // Persist topics first (blocks need their ids), then blocks with topicId.
+    for (const t of chapterTopics) {
+      const report = serializeReport(validateBlocks(t.blocks));
+      const created = await prisma.topic.create({
+        data: {
+          chapterId: chapter.id,
+          title: t.title,
+          slug: t.slug,
+          sortOrder: t.sortOrder,
+          status: t.status,
+          metadata: { ...t.metadata, tags: t.metadata.tags || [] },
+          validationReport: report,
+        },
+      });
+      t.dbId = created.id;
+    }
+
+    const topicBySlug = new Map(chapterTopics.map((t) => [t.slug, t.dbId]));
+    const flat = [];
+    for (const t of chapterTopics) {
+      for (const b of t.blocks) {
+        flat.push({ ...b, topicId: topicBySlug.get(t.slug) });
+      }
+    }
+
+    for (let i = 0; i < flat.length; i += BATCH_SIZE) {
+      const batch = flat
         .slice(i, i + BATCH_SIZE)
         .map((b, offset) => ({ ...b, chapterId: chapter.id, classifiedBy: 'auto', sortOrder: i + offset }));
       await prisma.contentBlock.createMany({ data: batch });
     }
 
     stats.chapters += 1;
-    stats.blocks += chapterBlocks.length;
-    for (const b of chapterBlocks) stats.byLevel[b.accessLevel] += 1;
-    if (chapterBlocks.length !== beforeCount) {
+    stats.blocks += flat.length;
+    for (const b of flat) stats.byLevel[b.accessLevel] += 1;
+    if (flat.length !== beforeCount || chapterTopics.length !== beforeTopics) {
       changedChapters.push({
         subject: subjectCfg.name,
         chapter: chapter.title,
         before: beforeCount,
-        after: chapterBlocks.length,
+        after: flat.length,
+        beforeTopics,
+        afterTopics: chapterTopics.length,
       });
     }
-    console.log(`  ✓ ${subjectCfg.name} / ${chapter.title}: ${chapterBlocks.length} blocks`);
+    console.log(`  ✓ ${subjectCfg.name} / ${chapter.title}: ${flat.length} blocks, ${chapterTopics.length} topics`);
   }
 
   console.log(`✓ Import complete — ${stats.chapters} chapters, ${stats.blocks} blocks (free=${stats.byLevel[3]}, members=${stats.byLevel[2]}, premium=${stats.byLevel[1]})`);

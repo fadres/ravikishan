@@ -19,6 +19,13 @@ const BLOCK_STYLE = {
   byakaran: { color: '#f43f5e', icon: ICONS.byakaran, label: 'Byakaran' },
   formula: { color: '#38bdf8', icon: ICONS.formula, label: 'Formula' },
   symbols: { color: '#c084fc', icon: ICONS.symbols, label: 'Symbols' },
+  learning_outcome: { color: '#4ade80', icon: ICONS.summary, label: 'Learning Outcomes' },
+  mind_recall: { color: '#facc15', icon: ICONS.keywords, label: 'Mind Recall' },
+  pyq: { color: '#f87171', icon: ICONS.important, label: 'Past Year Questions' },
+  solved_example: { color: '#fb923c', icon: ICONS.numerical, label: 'Solved Example' },
+  premium_expansion: { color: '#e879f9', icon: ICONS.mindmap, label: 'Advanced Learning' },
+  reference: { color: '#94a3b8', icon: ICONS.summary, label: 'Reference' },
+  revision_summary: { color: '#34d399', icon: ICONS.summary, label: 'Revision Summary' },
 };
 
 function KeywordsTags({ content }) {
@@ -138,7 +145,7 @@ function SymbolsTable({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, subjectType, labelOverride }) {
+export default function BlockRenderer({ block, labelOverride }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&

@@ -1,5 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../config/db.js';
+import {
+  sectionIndexForBlockType,
+  sectionLabelForBlockType,
+  sectionKeyForBlockType,
+  isSectionVisible,
+} from '../lib/sections.js';
 
 const SNIPPET_OPTIONS = 'MaxWords=25, MinWords=6, MaxFragments=1, StartSel=<<, StopSel=>>';
 
@@ -13,9 +19,24 @@ function filterSql(filters) {
   return parts.length ? Prisma.join(parts, ' ') : Prisma.empty;
 }
 
+const SECTION_TYPE_SQL = new Map([
+  ['diagram', Prisma.sql`cb."blockType" = 'mindmap'`],
+  ['concept', Prisma.sql`cb."blockType" IN ('note_concept','note_statement','formula','symbols','byakaran')`],
+  ['examples', Prisma.sql`cb."blockType" IN ('note_example','numerical')`],
+  ['important', Prisma.sql`cb."blockType" IN ('note_important','important_points')`],
+  ['mind_recall', Prisma.sql`cb."blockType" IN ('keywords','mind_recall')`],
+  ['pyq', Prisma.sql`cb."blockType" = 'pyq'`],
+  ['solved', Prisma.sql`cb."blockType" = 'solved_example'`],
+  ['premium', Prisma.sql`cb."blockType" = 'premium_expansion'`],
+  ['references', Prisma.sql`cb."blockType" IN ('reference','revision_summary','summary')`],
+  ['topic', Prisma.sql`cb."blockType" = 'note_topic'`],
+  ['learning', Prisma.sql`cb."blockType" = 'learning_outcome'`],
+]);
+
 export async function searchContent(q, viewerLevel = 3, filters = {}) {
-  const { subjectSlug, classSlug, blockType, accessLevel, page = 1, perPage = 25 } = filters;
+  const { subjectSlug, classSlug, blockType, accessLevel, section, page = 1, perPage = 25 } = filters;
   const offset = (page - 1) * perPage;
+  const sectionFilter = section ? SECTION_TYPE_SQL.get(section) : null;
 
   const englishQuery = prisma.$queryRaw`
     SELECT cb.id,
@@ -24,6 +45,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
            cb."subLevel",
            cb."accessLevel",
            cb."difficulty",
+           cb."sectionIndex",
            ch.title AS "chapterTitle",
            ch.slug   AS "chapterSlug",
            s.name    AS "subjectName",
@@ -42,6 +64,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_english @@ plainto_tsquery('english', ${q})
+    ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
     ${filterSql(filters)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
@@ -54,6 +77,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
            cb."subLevel",
            cb."accessLevel",
            cb."difficulty",
+           cb."sectionIndex",
            ch.title AS "chapterTitle",
            ch.slug   AS "chapterSlug",
            s.name    AS "subjectName",
@@ -72,6 +96,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_simple @@ plainto_tsquery('simple', ${q})
+    ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
     ${filterSql(filters)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
@@ -88,21 +113,26 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
   const results = [...merged.values()]
     .sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
     .map((row) => {
-      const readable = (row.accessLevel ?? 3) >= viewerLevel;
+      const blockAccess = row.accessLevel ?? 3;
+      const sectionIndex = row.sectionIndex ?? sectionIndexForBlockType(row.blockType);
+      const visible = isSectionVisible(sectionIndex, blockAccess, viewerLevel);
       const headline = row.snippetEn || row.snippetSimple || '';
       return {
         id: row.id,
         title: row.title ?? '',
         blockType: row.blockType,
-        accessLevel: row.accessLevel ?? 3,
+        accessLevel: blockAccess,
         difficulty: row.difficulty ?? 'easy',
         subLevel: row.subLevel ?? null,
+        sectionIndex,
+        sectionLabel: sectionLabelForBlockType(row.blockType),
+        sectionKey: sectionKeyForBlockType(row.blockType),
         chapter: { title: row.chapterTitle, slug: row.chapterSlug },
         subject: { name: row.subjectName, slug: row.subjectSlug },
         klass: { name: row.className, slug: row.classSlug },
         rank: Number(row.rank ?? 0),
-        locked: !readable,
-        snippet: readable ? stripHeadline(headline) : null,
+        locked: !visible,
+        snippet: visible ? stripHeadline(headline) : null,
       };
     });
 

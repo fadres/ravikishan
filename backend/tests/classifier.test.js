@@ -6,13 +6,13 @@ import { classifyContent, suggestForSubject } from '../src/services/classifier.j
 
 test('important marker at the start wins over other signals', () => {
   const r = classifyContent({ content: 'Note: this formula is central, for example in unit conversion.' });
-  assert.equal(r.blockType, 'note_important');
+  assert.equal(r.blockType, 'important_points');
   assert.match(r.reason, /important/i);
 });
 
 test('warning symbol is treated as important', () => {
   const r = classifyContent({ content: '⚠ Remember to include units in every answer.' });
-  assert.equal(r.blockType, 'note_important');
+  assert.equal(r.blockType, 'important_points');
 });
 
 test('example signals map to note_example', () => {

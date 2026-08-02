@@ -17,7 +17,6 @@ function layout(node, collapsed = new Set(), acc = []) {
   }
   const childNodes = children.map((c) => layout(c, collapsed, acc));
   const x = childNodes.reduce((s, c) => s + c.x, 0) / childNodes.length;
-  acc[acc.length - 1]; // touch acc to keep order deterministic
   return { node, x, children: childNodes };
 }
 

@@ -418,78 +418,81 @@ export default function Header() {
           )}
         </div>
 
-        {/* Log in / Join — always visible */}
-        <div className="flex items-center gap-2 shrink-0">
-          <Link
-            to="/login"
-            className="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/10 border border-white/15 transition"
-          >
-            Log in
-          </Link>
-          <Link
-            to="/register"
-            className="px-3 py-1.5 rounded-lg text-sm font-bold bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 hover:brightness-110 transition"
-          >
-            Join
-          </Link>
+        {/* Log in / Join — only when logged out */}
+        {!user && (
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              to="/login"
+              className="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/10 border border-white/15 transition"
+            >
+              Log in
+            </Link>
+            <Link
+              to="/register"
+              className="px-3 py-1.5 rounded-lg text-sm font-bold bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 hover:brightness-110 transition"
+            >
+              Join
+            </Link>
+          </div>
+        )}
 
-          {/* Logged-in avatar menu */}
-          {user && (
-            <>
-              <Link
-                to="/notifications"
-                className="relative w-9 h-9 rounded-full flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 transition"
-                aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`}
+        {/* Logged-in avatar menu */}
+        {user && (
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              to="/notifications"
+              className="relative w-9 h-9 rounded-full flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 transition"
+              aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+              {unread > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {unread > 9 ? '9+' : unread}
+                </span>
+              )}
+            </Link>
+            <div className="relative">
+              <button
+                onClick={() => setMenuOpen((o) => !o)}
+                className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 pl-1 pr-2 py-1 hover:bg-white/10 transition"
+                aria-label="Account menu"
               >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                <span className="relative w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm font-bold flex items-center justify-center">
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
+                  ) : (
+                    initial
+                  )}
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-pink-400 ring-2 ring-deep-900" />
+                </span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-slate-300">
+                  <path d="M6 9l6 6 6-6" />
                 </svg>
-                {unread > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center">
-                    {unread > 9 ? '9+' : unread}
-                  </span>
-                )}
-              </Link>
-              <div className="relative">
-                <button
-                  onClick={() => setMenuOpen((o) => !o)}
-                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 pl-1 pr-2 py-1 hover:bg-white/10 transition"
-                  aria-label="Account menu"
-                >
-                  <span className="relative w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm font-bold flex items-center justify-center">
-                    {user.avatarUrl ? (
-                      <img src={user.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
-                    ) : (
-                      initial
-                    )}
-                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-pink-400 ring-2 ring-deep-900" />
-                  </span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-slate-300">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-                {menuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-56 glass-strong rounded-xl p-2 z-50 shadow-xl">
-                      <div className="px-3 py-2 border-b border-white/10 mb-1">
-                        <p className="text-sm font-semibold text-white truncate">{user.displayName || 'Student'}</p>
-                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
-                        <span className="inline-block mt-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-aqua-400/15 text-aqua-300 font-bold">
-                          {user.role}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setMenuOpen(false);
-                          navigate('/profile');
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10"
-                      >
-                        My profile
-                      </button>
-                      {isAdmin && (
+              </button>
+              {menuOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-56 glass-strong rounded-xl p-2 z-50 shadow-xl">
+                    <div className="px-3 py-2 border-b border-white/10 mb-1">
+                      <p className="text-sm font-semibold text-white truncate">{user.displayName || 'Student'}</p>
+                      <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                      <span className="inline-block mt-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-aqua-400/15 text-aqua-300 font-bold">
+                        {user.role}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate('/profile');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10"
+                    >
+                      My profile
+                    </button>
+                    {isAdmin && (
                       <button
                         onClick={() => {
                           setMenuOpen(false);
@@ -509,21 +512,20 @@ export default function Header() {
                   </div>
                 </>
               )}
-              </div>
-            </>
-          )}
+            </div>
+          </div>
+        )}
 
-          {/* Mobile nav toggle */}
-          <button
-            onClick={() => setMobileNav((o) => !o)}
-            aria-label="Menu"
-            className="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 transition"
-          >
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {mobileNav ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-            </svg>
-          </button>
-        </div>
+        {/* Mobile nav toggle */}
+        <button
+          onClick={() => setMobileNav((o) => !o)}
+          aria-label="Menu"
+          className="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 transition"
+        >
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {mobileNav ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+          </svg>
+        </button>
       </div>
 
       {/* Mobile search */}

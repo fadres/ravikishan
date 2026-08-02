@@ -7,6 +7,7 @@ import { validate } from '../middleware/validate.js';
 import { recordAudit } from '../services/audit.js';
 import { notifyMembersContent } from '../services/mailer.js';
 import { suggestForSubject, ALLOWED_BLOCK_TYPES } from '../services/classifier.js';
+import { sectionIndexForBlockType } from '../lib/sections.js';
 import {
   listTopics,
   createTopic,
@@ -193,6 +194,7 @@ const BLOCK_TYPE_VALUES = [
   'note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important',
   'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
   'formula', 'symbols',
+  'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary',
 ];
 
 const blockSchema = z.object({
@@ -220,6 +222,9 @@ const blockSchema = z.object({
   subLevel: z.string().trim().max(300).nullish(),
   sortOrder: z.number().int().min(0).nullish(),
   accessLevel: z.number().int().min(1).max(3).nullish(),
+  sectionIndex: z.number().int().min(0).max(20).nullish(),
+  metadata: z.record(z.string(), z.any()).nullish(),
+  isDuplicateOf: z.string().uuid().nullish(),
 });
 
 async function assertBlockTypeAllowed(subjectId, blockType) {
@@ -268,6 +273,8 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
       ...data,
       chapterId: chapter.id,
       accessLevel: req.body.accessLevel ?? 3,
+      sectionIndex: req.body.sectionIndex ?? sectionIndexForBlockType(data.blockType),
+      metadata: req.body.metadata ?? {},
       classifiedBy: autoReason === null ? 'manual' : 'auto',
       sortOrder: req.body.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
     },
@@ -304,6 +311,7 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   if (data.blockType !== undefined) {
     await assertBlockTypeAllowed(block.chapter.subjectId, data.blockType);
     data.classifiedBy = 'manual';
+    data.sectionIndex = data.sectionIndex ?? sectionIndexForBlockType(data.blockType);
   }
 
   const updated = await prisma.contentBlock.update({

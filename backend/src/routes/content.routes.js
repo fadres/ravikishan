@@ -5,6 +5,13 @@ import { AppError } from '../middleware/error.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
+import {
+  sectionIndexForBlockType,
+  sectionLabelForBlockType,
+  sectionKeyForBlockType,
+  isSectionVisible,
+  coverageForTopic,
+} from '../lib/sections.js';
 
 const router = Router();
 
@@ -146,6 +153,7 @@ router.delete('/subjects/:slug/custom/:customId', requireRole('owner', 'admin'),
 
 const blockFullSelect = {
   id: true,
+  topicId: true,
   blockType: true,
   accessLevel: true,
   title: true,
@@ -155,6 +163,9 @@ const blockFullSelect = {
   mindmapJson: true,
   diagramData: true,
   subLevel: true,
+  sectionIndex: true,
+  metadata: true,
+  isDuplicateOf: true,
   sortOrder: true,
   createdAt: true,
   updatedAt: true,
@@ -165,18 +176,50 @@ const blockFullSelect = {
 // never leave the server for inaccessible blocks.
 const blockMetaOnly = (b) => ({
   id: b.id,
+  topicId: b.topicId,
   blockType: b.blockType,
   accessLevel: b.accessLevel,
   title: b.title,
   subLevel: b.subLevel,
+  sectionIndex: b.sectionIndex ?? sectionIndexForBlockType(b.blockType),
+  sectionLabel: sectionLabelForBlockType(b.blockType),
+  sectionKey: sectionKeyForBlockType(b.blockType),
   sortOrder: b.sortOrder,
 });
 
+const decorateBlock = (b, viewerLevel) => {
+  const sectionIndex = b.sectionIndex ?? sectionIndexForBlockType(b.blockType);
+  const visible = isSectionVisible(sectionIndex, b.accessLevel, viewerLevel);
+  const base = {
+    id: b.id,
+    topicId: b.topicId,
+    blockType: b.blockType,
+    accessLevel: b.accessLevel,
+    title: b.title,
+    subLevel: b.subLevel,
+    sectionIndex,
+    sectionLabel: sectionLabelForBlockType(b.blockType),
+    sectionKey: sectionKeyForBlockType(b.blockType),
+    sortOrder: b.sortOrder,
+  };
+  if (!visible) return base;
+  return {
+    ...base,
+    contentRichtext: b.contentRichtext,
+    contentCode: b.contentCode,
+    codeLanguage: b.codeLanguage,
+    mindmapJson: b.mindmapJson,
+    diagramData: b.diagramData,
+    metadata: b.metadata,
+    isDuplicateOf: b.isDuplicateOf,
+  };
+};
+
 // GET /api/subjects/:subjectSlug/chapters/:chapterSlug
-// Access tiers (spec): each block carries accessLevel 1 (most premium) – 3
-// (free). A block is readable when accessLevel >= the viewer's accessLevel.
-// Everything else about the subject/chapter is public — visitors see the
-// whole structure, titles and lock state, and only premium *content* is gated.
+// Structured-notes endpoint: blocks are returned grouped by topic and in
+// canonical section order (sectionIndex, then sortOrder). Automatic content
+// degradation: a viewer only receives the sections allowed by their tier
+// (public ≈10% → premium 100%), combined with the per-block accessLevel gate.
 router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (req, res) => {
   const classSlug = typeof req.query.class === 'string' ? req.query.class.trim() : '';
   const subject = await prisma.subject.findFirst({
@@ -193,12 +236,38 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
 
   const viewerLevel = req.user?.accessLevel ?? 3;
 
-  const blocks = await prisma.contentBlock.findMany({
-    where: { chapterId: chapter.id },
-    // Content flow: free (3) → members (2) → premium (1), then manual order.
-    orderBy: [{ accessLevel: 'desc' }, { sortOrder: 'asc' }],
-    select: blockFullSelect,
-  });
+  const [blocks, topics] = await Promise.all([
+    prisma.contentBlock.findMany({
+      where: { chapterId: chapter.id },
+      // Canonical render order: topic → sectionIndex → manual order.
+      orderBy: [{ topicId: 'asc' }, { sectionIndex: 'asc' }, { sortOrder: 'asc' }],
+      select: blockFullSelect,
+    }),
+    prisma.topic.findMany({
+      where: { chapterId: chapter.id },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        sortOrder: true,
+        metadata: true,
+        validationReport: true,
+      },
+    }),
+  ]);
+
+  // Degradation: compute per-topic coverage and hide out-of-tier sections.
+  const topicCoverage = new Map();
+  const blocksByTopic = new Map();
+  for (const b of blocks) {
+    const key = b.topicId || 'untitled';
+    if (!blocksByTopic.has(key)) blocksByTopic.set(key, []);
+    blocksByTopic.get(key).push(b);
+  }
+  for (const [key, topicBlocks] of blocksByTopic) {
+    topicCoverage.set(key, coverageForTopic(topicBlocks, viewerLevel));
+  }
 
   res.json({
     chapter: {
@@ -209,7 +278,17 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
       canRead: true, // gating now happens per block, not per chapter
     },
     subject: { id: subject.id, name: subject.name, slug: subject.slug, themeColor: subject.themeColor },
-    blocks: blocks.map((b) => (b.accessLevel >= viewerLevel ? b : blockMetaOnly(b))),
+    topics: topics.map((t) => ({
+      id: t.id,
+      title: t.title,
+      slug: t.slug,
+      sortOrder: t.sortOrder,
+      metadata: t.metadata,
+      validationReport: t.validationReport,
+      coveragePercent: topicCoverage.get(t.id) ?? 0,
+      premium: topicCoverage.get(t.id) === 100,
+    })),
+    blocks: blocks.map((b) => decorateBlock(b, viewerLevel)),
   });
 });
 
@@ -218,13 +297,15 @@ const searchSchema = z.object({
   subject: z.string().trim().optional(),
   class: z.string().trim().optional(),
   type: z.string().trim().optional(),
+  section: z.enum(['topic', 'learning', 'diagram', 'concept', 'examples', 'important', 'mind_recall', 'pyq', 'solved', 'premium', 'references']).optional(),
   access: z.number().int().min(1).max(3).optional(),
   page: z.number().int().min(1).optional(),
   perPage: z.number().int().min(1).max(50).optional(),
 });
 
 // GET /api/search?q= — live search, ranked by ts_rank, grouped client-side.
-// Snippets are gated per block by the viewer's access level (default 3).
+// Snippets are gated per block by the viewer's access level (default 3) and
+// the viewer's section limit (automatic degradation).
 router.get('/search', authenticate, validate(searchSchema, 'query'), async (req, res) => {
   const q = req.validated.q;
   const viewerLevel = req.user?.accessLevel ?? 3;
@@ -232,6 +313,7 @@ router.get('/search', authenticate, validate(searchSchema, 'query'), async (req,
     subjectSlug: req.validated.subject,
     classSlug: req.validated.class,
     blockType: req.validated.type,
+    section: req.validated.section,
     accessLevel: req.validated.access,
     page: req.validated.page,
     perPage: req.validated.perPage,

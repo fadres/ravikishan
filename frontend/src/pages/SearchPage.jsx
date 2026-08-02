@@ -335,7 +335,7 @@ export default function SearchPage() {
               <button
                 onClick={() => {
                   const p = Math.max(1, page - 1);
-                  setParams({ q: query, subject: subjectFilter, type: typeFilter, access: accessFilter || undefined, page: p });
+                  setParams({ q: query, subject: activeSubjectFilter, type: activeTypeFilter, access: activeAccessFilter || undefined, page: p });
                 }}
                 disabled={page <= 1}
                 className="px-4 py-2 rounded-xl glass text-sm font-bold text-slate-300 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
@@ -349,7 +349,7 @@ export default function SearchPage() {
               <button
                 onClick={() => {
                   const p = Math.min(totalPages, page + 1);
-                  setParams({ q: query, subject: subjectFilter, type: typeFilter, access: accessFilter || undefined, page: p });
+                  setParams({ q: query, subject: activeSubjectFilter, type: activeTypeFilter, access: activeAccessFilter || undefined, page: p });
                 }}
                 disabled={page >= totalPages}
                 className="px-4 py-2 rounded-xl glass text-sm font-bold text-slate-300 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"

@@ -1,10 +1,10 @@
-// Drop DB chapters that no longer exist in the restructured content folders.
+// Drop DB chapters that no longer exist in the content folders / navigation.
 // Run after: npm run content:restructure → npm run content:import.
 //
 // Run:  npm run content:prune
 
 import { PrismaClient } from '@prisma/client';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
@@ -12,12 +12,33 @@ import 'dotenv/config';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const prisma = new PrismaClient();
 
-const SUBJECTS = ['physics', 'chemistry', 'mathematics', 'biology'];
+const SUBJECTS = ['physics', 'chemistry', 'mathematics', 'biology', 'english', 'nepali', 'loksewa', 'general-knowledge'];
 
+const slugify = (text) =>
+  String(text)
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+// A chapter is kept when its slug appears in the navigation JSON or as a
+// content folder on disk. Anything else is an orphan.
 const keepBySubject = new Map();
 for (const id of SUBJECTS) {
-  const nav = JSON.parse(readFileSync(join(HERE, 'import-data', 'navigation', `${id}.json`), 'utf8'));
-  keepBySubject.set(id, new Set(nav.chapters.map((c) => c.id)));
+  const keep = new Set();
+  const navFile = join(HERE, 'import-data', 'navigation', `${id}.json`);
+  if (existsSync(navFile)) {
+    const nav = JSON.parse(readFileSync(navFile, 'utf8'));
+    for (const c of nav.chapters || []) keep.add(slugify(c.id));
+  }
+  const dir = join(HERE, 'import-data', 'content', id);
+  if (existsSync(dir)) {
+    for (const folder of readdirSync(dir)) keep.add(slugify(folder));
+  }
+  keepBySubject.set(id, keep);
 }
 
 const klass = await prisma.class.findUnique({ where: { slug: 'class-11' } });

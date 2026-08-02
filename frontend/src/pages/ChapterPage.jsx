@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import LockedBlockCard from '../components/LockedBlockCard.jsx';
@@ -29,7 +29,6 @@ function buildItems(blocks) {
 
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
-  const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');

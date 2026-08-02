@@ -1,58 +1,46 @@
 {
-  "title": "Botany5.1",
+  "title": "Botany 5.1 — The Living World & Biological Classification",
   "notes": [
-    "<h2>Classification of the Living World (Botany) — Root to Peak</h2>",
-    "<p><b>Diagram:</b></p>",
-    "<ul><li><b>Living World (Biology)</b> — <i>Basis: presence of living substance</i></li></ul>",
-    "<ul></ul>",
-    "<li><b>Protobiota</b> — <i>e.g. Viroids, Viruses, Virions, Prions</i></li>",
-    "<li><b>Cytobiota</b> — <i>Basis: cellular organisation</i></li>",
-    "<ul></ul>",
-    "<li><b>Prokaryotes</b> — <i>e.g. Bacteria, Cyanobacteria</i></li>",
-    "<li><b>Mesokaryotes</b> — <i>Members of Dinoflagellates</i></li>",
-    "<li><b>Eukaryotes</b></li>",
-    "<ul></ul>",
-    "<li><b>Plant Kingdom</b> — <i>Acc. to Eichler</i></li>",
-    "<ul></ul>",
-    "<li><b>Cryptogams</b></li>",
-    "<ul></ul>",
-    "<li><b>Thallophyta</b></li>",
-    "<ul></ul>",
-    "<li><b>Algae</b> — <i>e.g. Spirogyra</i></li>",
-    "<li><b>Fungi</b> — <i>e.g. Mucor, Yeast, Mushrooms</i></li>",
-    "<li><b>Lichens</b> — <i>Algae + Fungi symbiosis</i></li>",
-    "",
-    "",
-    "<li><b>Bryophyta</b> — <i>e.g. Marchantia, Funaria</i></li>",
-    "<li><b>Pteridophyta</b> — <i>e.g. Fern, Selaginella</i></li>",
-    "",
-    "",
-    "<li><b>Phanerogams</b></li>",
-    "<ul></ul>",
-    "<li><b>Gymnosperms</b> — <i>e.g. Pinus, Cycas</i></li>",
-    "<li><b>Angiosperms</b></li>",
-    "<ul></ul>",
-    "<li><b>Monocotyledons</b> — <i>e.g. Liliaceae, Poaceae</i></li>",
-    "<li><b>Dicotyledons</b> — <i>Acc. to Bentham & Hooker</i></li>",
-    "<ul></ul>",
-    "<li><b>Polypetalae</b></li>",
-    "<li><b>Gamopetalae</b></li>",
-    "<li><b>Monochlamydeae</b></li>",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "<li><b>Animal Kingdom</b></li>",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "<h2>Classification of the Living World (Botany) — Level by Level</h2>",
+    "<p>The hierarchy below is numbered <b>Level 1</b> (broadest) to <b>Level 8</b> (finest). Read each level as a branch of the one above it.</p>",
+    "<ul>",
+    "<li><b>Level 1 — Living World (Biology)</b> — <i>Basis: presence of living substance</i><ul>",
+    "<li><b>Level 2 — Protobiota</b> — <i>acellular, e.g. Viroids, Viruses, Virions, Prions</i></li>",
+    "<li><b>Level 2 — Cytobiota</b> — <i>Basis: cellular organisation</i><ul>",
+    "<li><b>Level 3 — Prokaryotes</b> — <i>e.g. Bacteria, Cyanobacteria</i></li>",
+    "<li><b>Level 3 — Mesokaryotes</b> — <i>e.g. Dinoflagellates</i></li>",
+    "<li><b>Level 3 — Eukaryotes</b><ul>",
+    "<li><b>Level 4 — Plant Kingdom</b> — <i>Acc. to Eichler</i><ul>",
+    "<li><b>Level 5 — Cryptogams</b> — <i>spore-bearing, no seed</i><ul>",
+    "<li><b>Level 6 — Thallophyta</b><ul>",
+    "<li><b>Level 7 — Algae</b> — <i>e.g. Spirogyra</i></li>",
+    "<li><b>Level 7 — Fungi</b> — <i>e.g. Mucor, Yeast, Mushrooms</i></li>",
+    "<li><b>Level 7 — Lichens</b> — <i>Algae + Fungi symbiosis</i></li>",
+    "</ul></li>",
+    "<li><b>Level 6 — Bryophyta</b> — <i>e.g. Marchantia, Funaria</i></li>",
+    "<li><b>Level 6 — Pteridophyta</b> — <i>e.g. Fern, Selaginella</i></li>",
+    "</ul></li>",
+    "<li><b>Level 5 — Phanerogams</b> — <i>seed-bearing</i><ul>",
+    "<li><b>Level 6 — Gymnosperms</b> — <i>e.g. Pinus, Cycas</i></li>",
+    "<li><b>Level 6 — Angiosperms</b><ul>",
+    "<li><b>Level 7 — Monocotyledons</b> — <i>e.g. Liliaceae, Poaceae</i></li>",
+    "<li><b>Level 7 — Dicotyledons</b> — <i>Acc. to Bentham &amp; Hooker</i><ul>",
+    "<li><b>Level 8 — Polypetalae</b> — <i>free petals</i></li>",
+    "<li><b>Level 8 — Gamopetalae</b> — <i>fused petals</i></li>",
+    "<li><b>Level 8 — Monochlamydeae</b> — <i>single perianth whorl</i></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "<li><b>Level 4 — Animal Kingdom</b><ul>",
+    "<li><b>Level 5 — Non-Chordata</b> — <i>e.g. Porifera to Echinodermata</i></li>",
+    "<li><b>Level 5 — Chordata</b> — <i>e.g. Pisces to Mammalia</i></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "</ul></li>",
+    "</ul>",
+    "<p><b>Quick memory aid:</b> Living World (1) → Protobiota/Cytobiota (2) → Pro-/Meso-/Eukaryotes (3) → Plant &amp; Animal Kingdoms (4) → Crypto-/Phanerogams (5) → Thallophyta, Bryophyta, Pteridophyta, Gymno-, Angiosperms (6) → Algae, Fungi, Lichens, Mono-, Dicots (7) → Polypetalae, Gamopetalae, Monochlamydeae (8).</p>",
     "<h2>Exam Notes — All Elements of the Classification</h2>",
     "<h3>1. Major Classification Systems</h3>",
     "<p><b>Two Kingdom</b> — Linnaeus (1758) — basis: nutrition/motility — Plantae, Animalia.</p>",
@@ -61,9 +49,9 @@
     "<p><b>Five Kingdom</b> — R.H. Whittaker (1969) — basis: cell structure, nutrition, body organisation, phylogeny — Monera, Protista, Fungi, Plantae, Animalia.</p>",
     "<p><b>Six Kingdom</b> — Carl Woese (1977) — basis: rRNA sequencing — Archaebacteria, Eubacteria, Protista, Fungi, Plantae, Animalia.</p>",
     "<p><b>Three Domain</b> — Carl Woese (1990) — basis: molecular phylogeny — Archaea, Bacteria, Eukarya.</p>",
-    "<p><b>Eichler's system</b> (1883) — basis: vascular tissue & seed habit — Cryptogams, Phanerogams.</p>",
-    "<p><b>Bentham & Hooker</b> (1862–83) — basis: floral characters (natural system) — Polypetalae, Gamopetalae, Monochlamydeae, Gymnosperms.</p>",
-    "<p><b>Engler & Prantl</b> (1887–1915) — basis: phylogenetic, simple → complex.</p>",
+    "<p><b>Eichler's system</b> (1883) — basis: vascular tissue &amp; seed habit — Cryptogams, Phanerogams.</p>",
+    "<p><b>Bentham &amp; Hooker</b> (1862–83) — basis: floral characters (natural system) — Polypetalae, Gamopetalae, Monochlamydeae, Gymnosperms.</p>",
+    "<p><b>Engler &amp; Prantl</b> (1887–1915) — basis: phylogenetic, simple → complex.</p>",
     "<p><b>Hutchinson</b> (1926) — basis: phylogenetic — split into Herbaceae and Lignosae lines.</p>",
     "<p><b>APG (I–IV)</b> — Angiosperm Phylogeny Group — basis: molecular/DNA data — currently the most widely accepted system.</p>",
     "<h3>2. Diagnostic Features — Cryptogams</h3>",
@@ -74,7 +62,7 @@
     "<p><b>Gymnosperms:</b> naked seed, no fruit, cone-borne — e.g. Pinus, Cycas. Name means \"naked seed\" (Greek: gymnos = naked, sperma = seed).</p>",
     "<p><b>Angiosperms:</b> seed enclosed in fruit, flowering plants — e.g. Mango, Wheat.</p>",
     "<h3>4. Classes of Algae</h3>",
-    "<p><b>Chlorophyceae</b> (green algae, chlorophyll a & b) — e.g. Chlamydomonas, Ulothrix.</p>",
+    "<p><b>Chlorophyceae</b> (green algae, chlorophyll a &amp; b) — e.g. Chlamydomonas, Ulothrix.</p>",
     "<p><b>Phaeophyceae</b> (brown algae, fucoxanthin) — e.g. Sargassum, Laminaria.</p>",
     "<p><b>Rhodophyceae</b> (red algae, phycoerythrin) — e.g. Gelidium, Polysiphonia.</p>",
     "<p><b>Cyanophyceae</b> (blue-green algae, prokaryotic) — e.g. Nostoc, Anabaena.</p>",
@@ -104,16 +92,98 @@
     "<p><b>Flower parts:</b> trimerous (monocot) vs tetra-/pentamerous (dicot).</p>",
     "<p><b>Secondary growth:</b> usually absent (monocot) vs usually present (dicot).</p>",
     "<p><b>Examples:</b> Wheat, Maize, Onion (monocot); Pea, Mustard, Rose (dicot).</p>",
-    "<h3>10. Bentham & Hooker's Sub-classes of Dicots</h3>",
+    "<h3>10. Bentham &amp; Hooker's Sub-classes of Dicots</h3>",
     "<p><b>Polypetalae</b> — free petals — families: Ranunculaceae, Brassicaceae, Malvaceae, Fabaceae/Papilionaceae, Rosaceae.</p>",
     "<p><b>Gamopetalae</b> — fused petals — families: Solanaceae, Asteraceae/Compositae, Rubiaceae.</p>",
     "<p><b>Monochlamydeae</b> — petals absent or single perianth whorl — families: Amaranthaceae, Euphorbiaceae, Moraceae.</p>",
-    "<p>Fabaceae is further split by Bentham & Hooker into three sub-families: Papilionoideae, Caesalpinioideae, Mimosoideae — a common one-mark question.</p>",
+    "<p>Fabaceae is further split by Bentham &amp; Hooker into three sub-families: Papilionoideae, Caesalpinioideae, Mimosoideae — a common one-mark question.</p>",
     "<h3>11. Frequently Confused / Testable Points</h3>",
     "<p>Viruses are acellular and replicate only inside a host — placed in Protobiota, outside the cellular world.</p>",
     "<p>Mesokaryotes (Dinoflagellates) have a nucleus but lack true nuclear membrane organisation like eukaryotes — an intermediate group.</p>",
     "<p>Cyanobacteria are prokaryotic but historically grouped with algae due to photosynthetic pigments.</p>",
     "<p>Lichens are not a single taxonomic group but a symbiotic association of fungus and alga/cyanobacterium.</p>",
     "<p><i>Gnetum</i> is a gymnosperm but shows angiosperm-like features (vessels present) — a classic \"connecting link\" question.</p>"
-  ]
+  ],
+  "mindmap": {
+    "title": "Botany Classification — Levels 1–8",
+    "children": [
+      {
+        "title": "Level 1 — Living World",
+        "children": [
+          {
+            "title": "Level 2 — Protobiota",
+            "details": "Viroids, Viruses, Virions, Prions"
+          },
+          {
+            "title": "Level 2 — Cytobiota",
+            "children": [
+              {
+                "title": "Level 3 — Prokaryotes",
+                "details": "Bacteria, Cyanobacteria"
+              },
+              {
+                "title": "Level 3 — Mesokaryotes",
+                "details": "Dinoflagellates"
+              },
+              {
+                "title": "Level 3 — Eukaryotes",
+                "children": [
+                  {
+                    "title": "Level 4 — Plant Kingdom",
+                    "details": "Eichler's system",
+                    "children": [
+                      {
+                        "title": "Level 5 — Cryptogams",
+                        "children": [
+                          {
+                            "title": "Level 6 — Thallophyta",
+                            "children": [
+                              { "title": "Level 7 — Algae", "details": "Spirogyra" },
+                              { "title": "Level 7 — Fungi", "details": "Mucor, Yeast, Mushrooms" },
+                              { "title": "Level 7 — Lichens", "details": "Algae + Fungi symbiosis" }
+                            ]
+                          },
+                          { "title": "Level 6 — Bryophyta", "details": "Marchantia, Funaria" },
+                          { "title": "Level 6 — Pteridophyta", "details": "Fern, Selaginella" }
+                        ]
+                      },
+                      {
+                        "title": "Level 5 — Phanerogams",
+                        "children": [
+                          { "title": "Level 6 — Gymnosperms", "details": "Pinus, Cycas" },
+                          {
+                            "title": "Level 6 — Angiosperms",
+                            "children": [
+                              { "title": "Level 7 — Monocotyledons", "details": "Liliaceae, Poaceae" },
+                              {
+                                "title": "Level 7 — Dicotyledons",
+                                "details": "Bentham & Hooker",
+                                "children": [
+                                  { "title": "Level 8 — Polypetalae", "details": "free petals" },
+                                  { "title": "Level 8 — Gamopetalae", "details": "fused petals" },
+                                  { "title": "Level 8 — Monochlamydeae", "details": "single perianth whorl" }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Level 4 — Animal Kingdom",
+                    "children": [
+                      { "title": "Level 5 — Non-Chordata", "details": "Porifera to Echinodermata" },
+                      { "title": "Level 5 — Chordata", "details": "Pisces to Mammalia" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "legend": ["Level 1 = broadest", "Level 8 = finest", "→ = leads to"]
+  }
 }

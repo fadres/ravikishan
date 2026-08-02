@@ -11,12 +11,32 @@ const prisma = new PrismaClient();
 const ownerEmail = process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com';
 const ownerPassword = process.env.OWNER_PASSWORD || 'ravikishan-owner-2026';
 
-async function upsertUser({ email, password, displayName, role, isApproved }) {
+async function upsertUser({ email, password, displayName, role, isApproved, accessLevel }) {
   const passwordHash = await bcrypt.hash(password, 12);
-  return prisma.user.upsert({
+  const existing = await prisma.user.findUnique({
     where: { email },
-    update: { role, isApproved, passwordHash },
-    create: { email, passwordHash, displayName, role, isApproved },
+    include: { passwordHashes: { take: 1 } },
+  });
+  if (existing) {
+    const patch = { role, isApproved, ...(accessLevel !== undefined ? { accessLevel } : {}) };
+    if (existing.passwordHashes.length === 0) {
+      patch.passwordHashes = {
+        create: { hash: passwordHash, expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) },
+      };
+    }
+    return prisma.user.update({ where: { email }, data: patch });
+  }
+  return prisma.user.create({
+    data: {
+      email,
+      displayName,
+      role,
+      isApproved,
+      accessLevel: accessLevel ?? 3,
+      passwordHashes: {
+        create: { hash: passwordHash, expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) },
+      },
+    },
   });
 }
 
@@ -39,8 +59,8 @@ async function upsertSubject(cls, { name, slug, subjectType, icon, themeColor, i
 async function upsertChapter(subject, title, slug, sortOrder, isLocked = true) {
   return prisma.chapter.upsert({
     where: { subjectId_slug: { subjectId: subject.id, slug } },
-    update: { title, sortOrder, isLocked },
-    create: { subjectId: subject.id, title, slug, sortOrder, isLocked },
+    update: { title, sortOrder, isLocked, status: 'published' },
+    create: { subjectId: subject.id, title, slug, sortOrder, isLocked, status: 'published' },
   });
 }
 
@@ -69,6 +89,7 @@ async function main() {
     displayName: 'Demo Member',
     role: 'member',
     isApproved: true,
+    accessLevel: 2,
   });
   const pendingStudent = await upsertUser({
     email: 'student@ravikishan.com',

@@ -75,6 +75,13 @@ enum BlockType {
   byakaran
   formula
   symbols
+  learning_outcome
+  mind_recall
+  pyq
+  solved_example
+  premium_expansion
+  reference
+  revision_summary
 }
 
 model User {
@@ -280,6 +287,8 @@ model ContentBlock {
   id              String         @id @default(uuid())
   chapterId       String
   chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topicId         String?
+  topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   blockType       BlockType
   accessLevel     Int            @default(3)
   difficulty      Difficulty     @default(easy)
@@ -291,6 +300,9 @@ model ContentBlock {
   diagramData     Json?
   subLevel        String?
   classifiedBy    String?
+  sectionIndex    Int?
+  metadata        Json?
+  isDuplicateOf   String?
   searchVectorEnglish Unsupported("tsvector")? @map("search_vector_english")
   searchVectorSimple  Unsupported("tsvector")? @map("search_vector_simple")
   sortOrder       Int            @default(0)
@@ -305,6 +317,8 @@ model ContentBlock {
   @@index([accessLevel])
   @@index([blockType])
   @@index([difficulty])
+  @@index([topicId])
+  @@index([sectionIndex])
   @@index([searchVectorEnglish(type: Gin)], map: "idx_content_search_english")
   @@index([searchVectorSimple(type: Gin)], map: "idx_content_search_simple")
 }
@@ -374,6 +388,9 @@ model Topic {
   description String?
   sortOrder   Int      @default(0)
   status      ContentStatus @default(draft)
+  metadata    Json?
+  validationReport Json?
+  blocks      ContentBlock[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   quizzes     Quiz[]

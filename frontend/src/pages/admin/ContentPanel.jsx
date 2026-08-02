@@ -5,13 +5,14 @@ import BlockEditor from './BlockEditor.jsx';
 const LOCKED_BLOCK_TYPES = [
   'note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important',
   'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
+  'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary',
 ];
 
 const ALLOWED_TYPES = {
-  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap'],
-  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap'],
-  english: ['summary', 'keywords', 'important_points'],
-  nepali: ['byakaran'],
+  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary'],
+  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'premium_expansion', 'revision_summary'],
+  english: ['summary', 'keywords', 'important_points', 'learning_outcome', 'pyq', 'revision_summary'],
+  nepali: ['byakaran', 'learning_outcome', 'revision_summary'],
 };
 
 const LANG_OPTIONS = ['javascript', 'typescript', 'python', 'json', 'html', 'css', 'sql', 'java', 'c', 'cpp', 'bash'];
@@ -22,6 +23,9 @@ const TYPE_LABELS = {
   mindmap: 'Mind map', diagram_compare: 'Compare', summary: 'Summary',
   keywords: 'Keywords', important_points: 'Important points', byakaran: 'Byakaran',
   formula: 'Formula', symbols: 'Symbols',
+  learning_outcome: 'Learning Outcomes', mind_recall: 'Mind Recall', pyq: 'Past Year Questions',
+  solved_example: 'Solved Example', premium_expansion: 'Advanced Learning',
+  reference: 'Reference', revision_summary: 'Revision Summary',
 };
 
 export default function ContentPanel() {

@@ -27,10 +27,9 @@ export default function LoginPage() {
     return next || '/';
   };
 
-  if (user) {
-    navigate(afterLogin(user.role), { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (user) navigate(afterLogin(user.role), { replace: true });
+  }, [user]);
 
   const submit = async (e) => {
     e.preventDefault();
