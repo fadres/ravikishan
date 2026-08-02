@@ -21,6 +21,7 @@ export const env = {
     .filter(Boolean),
   port: parseInt(process.env.PORT || '4000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
+  perfLog: process.env.PERF_LOG || '',
   authRateLimit: parseInt(process.env.AUTH_RATE_LIMIT || '20', 10),
   aiRateLimit: parseInt(process.env.AI_RATE_LIMIT || '40', 10),
   ownerEmail: process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com',

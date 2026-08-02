@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -250,61 +250,70 @@ export default function Home() {
   const loksewa = subjects11.find((s) => s.slug === 'loksewa');
   const gk = subjects11.find((s) => s.slug === 'general-knowledge');
 
-  const options = [
-    {
-      to: '/class/class-11',
-      name: 'Class 11',
-      desc: 'All subjects · NCE syllabus',
-      meta: `${subjects11.length} subjects`,
-      color: '#a78bfa',
-      icon: (
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-        </svg>
-      ),
-    },
-    {
-      to: '/class/class-12',
-      name: 'Class 12',
-      desc: 'Higher secondary content',
-      meta: 'Coming soon',
-      color: '#60a5fa',
-      icon: (
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 10L12 5 2 10l10 5 10-5z" />
-          <path d="M6 12.5V18c0 1.5 2.7 3.5 6 3.5s6-2 6-3.5v-5.5" />
-        </svg>
-      ),
-    },
-    {
-      to: '/class/class-11/subject/loksewa',
-      name: 'Loksewa Knowledge',
-      desc: 'Service commission prep',
-      meta: loksewa ? `${loksewa._count.chapters} chapters` : '',
-      color: '#f59e0b',
-      icon: (
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 3v18M8 6l-4 2c0 6 3 9 8 9s8-3 8-9l-4-2c0 3-1.5 4-4 4s-4-1-4-4z" />
-          <path d="M6 12a6 6 0 0 0 12 0" opacity="0" />
-        </svg>
-      ),
-    },
-    {
-      to: '/class/class-11/subject/general-knowledge',
-      name: 'General Knowledge',
-      desc: 'Awareness, facts & current affairs',
-      meta: gk ? `${gk._count.chapters} chapters` : '',
-      color: '#22d3ee',
-      icon: (
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18" />
-          <path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z" />
-        </svg>
-      ),
-    },
-  ];
+  const MemoizedSubjectOptions = React.memo(({ subjects, loksewa, gk }) => {
+    const options = [
+      {
+        to: '/class/class-11',
+        name: 'Class 11',
+        desc: 'All subjects · NCE syllabus',
+        meta: `${subjects.length} subjects`,
+        color: '#a78bfa',
+        icon: (
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+        ),
+      },
+      {
+        to: '/class/class-12',
+        name: 'Class 12',
+        desc: 'Higher secondary content',
+        meta: 'Coming soon',
+        color: '#60a5fa',
+        icon: (
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 10L12 5 2 10l10 5 10-5z" />
+            <path d="M6 12.5V18c0 1.5 2.7 3.5 6 3.5s6-2 6-3.5v-5.5" />
+          </svg>
+        ),
+      },
+      {
+        to: '/class/class-11/subject/loksewa',
+        name: 'Loksewa Knowledge',
+        desc: 'Service commission prep',
+        meta: loksewa ? `${loksewa._count.chapters} chapters` : '',
+        color: '#f59e0b',
+        icon: (
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v18M8 6l-4 2c0 6 3 9 8 9s8-3 8-9l-4-2c0 3-1.5 4-4 4s-4-1-4-4z" />
+            <path d="M6 12a6 6 0 0 0 12 0" opacity="0" />
+          </svg>
+        ),
+      },
+      {
+        to: '/class/class-11/subject/general-knowledge',
+        name: 'General Knowledge',
+        desc: 'Awareness, facts & current affairs',
+        meta: gk ? `${gk._count.chapters} chapters` : '',
+        color: '#22d3ee',
+        icon: (
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18" />
+            <path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z" />
+          </svg>
+        ),
+      },
+    ];
+    return options;
+  });
+
+  const options = MemoizedSubjectOptions({
+    subjects: subjects11,
+    loksewa,
+    gk,
+  });
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">

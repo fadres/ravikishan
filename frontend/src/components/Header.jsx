@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar.jsx';
 import { api } from '../api/client.js';
@@ -125,6 +125,9 @@ function WallpaperPreview({ id }) {
   }
 }
 
+const MemoizedSubjectList = React.memo(({ klass, subjectList }) => subjectList(klass));
+const MemoizedWallpaperPreview = React.memo(WallpaperPreview);
+
 export default function Header() {
   const { user, logout, isAdmin } = useAuth();
   const { theme, themes, setTheme, cycle, wallpaper, setWallpaper } = useTheme();
@@ -140,15 +143,16 @@ export default function Header() {
   const subjectsRef = useRef(null);
   const studyRef = useRef(null);
 
+  const closeDropdowns = useCallback((e) => {
+    if (themeRef.current && !themeRef.current.contains(e.target)) setThemeOpen(false);
+    if (subjectsRef.current && !subjectsRef.current.contains(e.target)) setSubjectsOpen(false);
+    if (studyRef.current && !studyRef.current.contains(e.target)) setStudyOpen(false);
+  }, [setThemeOpen, setSubjectsOpen, setStudyOpen]);
+
   useEffect(() => {
-    const clickAway = (e) => {
-      if (themeRef.current && !themeRef.current.contains(e.target)) setThemeOpen(false);
-      if (subjectsRef.current && !subjectsRef.current.contains(e.target)) setSubjectsOpen(false);
-      if (studyRef.current && !studyRef.current.contains(e.target)) setStudyOpen(false);
-    };
-    document.addEventListener('mousedown', clickAway);
-    return () => document.removeEventListener('mousedown', clickAway);
-  }, []);
+    document.addEventListener('mousedown', closeDropdowns);
+    return () => document.removeEventListener('mousedown', closeDropdowns);
+  }, [closeDropdowns]);
 
   useEffect(() => {
     api('/api/classes')
@@ -162,24 +166,42 @@ export default function Header() {
       return;
     }
     let cancelled = false;
-    async function poll() {
+    const poll = async () => {
       try {
         const res = await api('/api/notifications?limit=1');
         if (!cancelled) setUnread(res.unreadCount || 0);
       } catch {
         // ignore — badge is best-effort
       }
-    }
+    };
     poll();
-    const t = setInterval(poll, 60_000);
+    const interval = setInterval(poll, 60_000);
     const onFocus = () => poll();
     window.addEventListener('focus', onFocus);
     return () => {
       cancelled = true;
-      clearInterval(t);
+      clearInterval(interval);
       window.removeEventListener('focus', onFocus);
     };
   }, [user]);
+
+  const subjectList = useCallback((klass) => (
+    klass.subjects.map((s) => (
+      <Link
+        key={s.id}
+        to={`/class/${klass.slug}/subject/${s.slug}`}
+        onClick={() => setSubjectsOpen(false)}
+        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
+      >
+        <span
+          className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold"
+          style={{ background: `${s.themeColor || '#38bdf8'}22`, color: s.themeColor || '#38bdf8' }}>
+        {s.name.slice(0, 2)}
+      </span>
+        <span className="truncate">{s.name}</span>
+      </Link>
+    ))
+  ), [setSubjectsOpen]);
 
   const handleLogout = async () => {
     setMenuOpen(false);
@@ -188,6 +210,24 @@ export default function Header() {
   };
 
   const initial = user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'G';
+
+  const MemoizedSubjectList = React.memo(({ klass }) => (
+    klass.subjects.map((s) => (
+      <Link
+        key={s.id}
+        to={`/class/${klass.slug}/subject/${s.slug}`}
+        onClick={() => setSubjectsOpen(false)}
+        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
+      >
+        <span
+          className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold"
+          style={{ background: `${s.themeColor || '#38bdf8'}22`, color: s.themeColor || '#38bdf8' }}>
+        {s.name.slice(0, 2)}
+      </span>
+        <span className="truncate">{s.name}</span>
+      </Link>
+    ))
+  ));
 
   const navItem = ({ to, label, icon, end }) => (
     <NavLink
@@ -206,21 +246,6 @@ export default function Header() {
       {label}
     </NavLink>
   );
-
-  const subjectList = (klass) => klass.subjects.map((s) => (
-    <Link
-      key={s.id}
-      to={`/class/${klass.slug}/subject/${s.slug}`}
-      onClick={() => setSubjectsOpen(false)}
-      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
-    >
-      <span className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold"
-        style={{ background: `${s.themeColor || '#38bdf8'}22`, color: s.themeColor || '#38bdf8' }}>
-        {s.name.slice(0, 2)}
-      </span>
-      <span className="truncate">{s.name}</span>
-    </Link>
-  ));
 
   return (
     <header className="sticky top-0 z-40 shadow-lg">
@@ -289,7 +314,7 @@ export default function Header() {
                       <p className="px-3 pt-1.5 pb-0.5 text-[10px] uppercase tracking-wider text-aqua-300 font-bold">
                         {klass.name}
                       </p>
-                      {subjectList(klass)}
+                      <MemoizedSubjectList klass={klass} subjectList={subjectList} />
                     </div>
                   ))}
                 </div>

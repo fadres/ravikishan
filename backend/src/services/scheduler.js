@@ -48,32 +48,42 @@ async function runOnce(now = new Date()) {
     by: ['deckId'],
     where: { dueAt: { lte: now } },
     _count: true,
+    orderBy: { _count: { deckId: 'desc' } },
     take: 50,
   });
-  for (const batch of dueBatches) {
-    const deck = await prisma.flashcardDeck.findUnique({
-      where: { id: batch.deckId },
-      select: { userId: true, title: true },
+  if (dueBatches.length) {
+    const decks = await prisma.flashcardDeck.findMany({
+      where: { id: { in: dueBatches.map((b) => b.deckId) } },
+      select: { id: true, userId: true, title: true },
     });
-    if (!deck) continue;
-    const alreadyNudged = await prisma.notification.findFirst({
-      where: {
-        userId: deck.userId,
-        type: 'reminder',
-        title: { contains: deck.title },
-        createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) },
-      },
-      select: { id: true },
-    });
-    if (!alreadyNudged) {
-      await createNotification(
-        deck.userId,
-        'reminder',
-        `Revision due: ${deck.title}`,
-        `${batch._count} flashcard${batch._count === 1 ? '' : 's'} are due — a quick review keeps them fresh.`,
-        '/flashcards',
-        '🔄',
-      ).catch(() => {});
+    const deckById = new Map(decks.map((d) => [d.id, d]));
+    const userIds = [...new Set(decks.map((d) => d.userId))];
+    const recent = userIds.length
+      ? await prisma.notification.findMany({
+          where: {
+            userId: { in: userIds },
+            type: 'reminder',
+            createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) },
+          },
+          select: { userId: true, title: true },
+        })
+      : [];
+    for (const batch of dueBatches) {
+      const deck = deckById.get(batch.deckId);
+      if (!deck) continue;
+      const alreadyNudged = recent.some(
+        (n) => n.userId === deck.userId && n.title.includes(deck.title),
+      );
+      if (!alreadyNudged) {
+        await createNotification(
+          deck.userId,
+          'reminder',
+          `Revision due: ${deck.title}`,
+          `${batch._count} flashcard${batch._count === 1 ? '' : 's'} are due — a quick review keeps them fresh.`,
+          '/flashcards',
+          '🔄',
+        ).catch(() => {});
+      }
     }
   }
 

@@ -7,6 +7,7 @@ import { prisma } from './config/db.js';
 import { authenticate } from './middleware/auth.js';
 import { notFound, errorHandler } from './middleware/error.js';
 import { requestLogger } from './middleware/logger.js';
+import { perfMiddleware, registerPerf } from './middleware/perf.js';
 import authRoutes from './routes/auth.routes.js';
 import accessRoutes from './routes/access.routes.js';
 import contentRoutes from './routes/content.routes.js';
@@ -29,6 +30,8 @@ export function createApp() {
     (env.nodeEnv !== 'production' && /^http:\/\/localhost(:\d+)?$/.test(origin));
 
   app.use(requestLogger);
+  registerPerf(prisma);
+  app.use(perfMiddleware);
   app.use(
     helmet({
       contentSecurityPolicy: false,

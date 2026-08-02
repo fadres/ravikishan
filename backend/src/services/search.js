@@ -38,7 +38,13 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
   const offset = (page - 1) * perPage;
   const sectionFilter = section ? SECTION_TYPE_SQL.get(section) : null;
 
-  const englishQuery = prisma.$queryRaw`
+  // The 'english' tsvector only indexes latin text, so a Devanagari query can
+  // never match it — skip that query (and its scan) entirely.
+  const hasDevanagari = /[\u0900-\u097F]/.test(q);
+
+  const englishQuery = hasDevanagari
+    ? Promise.resolve([])
+    : prisma.$queryRaw`
     SELECT cb.id,
            cb.title,
            cb."blockType",
@@ -102,7 +108,19 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     LIMIT ${perPage} OFFSET ${offset}
   `;
 
-  const [english, simple] = await Promise.all([englishQuery, simpleQuery]);
+  const countQuery = prisma.$queryRaw`
+    SELECT COUNT(DISTINCT cb.id)::int AS total
+    FROM "ContentBlock" cb
+    JOIN "Chapter" ch ON ch.id = cb."chapterId"
+    JOIN "Subject" s  ON s.id = ch."subjectId"
+    JOIN "Class" c    ON c.id = s."classId"
+    WHERE (cb.search_vector_english @@ plainto_tsquery('english', ${q})
+        OR cb.search_vector_simple @@ plainto_tsquery('simple', ${q}))
+    ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
+    ${filterSql(filters)}
+  `;
+
+  const [english, simple, countRows] = await Promise.all([englishQuery, simpleQuery, countQuery]);
 
   const merged = new Map();
   for (const row of [...english, ...simple]) {
@@ -136,14 +154,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
       };
     });
 
-  const totalCount = await prisma.contentBlock.count({
-    where: {
-      OR: [
-        { title: { contains: q, mode: 'insensitive' } },
-        { contentRichtext: { contains: q, mode: 'insensitive' } },
-      ],
-    },
-  });
+  const totalCount = Number(countRows?.[0]?.total ?? 0);
 
   return { results, totalCount, page, perPage, totalPages: Math.ceil(totalCount / perPage) };
 }
