@@ -77,8 +77,10 @@ router.get('/quizzes/analytics', requireAuth, async (req, res) => {
   res.json({ analytics });
 });
 
+const quizIdSchema = z.object({ id: z.string().uuid() });
+
 // GET /api/quizzes/:id — quiz detail with questions (no answers).
-router.get('/quizzes/:id', requireAuth, async (req, res) => {
+router.get('/quizzes/:id', requireAuth, validate(quizIdSchema, 'params'), async (req, res) => {
   const quiz = await getQuizForTake(req.params.id);
   res.json({
     quiz: {
@@ -104,7 +106,7 @@ router.get('/quizzes/:id', requireAuth, async (req, res) => {
 
 // POST /api/quizzes/:id/attempts — start a quiz attempt (questions are
 // snapshot-shuffled server-side, answers never leave the server).
-router.post('/quizzes/:id/attempts', requireAuth, async (req, res) => {
+router.post('/quizzes/:id/attempts', requireAuth, validate(quizIdSchema, 'params'), async (req, res) => {
   const attempt = await startAttempt(req.user.id, req.params.id);
   res.status(201).json({ attempt });
 });
@@ -117,7 +119,9 @@ const submitSchema = z.object({
   timeSpentSeconds: z.number().int().min(0).optional(),
 });
 
-router.post('/attempts/:attemptId/submit', requireAuth, validate(submitSchema), async (req, res) => {
+const attemptIdSchema = z.object({ attemptId: z.string().uuid() });
+
+router.post('/attempts/:attemptId/submit', requireAuth, validate(attemptIdSchema, 'params'), validate(submitSchema), async (req, res) => {
   const attempt = await submitAttempt(req.user.id, req.params.attemptId, req.validated.answers, req.validated.timeSpentSeconds ?? 0);
   const perfect = attempt.totalPoints > 0 && attempt.score === attempt.totalPoints;
   if (perfect) {
@@ -127,7 +131,7 @@ router.post('/attempts/:attemptId/submit', requireAuth, validate(submitSchema), 
   res.json({ attempt });
 });
 
-router.post('/attempts/:attemptId/abandon', requireAuth, async (req, res) => {
+router.post('/attempts/:attemptId/abandon', requireAuth, validate(attemptIdSchema, 'params'), async (req, res) => {
   const attempt = await abandonAttempt(req.user.id, req.params.attemptId);
   res.json({ attempt });
 });
@@ -140,7 +144,7 @@ router.get('/attempts', requireAuth, async (req, res) => {
 });
 
 // GET /api/quizzes/attempts/:id — full attempt detail with explanations.
-router.get('/attempts/:id', requireAuth, async (req, res) => {
+router.get('/attempts/:id', requireAuth, validate(attemptIdSchema, 'params'), async (req, res) => {
   const attempt = await getAttemptDetail(req.user.id, req.params.id);
   const answerMap = new Map((attempt.answers ?? []).map((a) => [a.questionId, a]));
   const questions = attempt.quiz.questions.map((q) => {

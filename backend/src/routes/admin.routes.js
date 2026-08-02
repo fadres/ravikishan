@@ -28,6 +28,8 @@ import {
 const router = Router();
 router.use(requireRole('owner', 'admin'));
 
+const userIdSchema = z.object({ id: z.string().uuid() });
+
 // ── Access requests ──────────────────────────────────────────────────────
 
 router.get('/requests', async (req, res) => {
@@ -45,7 +47,7 @@ router.get('/requests', async (req, res) => {
   res.json({ requests });
 });
 
-router.post('/requests/:id/approve', async (req, res) => {
+router.post('/requests/:id/approve', validate(userIdSchema, 'params'), async (req, res) => {
   const request = await prisma.accessRequest.findUnique({ where: { id: req.params.id } });
   if (!request) throw new AppError(404, 'Request not found');
   if (request.status !== 'pending') throw new AppError(409, 'Request already resolved');
@@ -73,7 +75,7 @@ router.post('/requests/:id/approve', async (req, res) => {
   res.json({ request: updated });
 });
 
-router.post('/requests/:id/deny', async (req, res) => {
+router.post('/requests/:id/deny', validate(userIdSchema, 'params'), async (req, res) => {
   const request = await prisma.accessRequest.findUnique({ where: { id: req.params.id } });
   if (!request) throw new AppError(404, 'Request not found');
   if (request.status !== 'pending') throw new AppError(409, 'Request already resolved');
@@ -111,10 +113,7 @@ const userPatchSchema = z.object({
   accessLevel: z.number().int().min(1).max(3).optional(),
 });
 
-// Owners may assign any role; admins may only manage member/guest roles.
-// Access levels: 1 (most premium) is reserved for the owner; admins may grant
-// 2 or 3. A role change also nudges the default level unless one is explicit.
-router.patch('/users/:id', validate(userPatchSchema), async (req, res) => {
+router.patch('/users/:id', validate(userIdSchema, 'params'), validate(userPatchSchema), async (req, res) => {
   const target = await prisma.user.findUnique({ where: { id: req.params.id } });
   if (!target) throw new AppError(404, 'User not found');
   if (target.role === 'owner' && req.user.id !== target.id) {
@@ -148,7 +147,7 @@ router.patch('/users/:id', validate(userPatchSchema), async (req, res) => {
 
 const lockSchema = z.object({ isLocked: z.boolean() });
 
-router.patch('/subjects/:id', validate(lockSchema), async (req, res) => {
+router.patch('/subjects/:id', validate(userIdSchema, 'params'), validate(lockSchema), async (req, res) => {
   const subject = await prisma.subject.findUnique({ where: { id: req.params.id } });
   if (!subject) throw new AppError(404, 'Subject not found');
   const updated = await prisma.subject.update({
@@ -162,7 +161,7 @@ router.patch('/subjects/:id', validate(lockSchema), async (req, res) => {
   res.json({ subject: updated });
 });
 
-router.patch('/chapters/:id', validate(lockSchema), async (req, res) => {
+router.patch('/chapters/:id', validate(userIdSchema, 'params'), validate(lockSchema), async (req, res) => {
   const chapter = await prisma.chapter.findUnique({ where: { id: req.params.id } });
   if (!chapter) throw new AppError(404, 'Chapter not found');
   const updated = await prisma.chapter.update({
@@ -298,7 +297,7 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
 
 const blockPatchSchema = blockSchema.partial();
 
-router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
+router.patch('/blocks/:id', validate(userIdSchema, 'params'), validate(blockPatchSchema), async (req, res) => {
   const block = await prisma.contentBlock.findUnique({
     where: { id: req.params.id },
     include: { chapter: { include: { subject: true } } },
@@ -333,7 +332,7 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   res.json({ block: updated });
 });
 
-router.delete('/blocks/:id', async (req, res) => {
+router.delete('/blocks/:id', validate(userIdSchema, 'params'), async (req, res) => {
   const block = await prisma.contentBlock.findUnique({ where: { id: req.params.id } });
   if (!block) throw new AppError(404, 'Block not found');
   await prisma.contentBlock.delete({ where: { id: block.id } });
@@ -446,7 +445,7 @@ router.post('/chapters', validate(chapterCreateSchema), async (req, res) => {
   res.status(201).json({ chapter });
 });
 
-router.delete('/chapters/:id', async (req, res) => {
+router.delete('/chapters/:id', validate(userIdSchema, 'params'), async (req, res) => {
   const chapter = await prisma.chapter.findUnique({ where: { id: req.params.id } });
   if (!chapter) throw new AppError(404, 'Chapter not found');
   await prisma.chapter.delete({ where: { id: chapter.id } });
@@ -506,7 +505,7 @@ router.post('/chapters/:id/topics', validate(z.object({
   res.status(201).json({ topic });
 });
 
-router.patch('/topics/:id', validate(z.object({
+router.patch('/topics/:id', validate(userIdSchema, 'params'), validate(z.object({
   title: z.string().trim().min(1).max(200).optional(),
   slug: z.string().trim().min(1).max(200).optional(),
   description: z.string().trim().max(2000).optional(),
@@ -517,7 +516,7 @@ router.patch('/topics/:id', validate(z.object({
   res.json({ topic });
 });
 
-router.delete('/topics/:id', async (req, res) => {
+router.delete('/topics/:id', validate(userIdSchema, 'params'), async (req, res) => {
   await deleteTopic(req.params.id, req.user);
   res.status(204).end();
 });
@@ -548,7 +547,7 @@ router.post('/tags', validate(z.object({
   res.status(201).json({ tag });
 });
 
-router.delete('/tags/:id', async (req, res) => {
+router.delete('/tags/:id', validate(userIdSchema, 'params'), async (req, res) => {
   await deleteTag(req.params.id, req.user);
   res.status(204).end();
 });

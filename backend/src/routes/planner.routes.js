@@ -63,12 +63,14 @@ router.post('/goals', validate(goalSchema), async (req, res) => {
   res.status(201).json({ goal });
 });
 
-router.patch('/goals/:id', validate(goalProgressSchema), async (req, res) => {
+const planIdSchema = z.object({ id: z.string().uuid() });
+
+router.patch('/goals/:id', validate(planIdSchema, 'params'), validate(goalProgressSchema), async (req, res) => {
   const goal = await updateGoalProgress(req.user.id, req.params.id, req.body.progress);
   res.json({ goal });
 });
 
-router.delete('/goals/:id', async (req, res) => {
+router.delete('/goals/:id', validate(planIdSchema, 'params'), async (req, res) => {
   await deleteGoal(req.user.id, req.params.id);
   res.json({ ok: true });
 });
@@ -85,12 +87,12 @@ router.post('/exams', validate(examSchema), async (req, res) => {
   res.status(201).json({ exam });
 });
 
-router.patch('/exams/:id', validate(examSchema.partial()), async (req, res) => {
+router.patch('/exams/:id', validate(planIdSchema, 'params'), validate(examSchema.partial()), async (req, res) => {
   const exam = await updateExam(req.user.id, req.params.id, req.body);
   res.json({ exam });
 });
 
-router.delete('/exams/:id', async (req, res) => {
+router.delete('/exams/:id', validate(planIdSchema, 'params'), async (req, res) => {
   await deleteExam(req.user.id, req.params.id);
   res.json({ ok: true });
 });
@@ -123,7 +125,7 @@ router.post('/plan/:id/toggle', async (req, res) => {
   res.json({ item });
 });
 
-router.delete('/plan/:id', async (req, res) => {
+router.delete('/plan/:id', validate(planIdSchema, 'params'), async (req, res) => {
   await deletePlanItem(req.user.id, req.params.id);
   res.json({ ok: true });
 });

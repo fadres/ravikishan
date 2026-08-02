@@ -97,12 +97,14 @@ router.get('/files', requireAuth, async (req, res) => {
   res.json(result);
 });
 
-router.get('/files/:id', requireAuth, async (req, res) => {
+const fileIdSchema = z.object({ id: z.string().uuid() });
+
+router.get('/files/:id', requireAuth, validate(fileIdSchema, 'params'), async (req, res) => {
   const file = await getFileDetails(req.params.id, req.user.id);
   res.json({ file });
 });
 
-router.get('/files/:id/download', requireAuth, async (req, res) => {
+router.get('/files/:id/download', requireAuth, validate(fileIdSchema, 'params'), async (req, res) => {
   const { url, key, originalFilename } = await getDownloadUrl(req.params.id, req.user.id);
   await recordAudit(req.user, 'file.downloaded', 'R2Upload', req.params.id, {
     key,
@@ -111,7 +113,7 @@ router.get('/files/:id/download', requireAuth, async (req, res) => {
   res.json({ url, key, originalFilename });
 });
 
-router.get('/files/:id/preview', requireAuth, async (req, res) => {
+router.get('/files/:id/preview', requireAuth, validate(fileIdSchema, 'params'), async (req, res) => {
   const preview = await getPreviewUrl(req.params.id, req.user.id);
   await recordAudit(req.user, 'file.previewed', 'R2Upload', req.params.id, {
     key: preview.key,
@@ -120,7 +122,7 @@ router.get('/files/:id/preview', requireAuth, async (req, res) => {
   res.json(preview);
 });
 
-router.delete('/files/:id', requireAuth, async (req, res) => {
+router.delete('/files/:id', requireAuth, validate(fileIdSchema, 'params'), async (req, res) => {
   const result = await deleteFile(req.params.id, req.user.id);
   await recordAudit(req.user, 'file.deleted', 'R2Upload', req.params.id, result);
   res.json(result);

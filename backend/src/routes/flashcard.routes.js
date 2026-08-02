@@ -43,6 +43,9 @@ const cardSchema = z.object({
 
 const cardUpdateSchema = cardSchema.partial();
 
+const deckIdSchema = z.object({ id: z.string().uuid() });
+const cardIdSchema = z.object({ id: z.string().uuid() });
+
 // ── Decks ───────────────────────────────────────────
 
 router.get('/decks', async (req, res) => {
@@ -61,19 +64,19 @@ router.post('/decks', validate(deckCreateSchema), async (req, res) => {
   res.status(201).json({ deck });
 });
 
-router.patch('/decks/:id', validate(deckUpdateSchema), async (req, res) => {
+router.patch('/decks/:id', validate(deckIdSchema, 'params'), validate(deckUpdateSchema), async (req, res) => {
   const deck = await updateDeck(req.user.id, req.params.id, req.body);
   res.json({ deck });
 });
 
-router.delete('/decks/:id', async (req, res) => {
+router.delete('/decks/:id', validate(deckIdSchema, 'params'), async (req, res) => {
   await deleteDeck(req.user.id, req.params.id);
   res.json({ ok: true });
 });
 
 // ── Cards ───────────────────────────────────────────
 
-router.get('/decks/:id/cards', async (req, res) => {
+router.get('/decks/:id/cards', validate(deckIdSchema, 'params'), async (req, res) => {
   const q = req.query;
   const deck = await listCards(req.user.id, req.params.id, {
     dueOnly: q.due === 'true',
@@ -83,22 +86,22 @@ router.get('/decks/:id/cards', async (req, res) => {
   res.json({ deck });
 });
 
-router.post('/decks/:id/cards', validate(cardSchema), async (req, res) => {
+router.post('/decks/:id/cards', validate(deckIdSchema, 'params'), validate(cardSchema), async (req, res) => {
   const card = await createCard(req.user.id, req.params.id, req.body);
   res.status(201).json({ card });
 });
 
-router.patch('/cards/:id', validate(cardUpdateSchema), async (req, res) => {
+router.patch('/cards/:id', validate(cardIdSchema, 'params'), validate(cardUpdateSchema), async (req, res) => {
   const card = await updateCard(req.user.id, req.params.id, req.body);
   res.json({ card });
 });
 
-router.delete('/cards/:id', async (req, res) => {
+router.delete('/cards/:id', validate(cardIdSchema, 'params'), async (req, res) => {
   await deleteCard(req.user.id, req.params.id);
   res.json({ ok: true });
 });
 
-router.post('/cards/:id/bookmark', async (req, res) => {
+router.post('/cards/:id/bookmark', validate(cardIdSchema, 'params'), async (req, res) => {
   const card = await toggleBookmark(req.user.id, req.params.id);
   res.json({ card });
 });
@@ -109,7 +112,7 @@ const reviewSchema = z.object({
   rating: z.enum(['again', 'hard', 'good', 'easy']),
 });
 
-router.post('/cards/:id/review', validate(reviewSchema), async (req, res) => {
+router.post('/cards/:id/review', validate(cardIdSchema, 'params'), validate(reviewSchema), async (req, res) => {
   const card = await reviewCard(req.user.id, req.params.id, req.body.rating);
   res.json({ card });
 });

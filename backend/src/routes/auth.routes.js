@@ -276,7 +276,9 @@ router.get('/sessions', requireAuth, async (req, res) => {
   res.json({ sessions });
 });
 
-router.delete('/sessions/:id', requireAuth, async (req, res) => {
+const sessionIdSchema = z.object({ id: z.string().uuid() });
+
+router.delete('/sessions/:id', requireAuth, validate(sessionIdSchema, 'params'), async (req, res) => {
   const session = await prisma.refreshToken.findFirst({
     where: { id: req.params.id, userId: req.user.id },
   });

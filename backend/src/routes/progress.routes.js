@@ -28,7 +28,10 @@ router.get('/progress', authenticate, async (req, res) => {
   res.json({ progress });
 });
 
-router.get('/progress/:chapterId', authenticate, async (req, res) => {
+const chapterIdSchema = z.object({ chapterId: z.string().uuid() });
+const chapterBlockSchema = z.object({ chapterId: z.string().uuid(), blockId: z.string().uuid() });
+
+router.get('/progress/:chapterId', authenticate, validate(chapterIdSchema, 'params'), async (req, res) => {
   const progress = await getProgress(req.user.id, req.params.chapterId);
   if (!progress) throw new AppError(404, 'Progress not found');
   res.json({ progress });
@@ -40,12 +43,12 @@ const updateProgressSchema = z.object({
   completed: z.boolean().optional(),
 });
 
-router.patch('/progress/:chapterId', authenticate, validate(updateProgressSchema), async (req, res) => {
+router.patch('/progress/:chapterId', authenticate, validate(chapterIdSchema, 'params'), validate(updateProgressSchema), async (req, res) => {
   const progress = await updateProgress(req.user.id, req.params.chapterId, req.validated);
   res.json({ progress });
 });
 
-router.post('/progress/:chapterId/block/:blockId', authenticate, async (req, res) => {
+router.post('/progress/:chapterId/block/:blockId', authenticate, validate(chapterBlockSchema, 'params'), async (req, res) => {
   const progress = await completeBlock(req.user.id, req.params.chapterId, req.params.blockId);
   res.json({ progress });
 });
@@ -68,12 +71,12 @@ router.post('/bookmarks', authenticate, validate(bookmarkSchema), async (req, re
   res.status(201).json({ bookmark });
 });
 
-router.delete('/bookmarks/:chapterId', authenticate, async (req, res) => {
+router.delete('/bookmarks/:chapterId', authenticate, validate(chapterIdSchema, 'params'), async (req, res) => {
   await deleteBookmark(req.user.id, req.params.chapterId, null);
   res.json({ ok: true });
 });
 
-router.delete('/bookmarks/:chapterId/block/:blockId', authenticate, async (req, res) => {
+router.delete('/bookmarks/:chapterId/block/:blockId', authenticate, validate(chapterBlockSchema, 'params'), async (req, res) => {
   await deleteBookmark(req.user.id, req.params.chapterId, req.params.blockId);
   res.json({ ok: true });
 });
