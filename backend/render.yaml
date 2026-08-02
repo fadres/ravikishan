@@ -36,7 +36,7 @@ services:
       - key: MAIL_FROM
         sync: false
       - key: SITE_URL
-        value: https://ravikishan-ntux.onrender.com
+        value: https://hero000001.netlify.app
       - key: R2_ENDPOINT
         sync: false
       - key: R2_ACCESS_KEY_ID

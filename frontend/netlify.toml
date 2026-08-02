@@ -8,7 +8,7 @@
   functions = "netlify/functions"
 
 # Environment variables (set in Netlify dashboard)
-VITE_API_URL=https://hero000001.netlify.app
+VITE_API_URL=https://ravikishan-ntux.onrender.com
 
 # Headers for SPA routing and performance
 [[headers]]
