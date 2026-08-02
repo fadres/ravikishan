@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "migrate": "prisma db push && node prisma/ensure-owner.js && node prisma/import-content.js",
+    "migrate": "prisma db push --accept-data-loss && node prisma/ensure-owner.js && node prisma/import-content.js",
     "migrate:dev": "prisma migrate dev",
     "generate": "prisma generate",
     "seed": "node prisma/seed.js",
