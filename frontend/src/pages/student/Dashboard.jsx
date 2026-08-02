@@ -4,7 +4,7 @@ import { api } from '../../api/client.js';
 
 function ProgressBar({ pct, color = 'aqua' }) {
   return (
-    <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+    <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden" role="progressbar" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
       <div
         className={`h-full rounded-full bg-${color}-400 transition-all duration-500`}
         style={{ width: `${Math.min(100, Math.max(0, pct))}%` }}
@@ -15,7 +15,7 @@ function ProgressBar({ pct, color = 'aqua' }) {
 
 function StatCard({ label, value, icon }) {
   return (
-    <div className="glass rounded-2xl p-5">
+    <div className="glass rounded-2xl p-5" role="region" aria-label={label}>
       <div className="flex items-center gap-3 mb-2">
         <span className="text-2xl" aria-hidden="true">{icon}</span>
         <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">{label}</span>
@@ -123,9 +123,9 @@ export default function StudentDashboard() {
         <section>
           <h2 className="text-sm font-bold uppercase tracking-wider text-aqua-300 mb-3">Active Chapters</h2>
           {progress.length === 0 ? (
-            <div className="glass rounded-2xl p-8 text-center">
+            <div className="glass rounded-2xl p-8 text-center" role="status">
               <p className="text-slate-300">No chapters started yet.</p>
-              <Link to="/" className="mt-3 inline-block text-aqua-300 hover:text-aqua-100 text-sm font-bold">
+              <Link to="/" className="mt-3 inline-block text-aqua-300 hover:text-aqua-100 text-sm font-bold" tabIndex={0}>
                 Browse subjects →
               </Link>
             </div>
@@ -135,7 +135,9 @@ export default function StudentDashboard() {
                 <Link
                   key={p.chapter.id}
                   to={`/class/${p.chapter.subject.classSlug || '#'}/subject/${p.chapter.subject.slug}/chapter/${p.chapter.slug}`}
-                  className="glass rounded-2xl p-4 block hover:border-aqua-400/40 transition"
+                  className="glass rounded-2xl p-4 block hover:border-aqua-400/40 transition focus:outline-none focus:ring-2 focus:ring-aqua-400"
+                  tabIndex={0}
+                  role="link"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-bold text-white text-sm">{p.chapter.title}</h3>

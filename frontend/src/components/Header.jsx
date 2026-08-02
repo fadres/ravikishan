@@ -12,6 +12,14 @@ const NAV = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
 ];
 
+const STUDY_LINKS = [
+  { to: '/quizzes', label: 'Quizzes', icon: '❓' },
+  { to: '/flashcards', label: 'Flashcards', icon: '🃏' },
+  { to: '/planner', label: 'Planner', icon: '📅' },
+  { to: '/achievements', label: 'Achievements', icon: '🏅' },
+  { to: '/ai-tools', label: 'AI tools', icon: '🤖' },
+];
+
 function NavIcon({ name }) {
   const common = { viewBox: '0 0 24 24', width: 15, height: 15, fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' };
   switch (name) {
@@ -126,13 +134,17 @@ export default function Header() {
   const [subjectsOpen, setSubjectsOpen] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [classes, setClasses] = useState([]);
+  const [studyOpen, setStudyOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
   const themeRef = useRef(null);
   const subjectsRef = useRef(null);
+  const studyRef = useRef(null);
 
   useEffect(() => {
     const clickAway = (e) => {
       if (themeRef.current && !themeRef.current.contains(e.target)) setThemeOpen(false);
       if (subjectsRef.current && !subjectsRef.current.contains(e.target)) setSubjectsOpen(false);
+      if (studyRef.current && !studyRef.current.contains(e.target)) setStudyOpen(false);
     };
     document.addEventListener('mousedown', clickAway);
     return () => document.removeEventListener('mousedown', clickAway);
@@ -143,6 +155,31 @@ export default function Header() {
       .then((d) => setClasses(d.classes || []))
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setUnread(0);
+      return;
+    }
+    let cancelled = false;
+    async function poll() {
+      try {
+        const res = await api('/api/notifications?limit=1');
+        if (!cancelled) setUnread(res.unreadCount || 0);
+      } catch {
+        // ignore — badge is best-effort
+      }
+    }
+    poll();
+    const t = setInterval(poll, 60_000);
+    const onFocus = () => poll();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [user]);
 
   const handleLogout = async () => {
     setMenuOpen(false);
@@ -227,7 +264,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
           {navItem(NAV[0])}
           <div className="relative" ref={subjectsRef}>
             <button
@@ -254,6 +291,36 @@ export default function Header() {
                       </p>
                       {subjectList(klass)}
                     </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          <div className="relative" ref={studyRef}>
+            <button
+              onClick={() => setStudyOpen((o) => !o)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition"
+            >
+              <span aria-hidden="true">🎓</span>
+              Study
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" className={studyOpen ? 'rotate-180 transition' : 'transition'}>
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            {studyOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setStudyOpen(false)} />
+                <div className="absolute left-0 mt-2 w-56 glass-strong rounded-2xl p-2 z-50 shadow-2xl">
+                  {STUDY_LINKS.map((l) => (
+                    <Link
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setStudyOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
+                    >
+                      <span aria-hidden="true">{l.icon}</span>
+                      {l.label}
+                    </Link>
                   ))}
                 </div>
               </>
@@ -368,32 +435,61 @@ export default function Header() {
 
           {/* Logged-in avatar menu */}
           {user && (
-            <div className="relative">
-              <button
-                onClick={() => setMenuOpen((o) => !o)}
-                className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 pl-1 pr-2 py-1 hover:bg-white/10 transition"
-                aria-label="Account menu"
+            <>
+              <Link
+                to="/notifications"
+                className="relative w-9 h-9 rounded-full flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 transition"
+                aria-label={`Notifications${unread ? ` (${unread} unread)` : ''}`}
               >
-                <span className="relative w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm font-bold flex items-center justify-center">
-                  {initial}
-                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-pink-400 ring-2 ring-deep-900" />
-                </span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-slate-300">
-                  <path d="M6 9l6 6 6-6" />
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
-              </button>
-              {menuOpen && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-56 glass-strong rounded-xl p-2 z-50 shadow-xl">
-                    <div className="px-3 py-2 border-b border-white/10 mb-1">
-                      <p className="text-sm font-semibold text-white truncate">{user.displayName || 'Student'}</p>
-                      <p className="text-xs text-slate-400 truncate">{user.email}</p>
-                      <span className="inline-block mt-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-aqua-400/15 text-aqua-300 font-bold">
-                        {user.role}
-                      </span>
-                    </div>
-                    {isAdmin && (
+                {unread > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center">
+                    {unread > 9 ? '9+' : unread}
+                  </span>
+                )}
+              </Link>
+              <div className="relative">
+                <button
+                  onClick={() => setMenuOpen((o) => !o)}
+                  className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 pl-1 pr-2 py-1 hover:bg-white/10 transition"
+                  aria-label="Account menu"
+                >
+                  <span className="relative w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm font-bold flex items-center justify-center">
+                    {user.avatarUrl ? (
+                      <img src={user.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      initial
+                    )}
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-pink-400 ring-2 ring-deep-900" />
+                  </span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-slate-300">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                {menuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                    <div className="absolute right-0 mt-2 w-56 glass-strong rounded-xl p-2 z-50 shadow-xl">
+                      <div className="px-3 py-2 border-b border-white/10 mb-1">
+                        <p className="text-sm font-semibold text-white truncate">{user.displayName || 'Student'}</p>
+                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                        <span className="inline-block mt-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-aqua-400/15 text-aqua-300 font-bold">
+                          {user.role}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setMenuOpen(false);
+                          navigate('/profile');
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10"
+                      >
+                        My profile
+                      </button>
+                      {isAdmin && (
                       <button
                         onClick={() => {
                           setMenuOpen(false);
@@ -413,7 +509,8 @@ export default function Header() {
                   </div>
                 </>
               )}
-            </div>
+              </div>
+            </>
           )}
 
           {/* Mobile nav toggle */}
@@ -436,7 +533,7 @@ export default function Header() {
 
       {/* Mobile nav */}
       {mobileNav && (
-        <nav className="lg:hidden header-solid border-b border-white/10 px-3 py-3 flex flex-col gap-1">
+        <nav className="lg:hidden header-solid border-b border-white/10 px-3 py-3 flex flex-col gap-1" aria-label="Mobile navigation">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
@@ -454,6 +551,20 @@ export default function Header() {
               <NavIcon name={item.icon} />
               {item.label}
             </NavLink>
+          ))}
+          <p className="px-4 pt-2 pb-1 text-[10px] uppercase tracking-wider text-aqua-300 font-bold">
+            Study tools
+          </p>
+          {STUDY_LINKS.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              onClick={() => setMobileNav(false)}
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm text-slate-300 hover:bg-white/10"
+            >
+              <span aria-hidden="true">{l.icon}</span>
+              {l.label}
+            </Link>
           ))}
           {classes.map((klass) => (
             <div key={klass.id}>

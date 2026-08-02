@@ -1,6 +1,7 @@
 import { prisma } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
 import { recordAudit } from './audit.js';
+import { addXp, bumpDailyStudy } from './gamification.js';
 
 // ── UserProgress ────────────────────────────────────
 
@@ -36,6 +37,7 @@ export async function updateProgress(userId, chapterId, data) {
   if (!chapter) throw new AppError(404, 'Chapter not found');
 
   const totalBlocks = await prisma.contentBlock.count({ where: { chapterId } });
+  const now = new Date();
 
   const progress = await prisma.userProgress.upsert({
     where: { userId_chapterId: { userId, chapterId } },
@@ -45,18 +47,23 @@ export async function updateProgress(userId, chapterId, data) {
       blocksCompleted: data.blocksCompleted ?? 0,
       totalBlocks,
       lastBlockId: data.lastBlockId ?? null,
-      lastAccessedAt: new Date(),
-      completedAt: data.completed ? new Date() : null,
+      lastAccessedAt: now,
+      completedAt: data.completed ? now : null,
     },
     update: {
       blocksCompleted: data.blocksCompleted ?? undefined,
       totalBlocks,
       lastBlockId: data.lastBlockId ?? undefined,
-      lastAccessedAt: new Date(),
-      completedAt: data.completed ? new Date() : undefined,
+      lastAccessedAt: now,
+      completedAt: data.completed ? now : undefined,
     },
     include: { chapter: { select: { id: true, title: true, slug: true } } },
   });
+
+  if (data.completed && !progress.completedAt) {
+    await addXp(userId, 30, 'chapter_completed', chapterId, { chapterTitle: chapter.title });
+    await bumpDailyStudy(userId, { blocks: totalBlocks });
+  }
   return progress;
 }
 
@@ -80,6 +87,8 @@ export async function completeBlock(userId, chapterId, blockId) {
     },
     include: { chapter: { select: { id: true, title: true, slug: true } } },
   });
+  await addXp(userId, 5, 'block_completed', blockId, { chapterId });
+  await bumpDailyStudy(userId, { blocks: 1 });
   return progress;
 }
 
@@ -155,6 +164,8 @@ export async function updateStreak(userId) {
       longestStreak: Math.max(streak.longestStreak, newStreak),
     },
   });
+
+  if (newStreak === 1) await bumpDailyStudy(userId, {});
   return updated;
 }
 

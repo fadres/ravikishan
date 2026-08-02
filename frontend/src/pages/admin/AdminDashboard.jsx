@@ -3,7 +3,7 @@ import { api } from '../../api/client.js';
 
 function StatCard({ label, value, icon, color = 'aqua' }) {
   return (
-    <div className="glass rounded-2xl p-5">
+    <div className="glass rounded-2xl p-5" role="region" aria-label={label}>
       <div className="flex items-center gap-3 mb-2">
         <span className="text-2xl" aria-hidden="true">{icon}</span>
         <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">{label}</span>

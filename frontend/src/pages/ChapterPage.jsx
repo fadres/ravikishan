@@ -216,7 +216,7 @@ export default function ChapterPage() {
           <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
             This chapter has no notes yet.
           </p>
-        })}
+        )}
 
         {/* Render numbered sub-sections for large chapters */}
         {blocks.filter(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub1')).length > 0 && (

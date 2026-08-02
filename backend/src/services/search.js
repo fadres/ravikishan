@@ -1,6 +1,17 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/db.js';
 
 const SNIPPET_OPTIONS = 'MaxWords=25, MinWords=6, MaxFragments=1, StartSel=<<, StopSel=>>';
+
+function filterSql(filters) {
+  const { subjectSlug, classSlug, blockType, accessLevel } = filters;
+  const parts = [];
+  if (subjectSlug) parts.push(Prisma.sql`AND s.slug = ${subjectSlug}`);
+  if (classSlug) parts.push(Prisma.sql`AND c.slug = ${classSlug}`);
+  if (blockType) parts.push(Prisma.sql`AND cb."blockType" = ${blockType}`);
+  if (accessLevel !== undefined) parts.push(Prisma.sql`AND cb."accessLevel" <= ${accessLevel}`);
+  return parts.length ? Prisma.join(parts, ' ') : Prisma.empty;
+}
 
 export async function searchContent(q, viewerLevel = 3, filters = {}) {
   const { subjectSlug, classSlug, blockType, accessLevel, page = 1, perPage = 25 } = filters;
@@ -31,10 +42,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_english @@ plainto_tsquery('english', ${q})
-    ${subjectSlug ? prisma.raw(`AND s.slug = ${subjectSlug}`) : prisma.raw('')}
-    ${classSlug ? prisma.raw(`AND c.slug = ${classSlug}`) : prisma.raw('')}
-    ${blockType ? prisma.raw(`AND cb."blockType" = ${blockType}`) : prisma.raw('')}
-    ${accessLevel !== undefined ? prisma.raw(`AND cb."accessLevel" <= ${accessLevel}`) : prisma.raw('')}
+    ${filterSql(filters)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
   `;
@@ -64,10 +72,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_simple @@ plainto_tsquery('simple', ${q})
-    ${subjectSlug ? prisma.raw(`AND s.slug = ${subjectSlug}`) : prisma.raw('')}
-    ${classSlug ? prisma.raw(`AND c.slug = ${classSlug}`) : prisma.raw('')}
-    ${blockType ? prisma.raw(`AND cb."blockType" = ${blockType}`) : prisma.raw('')}
-    ${accessLevel !== undefined ? prisma.raw(`AND cb."accessLevel" <= ${accessLevel}`) : prisma.raw('')}
+    ${filterSql(filters)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
   `;

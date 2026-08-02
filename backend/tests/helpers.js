@@ -30,21 +30,46 @@ export async function boot() {
 // Wipe all tables, then seed a minimal fixture set.
 export async function resetDb() {
   await prisma.$transaction([
+    prisma.emailVerificationToken.deleteMany(),
+    prisma.passwordResetToken.deleteMany(),
+    prisma.loginHistory.deleteMany(),
+    prisma.notification.deleteMany(),
+    prisma.pushSubscription.deleteMany(),
+    prisma.xpEntry.deleteMany(),
+    prisma.userBadge.deleteMany(),
+    prisma.dailyStudy.deleteMany(),
+    prisma.quizAttempt.deleteMany(),
+    prisma.quizQuestion.deleteMany(),
+    prisma.quiz.deleteMany(),
+    prisma.flashcard.deleteMany(),
+    prisma.flashcardDeck.deleteMany(),
+    prisma.studyGoal.deleteMany(),
+    prisma.exam.deleteMany(),
+    prisma.studyPlanItem.deleteMany(),
+    prisma.bookmark.deleteMany(),
+    prisma.userProgress.deleteMany(),
+    prisma.studyStreak.deleteMany(),
+    prisma.learningAnalytics.deleteMany(),
+    prisma.r2Upload.deleteMany(),
+    prisma.contentVersion.deleteMany(),
+    prisma.decisionMaker.deleteMany(),
+    prisma.auditLog.deleteMany(),
+    prisma.accessRequest.deleteMany(),
+    prisma.refreshToken.deleteMany(),
     prisma.contentBlock.deleteMany(),
     prisma.chapter.deleteMany(),
     prisma.subject.deleteMany(),
     prisma.class.deleteMany(),
-    prisma.accessRequest.deleteMany(),
-    prisma.refreshToken.deleteMany(),
-    prisma.auditLog.deleteMany(),
     prisma.user.deleteMany(),
+    prisma.badge.deleteMany(),
   ]);
 
   const passwordHash = await bcrypt.hash('testpass123', 10);
+  const passwordData = () => ({ create: { hash: passwordHash, expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) } });
   const owner = await prisma.user.create({
     data: {
       email: 'owner@test.ravikishan',
-      passwordHash,
+      passwordHashes: passwordData(),
       displayName: 'Ravikishan Owner',
       role: 'owner',
       isApproved: true,
@@ -54,7 +79,7 @@ export async function resetDb() {
   const member = await prisma.user.create({
     data: {
       email: 'member@test.ravikishan',
-      passwordHash,
+      passwordHashes: passwordData(),
       displayName: 'Test Member',
       role: 'member',
       isApproved: true,
@@ -64,7 +89,7 @@ export async function resetDb() {
   const guest = await prisma.user.create({
     data: {
       email: 'guest@test.ravikishan',
-      passwordHash,
+      passwordHashes: passwordData(),
       displayName: 'Test Guest',
       role: 'guest',
       isApproved: false,
@@ -74,7 +99,7 @@ export async function resetDb() {
   const admin = await prisma.user.create({
     data: {
       email: 'admin@test.ravikishan',
-      passwordHash,
+      passwordHashes: passwordData(),
       displayName: 'Test Admin',
       role: 'admin',
       isApproved: true,

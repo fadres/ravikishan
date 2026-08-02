@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import { createApp } from './app.js';
 import { env } from './config/env.js';
 import { prisma } from './config/db.js';
+import { startScheduler, stopScheduler } from './services/scheduler.js';
+import { ensureBadges } from './services/badges.js';
 
 // Ensure the owner account exists (idempotent). Uses OWNER_EMAIL /
 // OWNER_PASSWORD from the environment — the same values seed.js uses, so
@@ -40,12 +42,18 @@ const server = app.listen(env.port, () => {
   console.log(`Ravikishan API listening on http://localhost:${env.port} (${env.nodeEnv})`);
 });
 
+startScheduler();
+ensureBadges().catch((err) => {
+  console.error('Badge seed failed:', err);
+});
+
 ensureOwner().catch((err) => {
   console.error('Owner bootstrap failed:', err);
 });
 
 async function shutdown() {
   console.log('Shutting down…');
+  stopScheduler();
   server.close(async () => {
     await prisma.$disconnect();
     process.exit(0);

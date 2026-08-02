@@ -104,6 +104,7 @@ export default function SubjectPage() {
             Chapters are being written — check back soon.
           </p>
         )}
-      </div>
-    </div>
-  );
+       </div>
+     </div>
+   );
+}

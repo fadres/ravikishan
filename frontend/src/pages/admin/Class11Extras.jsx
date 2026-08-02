@@ -185,11 +185,11 @@ export default function Class11Extras() {
               <div>
                 <h3 className="text-lg font-semibold text-aqua-300 mb-2">System Relationships</h3>
                 <div className="bg-white/5 rounded-lg p-4 text-xs font-mono text-slate-200">
-                  <p>baseQuantities = {</p>
+                  <p>{'{'}baseQuantities = {'{'}</p>
                   <p>  F: [1, 1, -2],  // Force: M L T⁻²</p>
                   <p>  V: [0, 1, -1],  // Velocity: L T⁻¹</p>
                   <p>  T: [0, 0, 1]    // Time: T</p>
-                  <p>}</p>
+                  <p>{'}'}</p>
                 </div>
 
                 <div className="mt-3 space-y-2">

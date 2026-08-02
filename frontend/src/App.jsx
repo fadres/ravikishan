@@ -21,6 +21,21 @@ const Class11Extras = lazy(() => import('./pages/admin/Class11Extras.jsx'));
 const UploadPage = lazy(() => import('./pages/admin/UploadPage.jsx'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard.jsx'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage.jsx'));
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage.jsx'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage.jsx'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage.jsx'));
+const QuizzesPage = lazy(() => import('./pages/quizzes/QuizzesPage.jsx'));
+const QuizTakePage = lazy(() => import('./pages/quizzes/QuizTakePage.jsx'));
+const QuizReviewPage = lazy(() => import('./pages/quizzes/QuizReviewPage.jsx'));
+const QuizLeaderboardPage = lazy(() => import('./pages/quizzes/QuizLeaderboardPage.jsx'));
+const FlashcardsPage = lazy(() => import('./pages/flashcards/FlashcardsPage.jsx'));
+const DeckDetailPage = lazy(() => import('./pages/flashcards/DeckDetailPage.jsx'));
+const ReviewSessionPage = lazy(() => import('./pages/flashcards/ReviewSessionPage.jsx'));
+const PlannerPage = lazy(() => import('./pages/PlannerPage.jsx'));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage.jsx'));
+const AchievementsPage = lazy(() => import('./pages/AchievementsPage.jsx'));
+const AiToolsPage = lazy(() => import('./pages/AiToolsPage.jsx'));
 
 function PageLoader() {
   return (
@@ -33,6 +48,9 @@ function PageLoader() {
 export default function App() {
   return (
     <ThemeProvider>
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-aqua-500 focus:text-white focus:rounded-lg">
+        Skip to content
+      </a>
       <Shell />
     </ThemeProvider>
   );
@@ -43,7 +61,7 @@ function Shell() {
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <Header />
-      <main className="flex-1 pb-safe px-4 sm:px-6">
+      <main id="main-content" className="flex-1 pb-safe px-4 sm:px-6">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -56,6 +74,21 @@ function Shell() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/quizzes" element={<QuizzesPage />} />
+            <Route path="/quizzes/:quizId" element={<QuizTakePage />} />
+            <Route path="/quizzes/attempts/:attemptId" element={<QuizReviewPage />} />
+            <Route path="/quizzes/leaderboard" element={<QuizLeaderboardPage />} />
+            <Route path="/flashcards" element={<FlashcardsPage />} />
+            <Route path="/flashcards/:deckId" element={<DeckDetailPage />} />
+            <Route path="/flashcards/:deckId/review" element={<ReviewSessionPage />} />
+            <Route path="/planner" element={<PlannerPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
+            <Route path="/ai-tools" element={<AiToolsPage />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="dashboard" element={<AdminDashboard />} />

@@ -56,7 +56,7 @@ router.post('/requests/:id/approve', async (req, res) => {
     }),
     prisma.user.update({
       where: { id: request.userId },
-      data: { role: 'member', isApproved: true, accessLevel: 1 },
+      data: { role: 'member', isApproved: true, accessLevel: 2 },
     }),
   ]);
   await recordAudit(req.user, 'access.approved', 'AccessRequest', request.id, { userId: request.userId });
@@ -184,7 +184,7 @@ router.get('/audit', async (req, res) => {
     take: limit,
     include: { actor: { select: { id: true, email: true } } },
   });
-  res.json({ logs });
+  res.json({ logs: logs.map((l) => ({ ...l, actorEmail: l.actor?.email ?? null })) });
 });
 
 // ── Content CRUD ─────────────────────────────────────────────────────────
@@ -268,6 +268,7 @@ router.post('/chapters/:id/blocks', validate(blockSchema), async (req, res) => {
       ...data,
       chapterId: chapter.id,
       accessLevel: req.body.accessLevel ?? 3,
+      classifiedBy: autoReason === null ? 'manual' : 'auto',
       sortOrder: req.body.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
     },
   });
@@ -302,6 +303,7 @@ router.patch('/blocks/:id', validate(blockPatchSchema), async (req, res) => {
   // original classification (auto stays auto, manual stays manual).
   if (data.blockType !== undefined) {
     await assertBlockTypeAllowed(block.chapter.subjectId, data.blockType);
+    data.classifiedBy = 'manual';
   }
 
   const updated = await prisma.contentBlock.update({

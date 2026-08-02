@@ -69,6 +69,30 @@ async function sendMail(to, subject, title, bodyHtml) {
   }
 }
 
+function actionButton(label, url) {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:18px 0"><tr><td style="border-radius:12px;background:linear-gradient(135deg,#22d3ee,#67e8f9)"><a href="${escapeHtml(url)}" style="display:inline-block;padding:12px 26px;border-radius:12px;color:#082f33;font-weight:bold;text-decoration:none;font-size:14px">${escapeHtml(label)}</a></td></tr></table>`;
+}
+
+// Email verification — sent at registration and on resend.
+export async function sendVerificationEmail(to, displayName, token) {
+  const url = `${env.siteUrl}/verify-email?token=${encodeURIComponent(token)}`;
+  const body = `<p>Hi ${escapeHtml(displayName || 'there')},</p>
+<p>Welcome to <strong>Ravikishan Study Notes</strong>. Verify your email address to secure your account, get notified about new content and unlock account recovery.</p>
+${actionButton('Verify my email', url)}
+<p style="font-size:12px;color:#94a3b8">This link expires in 24 hours. If you did not create this account, you can safely ignore this email.</p>`;
+  return sendMail(to, 'Verify your email address', 'Confirm your email', body);
+}
+
+// Forgot password — delivers a one-time reset link.
+export async function sendPasswordResetEmail(to, displayName, token) {
+  const url = `${env.siteUrl}/reset-password?token=${encodeURIComponent(token)}`;
+  const body = `<p>Hi ${escapeHtml(displayName || 'there')},</p>
+<p>We received a request to reset your Ravikishan password. Click below to choose a new one:</p>
+${actionButton('Reset my password', url)}
+<p style="font-size:12px;color:#94a3b8">This link expires in 1 hour and can only be used once. If you did not request this, you can safely ignore this email — your password stays unchanged.</p>`;
+  return sendMail(to, 'Reset your password', 'Password reset', body);
+}
+
 // Sends to every member (accessLevel 1 or 2, excluding owner/admins).
 async function memberRecipients() {
   return prisma.user.findMany({

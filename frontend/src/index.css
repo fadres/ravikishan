@@ -208,6 +208,17 @@ body {
   to { opacity: 1; transform: none; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Active nav pill — accent gradient, theme-aware */
 .nav-pill {
   background: linear-gradient(90deg, var(--color-aqua-400), color-mix(in srgb, var(--color-aqua-400) 55%, var(--color-deep-700)));

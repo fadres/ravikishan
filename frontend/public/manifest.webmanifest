@@ -1,12 +1,16 @@
 {
-  "name": "Ravikishan",
+  "id": "/",
+  "name": "Ravikishan — Study Board",
   "short_name": "Ravikishan",
-  "description": "Ravikishan — curated Class 11 & 12 exam notes by Ravikishan.",
+  "description": "Curated Class 11 & 12 exam notes, quizzes, flashcards and study tools by Ravikishan.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#04101f",
   "theme_color": "#0a2447",
   "lang": "en",
+  "categories": ["education", "productivity"],
   "icons": [
     {
       "src": "/favicon.svg",
