@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { api, getAccessToken, setTokens, clearTokens, getRefreshToken } from '../api/client.js';
 
 const AuthContext = createContext(null);
@@ -6,19 +6,36 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const lastFetchRef = useRef(0);
 
   const fetchMe = useCallback(async () => {
     try {
-      if (!getAccessToken()) return;
+      if (!getAccessToken()) return null;
+      lastFetchRef.current = Date.now();
       const data = await api('/api/auth/me');
       setUser(data.user);
+      return data.user;
     } catch {
       setUser(null);
+      return null;
     }
   }, []);
 
   useEffect(() => {
     fetchMe().finally(() => setLoading(false));
+  }, [fetchMe]);
+
+  // Auto-refresh the profile silently when the tab regains focus — throttled
+  // to once a minute. The backend loads the user row fresh on every request,
+  // so once the owner approves an access request, this picks up the new
+  // access level (premium unlock) without the user having to log in again.
+  useEffect(() => {
+    if (!getAccessToken()) return undefined;
+    const onFocus = () => {
+      if (Date.now() - lastFetchRef.current > 60_000) fetchMe();
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
   }, [fetchMe]);
 
   const login = useCallback(async (email, password) => {
@@ -47,10 +64,13 @@ export function AuthProvider({ children }) {
         auth: Boolean(getAccessToken()),
       });
       if (data.accessToken) setTokens(data.accessToken, data.refreshToken);
+      // Always re-fetch the profile after submitting: if this user was just
+      // approved their access level refreshes right away (no re-login).
       if (data.user && !user) setUser(data.user);
+      else await fetchMe();
       return data;
     },
-    [user],
+    [user, fetchMe],
   );
 
   const logout = useCallback(async () => {
