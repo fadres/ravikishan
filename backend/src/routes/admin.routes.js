@@ -59,7 +59,9 @@ router.post('/requests/:id/approve', validate(userIdSchema, 'params'), async (re
     }),
     prisma.user.update({
       where: { id: request.userId },
-      data: { role: 'member', isApproved: true, accessLevel: 2 },
+      // The content behind "Access it" is premium (level 1), so an approved
+      // request must grant premium — members (2) would stay locked.
+      data: { role: 'member', isApproved: true, accessLevel: 1 },
     }),
   ]);
   await recordAudit(req.user, 'access.approved', 'AccessRequest', request.id, { userId: request.userId });

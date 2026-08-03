@@ -80,7 +80,7 @@ export default function FileList({ refreshKey }) {
   }
 
   if (files.length === 0) {
-    return <p className="text-slate-500 text-sm text-center py-4">No files uploaded yet.</p>;
+    return <p className="text-slate-500 text-sm text-center py-4">This section is under development and will be added in future updates.</p>;
   }
 
   return (

@@ -42,7 +42,7 @@ export default function LockedBlockCard({ block, topicLabel, contactEmail = '', 
             {topicLabel && <span className="text-xs font-extrabold uppercase tracking-wider mr-1.5" style={{ color: themeColor }}>{topicLabel}</span>}
             {block.title}
           </p>
-          <p className="text-xs text-slate-400">This section is locked</p>
+          <p className="text-xs text-slate-400">This section needs premium access.</p>
         </div>
         <span className="shrink-0 text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-bold border" style={{ color: themeColor, borderColor: `${themeColor}55`, background: `${themeColor}11` }}>
           Locked
