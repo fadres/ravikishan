@@ -40,7 +40,7 @@ export default function ChapterPage() {
   // must track the header's real height (mobile header is two rows tall).
   useEffect(() => {
     const header = document.querySelector('header');
-    const searchBar = document.querySelector('.md\:hidden.header-solid.border-b');
+    const searchBar = document.querySelector('.md\\:hidden.header-solid.border-b');
     const update = () => {
       if (header) setHeaderH(header.offsetHeight);
     };

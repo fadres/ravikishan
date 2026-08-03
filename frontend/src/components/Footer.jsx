@@ -49,8 +49,30 @@ function MailIcon() {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 py-8 px-4 text-center text-sm text-slate-500">
-      <p>Ravikishan · Study Vault · Contact: {CONTACT_EMAIL}</p>
+    <footer className="border-t border-white/10 py-8 px-4 text-center text-sm">
+      <div className="max-w-2xl mx-auto space-y-3">
+        <p className="text-base font-bold text-slate-200 tracking-wide">Ravikishan · Study Vault</p>
+        <p className="text-slate-400">
+          Contact:{' '}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="font-semibold text-aqua-300 drop-shadow-[0_0_8px_rgba(125,211,252,0.9)] hover:text-aqua-200 transition"
+          >
+            {CONTACT_EMAIL}
+          </a>
+        </p>
+        <p className="mx-auto max-w-xl text-slate-400">
+          A free study vault built by a student for students — curated Class 11 &amp; 12 notes, quizzes, flashcards, a
+          daily planner and AI study tools, made with curiosity so that every learner grows, little by little.
+        </p>
+        <p className="text-slate-300">
+          Designed and developed by{' '}
+          <span className="font-bold text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.95)]">
+            Ravikishan
+          </span>
+        </p>
+        <p className="pt-1 text-slate-400 italic tracking-wide">Knowledge is power</p>
+      </div>
     </footer>
   );
 }

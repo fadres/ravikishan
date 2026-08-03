@@ -59,7 +59,7 @@ export default function App() {
 function Shell() {
   const { wallpaper } = useTheme();
   const location = useLocation();
-  const showFooter = location.pathname === '/' || location.pathname === '/dashboard';
+  const showFooter = location.pathname === '/dashboard';
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <Header />
