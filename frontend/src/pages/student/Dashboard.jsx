@@ -27,29 +27,48 @@ function StatCard({ label, value, icon }) {
 
 function OwnerIntro() {
   return (
-    <div className="glass rounded-2xl p-6 mb-8 relative overflow-hidden">
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-aqua-400/15 text-aqua-300 border border-aqua-400/30">
+    <div className="relative overflow-hidden glass rounded-2xl p-6 mb-8">
+      <div
+        aria-hidden="true"
+        className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-25 blur-3xl pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.5), transparent 70%)' }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-20 -left-16 w-56 h-56 rounded-full opacity-20 blur-3xl pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.45), transparent 70%)' }}
+      />
+      <div className="relative flex flex-wrap gap-2.5 mb-5">
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-aqua-400/40 bg-gradient-to-r from-aqua-400/15 to-aqua-400/5 text-aqua-200 shadow-[0_0_14px_-4px_rgba(56,189,248,0.6)]">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
           Based on NEB Curriculum
         </span>
-        <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-400/15 text-emerald-300 border border-emerald-400/30">
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border border-emerald-400/40 bg-gradient-to-r from-emerald-400/15 to-emerald-400/5 text-emerald-200 shadow-[0_0_14px_-4px_rgba(52,211,153,0.6)]">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <path d="M9 7h7M9 11h5" />
+          </svg>
           Approved by CDC
         </span>
       </div>
-      <p className="text-sm text-slate-300 leading-relaxed max-w-2xl">
+      <p className="relative text-sm text-slate-300 leading-relaxed max-w-2xl">
         Study Vault curates notes for NEB classes 11 and 12 — every chapter, key formula and solved example in one
         place, so you can prepare for your board exams without hunting across the internet.
       </p>
-      <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="relative mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-slate-400">
           Designed and developed by{' '}
-          <span className="font-black text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.95)]">Ravikishan</span>
+          <span className="glow-gold text-base font-extrabold">Ravikishan</span>
         </p>
         <a
           href="https://www.instagram.com/___unxknown___player"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-aqua-300 hover:text-aqua-100 transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-aqua-400/40 bg-aqua-400/10 text-aqua-200 text-xs font-bold hover:bg-aqua-400/20 hover:shadow-[0_0_18px_-4px_rgba(56,189,248,0.8)] transition"
         >
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
             <rect x="2" y="2" width="20" height="20" rx="5" />
