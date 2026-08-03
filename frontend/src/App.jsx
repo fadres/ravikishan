@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
@@ -60,8 +60,6 @@ export default function App() {
 
 function Shell() {
   const { wallpaper } = useTheme();
-  const location = useLocation();
-  const showFooter = location.pathname === '/dashboard';
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <Header />
@@ -109,7 +107,7 @@ function Shell() {
           </Routes>
         </Suspense>
       </main>
-      {showFooter && <Footer />}
+      <Footer />
     </div>
   );
 }

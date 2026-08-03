@@ -128,7 +128,64 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     ${filterSql(filters, viewerLevel)}
   `;
 
-  const [english, simple, countRows] = await Promise.all([englishQuery, simpleQuery, countQuery]);
+  const chapterRows = prisma.$queryRaw`
+    SELECT ch.id, ch.title, ch.slug AS "chapterSlug",
+           s.name AS "subjectName", s.slug AS "subjectSlug",
+           c.slug AS "classSlug", c.name AS "className",
+           (ch.title ILIKE ${q + '%'})::int AS "isPrefix"
+    FROM "Chapter" ch
+    JOIN "Subject" s ON s.id = ch."subjectId"
+    JOIN "Class" c ON c.id = s."classId"
+    WHERE ch.status = 'published' AND s.status = 'published'
+      AND (ch.title ILIKE ${'%' + q + '%'} OR ch.slug ILIKE ${'%' + q + '%'})
+    ${subjectSlug ? Prisma.sql`AND s.slug = ${subjectSlug}` : Prisma.empty}
+    ${classSlug ? Prisma.sql`AND c.slug = ${classSlug}` : Prisma.empty}
+    ORDER BY "isPrefix" DESC, ch.title
+    LIMIT 8
+  `;
+
+  const chapterCountRows = prisma.$queryRaw`
+    SELECT COUNT(*)::int AS total
+    FROM "Chapter" ch
+    JOIN "Subject" s ON s.id = ch."subjectId"
+    JOIN "Class" c ON c.id = s."classId"
+    WHERE ch.status = 'published' AND s.status = 'published'
+      AND (ch.title ILIKE ${'%' + q + '%'} OR ch.slug ILIKE ${'%' + q + '%'})
+    ${subjectSlug ? Prisma.sql`AND s.slug = ${subjectSlug}` : Prisma.empty}
+    ${classSlug ? Prisma.sql`AND c.slug = ${classSlug}` : Prisma.empty}
+  `;
+
+  const subjectRows = prisma.$queryRaw`
+    SELECT s.id, s.name, s.slug AS "subjectSlug",
+           c.slug AS "classSlug", c.name AS "className",
+           (s.name ILIKE ${q + '%'})::int AS "isPrefix"
+    FROM "Subject" s
+    JOIN "Class" c ON c.id = s."classId"
+    WHERE s.status = 'published'
+      AND s.name ILIKE ${'%' + q + '%'}
+    ${classSlug ? Prisma.sql`AND c.slug = ${classSlug}` : Prisma.empty}
+    ORDER BY "isPrefix" DESC, s.name
+    LIMIT 6
+  `;
+
+  const subjectCountRows = prisma.$queryRaw`
+    SELECT COUNT(*)::int AS total
+    FROM "Subject" s
+    JOIN "Class" c ON c.id = s."classId"
+    WHERE s.status = 'published'
+      AND s.name ILIKE ${'%' + q + '%'}
+    ${classSlug ? Prisma.sql`AND c.slug = ${classSlug}` : Prisma.empty}
+  `;
+
+  const [english, simple, countRows, chapters, chapterCount, subjects, subjectCount] = await Promise.all([
+    englishQuery,
+    simpleQuery,
+    countQuery,
+    chapterRows,
+    chapterCountRows,
+    subjectRows,
+    subjectCountRows,
+  ]);
 
   const merged = new Map();
   for (const row of [...english, ...simple]) {
@@ -136,15 +193,52 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     if (!existing || (row.rank ?? 0) > (existing.rank ?? 0)) merged.set(row.id, row);
   }
 
+  // Chapters and subjects that match the query itself — ranked above content
+  // blocks so "cell" surfaces the chapter, not just inner notes.
+  for (const row of chapters) {
+    merged.set(`chapter-${row.id}`, {
+      id: row.id,
+      kind: 'chapter',
+      blockType: 'chapter',
+      title: row.title ?? '',
+      chapter: { title: row.title ?? '', slug: row.chapterSlug },
+      subject: { name: row.subjectName, slug: row.subjectSlug },
+      klass: { name: row.className, slug: row.classSlug },
+      rank: row.isPrefix ? 1000 : 900,
+      accessLevel: 3,
+      locked: false,
+      snippet: null,
+      sectionIndex: null,
+    });
+  }
+  for (const row of subjects) {
+    merged.set(`subject-${row.id}`, {
+      id: row.id,
+      kind: 'subject',
+      blockType: 'subject',
+      title: row.name ?? '',
+      chapter: { title: '', slug: '' },
+      subject: { name: row.name ?? '', slug: row.subjectSlug },
+      klass: { name: row.className, slug: row.classSlug },
+      rank: row.isPrefix ? 800 : 700,
+      accessLevel: 3,
+      locked: false,
+      snippet: null,
+      sectionIndex: null,
+    });
+  }
+
   const results = [...merged.values()]
     .sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
     .map((row) => {
+      if (row.kind) return row;
       const blockAccess = row.accessLevel ?? 3;
       const sectionIndex = row.sectionIndex ?? sectionIndexForBlockType(row.blockType);
       const visible = isSectionVisible(sectionIndex, blockAccess, viewerLevel);
       const headline = row.snippetEn || row.snippetSimple || '';
       return {
         id: row.id,
+        kind: 'block',
         title: row.title ?? '',
         blockType: row.blockType,
         accessLevel: blockAccess,
@@ -162,7 +256,11 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
       };
     });
 
-  const totalCount = Number(countRows?.[0]?.total ?? 0);
+  const blockTotal = Number(countRows?.[0]?.total ?? 0);
+  const totalCount =
+    blockTotal +
+    Number(chapterCount?.[0]?.total ?? 0) +
+    Number(subjectCount?.[0]?.total ?? 0);
 
   return { results, totalCount, page, perPage, totalPages: Math.ceil(totalCount / perPage) };
 }

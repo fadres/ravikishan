@@ -2,6 +2,8 @@
 // naming what kind of content it is (topic / concept / example / …).
 
 export const TYPE_META = {
+  chapter: { label: 'Chapter', color: '#7dd3fc' },
+  subject: { label: 'Subject', color: '#34d399' },
   note_topic: { label: 'Topic', color: '#38bdf8' },
   note_concept: { label: 'Concept', color: '#2dd4bf' },
   note_statement: { label: 'Statement', color: '#818cf8' },

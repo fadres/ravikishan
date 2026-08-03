@@ -59,7 +59,18 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
 
   const goTo = (r) => {
     setOpen(false);
-    navigate(`/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`);
+    if (r.kind === 'subject') {
+      navigate(`/class/${r.klass.slug}/subject/${r.subject.slug}`);
+    } else {
+      navigate(`/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`);
+    }
+  };
+
+  const breadcrumb = (r) => {
+    const parts = [];
+    if (r.kind !== 'subject' && r.subject && r.subject.name) parts.push(r.subject.name);
+    if (r.chapter && r.chapter.title) parts.push(r.chapter.title);
+    return parts.join(' · ');
   };
 
   const submit = (e) => {
@@ -127,7 +138,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
                         className="inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle"
                         style={{ background: SUBJECT_COLORS[r.subject.slug] || '#38bdf8' }}
                       />
-                      {r.subject.name} · {r.chapter.title}
+                      {breadcrumb(r)}
                       {r.locked && ' · reserved'}
                     </span>
                     {r.snippet && <span className="block text-xs text-slate-300 mt-0.5 line-clamp-2">{r.snippet}</span>}
