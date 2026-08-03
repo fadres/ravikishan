@@ -74,9 +74,9 @@ export async function savePushSubscription(userId, subscription) {
   });
 }
 
-export async function deletePushSubscription(endpoint) {
+export async function deletePushSubscription(endpoint, userId) {
   if (!endpoint) return;
-  await prisma.pushSubscription.deleteMany({ where: { endpoint } });
+  await prisma.pushSubscription.deleteMany({ where: { endpoint, userId } });
 }
 
 // Best-effort web push when configured; never throws to the caller.

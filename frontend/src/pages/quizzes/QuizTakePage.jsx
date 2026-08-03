@@ -52,12 +52,12 @@ export default function QuizTakePage() {
   useEffect(() => {
     if (secondsLeft === null) return;
     if (secondsLeft <= 0) {
-      submit();
+      submit(true); // force: skip the confirm dialog, submit immediately
       return;
     }
     const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
-  }, [secondsLeft]);
+  }, [secondsLeft, submit]);
 
   const submit = useCallback(
     async (force = false) => {
@@ -229,7 +229,10 @@ export default function QuizTakePage() {
                 Keep going
               </button>
               <button
-                onClick={() => setConfirming(false) || submit(false)}
+                onClick={() => {
+                  setConfirming(false);
+                  submit(true);
+                }}
                 className="px-4 py-2 rounded-xl text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
               >
                 Submit

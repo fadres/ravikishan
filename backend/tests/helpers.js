@@ -118,6 +118,7 @@ export async function resetDb() {
       subjectType: 'science_math',
       isLocked: true,
       sortOrder: 1,
+      status: 'published',
     },
   });
   const openSubject = await prisma.subject.create({
@@ -128,6 +129,7 @@ export async function resetDb() {
       subjectType: 'english',
       isLocked: false,
       sortOrder: 2,
+      status: 'published',
     },
   });
 
@@ -138,6 +140,7 @@ export async function resetDb() {
       slug: 'kinematics',
       isLocked: true,
       sortOrder: 1,
+      status: 'published',
     },
   });
   const openChapter = await prisma.chapter.create({
@@ -147,6 +150,7 @@ export async function resetDb() {
       slug: 'the-selfish-giant',
       isLocked: false,
       sortOrder: 1,
+      status: 'published',
     },
   });
 

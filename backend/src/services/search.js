@@ -9,13 +9,15 @@ import {
 
 const SNIPPET_OPTIONS = 'MaxWords=25, MinWords=6, MaxFragments=1, StartSel=<<, StopSel=>>';
 
-function filterSql(filters) {
+function filterSql(filters, viewerLevel) {
   const { subjectSlug, classSlug, blockType, accessLevel } = filters;
   const parts = [];
   if (subjectSlug) parts.push(Prisma.sql`AND s.slug = ${subjectSlug}`);
   if (classSlug) parts.push(Prisma.sql`AND c.slug = ${classSlug}`);
   if (blockType) parts.push(Prisma.sql`AND cb."blockType" = ${blockType}`);
-  if (accessLevel !== undefined) parts.push(Prisma.sql`AND cb."accessLevel" <= ${accessLevel}`);
+  if (accessLevel !== undefined) {
+    parts.push(Prisma.sql`AND cb."accessLevel" >= ${Math.max(accessLevel, viewerLevel)}`);
+  }
   return parts.length ? Prisma.join(parts, ' ') : Prisma.empty;
 }
 
@@ -70,8 +72,10 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_english @@ plainto_tsquery('english', ${q})
+    AND ch.status = 'published'
+    AND s.status = 'published'
     ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
-    ${filterSql(filters)}
+    ${filterSql(filters, viewerLevel)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
   `;
@@ -102,8 +106,10 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Subject" s  ON s.id = ch."subjectId"
     JOIN "Class" c    ON c.id = s."classId"
     WHERE cb.search_vector_simple @@ plainto_tsquery('simple', ${q})
+    AND ch.status = 'published'
+    AND s.status = 'published'
     ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
-    ${filterSql(filters)}
+    ${filterSql(filters, viewerLevel)}
     ORDER BY rank DESC
     LIMIT ${perPage} OFFSET ${offset}
   `;
@@ -116,8 +122,10 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     JOIN "Class" c    ON c.id = s."classId"
     WHERE (cb.search_vector_english @@ plainto_tsquery('english', ${q})
         OR cb.search_vector_simple @@ plainto_tsquery('simple', ${q}))
+    AND ch.status = 'published'
+    AND s.status = 'published'
     ${sectionFilter ? Prisma.sql`AND ${sectionFilter}` : Prisma.empty}
-    ${filterSql(filters)}
+    ${filterSql(filters, viewerLevel)}
   `;
 
   const [english, simple, countRows] = await Promise.all([englishQuery, simpleQuery, countQuery]);

@@ -228,43 +228,43 @@ export default function ContentPanel() {
             </div>
             <div className="mt-1.5 space-y-1 max-h-72 overflow-y-auto pr-1">
               {subject.chapters.map((c) => (
-                <button
+                <div
                   key={c.id}
-                  onClick={() => loadBlocks(c.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition flex items-center justify-between gap-2 ${
+                  className={`w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm transition border ${
                     activeChapter?.id === c.id
-                      ? 'bg-aqua-400/15 border border-aqua-400/40 text-aqua-100'
-                      : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10'
+                      ? 'bg-aqua-400/15 border-aqua-400/40'
+                      : 'bg-white/5 border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  <span className="truncate">{c.title}</span>
+                  <button
+                    onClick={() => loadBlocks(c.id)}
+                    className={`flex-1 min-w-0 text-left truncate ${
+                      activeChapter?.id === c.id ? 'text-aqua-100' : 'text-slate-300'
+                    }`}
+                  >
+                    {c.title}
+                  </button>
                   <span className="flex items-center gap-1 shrink-0">
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleChapter(c);
-                      }}
-                      className={`text-[10px] ${c.isLocked ? 'text-amber-300' : 'text-emerald-300'}`}
+                    <button
+                      onClick={() => toggleChapter(c)}
+                      aria-label={c.isLocked ? `Open ${c.title}` : `Lock ${c.title}`}
                       title={c.isLocked ? 'Locked — click to open' : 'Open — click to lock'}
+                      className={`text-[10px] p-1 rounded ${
+                        c.isLocked ? 'text-amber-300 hover:bg-amber-400/10' : 'text-emerald-300 hover:bg-emerald-400/10'
+                      }`}
                     >
                       {c.isLocked ? '🔒' : '🔓'}
-                    </span>
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteChapter(c);
-                      }}
-                      className="text-[10px] text-slate-500 hover:text-rose-300"
+                    </button>
+                    <button
+                      onClick={() => deleteChapter(c)}
+                      aria-label={`Delete ${c.title}`}
                       title="Delete chapter"
+                      className="text-[10px] p-1 rounded text-slate-500 hover:text-rose-300 hover:bg-rose-400/10"
                     >
                       🗑
-                    </span>
+                    </button>
                   </span>
-                </button>
+                </div>
               ))}
             </div>
             <form onSubmit={addChapter} className="mt-2 flex gap-1.5">

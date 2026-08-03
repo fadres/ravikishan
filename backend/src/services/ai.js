@@ -45,7 +45,7 @@ async function loadChapter(userId, chapterId) {
     include: {
       subject: { select: { id: true, name: true } },
       blocks: {
-        where: { accessLevel: { lte: viewerLevel } },
+        where: { accessLevel: { gte: viewerLevel } },
         orderBy: { sortOrder: 'asc' },
       },
     },
@@ -59,7 +59,7 @@ async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
     : 3;
   const blocks = await prisma.contentBlock.findMany({
     where: {
-      accessLevel: { lte: viewerLevel },
+      accessLevel: { gte: viewerLevel },
       ...(subjectId ? { chapter: { subjectId } } : {}),
       ...(chapterId ? { chapterId } : {}),
     },

@@ -182,8 +182,26 @@ export default function SearchPage() {
         <>
           {results.length === 0 ? (
             <div className="glass rounded-2xl p-10 text-center">
-              <p className="text-slate-200 font-semibold mb-1">No direct matches for "{params.get('q')}"</p>
-              <p className="text-sm text-slate-400">Here are some recommended topics instead:</p>
+              {activeSubjectFilter || activeTypeFilter || activeAccessFilter ? (
+                <>
+                  <p className="text-slate-200 font-semibold mb-1">No results match the current filters.</p>
+                  <button
+                    onClick={() => {
+                      setFilter('subject', '');
+                      setFilter('type', '');
+                      setFilter('access', '');
+                    }}
+                    className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
+                  >
+                    Clear all filters
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-slate-200 font-semibold mb-1">No direct matches for "{params.get('q')}"</p>
+                  <p className="text-sm text-slate-400">Here are some recommended topics instead:</p>
+                </>
+              )}
             </div>
           ) : (
             <>
@@ -264,22 +282,6 @@ export default function SearchPage() {
               </div>
             </>
           )}
-
-{activeSubjectFilter || activeTypeFilter || activeAccessFilter ? (
-             <div className="glass rounded-2xl p-8 text-center mb-6">
-               <p className="text-slate-200 font-semibold">Nothing matches these filters.</p>
-               <button
-                 onClick={() => {
-                   setFilter('subject', '');
-                   setFilter('type', '');
-                   setFilter('access', '');
-                 }}
-                 className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
-               >
-                 Clear all filters
-               </button>
-             </div>
-           ) : null}
 
           {groups.map((g) => (
             <section key={g.key} className="mb-8">

@@ -120,7 +120,7 @@ router.post('/plan', validate(planItemSchema), async (req, res) => {
   res.status(201).json({ item });
 });
 
-router.post('/plan/:id/toggle', async (req, res) => {
+router.post('/plan/:id/toggle', validate(planIdSchema, 'params'), async (req, res) => {
   const item = await togglePlanItem(req.user.id, req.params.id);
   res.json({ item });
 });

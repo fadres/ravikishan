@@ -21,6 +21,7 @@ const CLASS_SELECT = {
   slug: true,
   sortOrder: true,
   subjects: {
+    where: { status: 'published' },
     orderBy: { name: 'asc' },
     select: {
       id: true,
@@ -31,7 +32,9 @@ const CLASS_SELECT = {
       themeColor: true,
       isLocked: true,
       sortOrder: true,
-      _count: { select: { chapters: true } },
+      _count: {
+        select: { chapters: { where: { status: 'published' } } },
+      },
     },
   },
 };
@@ -66,6 +69,7 @@ const subjectSelect = {
   sortOrder: true,
   class: { select: { id: true, name: true, slug: true } },
   chapters: {
+    where: { status: 'published' },
     orderBy: { sortOrder: 'asc' },
     select: {
       id: true,
@@ -86,6 +90,7 @@ router.get('/subjects/:slug', async (req, res) => {
   const subject = await prisma.subject.findFirst({
     where: {
       slug: req.params.slug,
+      status: 'published',
       ...(classSlug ? { class: { slug: classSlug } } : {}),
     },
     orderBy: { class: { sortOrder: 'asc' } },
@@ -99,7 +104,7 @@ router.get('/subjects/:slug', async (req, res) => {
 // GET /api/subjects/:slug/custom — public: the custom subject cards.
 router.get('/subjects/:slug/custom', async (req, res) => {
   const subject = await prisma.subject.findFirst({
-    where: { slug: req.params.slug },
+    where: { slug: req.params.slug, status: 'published' },
     orderBy: { class: { sortOrder: 'asc' } },
     select: { id: true },
   });
@@ -225,10 +230,11 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
   const subject = await prisma.subject.findFirst({
     where: {
       slug: req.params.subjectSlug,
+      status: 'published',
       ...(classSlug ? { class: { slug: classSlug } } : {}),
     },
     orderBy: { class: { sortOrder: 'asc' } },
-    include: { chapters: { where: { slug: req.params.chapterSlug } } },
+    include: { chapters: { where: { slug: req.params.chapterSlug, status: 'published' } } },
   });
   if (!subject) throw new AppError(404, 'Subject not found');
   const chapter = subject.chapters[0];
@@ -298,9 +304,9 @@ const searchSchema = z.object({
   class: z.string().trim().optional(),
   type: z.string().trim().optional(),
   section: z.enum(['topic', 'learning', 'diagram', 'concept', 'examples', 'important', 'mind_recall', 'pyq', 'solved', 'premium', 'references']).optional(),
-  access: z.number().int().min(1).max(3).optional(),
-  page: z.number().int().min(1).optional(),
-  perPage: z.number().int().min(1).max(50).optional(),
+  access: z.coerce.number().int().min(1).max(3).optional(),
+  page: z.coerce.number().int().min(1).optional(),
+  perPage: z.coerce.number().int().min(1).max(50).optional(),
 });
 
 // GET /api/search?q= — live search, ranked by ts_rank, grouped client-side.

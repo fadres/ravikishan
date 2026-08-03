@@ -24,7 +24,9 @@ router.get('/', async (req, res) => {
   res.json({ notifications, unreadCount: count });
 });
 
-router.post('/:id/read', async (req, res) => {
+const idSchema = z.object({ id: z.string().uuid() });
+
+router.post('/:id/read', validate(idSchema, 'params'), async (req, res) => {
   const notification = await markRead(req.user.id, req.params.id);
   res.json({ notification });
 });
@@ -47,7 +49,7 @@ router.post('/push/subscribe', validate(pushSchema), async (req, res) => {
 });
 
 router.post('/push/unsubscribe', validate(z.object({ endpoint: z.string().trim().max(500) })), async (req, res) => {
-  await deletePushSubscription(req.body.endpoint);
+  await deletePushSubscription(req.body.endpoint, req.user.id);
   res.json({ ok: true });
 });
 

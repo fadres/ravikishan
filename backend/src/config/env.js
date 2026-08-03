@@ -7,6 +7,11 @@ if (process.env.NODE_ENV === 'production') {
   for (const key of required) {
     if (!process.env[key]) throw new Error(`Missing required environment variable: ${key}`);
   }
+  for (const key of ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET']) {
+    if (process.env[key] && process.env[key].length < 16) {
+      throw new Error(`${key} must be at least 16 characters in production`);
+    }
+  }
 }
 
 export const env = {
@@ -31,7 +36,7 @@ export const env = {
   smtpUser: process.env.SMTP_USER || '',
   smtpPass: process.env.SMTP_PASS || '',
   mailFrom: process.env.MAIL_FROM || '',
-  siteUrl: process.env.SITE_URL || 'https://timepass001.netlify.app',
+  siteUrl: process.env.SITE_URL || 'https://hero000001.netlify.app',
   vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
   vapidPrivateKey: process.env.VAPID_PRIVATE_KEY || '',
   vapidSubject: process.env.VAPID_SUBJECT || 'mailto:harindarsah98172@gmail.com',

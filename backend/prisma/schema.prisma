@@ -212,6 +212,7 @@ model AccessRequest {
 
   @@index([status])
   @@index([userId, status])
+  @@index([resolvedById])
 }
 
 model Class {
@@ -220,8 +221,6 @@ model Class {
   slug      String    @unique
   sortOrder Int       @default(0)
   subjects  Subject[]
-
-  @@index([slug])
 }
 
 model Subject {
@@ -412,9 +411,9 @@ model ContentVersion {
   mindmapJson     Json?
   diagramData     Json?
   subLevel        String?
-  changedBy   String
-  user        User     @relation(fields: [changedById], references: [id], onDelete: SetNull)
-  changedById String
+  changedBy   String?
+  user        User?    @relation(fields: [changedById], references: [id], onDelete: SetNull)
+  changedById String?
   createdAt   DateTime @default(now())
 
   @@unique([blockId, version])
@@ -562,8 +561,6 @@ model Badge {
   criteria    Json
   createdAt   DateTime @default(now())
   userBadges  UserBadge[]
-
-  @@index([code])
 }
 
 model UserBadge {
@@ -593,7 +590,6 @@ model DailyStudy {
   updatedAt   DateTime @updatedAt
 
   @@unique([userId, date])
-  @@index([userId, date])
 }
 
 // ── Quiz System ─────────────────────────────────────
@@ -603,11 +599,11 @@ model Quiz {
   title             String
   description       String?
   subjectId         String?
-  subject           Subject?      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject           Subject?      @relation(fields: [subjectId], references: [id], onDelete: SetNull)
   chapterId         String?
-  chapter           Chapter?      @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter           Chapter?      @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   topicId           String?
-  topic             Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topic             Topic?        @relation(fields: [topicId], references: [id], onDelete: SetNull)
   status            ContentStatus @default(draft)
   timeLimitSeconds  Int?
   shuffle           Boolean       @default(true)
@@ -746,6 +742,7 @@ model Exam {
 
   @@index([userId])
   @@index([examDate])
+  @@index([subjectId])
 }
 
 model StudyPlanItem {
