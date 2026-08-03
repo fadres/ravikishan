@@ -1,10 +1,8 @@
 // Mini markdown → React renderer.
 // Deliberately dependency-free and XSS-safe: all input is HTML-escaped first;
-// only bold/italic/inline-code/math/list/quote/heading tokens are parsed.
-// KaTeX handles $...$ math; unknown math falls back to plain text.
-
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
+// only bold/italic/inline-code/list/quote/heading tokens are parsed.
+// LaTeX is NOT rendered — $...$ math and \commands are converted to plain,
+// readable text by latexToPlain() so no raw LaTeX ever reaches the screen.
 
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (c) => ({
@@ -16,30 +14,61 @@ function escapeHtml(text) {
   })[c]);
 }
 
-function MathInline({ tex }) {
-  let html = '';
-  try {
-    html = katex.renderToString(tex, { throwOnError: true, strict: 'ignore' });
-  } catch {
-    html = escapeHtml(`$${tex}$`);
-  }
-  return <span className="math-inline" dangerouslySetInnerHTML={{ __html: html }} />;
+// The one standard LaTeX→plain-text converter used by every renderer in the
+// system (markdown, tables, mind maps, formulas, symbols, keywords). Any
+// $...$ / $$...$$ delimiters are dropped, common \commands become readable
+// text, and everything else (braces, backslashes, ^, _) is cleaned away so
+// no LaTeX presentation can leak through anywhere.
+export function latexToPlain(input) {
+  const symbols = {
+    times: '×', div: '÷', pm: '±', mp: '∓', cdot: '·', bullet: '•',
+    leq: '≤', geq: '≥', neq: '≠', approx: '≈', equiv: '≡', sim: '~',
+    propto: '∝', infty: '∞', partial: '∂', nabla: '∇', forall: '∀',
+    exists: '∃', emptyset: '∅', subset: '⊂', supset: '⊃', subseteq: '⊆',
+    supseteq: '⊇', cup: '∪', cap: '∩', in: '∈', notin: '∉',
+    leftarrow: '←', rightarrow: '→', leftrightarrow: '↔',
+    Leftarrow: '⇐', Rightarrow: '⇒', uparrow: '↑', downarrow: '↓',
+    alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ε', zeta: 'ζ',
+    eta: 'η', theta: 'θ', iota: 'ι', kappa: 'κ', lambda: 'λ', mu: 'μ',
+    nu: 'ν', xi: 'ξ', pi: 'π', rho: 'ρ', sigma: 'σ', tau: 'τ',
+    upsilon: 'υ', phi: 'φ', chi: 'χ', psi: 'ψ', omega: 'ω',
+    Gamma: 'Γ', Delta: 'Δ', Theta: 'Θ', Lambda: 'Λ', Xi: 'Ξ', Pi: 'Π',
+    Sigma: 'Σ', Phi: 'Φ', Psi: 'Ψ', Omega: 'Ω',
+    degree: '°', prime: '′', perp: '⊥', parallel: '∥', angle: '∠',
+    sum: 'Σ', prod: 'Π', int: '∫', sqrt: '√', infty: '∞',
+    ldots: '…', cdots: '⋯', dots: '…', text: '', mathrm: '', mathbf: '',
+    mathit: '', mathsf: '', mathtt: '', mathcal: '', mbox: '', em: '',
+  };
+  let s = String(input ?? '').replace(/\s+/g, ' ').trim();
+  // frac{a}{b} → a/b
+  s = s.replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, (_, a, b) => `${a}/${b}`);
+  // sqrt{x} → √x  (also sqrt[n]{x})
+  s = s.replace(/\\sqrt\s*(?:\[([^{}]*)\])?\s*\{([^{}]*)\}/g, (_, n, b) => (n ? `${n}√(${b})` : `√(${b})`));
+  // text{...} / mathrm{...} → content
+  s = s.replace(/\\(?:text|mathrm|mathbf|mathit|mathsf|mathtt|mathcal|mbox|em|operatorname)\s*\{([^{}]*)\}/g, '$1');
+  // _{} and ^{} → _x and ^x
+  s = s.replace(/\_\s*\{([^{}]*)\}/g, '_$1');
+  s = s.replace(/\^\s*\{([^{}]*)\}/g, '^$1');
+  // \left \right \big etc. → nothing
+  s = s.replace(/\\(?:left|right|big|Big|bigg|Bigg|bigl|bigr|Bigl|Bigr|biggl|biggr)\b/g, '');
+  // \; \, \! \: \quad \qquad → space
+  s = s.replace(/\\quad|\\qquad|\\;|\\,|\\!|\\:/g, ' ');
+  // \sin, \cos … function names keep their word (before the generic command
+  // remover below so they are not consumed first)
+  s = s.replace(/\\(sin|cos|tan|cot|sec|csc|log|ln|lim|exp|max|min|det|sum|prod|int)\b/g, '$1');
+  // known command words → symbol or empty (fallback strips the command)
+  s = s.replace(/\\([a-zA-Z]+)/g, (m, name) => (symbols[name] !== undefined ? symbols[name] : ''));
+  // leftovers: $ $$ { } ^ _ \ and stray markers
+  s = s.replace(/[${}\\^_]/g, '');
+  s = s.replace(/\s+/g, ' ').trim();
+  return s;
 }
 
-function MathBlock({ tex }) {
-  let html = '';
-  try {
-    html = katex.renderToString(tex, { throwOnError: true, strict: 'ignore', displayMode: true });
-  } catch {
-    html = `<div class="font-mono text-sm">${escapeHtml(`$$${tex}$$`)}</div>`;
-  }
-  return <div className="my-3 overflow-x-auto py-2 px-3 rounded-xl bg-white/5 border border-white/10" dangerouslySetInnerHTML={{ __html: html }} />;
-}
-
-// Inline tokenizer: `code`, $math$, **bold**, *italic* — HTML already escaped.
+// Inline tokenizer: `code`, **bold**, *italic* — math was already cleaned by
+// latexToPlain() upstream, so nothing raw can appear. HTML already escaped.
 function renderInline(text, keyPrefix) {
   const tokens = [];
-  const regex = /(`[^`\n]+`|\$\$[^$\n]+\$\$|\$[^$\n]+\$|\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g;
+  const regex = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g;
   let last = 0;
   let m;
   let i = 0;
@@ -53,10 +82,6 @@ function renderInline(text, keyPrefix) {
           {token.slice(1, -1)}
         </code>,
       );
-    } else if (token.startsWith('$$')) {
-      tokens.push(<MathInline key={key} tex={token.slice(2, -2)} />);
-    } else if (token.startsWith('$')) {
-      tokens.push(<MathInline key={key} tex={token.slice(1, -1)} />);
     } else if (token.startsWith('**')) {
       tokens.push(
         <strong key={key} className="font-bold text-white">
@@ -77,18 +102,13 @@ function renderInline(text, keyPrefix) {
 }
 
 function renderText(text, keyPrefix) {
-  return renderInline(escapeHtml(text), keyPrefix);
+  return renderInline(escapeHtml(latexToPlain(text)), keyPrefix);
 }
 
-// Table cells render as plain, standard text: strip LaTeX math and emphasis
-// markers so tables stay clean and readable on any screen.
+// Table cells render as plain, standard text: LaTeX is converted (never
+// stripped to nothing, never shown raw) and emphasis markers are removed.
 function plainText(text) {
-  const cleaned = String(text)
-    .replace(/\$\$[^$\n]+?\$\$/g, '')
-    .replace(/\$[^$\n]+?\$/g, '')
-    .replace(/\*\*([^*]*)\*\*/g, '$1')
-    .replace(/`([^`]*)`/g, '$1');
-  return escapeHtml(cleaned);
+  return escapeHtml(latexToPlain(text));
 }
 
 function InlineBlock({ children, key }) {
@@ -143,7 +163,8 @@ function ListGroup({ items, keyPrefix }) {
 }
 
 // Block parser: handles paragraphs, #/##/### headings, > quotes,
-// - and 1. lists (with nested indentation), $$ display math, --- rules.
+// - and 1. lists (with nested indentation), $$ display math (as plain text),
+// --- rules, and pipe/tab tables.
 export default function Markdown({ content, className = '' }) {
   const lines = String(content || '').split(/\r?\n/);
   const out = [];
@@ -154,10 +175,20 @@ export default function Markdown({ content, className = '' }) {
   while (i < lines.length) {
     const line = lines[i];
 
-    // display math block
+    // display math block — rendered as plain, readable text (no KaTeX)
     const dm = line.match(/^\$\$(.*?)\$\$\s*$/);
     if (dm) {
-      out.push(<MathBlock key={nextKey()} tex={dm[1]} />);
+      const cleaned = latexToPlain(dm[1]);
+      if (cleaned) {
+        out.push(
+          <div
+            key={nextKey()}
+            className="my-3 overflow-x-auto py-2 px-3 rounded-xl bg-white/5 border border-white/10 font-mono text-[15px] text-aqua-100"
+          >
+            {cleaned}
+          </div>,
+        );
+      }
       i += 1;
       continue;
     }

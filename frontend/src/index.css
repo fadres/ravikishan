@@ -254,8 +254,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-deep-700);
 }
-
-/* KaTeX sizing inside prose */
-.katex {
-  font-size: 1.05em;
-}
