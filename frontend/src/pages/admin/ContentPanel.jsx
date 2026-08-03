@@ -35,10 +35,13 @@ export default function ContentPanel() {
   const [subjectSlug, setSubjectSlug] = useState('');
   const [subject, setSubject] = useState(null);
   const [blocks, setBlocks] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [editor, setEditor] = useState(null); // { block?, subjectType } | null
   const [newChapterTitle, setNewChapterTitle] = useState('');
+  const [newTopicTitle, setNewTopicTitle] = useState('');
 
   const loadClasses = async () => {
     const data = await api('/api/classes');
@@ -71,7 +74,14 @@ export default function ContentPanel() {
 
   const loadBlocks = async (chapterId) => {
     const data = await api(`/api/admin/chapters/${chapterId}/blocks`);
+    setSelectedChapterId(chapterId);
     setBlocks(data.blocks);
+    try {
+      const t = await api(`/api/admin/chapters/${chapterId}/topics`);
+      setTopics(t.topics || []);
+    } catch (e) {
+      setTopics([]);
+    }
   };
 
   const toggleSubject = async (s) => {
@@ -127,6 +137,23 @@ export default function ContentPanel() {
     }
   };
 
+  const addTopic = async (e) => {
+    e.preventDefault();
+    if (!activeChapter || !newTopicTitle.trim()) return;
+    setError('');
+    try {
+      const data = await api(`/api/admin/chapters/${activeChapter.id}/topics`, {
+        method: 'POST',
+        body: { title: newTopicTitle.trim() },
+      });
+      setNewTopicTitle('');
+      setTopics((prev) => [...prev, data.topic]);
+      setNotice(`Topic "${data.topic.title}" added — it now appears as a numbered rail in the chapter.`);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const saveBlock = async (payload) => {
     if (editor?.block) {
       await api(`/api/admin/blocks/${editor.block.id}`, { method: 'PATCH', body: payload });
@@ -161,7 +188,8 @@ export default function ContentPanel() {
     }
   };
 
-  const activeChapter = subject?.chapters.find((c) => c.id === blocks[0]?.chapterId);
+  const activeChapter = subject?.chapters.find((c) => c.id === selectedChapterId);
+  const topicById = new Map(topics.map((t) => [t.id, t]));
 
   return (
     <div className="grid lg:grid-cols-[300px_1fr] gap-6 items-start">
@@ -296,6 +324,45 @@ export default function ContentPanel() {
           </div>
         )}
 
+        {/* Topic management — chapter structure rails */}
+        {activeChapter && (
+          <div className="glass rounded-2xl p-4 mb-5">
+            <div className="flex items-center justify-between">
+              <label className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Topics · chapter structure</label>
+            </div>
+            {topics.length === 0 ? (
+              <p className="text-xs text-slate-400 mt-2">
+                No topics yet — blocks without a topic appear under a final "Other notes" rail. Add a topic to give this chapter a structured syllabus layout.
+              </p>
+            ) : (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {topics.map((t) => (
+                  <span key={t.id} className="inline-flex items-center gap-1.5 glass rounded-full pl-1.5 pr-3 py-1 text-xs font-semibold">
+                    <span
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-extrabold"
+                      style={{ background: '#38bdf822', color: '#38bdf8', border: '1px solid #38bdf866' }}
+                    >
+                      {(topics.indexOf(t) + 1)}
+                    </span>
+                    <span className="text-slate-200">{t.title}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+            <form onSubmit={addTopic} className="mt-3 flex items-center gap-2">
+              <input
+                value={newTopicTitle}
+                onChange={(e) => setNewTopicTitle(e.target.value)}
+                placeholder="New topic title (syllabus rail)"
+                className="flex-1 min-w-0 bg-white/10 border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60"
+              />
+              <button className="px-3 py-1.5 rounded-lg text-xs font-bold text-aqua-900 bg-aqua-400/30 text-aqua-100 border border-aqua-400/40 hover:bg-aqua-400/40">
+                + Topic
+              </button>
+            </form>
+          </div>
+        )}
+
         {!activeChapter && (
           <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
             Select a chapter on the left to edit its blocks.
@@ -329,6 +396,14 @@ export default function ContentPanel() {
                   {b.classifiedBy === 'auto' && (
                     <span className="text-[9px] uppercase tracking-wider font-bold text-aqua-200/80 border border-aqua-400/30 rounded-full px-1.5 py-0.5 mr-1.5 align-middle">
                       auto
+                    </span>
+                  )}
+                  {b.topicId && topicById.has(b.topicId) && (
+                    <span
+                      className="text-[9px] uppercase tracking-wider font-bold rounded-full px-1.5 py-0.5 mr-1.5 align-middle border"
+                      style={{ color: '#38bdf8', borderColor: '#38bdf866', background: '#38bdf811' }}
+                    >
+                      {topics.findIndex((t) => t.id === b.topicId) + 1} · {topicById.get(b.topicId).title}
                     </span>
                   )}
                   {b.accessLevel && (
@@ -377,6 +452,7 @@ export default function ContentPanel() {
           block={editor.block}
           chapterId={editor.chapterId}
           subjectType={editor.subjectType}
+          topics={topics}
           allowedTypes={ALLOWED_TYPES[editor.subjectType] || LOCKED_BLOCK_TYPES}
           languageOptions={LANG_OPTIONS}
           onClose={() => setEditor(null)}

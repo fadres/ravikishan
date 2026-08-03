@@ -226,6 +226,7 @@ const blockSchema = z.object({
   sectionIndex: z.number().int().min(0).max(20).nullish(),
   metadata: z.record(z.string(), z.any()).nullish(),
   isDuplicateOf: z.string().uuid().nullish(),
+  topicId: z.string().uuid().nullish(),
 });
 
 async function assertBlockTypeAllowed(subjectId, blockType) {

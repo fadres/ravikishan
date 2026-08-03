@@ -16,7 +16,7 @@ const TYPE_LABELS = {
 // diagram_compare fields, sub_level nesting for Nepali byakaran.
 // New blocks default to "Auto-detect" — a live classifier previews the type
 // and saving without an explicit pick marks the block classified_by: "auto".
-export default function BlockEditor({ block, chapterId, subjectType, allowedTypes, languageOptions, onClose, onSaved, onSave }) {
+export default function BlockEditor({ block, chapterId, subjectType, allowedTypes, languageOptions, topics = [], onClose, onSaved, onSave }) {
   const isNew = !block;
   const [form, setForm] = useState(() => ({
     blockType: block?.blockType || '',
@@ -39,6 +39,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       : { leftName: '', leftPoints: '', rightName: '', rightPoints: '', similarities: '', differences: '' },
     subLevel: block?.subLevel || '',
     accessLevel: block?.accessLevel || 3,
+    topicId: block ? block.topicId || '' : (topics[0]?.id || ''),
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -60,6 +61,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       mindmapJson: null,
       diagramData: null,
     };
+    if (form.topicId) payload.topicId = form.topicId;
     // Omit blockType entirely → the server classifies and marks it "auto".
     if (form.blockType) payload.blockType = form.blockType;
     if (form.mindmapJson.trim()) {
@@ -194,6 +196,25 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="mt-4">
+          <label className={labelCls}>Topic (syllabus rail) — where this block appears</label>
+          <select
+            value={form.topicId}
+            onChange={(e) => set('topicId', e.target.value)}
+            className={inputCls}
+          >
+            <option value="" className="bg-deep-800">Other notes (no topic rail)</option>
+            {topics.map((t, i) => (
+              <option key={t.id} value={t.id} className="bg-deep-800">
+                {i + 1} · {t.title}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1.5 text-[11px] text-slate-400 leading-snug">
+            New blocks default to the first topic — every block must live in a topic so the chapter keeps its structured layout.
+          </p>
         </div>
 
         <div className="mt-4">
