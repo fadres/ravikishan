@@ -17,22 +17,25 @@ import { latexToPlain } from '../../lib/markdown.jsx';
 const MAX_ZOOM = 8; // how far the map can expand on pinch/wheel
 const FIT_FLOOR = 0.5; // fit mode never shrinks below 50% — keeps text visible
 
-const NODE_H = 58; // tall boxes: easy to read and tap
-const SIBLING_GAP = 22; // spacing between sibling boxes
-const LEVEL_GAP = 34; // vertical spacing between levels
+// Big, spacious boxes with compact labels — the "bigger box, smaller letter"
+// look. Tap any box to open the full-size detail view where everything is
+// readable at a large size.
+const BOX_H = 76; // tall, roomy boxes
+const SIBLING_GAP = 24; // spacing between sibling boxes
+const LEVEL_GAP = 40; // vertical spacing between levels
 
 function textLen(s) {
   return [...String(s)].length;
 }
 
-// Box dimensions come from the label length. Letters stay readable (11–16px):
-// short labels get large letters, long labels shrink but never below 11px.
+// Box dimensions come from the label length. Labels stay compact (9–14px);
+// boxes are wide and tall so the map reads as big tiles with small letters.
 // Because this runs per node at render time, every new mind map that gets
 // uploaded automatically follows the same rules.
 function boxFor(name) {
   const len = textLen(latexToPlain(name));
-  const font = len > 30 ? 11 : len > 18 ? 12 : len > 9 ? 13 : 15;
-  const width = Math.min(440, Math.max(130, 44 + len * font * 0.66));
+  const font = len > 30 ? 9 : len > 20 ? 10 : len > 10 ? 11 : len > 4 ? 12 : 14;
+  const width = Math.min(460, Math.max(150, 48 + len * font * 0.7));
   return { width: Math.round(width), font };
 }
 
