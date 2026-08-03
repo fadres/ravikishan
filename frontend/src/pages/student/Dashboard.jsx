@@ -78,6 +78,40 @@ export default function StudentDashboard() {
       <h1 className="text-2xl sm:text-3xl font-extrabold text-gradient mb-1">My Dashboard</h1>
       <p className="text-sm text-slate-400 mb-8">Track your learning progress and stay on streak.</p>
 
+      <div className="glass rounded-2xl p-6 mb-8 relative overflow-hidden">
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-aqua-400/15 text-aqua-300 border border-aqua-400/30">
+            Based on NEB Curriculum
+          </span>
+          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-400/15 text-emerald-300 border border-emerald-400/30">
+            Approved by CDC
+          </span>
+        </div>
+        <p className="text-sm text-slate-300 leading-relaxed max-w-2xl">
+          Study Vault curates notes for NEB classes 11 and 12 — every chapter, key formula and solved example in one
+          place, so you can prepare for your board exams without hunting across the internet.
+        </p>
+        <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <p className="text-xs text-slate-400">
+            Designed and developed by{' '}
+            <span className="font-black text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.95)]">Ravikishan</span>
+          </p>
+          <a
+            href="https://www.instagram.com/___unxknown___player"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-aqua-300 hover:text-aqua-100 transition"
+          >
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <path d="M17.5 6.5h.01" />
+            </svg>
+            @___unxknown___player
+          </a>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <StatCard label="Chapters" value={totalChapters} icon="📚" />
         <StatCard label="Completed" value={completedChapters} icon="✅" />

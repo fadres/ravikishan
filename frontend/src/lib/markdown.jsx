@@ -80,6 +80,17 @@ function renderText(text, keyPrefix) {
   return renderInline(escapeHtml(text), keyPrefix);
 }
 
+// Table cells render as plain, standard text: strip LaTeX math and emphasis
+// markers so tables stay clean and readable on any screen.
+function plainText(text) {
+  const cleaned = String(text)
+    .replace(/\$\$[^$\n]+?\$\$/g, '')
+    .replace(/\$[^$\n]+?\$/g, '')
+    .replace(/\*\*([^*]*)\*\*/g, '$1')
+    .replace(/`([^`]*)`/g, '$1');
+  return escapeHtml(cleaned);
+}
+
 function InlineBlock({ children, key }) {
   return <p key={key} className="leading-relaxed">{children}</p>;
 }
@@ -187,40 +198,50 @@ export default function Markdown({ content, className = '' }) {
       continue;
     }
 
-    // table (consecutive "| … |" lines)
-    if (/^\s*\|/.test(line)) {
+    // table (consecutive "| … |" or tab-separated lines)
+    const isPipeRow = (l) => /^\s*\|/.test(l);
+    if (isPipeRow(line) || line.includes('\t')) {
       const rows = [];
-      while (i < lines.length && /^\s*\|/.test(lines[i])) {
+      while (i < lines.length && (isPipeRow(lines[i]) || lines[i].includes('\t'))) {
         rows.push(lines[i]);
         i += 1;
       }
-      const parseRow = (l) =>
-        l
-          .trim()
-          .replace(/^\|/, '')
-          .replace(/\|$/, '')
-          .split('|')
-          .map((c) => c.trim());
+      const parseRow = (l) => {
+        if (isPipeRow(l)) {
+          return l
+            .trim()
+            .replace(/^\|/, '')
+            .replace(/\|$/, '')
+            .split('|')
+            .map((c) => c.trim());
+        }
+        return l
+          .split('\t')
+          .map((c) => c.trim())
+          .filter((c) => c !== '');
+      };
       const isSep = (r) => /^[\s:|-]+$/.test(r.replace(/\s/g, ''));
       const header = parseRow(rows[0]);
       let body = rows.slice(1);
       if (body.length && isSep(body[0])) body = body.slice(1);
+      const cells = (row) =>
+        row.map((c, j) => (
+          <td key={j} className="px-3 py-2 text-slate-300 align-top">{plainText(c)}</td>
+        ));
       out.push(
         <div key={nextKey()} className="my-3 overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full text-sm border-collapse min-w-max">
             <thead>
               <tr className="text-left text-[11px] uppercase tracking-wider text-aqua-300 bg-aqua-400/10 border-b border-white/10">
                 {header.map((c, j) => (
-                  <th key={j} className="px-3 py-2 font-bold whitespace-nowrap">{renderText(c, nextKey())}</th>
+                  <th key={j} className="px-3 py-2 font-bold whitespace-nowrap">{plainText(c)}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {body.map((r, ri) => (
                 <tr key={ri} className="border-b border-white/5 last:border-0">
-                  {parseRow(r).map((c, j) => (
-                    <td key={j} className="px-3 py-2 text-slate-300 align-top">{renderText(c, nextKey())}</td>
-                  ))}
+                  {cells(parseRow(r))}
                 </tr>
               ))}
             </tbody>

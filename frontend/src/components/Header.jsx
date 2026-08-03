@@ -13,6 +13,8 @@ const NAV = [
 ];
 
 const STUDY_LINKS = [
+  { to: '/pomodoro', label: 'Pomodoro timer', icon: '⏱️' },
+  { to: '/exam-countdown', label: 'Exam countdown', icon: '📆' },
   { to: '/quizzes', label: 'Quizzes', icon: '❓' },
   { to: '/flashcards', label: 'Flashcards', icon: '🃏' },
   { to: '/planner', label: 'Planner', icon: '📅' },
@@ -132,7 +134,7 @@ export default function Header() {
   const { theme, themes, setTheme, cycle, wallpaper, setWallpaper } = useTheme();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [themeOpen, setThemeOpen] = useState(false);
+  const [panel, setPanel] = useState(null); // 'theme' | 'wallpaper' | null
   const [subjectsOpen, setSubjectsOpen] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [classes, setClasses] = useState([]);
@@ -143,10 +145,10 @@ export default function Header() {
   const studyRef = useRef(null);
 
   const closeDropdowns = useCallback((e) => {
-    if (themeRef.current && !themeRef.current.contains(e.target)) setThemeOpen(false);
+    if (themeRef.current && !themeRef.current.contains(e.target)) setPanel(null);
     if (subjectsRef.current && !subjectsRef.current.contains(e.target)) setSubjectsOpen(false);
     if (studyRef.current && !studyRef.current.contains(e.target)) setStudyOpen(false);
-  }, [setThemeOpen, setSubjectsOpen, setStudyOpen]);
+  }, [setPanel, setSubjectsOpen, setStudyOpen]);
 
   useEffect(() => {
     document.addEventListener('mousedown', closeDropdowns);
@@ -342,8 +344,8 @@ export default function Header() {
         {/* Theme picker */}
         <div className="relative shrink-0" ref={themeRef}>
           <button
-            onClick={() => setThemeOpen((o) => !o)}
-            aria-label="Change theme"
+            onClick={() => setPanel((p) => (p === 'theme' ? null : 'theme'))}
+            aria-label="Change theme or wallpaper"
             className="w-9 h-9 rounded-full flex items-center justify-center border border-white/15 text-slate-200 hover:bg-white/10 hover:text-white transition"
             style={{ background: `conic-gradient(${theme.aqua300}, ${theme.aqua400}, ${theme.aqua100}, ${theme.aqua300})` }}
           >
@@ -353,72 +355,105 @@ export default function Header() {
             </svg>
           </button>
 
-          {themeOpen && (
+          {panel && (
             <>
-              <div className="fixed inset-0 z-40" onClick={() => setThemeOpen(false)} />
+              <div className="fixed inset-0 z-40" onClick={() => setPanel(null)} />
               <div className="absolute right-0 mt-2 w-72 glass-strong rounded-2xl p-3 z-50 shadow-2xl">
-                <div className="flex items-center justify-between px-1 mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">
-                    Theme · {theme.name}
-                  </p>
+                <div className="flex gap-1.5 p-1 mb-3 bg-white/5 rounded-full">
                   <button
-                    onClick={cycle}
-                    className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-aqua-400/15 text-aqua-300 hover:bg-aqua-400/25 transition"
+                    onClick={() => setPanel('theme')}
+                    className={`flex-1 text-xs font-bold px-2 py-1.5 rounded-full transition ${
+                      panel === 'theme'
+                        ? 'bg-aqua-400 text-deep-950'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
                   >
-                    Shuffle
+                    Theme
+                  </button>
+                  <button
+                    onClick={() => setPanel('wallpaper')}
+                    className={`flex-1 text-xs font-bold px-2 py-1.5 rounded-full transition ${
+                      panel === 'wallpaper'
+                        ? 'bg-aqua-400 text-deep-950'
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    Natural wallpaper
                   </button>
                 </div>
-                <div className="grid grid-cols-4 gap-2 max-h-72 overflow-y-auto pr-1">
-                  {themes.map((t) => {
-                    const activeTheme = t.id === theme.id;
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => setTheme(t.id)}
-                        title={t.name}
-                        className={`flex flex-col items-center gap-1.5 rounded-xl px-1.5 py-2 border transition ${
-                          activeTheme
-                            ? 'border-aqua-400/70 bg-aqua-400/10'
-                            : 'border-white/10 hover:border-white/25 hover:bg-white/5'
-                        }`}
-                      >
-                        <span
-                          className="w-7 h-7 rounded-full border border-white/20"
-                          style={{ background: `linear-gradient(135deg, ${t.aqua400}, ${t.deep800} 80%)` }}
-                        />
-                        <span className="text-[9px] leading-tight text-slate-300 text-center line-clamp-2">
-                          {t.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
 
-                <div className="flex items-center justify-between px-1 mt-3 mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">Wallpaper</p>
-                </div>
-                <div className="grid grid-cols-5 gap-2">
-                  {WALLPAPERS.map((w) => (
-                    <button
-                      key={w.id}
-                      onClick={() => setWallpaper(w.id)}
-                      title={w.name}
-                      className={`flex flex-col items-center gap-1.5 rounded-xl px-1 py-2 border transition ${
-                        wallpaper === w.id
-                          ? 'border-aqua-400/70 bg-aqua-400/10'
-                          : 'border-white/10 hover:border-white/25 hover:bg-white/5'
-                      }`}
-                    >
-                      <span className="w-7 h-7 rounded-lg overflow-hidden border border-white/20 relative bg-gradient-to-b from-deep-700 to-deep-900">
-                        <WallpaperPreview id={w.id} />
-                      </span>
-                      <span className="text-[9px] text-slate-300">{w.name}</span>
-                    </button>
-                  ))}
-                </div>
-                <p className="px-1 mt-2 text-[10px] text-slate-500">
-                  Static nature scenery — no animations, battery friendly.
-                </p>
+                {panel === 'theme' && (
+                  <>
+                    <div className="flex items-center justify-between px-1 mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">
+                        Theme · {theme.name}
+                      </p>
+                      <button
+                        onClick={cycle}
+                        className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-aqua-400/15 text-aqua-300 hover:bg-aqua-400/25 transition"
+                      >
+                        Shuffle
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 max-h-72 overflow-y-auto pr-1">
+                      {themes.map((t) => {
+                        const activeTheme = t.id === theme.id;
+                        return (
+                          <button
+                            key={t.id}
+                            onClick={() => setTheme(t.id)}
+                            title={t.name}
+                            className={`flex flex-col items-center gap-1.5 rounded-xl px-1.5 py-2 border transition ${
+                              activeTheme
+                                ? 'border-aqua-400/70 bg-aqua-400/10'
+                                : 'border-white/10 hover:border-white/25 hover:bg-white/5'
+                            }`}
+                          >
+                            <span
+                              className="w-7 h-7 rounded-full border border-white/20"
+                              style={{ background: `linear-gradient(135deg, ${t.aqua400}, ${t.deep800} 80%)` }}
+                            />
+                            <span className="text-[9px] leading-tight text-slate-300 text-center line-clamp-2">
+                              {t.name}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+
+                {panel === 'wallpaper' && (
+                  <>
+                    <div className="flex items-center justify-between px-1 mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">
+                        Natural wallpaper
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-5 gap-2">
+                      {WALLPAPERS.map((w) => (
+                        <button
+                          key={w.id}
+                          onClick={() => setWallpaper(w.id)}
+                          title={w.name}
+                          className={`flex flex-col items-center gap-1.5 rounded-xl px-1 py-2 border transition ${
+                            wallpaper === w.id
+                              ? 'border-aqua-400/70 bg-aqua-400/10'
+                              : 'border-white/10 hover:border-white/25 hover:bg-white/5'
+                          }`}
+                        >
+                          <span className="w-7 h-7 rounded-lg overflow-hidden border border-white/20 relative bg-gradient-to-b from-deep-700 to-deep-900">
+                            <WallpaperPreview id={w.id} />
+                          </span>
+                          <span className="text-[9px] text-slate-300">{w.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="px-1 mt-2 text-[10px] text-slate-500">
+                      Static nature scenery — no animations, battery friendly.
+                    </p>
+                  </>
+                )}
               </div>
             </>
           )}

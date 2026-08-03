@@ -33,6 +33,8 @@ const FlashcardsPage = lazy(() => import('./pages/flashcards/FlashcardsPage.jsx'
 const DeckDetailPage = lazy(() => import('./pages/flashcards/DeckDetailPage.jsx'));
 const ReviewSessionPage = lazy(() => import('./pages/flashcards/ReviewSessionPage.jsx'));
 const PlannerPage = lazy(() => import('./pages/PlannerPage.jsx'));
+const PomodoroPage = lazy(() => import('./pages/PomodoroPage.jsx'));
+const ExamCountdownPage = lazy(() => import('./pages/ExamCountdownPage.jsx'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage.jsx'));
 const AchievementsPage = lazy(() => import('./pages/AchievementsPage.jsx'));
 const AiToolsPage = lazy(() => import('./pages/AiToolsPage.jsx'));
@@ -88,6 +90,8 @@ function Shell() {
             <Route path="/flashcards/:deckId" element={<DeckDetailPage />} />
             <Route path="/flashcards/:deckId/review" element={<ReviewSessionPage />} />
             <Route path="/planner" element={<PlannerPage />} />
+            <Route path="/pomodoro" element={<PomodoroPage />} />
+            <Route path="/exam-countdown" element={<ExamCountdownPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="/ai-tools" element={<AiToolsPage />} />

@@ -17,12 +17,14 @@ export const WALLPAPERS = [
   { id: 'night', name: 'Night' },
 ];
 
+export const DEFAULT_WALLPAPER = 'mountain';
+
 export function storedWallpaperId() {
   try {
     const id = localStorage.getItem(WALLPAPER_KEY);
-    return WALLPAPERS.some((w) => w.id === id) ? id : 'none';
+    return WALLPAPERS.some((w) => w.id === id) ? id : DEFAULT_WALLPAPER;
   } catch {
-    return 'none';
+    return DEFAULT_WALLPAPER;
   }
 }
 
