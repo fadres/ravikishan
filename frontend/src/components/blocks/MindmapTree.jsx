@@ -1,27 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Collapsible SVG tree for mindmap_json blocks — zero dependencies.
-// Layout: leaves get sequential x positions (in-order), parents sit at the
-// average of their children; y = depth. Boxes are sized to fit their label
-// and the font shrinks for long names, so nothing overlaps. The whole map
-// can be pinched (two-finger) or scrolled (wheel) to zoom in/out and dragged
-// to pan, perfect for presenting on phones and projectors.
+// ── Mind map design system ────────────────────────────────────────────────
+// Every mind map follows these rules automatically — current content AND all
+// future additions:
+//   • each box is 7× larger than the base text-fit size (BOX_SCALE = 7)
+//   • label letters are 3× smaller (FONT_DIVISOR = 3, floor MIN_FONT)
+//   • labels auto-fit inside their box, so text never overflows → boxes
+//     never overlap
+//   • pinch (touch) or wheel (desktop) expands and contracts the whole map
+//     from the fitted view up to MAX_ZOOM, and dragging pans around it
+// ──────────────────────────────────────────────────────────────────────────
 
-const NODE_H = 34;
-const LEVEL_GAP = 46;
-const SIBLING_GAP = 14;
-const MIN_W = 104;
-const MAX_W = 320;
+const BOX_SCALE = 7; // box size multiplier (7× larger)
+const FONT_DIVISOR = 3; // font divisor (3× smaller letters)
+const MIN_FONT = 5; // absolute minimum label size
+const MAX_ZOOM = 8; // how far the map can expand on pinch/wheel
+
+const NODE_H = 34 * BOX_SCALE; // 238px tall boxes
+const SIBLING_GAP = 18 * BOX_SCALE; // spacing between sibling boxes
+const LEVEL_GAP = 18 * BOX_SCALE; // vertical spacing between levels
 
 function textLen(s) {
   return [...String(s)].length;
 }
 
+// Box dimensions come from the label length, then the system scales them.
+// Because this runs per node at render time, every new mind map that gets
+// uploaded automatically follows the same rules.
 function boxFor(name) {
   const len = textLen(name);
-  const width = Math.min(MAX_W, Math.max(MIN_W, 24 + len * 6.6));
-  const font = len > 64 ? 8.5 : len > 40 ? 9.5 : len > 26 ? 10.5 : 12.5;
-  return { width, font };
+  const base = Math.min(320, Math.max(104, 24 + len * 6.6));
+  return { width: Math.round(base * BOX_SCALE), font: Math.max(MIN_FONT, 12.5 / FONT_DIVISOR) };
 }
 
 // In-order leaf placement: each leaf is centred at the current cursor and the
@@ -52,7 +61,16 @@ export default function MindmapTree({ data }) {
   const walk = (entry, depth, parentKey) => {
     const key = parentKey ? `${parentKey} > ${entry.node.name}` : entry.node.name;
     const y = depth * (NODE_H + LEVEL_GAP);
-    nodes.push({ key, name: entry.node.name, x: entry.x, y, width: entry.meta.width, font: entry.meta.font, isCollapsed: collapsed.has(key), hasChildren: entry.children.length > 0 });
+    nodes.push({
+      key,
+      name: entry.node.name,
+      x: entry.x,
+      y,
+      width: entry.meta.width,
+      font: entry.meta.font,
+      isCollapsed: collapsed.has(key),
+      hasChildren: entry.children.length > 0,
+    });
     if (parentKey) edges.push({ from: parentKey, to: key });
     if (!collapsed.has(key)) {
       for (const child of entry.children) walk(child, depth + 1, key);
@@ -63,7 +81,6 @@ export default function MindmapTree({ data }) {
   // Canvas is inset to the whole tree so the viewBox fits the content exactly.
   const left = Math.min(...nodes.map((n) => n.x - n.width / 2));
   const right = Math.max(...nodes.map((n) => n.x + n.width / 2));
-  const top = 0;
   const bottom = Math.max(...nodes.map((n) => n.y + NODE_H));
   const shiftX = 30 - left;
   const width = right - left + 60;
@@ -95,15 +112,17 @@ export default function MindmapTree({ data }) {
   };
 
   const svg = (
-    <svg width={width} height={height} viewBox={`${Math.min(top - 5, 0)} 0 ${width} ${height}`}>
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
       {edges.map((e, i) => (
         <g key={i}>
-          <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="1.5" />
-          <circle r="2.4" fill="rgba(125,211,252,0.5)" transform={arrow(e.to)} />
+          <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="2" />
+          <circle r="3" fill="rgba(125,211,252,0.5)" transform={arrow(e.to)} />
         </g>
       ))}
       {nodes.map((n) => {
         const isRoot = n.key === tree.node.name;
+        const estTextWidth = textLen(n.name) * n.font * 0.62;
+        const fitText = estTextWidth > n.width - 24 ? n.width - 24 : undefined;
         return (
           <g
             key={n.key}
@@ -116,25 +135,32 @@ export default function MindmapTree({ data }) {
               x={-n.width / 2}
               width={n.width}
               height={NODE_H}
-              rx={9}
+              rx={22}
               fill={isRoot ? 'rgba(56,189,248,0.16)' : 'rgba(255,255,255,0.05)'}
               stroke={isRoot ? 'rgba(56,189,248,0.6)' : 'rgba(255,255,255,0.15)'}
-              strokeWidth={1.2}
+              strokeWidth={2}
             />
             <text
               x={0}
-              y={NODE_H / 2 + 3.5}
+              y={NODE_H / 2 + 3}
               textAnchor="middle"
               fill={isRoot ? '#7dd3fc' : '#e2e8f0'}
               fontSize={n.font}
               fontWeight={isRoot ? 700 : 500}
-              textLength={n.width - 12}
+              textLength={fitText}
               lengthAdjust="spacingAndGlyphs"
             >
               {n.name}
             </text>
             {n.hasChildren && (
-              <text x={n.width / 2 - 8} y={NODE_H / 2 + 3.5} textAnchor="middle" fill="#7dd3fc" fontSize="10">
+              <text
+                x={n.width / 2 - 22}
+                y={NODE_H / 2 + 7}
+                textAnchor="middle"
+                fill="#7dd3fc"
+                fontSize={16}
+                fontWeight={700}
+              >
                 {n.isCollapsed ? '+' : '−'}
               </text>
             )}
@@ -145,13 +171,13 @@ export default function MindmapTree({ data }) {
   );
 
   const bar = (
-    <div className="flex items-center gap-2 mb-3">
+    <div className="flex items-center gap-2 mb-3 flex-wrap">
       <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
-        {mode === 'fit' ? 'Fit to screen' : 'Scroll'}
+        {mode === 'fit' ? 'Fit to screen' : 'Full size'}
       </span>
-      {mode === 'fit' && (
-        <span className="text-[10px] text-slate-500">Pinch / scroll to zoom · drag to pan</span>
-      )}
+      <span className="text-[10px] text-slate-500">
+        Bigger boxes · tiny labels — pinch / wheel to expand, drag to pan
+      </span>
       <div className="flex gap-1.5 ml-auto">
         <button
           onClick={() => setMode('fit')}
@@ -173,36 +199,26 @@ export default function MindmapTree({ data }) {
     </div>
   );
 
-  if (mode === 'scroll') {
-    return (
-      <div>
-        {bar}
-        <div
-          className="overflow-auto max-h-[70vh] rounded-xl border border-white/10 bg-deep-950/40"
-          style={{ touchAction: 'auto' }}
-        >
-          <div className="p-3 w-max min-w-full">{svg}</div>
-        </div>
-        <p className="mt-2 text-[11px] text-slate-400">Drag / two-finger scroll to see the parts outside the screen.</p>
-      </div>
-    );
-  }
-
   return (
     <div>
       {bar}
       <div className="rounded-xl border border-white/10 bg-deep-950/60 overflow-hidden">
-        <FitSvg width={width} height={height}>{svg}</FitSvg>
+        <ZoomCanvas fitMode={mode === 'fit'} width={width} height={height}>
+          {svg}
+        </ZoomCanvas>
       </div>
     </div>
   );
 }
 
-// Fit-to-screen with touch gestures: contained exactly by default, then the
-// user can pinch / wheel to zoom "in" and drag to pan for a closer look.
+// One zoom engine for both modes:
+//   • Fit mode  — starts fitted to the screen, expands up to MAX_ZOOM on
+//                 pinch/wheel, drag to pan
+//   • Scroll mode — starts at full 100% size (huge boxes, tiny labels),
+//                 expands up to MAX_ZOOM, drag to pan
 // Two pointers control the scale; one pointer pans; wheel zooms around the
 // cursor. Everything stays clamped so the map never drifts away.
-function FitSvg({ width, height, children }) {
+function ZoomCanvas({ fitMode, width, height, children }) {
   const [fit, setFit] = useState(1);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -227,9 +243,9 @@ function FitSvg({ width, height, children }) {
     };
   }, [width]);
 
-  const scale = fit * zoom;
-
-  const clampZoom = (z) => Math.min(6, Math.max(1, z));
+  const base = fitMode ? fit : 1;
+  const scale = base * zoom;
+  const clampZoom = (z) => Math.min(MAX_ZOOM, Math.max(1, z));
 
   const zoomAt = (sx, sy, next) => {
     const k = next / scale;
@@ -237,13 +253,21 @@ function FitSvg({ width, height, children }) {
     setPan((p) => ({ x: sx - (sx - p.x) * k, y: sy - (sy - p.y) * k }));
   };
 
-  const onWheel = (e) => {
+  const onWheelRef = useRef(null);
+  onWheelRef.current = (e) => {
     if (!ref.current) return;
     e.preventDefault();
     const rect = ref.current.getBoundingClientRect();
     const next = clampZoom(zoom * (e.deltaY < 0 ? 1.15 : 0.87));
     zoomAt(e.clientX - rect.left, e.clientY - rect.top, next);
   };
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const handler = (e) => onWheelRef.current(e);
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, []);
 
   const onPointerDown = (e) => {
     e.currentTarget.setPointerCapture?.(e.pointerId);
@@ -283,21 +307,11 @@ function FitSvg({ width, height, children }) {
 
   const { x: panX = 0, y: panY = 0 } = pan;
 
-  const onWheelRef = useRef(onWheel);
-  onWheelRef.current = onWheel;
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const handler = (e) => onWheelRef.current(e);
-    el.addEventListener('wheel', handler, { passive: false });
-    return () => el.removeEventListener('wheel', handler);
-  }, []);
-
   return (
     <div
       ref={ref}
       className="relative w-full overflow-hidden select-none"
-      style={{ touchAction: 'none', cursor: 'grab', height: Math.round(height * fit) }}
+      style={{ touchAction: 'none', cursor: 'grab', height: Math.round(height * scale) }}
     >
       <div
         onPointerDown={onPointerDown}
@@ -324,14 +338,14 @@ function FitSvg({ width, height, children }) {
           <button
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 1.25))}
             className="w-7 h-7 rounded-lg text-sm font-black text-slate-200 hover:bg-white/10"
-            aria-label="Zoom in"
+            aria-label="Expand"
           >
             +
           </button>
           <button
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 0.8))}
             className="w-7 h-7 rounded-lg text-sm font-black text-slate-200 hover:bg-white/10"
-            aria-label="Zoom out"
+            aria-label="Contract"
           >
             −
           </button>
@@ -340,7 +354,7 @@ function FitSvg({ width, height, children }) {
             className="px-2 h-7 rounded-lg text-[11px] font-bold text-aqua-200 hover:bg-white/10"
             aria-label="Reset view"
           >
-            Fit
+            {fitMode ? 'Fit' : '100%'}
           </button>
         </div>
       </div>
