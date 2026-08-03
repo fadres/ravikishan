@@ -2,7 +2,7 @@
    navigation, stale-while-revalidate for hashed assets. API calls are
    never intercepted. */
 
-const SHELL_CACHE = 'rk-shell-v1';
+const SHELL_CACHE = 'rk-shell-v3';
 const SHELL = ['/', '/manifest.webmanifest', '/favicon.svg', '/favicon-maskable.svg'];
 
 self.addEventListener('install', (event) => {

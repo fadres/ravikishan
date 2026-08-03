@@ -125,7 +125,6 @@ function WallpaperPreview({ id }) {
   }
 }
 
-const MemoizedSubjectList = React.memo(({ klass, subjectList }) => subjectList(klass));
 const MemoizedWallpaperPreview = React.memo(WallpaperPreview);
 
 export default function Header() {
@@ -184,24 +183,6 @@ export default function Header() {
       window.removeEventListener('focus', onFocus);
     };
   }, [user]);
-
-  const subjectList = useCallback((klass) => (
-    klass.subjects.map((s) => (
-      <Link
-        key={s.id}
-        to={`/class/${klass.slug}/subject/${s.slug}`}
-        onClick={() => setSubjectsOpen(false)}
-        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
-      >
-        <span
-          className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold"
-          style={{ background: `${s.themeColor || '#38bdf8'}22`, color: s.themeColor || '#38bdf8' }}>
-        {s.name.slice(0, 2)}
-      </span>
-        <span className="truncate">{s.name}</span>
-      </Link>
-    ))
-  ), [setSubjectsOpen]);
 
   const handleLogout = async () => {
     setMenuOpen(false);
@@ -314,7 +295,7 @@ export default function Header() {
                       <p className="px-3 pt-1.5 pb-0.5 text-[10px] uppercase tracking-wider text-aqua-300 font-bold">
                         {klass.name}
                       </p>
-                      <MemoizedSubjectList klass={klass} subjectList={subjectList} />
+                      <MemoizedSubjectList klass={klass} />
                     </div>
                   ))}
                 </div>
