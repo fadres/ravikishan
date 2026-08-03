@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const LINKS = [
   { to: '/', label: 'Home' },
@@ -21,8 +22,9 @@ function InstagramIcon() {
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { footerStyle } = useTheme();
   return (
-    <footer className="border-t border-white/10 mt-16 relative overflow-hidden">
+    <footer className={`border-t border-white/10 mt-16 relative overflow-hidden ${footerStyle === 'frosted' ? 'footer-frosted' : ''}`}>
       <span
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-aqua-400/70 to-transparent"

@@ -1,8 +1,17 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { THEMES, DEFAULT_THEME } from '../theme/themes.js';
+
+// ── Standardized appearance system ─────────────────────────────────────────
+// One source of truth for how the app looks. Theme colors and wallpapers are
+// mutually exclusive: picking a wallpaper switches to wallpaper mode (the
+// theme palette is not applied), picking a theme switches back (wallpaper is
+// turned off). Header and footer each have a solid/frosted style option.
+// Every page reads from this single provider — no scattered local state.
 
 const STORAGE_KEY = 'rk_theme';
 const WALLPAPER_KEY = 'rk_wallpaper';
+const HEADER_KEY = 'rk_header_style';
+const FOOTER_KEY = 'rk_footer_style';
 
 export const WALLPAPERS = [
   { id: 'none', name: 'None' },
@@ -19,13 +28,27 @@ export const WALLPAPERS = [
 
 export const DEFAULT_WALLPAPER = 'mountain';
 
-export function storedWallpaperId() {
+export const HEADER_STYLES = [
+  { id: 'solid', name: 'Solid' },
+  { id: 'frosted', name: 'Frosted' },
+];
+
+export const FOOTER_STYLES = [
+  { id: 'solid', name: 'Solid' },
+  { id: 'frosted', name: 'Frosted' },
+];
+
+function stored(key, fallback) {
   try {
-    const id = localStorage.getItem(WALLPAPER_KEY);
-    return WALLPAPERS.some((w) => w.id === id) ? id : DEFAULT_WALLPAPER;
+    const v = localStorage.getItem(key);
+    return v ?? fallback;
   } catch {
-    return DEFAULT_WALLPAPER;
+    return fallback;
   }
+}
+
+export function storedWallpaperId() {
+  return WALLPAPERS.some((w) => w.id === stored(WALLPAPER_KEY, null)) ? stored(WALLPAPER_KEY, null) : DEFAULT_WALLPAPER;
 }
 
 function themeById(id) {
@@ -45,39 +68,57 @@ function applyTheme(t) {
   root.style.setProperty('--color-deep-600', t.deep600);
 }
 
-function storedThemeId() {
-  try {
-    const id = localStorage.getItem(STORAGE_KEY);
-    return themeById(id) ? id : DEFAULT_THEME;
-  } catch {
-    return DEFAULT_THEME;
-  }
-}
-
 const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
-  const [themeId, setThemeId] = useState(storedThemeId);
-  const [wallpaper, setWallpaper] = useState(storedWallpaperId);
+  const [themeId, setThemeId] = useState(() => stored(STORAGE_KEY, DEFAULT_THEME));
+  const [wallpaper, setWallpaperId] = useState(storedWallpaperId);
+  const [headerStyle, setHeaderStyle] = useState(() => stored(HEADER_KEY, 'solid'));
+  const [footerStyle, setFooterStyle] = useState(() => stored(FOOTER_KEY, 'solid'));
+
+  // Wallpaper mode means "only the wallpaper is visible": the theme palette
+  // is NOT applied while a wallpaper is active, so nothing mixes.
+  const isWallpaperMode = wallpaper !== 'none';
 
   useEffect(() => {
-    applyTheme(themeById(themeId));
+    // In wallpaper mode the theme palette stays on the default look; only
+    // when no wallpaper is chosen does the chosen theme actually apply.
+    applyTheme(themeById(isWallpaperMode ? DEFAULT_THEME : themeId));
     try {
       localStorage.setItem(STORAGE_KEY, themeId);
     } catch {
-      /* private mode — theme still applies for this session */
+      /* private mode — applies for this session */
     }
-  }, [themeId]);
-
-  useEffect(() => {
     try {
       localStorage.setItem(WALLPAPER_KEY, wallpaper);
     } catch {
-      /* private mode — wallpaper still applies for this session */
+      /* private mode */
     }
-  }, [wallpaper]);
+  }, [themeId, wallpaper, isWallpaperMode]);
 
-  const setTheme = useCallback((id) => setThemeId(themeById(id).id), []);
+  useEffect(() => {
+    try {
+      localStorage.setItem(HEADER_KEY, headerStyle);
+      localStorage.setItem(FOOTER_KEY, footerStyle);
+    } catch {
+      /* private mode */
+    }
+  }, [headerStyle, footerStyle]);
+
+  const setTheme = useCallback((id) => {
+    const next = themeById(id).id;
+    setThemeId(next);
+    // Mutual exclusion: choosing a theme turns the wallpaper off.
+    setWallpaperId('none');
+  }, []);
+
+  const setWallpaper = useCallback((id) => {
+    const valid = WALLPAPERS.some((w) => w.id === id) ? id : 'none';
+    setWallpaperId(valid);
+    // Mutual exclusion: a wallpaper replaces the theme on screen.
+    if (valid !== 'none') setThemeId(DEFAULT_THEME);
+  }, []);
+
   const cycle = useCallback(() => {
     setThemeId((prev) => {
       const i = THEMES.findIndex((t) => t.id === prev);
@@ -85,11 +126,24 @@ export function ThemeProvider({ children }) {
     });
   }, []);
 
-  return (
-    <ThemeContext.Provider value={{ theme: themeById(themeId), themes: THEMES, setTheme, cycle, wallpaper, setWallpaper }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({
+      theme: themeById(isWallpaperMode ? DEFAULT_THEME : themeId),
+      themes: THEMES,
+      setTheme,
+      cycle,
+      wallpaper,
+      setWallpaper,
+      isWallpaperMode,
+      headerStyle,
+      setHeaderStyle,
+      footerStyle,
+      setFooterStyle,
+    }),
+    [themeId, wallpaper, isWallpaperMode, setTheme, cycle, setWallpaper, headerStyle, footerStyle, setHeaderStyle, setFooterStyle],
   );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

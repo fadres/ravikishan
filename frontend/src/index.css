@@ -136,6 +136,20 @@ body {
   background: linear-gradient(180deg, var(--color-deep-800) 0%, var(--color-deep-900) 100%);
 }
 
+/* Frosted-glass header — lets the wallpaper/theme glow through */
+.header-frosted {
+  background: color-mix(in srgb, var(--color-deep-800) 62%, transparent);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+}
+
+/* Frosted-glass footer — matches the header style */
+.footer-frosted {
+  background: color-mix(in srgb, var(--color-deep-900) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
 /* Warm off-white top bar (streak bar) */
 .topbar-warm {
   background: linear-gradient(180deg, #fbf7ef 0%, #f6efe3 100%);

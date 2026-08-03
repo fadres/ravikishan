@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar.jsx';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { useTheme, WALLPAPERS } from '../context/ThemeContext.jsx';
+import { useTheme, WALLPAPERS, HEADER_STYLES, FOOTER_STYLES } from '../context/ThemeContext.jsx';
 
 const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
@@ -131,7 +131,11 @@ const MemoizedWallpaperPreview = React.memo(WallpaperPreview);
 
 export default function Header() {
   const { user, logout, isAdmin } = useAuth();
-  const { theme, themes, setTheme, cycle, wallpaper, setWallpaper } = useTheme();
+  const {
+    theme, themes, setTheme, cycle,
+    wallpaper, setWallpaper, isWallpaperMode,
+    headerStyle, setHeaderStyle, footerStyle, setFooterStyle,
+  } = useTheme();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [panel, setPanel] = useState(null); // 'theme' | 'wallpaper' | null
@@ -233,7 +237,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 shadow-lg">
       {/* Main bar */}
-      <div className="header-solid border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5 relative">
+      <div className={`${headerStyle === 'frosted' ? 'header-frosted' : 'header-solid'} border-b border-white/10 flex items-center gap-3 px-3 sm:px-6 py-2.5 relative`}>
         {/* Motivational fire — small centered motto */}
         <span
           aria-hidden="true"
@@ -378,9 +382,12 @@ export default function Header() {
                         : 'text-slate-300 hover:text-white'
                     }`}
                   >
-                    Natural wallpaper
+                    Wallpaper
                   </button>
                 </div>
+                <p className="px-1 mb-3 text-[10px] text-slate-500">
+                  Only one is visible at a time — picking a wallpaper turns the theme off, and picking a theme clears the wallpaper.
+                </p>
 
                 {panel === 'theme' && (
                   <>
@@ -395,7 +402,7 @@ export default function Header() {
                         Shuffle
                       </button>
                     </div>
-                    <div className="grid grid-cols-4 gap-2 max-h-72 overflow-y-auto pr-1">
+                    <div className={`grid grid-cols-4 gap-2 max-h-64 overflow-y-auto pr-1 ${isWallpaperMode ? 'opacity-40 pointer-events-none' : ''}`}>
                       {themes.map((t) => {
                         const activeTheme = t.id === theme.id;
                         return (
@@ -420,16 +427,19 @@ export default function Header() {
                         );
                       })}
                     </div>
+                    {isWallpaperMode && (
+                      <button
+                        onClick={() => setWallpaper('none')}
+                        className="w-full mt-2 text-[11px] font-bold px-2.5 py-1.5 rounded-full border border-aqua-400/40 text-aqua-300 hover:bg-aqua-400/10 transition"
+                      >
+                        Clear wallpaper to use themes
+                      </button>
+                    )}
                   </>
                 )}
 
                 {panel === 'wallpaper' && (
                   <>
-                    <div className="flex items-center justify-between px-1 mb-2">
-                      <p className="text-xs font-bold uppercase tracking-wider text-aqua-300">
-                        Natural wallpaper
-                      </p>
-                    </div>
                     <div className="grid grid-cols-5 gap-2">
                       {WALLPAPERS.map((w) => (
                         <button
@@ -450,10 +460,45 @@ export default function Header() {
                       ))}
                     </div>
                     <p className="px-1 mt-2 text-[10px] text-slate-500">
-                      Static nature scenery — no animations, battery friendly.
+                      Static nature scenery — no animations, battery friendly. Theme colors are hidden while a wallpaper is active.
                     </p>
                   </>
                 )}
+
+                <div className="mt-3 pt-3 border-t border-white/10 space-y-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Header</p>
+                    <div className="flex gap-1 p-0.5 bg-white/5 rounded-full">
+                      {HEADER_STYLES.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => setHeaderStyle(s.id)}
+                          className={`px-3 py-1 text-[10px] font-bold rounded-full transition ${
+                            headerStyle === s.id ? 'bg-aqua-400 text-deep-950' : 'text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          {s.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Footer</p>
+                    <div className="flex gap-1 p-0.5 bg-white/5 rounded-full">
+                      {FOOTER_STYLES.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => setFooterStyle(s.id)}
+                          className={`px-3 py-1 text-[10px] font-bold rounded-full transition ${
+                            footerStyle === s.id ? 'bg-aqua-400 text-deep-950' : 'text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          {s.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -570,13 +615,13 @@ export default function Header() {
       </div>
 
       {/* Mobile search */}
-      <div className="md:hidden header-solid border-b border-white/10 px-3 py-2">
+      <div className={`md:hidden ${headerStyle === 'frosted' ? 'header-frosted' : 'header-solid'} border-b border-white/10 px-3 py-2`}>
         <SearchBar placeholder="Search subjects, chapters or topics…" />
       </div>
 
       {/* Mobile nav */}
       {mobileNav && (
-        <nav className="lg:hidden header-solid border-b border-white/10 px-3 py-3 flex flex-col gap-1" aria-label="Mobile navigation">
+        <nav className={`lg:hidden ${headerStyle === 'frosted' ? 'header-frosted' : 'header-solid'} border-b border-white/10 px-3 py-3 flex flex-col gap-1`} aria-label="Mobile navigation">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
