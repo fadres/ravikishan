@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -250,7 +250,7 @@ export default function Home() {
   const loksewa = subjects11.find((s) => s.slug === 'loksewa');
   const gk = subjects11.find((s) => s.slug === 'general-knowledge');
 
-  const MemoizedSubjectOptions = React.memo(({ subjects, loksewa, gk }) => {
+  const buildOptions = ({ subjects, loksewa, gk }) => {
     const options = [
       {
         to: '/class/class-11',
@@ -307,9 +307,9 @@ export default function Home() {
       },
     ];
     return options;
-  });
+  };
 
-  const options = MemoizedSubjectOptions({
+  const options = buildOptions({
     subjects: subjects11,
     loksewa,
     gk,
