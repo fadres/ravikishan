@@ -114,7 +114,7 @@ export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
   // ── 2. Knowledge-graph "belongs to chapter" questions ────────────────
   const blocks = await prisma.contentBlock.findMany({
     where: {
-      accessLevel: { gte: viewerLevel },
+      accessLevel: { gte: Math.min(viewerLevel, 3) },
       blockType: { in: TERM_SOURCES },
       chapter: { status: 'published' },
     },

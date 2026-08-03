@@ -124,28 +124,32 @@ export function sectionLabelForBlockType(blockType) {
 //   AND block.accessLevel >= viewerLevel
 //
 // Approximate topic coverage per tier (typical 10–14 block topic):
-//   public (no account)  → sections 0–1   → ≈10–15%
-//   level 3 (guest)      → sections 0–3   → ≈25–30%
-//   level 2 (member)     → sections 0–5   → ≈50–60%
-//   level 1 (premium)    → all sections   → 100%
+//   level 4 (public, no account) → sections 0–1   → ≈15%
+//   level 3 (logged in)          → sections 0–3   → ≈25%
+//   level 2 (member, approved)   → sections 0–5   → ≈50%
+//   level 1 (premium)            → all sections   → 100%
 //
 // The diagram section (index 2) and its mindmap blocks are premium only
 // (accessLevel 1): guests/members may see the section slot, but the block
 // accessLevel gate hides the actual content. An anonymous visitor is
-// modelled as viewerLevel 0 (below guest 3).
+// modelled as viewerLevel 4 (public).
 
 export function viewerSectionLimit(viewerLevel) {
-  if (!viewerLevel || viewerLevel < 1) return 1; // public ≈10%
-  if (viewerLevel === 3) return 3; // guests ≈25% (topic + learning + concept)
-  if (viewerLevel === 2) return 5; // members ≈50%
+  const level = viewerLevel || 4; // missing token ⇒ public
+  if (level >= 4) return 1; // public ≈15%
+  if (level === 3) return 3; // logged-in ≈25% (topic + learning + concept)
+  if (level === 2) return 5; // member ≈50%
   return SECTION_ORDER.length - 1; // premium = everything
 }
 
 export function isSectionVisible(sectionIndex, blockAccessLevel, viewerLevel) {
-  const level = viewerLevel || 0;
+  const level = viewerLevel || 4;
   const limit = viewerSectionLimit(level);
   const idx = sectionIndex ?? 0;
-  return idx <= limit && (blockAccessLevel ?? 3) >= level;
+  // Public (4) still reads the widest tier of blocks (accessLevel 3 = the
+  // most general content) but only inside their section limit (~15%).
+  const minBlockAccess = Math.min(level, 3);
+  return idx <= limit && (blockAccessLevel ?? 3) >= minBlockAccess;
 }
 
 export function coverageForTopic(blocks, viewerLevel) {

@@ -59,9 +59,10 @@ router.post('/requests/:id/approve', validate(userIdSchema, 'params'), async (re
     }),
     prisma.user.update({
       where: { id: request.userId },
-      // The content behind "Access it" is premium (level 1), so an approved
-      // request must grant premium — members (2) would stay locked.
-      data: { role: 'member', isApproved: true, accessLevel: 1 },
+      // Approving an access request promotes the user to member tier (2),
+      // which unlocks ≈50% of content. Premium (1) is only ever granted
+      // manually by the owner through the Users panel.
+      data: { role: 'member', isApproved: true, accessLevel: 2 },
     }),
   ]);
   await recordAudit(req.user, 'access.approved', 'AccessRequest', request.id, { userId: request.userId });
@@ -112,7 +113,7 @@ router.get('/users', async (_req, res) => {
 const userPatchSchema = z.object({
   role: z.enum(['owner', 'admin', 'member', 'guest']).optional(),
   isApproved: z.boolean().optional(),
-  accessLevel: z.number().int().min(1).max(3).optional(),
+  accessLevel: z.number().int().min(1).max(4).optional(),
 });
 
 router.patch('/users/:id', validate(userIdSchema, 'params'), validate(userPatchSchema), async (req, res) => {

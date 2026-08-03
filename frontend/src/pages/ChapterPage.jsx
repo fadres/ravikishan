@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import LockedBlockCard from '../components/LockedBlockCard.jsx';
@@ -9,6 +9,7 @@ import { buildChapterStructure, STRUCTURE_COLORS, STRUCTURE_LEGEND } from '../li
 
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
+  const location = useLocation();
   const { user, isAdmin } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
@@ -57,7 +58,7 @@ export default function ChapterPage() {
   }, []);
 
   const { chapter, subject, blocks: rawBlocks, topics } = data ?? {};
-  const viewerLevel = chapter?.viewerAccessLevel ?? 3;
+  const viewerLevel = chapter?.viewerAccessLevel ?? 4;
   const hasFullAccess = isAdmin || viewerLevel === 1;
 
   // Empty boxes never render: only blocks with real content survive for full
@@ -146,6 +147,38 @@ export default function ChapterPage() {
           ))}
         </div>
       </div>
+
+      {/* Access tier banner — public 15% → login 25% → member 50% → premium 100% */}
+      {!hasFullAccess && (
+        <div
+          className="mb-6 glass rounded-2xl px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3"
+          style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 0 24px -12px ${subject.themeColor}66` }}
+        >
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-white">
+              You are viewing the {viewerLevel === 4 ? 'free public preview' : viewerLevel === 3 ? 'guest' : 'member'} tier
+              {viewerLevel === 4 ? ' — about 15% of this chapter.' : viewerLevel === 3 ? ' — about 25% of this chapter.' : ' — about 50% of this chapter.'}
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {viewerLevel === 4
+                ? 'Log in to see 25%, or click "Access it" below any concept to become a member (50%).'
+                : viewerLevel === 3
+                  ? 'Become a member to unlock 50% — click "Access it" below any concept.'
+                  : 'Members see 50%. Premium (100%) is granted by the owner.'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {viewerLevel === 4 && (
+              <Link
+                to={`/login?next=${encodeURIComponent(location.pathname)}`}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
+              >
+                Log in for 25%
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Outline chips — jump to any topic in the chapter */}
       {structure.topics.length > 1 && (
@@ -251,7 +284,7 @@ export default function ChapterPage() {
                   <div className="space-y-4">
                     {c.blocks.map((block, bi) => {
                       const isHead = block === headBlock;
-                      return hasFullAccess ? (
+                      return hasContent(block) ? (
                         <BlockRenderer
                           key={block.id ?? `${t.number}-${ci}-${bi}`}
                           block={block}

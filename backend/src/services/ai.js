@@ -39,7 +39,7 @@ async function loadChapter(userId, chapterId) {
   if (!chapterId) return null;
   const viewerLevel = userId
     ? ((await prisma.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
-    : 3;
+    : 4;
   const chapter = await prisma.chapter.findUnique({
     where: { id: chapterId },
     include: {
@@ -56,7 +56,7 @@ async function loadChapter(userId, chapterId) {
 async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
   const viewerLevel = userId
     ? ((await prisma.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
-    : 3;
+    : 4;
   const blocks = await prisma.contentBlock.findMany({
     where: {
       accessLevel: { gte: viewerLevel },

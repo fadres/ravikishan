@@ -79,6 +79,12 @@ export default function Footer() {
         </p>
 
         <p className="mt-4 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
+          Content is designed in line with the Nepal education system — National Examination Board (NEB),
+          Curriculum Development Centre (CDC), Sanothimi, and the Ministry of Education, Science and
+          Technology. All rights reserved.
+        </p>
+
+        <p className="mt-4 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
           Made with curiosity by Ravikishan. All rights reserved. Its your time to shine and make a
           difference! We are committed to delivering the best experience for our audience. We value
           your feedback and suggestions. Stay connected with us for the latest updates and news.

@@ -241,7 +241,7 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
   const chapter = subject.chapters[0];
   if (!chapter) throw new AppError(404, 'Chapter not found');
 
-  const viewerLevel = req.user?.accessLevel ?? 3;
+  const viewerLevel = req.user?.accessLevel ?? 4;
 
   const [blocks, topics] = await Promise.all([
     prisma.contentBlock.findMany({
@@ -304,7 +304,7 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
 // Questions come from published quiz MCQs + content blocks (keywords, formulas,
 // concepts), gated by the viewer's access level.
 router.get('/quick/questions', async (req, res) => {
-  const viewerLevel = req.user?.accessLevel ?? 3;
+  const viewerLevel = req.user?.accessLevel ?? 4;
   const questions = await getQuickQuestions(viewerLevel);
   res.json({ questions, count: questions.length });
 });
@@ -325,7 +325,7 @@ const searchSchema = z.object({
 // the viewer's section limit (automatic degradation).
 router.get('/search', authenticate, validate(searchSchema, 'query'), async (req, res) => {
   const q = req.validated.q;
-  const viewerLevel = req.user?.accessLevel ?? 3;
+  const viewerLevel = req.user?.accessLevel ?? 4;
   const filters = {
     subjectSlug: req.validated.subject,
     classSlug: req.validated.class,

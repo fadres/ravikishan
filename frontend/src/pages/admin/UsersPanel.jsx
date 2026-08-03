@@ -84,13 +84,16 @@ export default function UsersPanel() {
                           ? 'text-amber-300 border-amber-400/40'
                           : (u.accessLevel ?? 3) === 2
                             ? 'text-aqua-200 border-aqua-400/40'
-                            : 'text-emerald-300 border-emerald-400/40'
+                            : (u.accessLevel ?? 3) === 3
+                              ? 'text-emerald-300 border-emerald-400/40'
+                              : 'text-slate-300 border-slate-400/40'
                       }`}
                       title="Only the owner can grant Premium (1)"
                     >
-                      <option value={1} className="bg-deep-800">1 · Premium</option>
-                      <option value={2} className="bg-deep-800">2 · Members</option>
-                      <option value={3} className="bg-deep-800">3 · Free</option>
+                      <option value={4} className="bg-deep-800">4 · Public (15%)</option>
+                      <option value={3} className="bg-deep-800">3 · Free — logged in (25%)</option>
+                      <option value={2} className="bg-deep-800">2 · Member (50%)</option>
+                      <option value={1} className="bg-deep-800">1 · Premium (100%)</option>
                     </select>
                   </td>
                   <td className="px-5 py-3.5">
