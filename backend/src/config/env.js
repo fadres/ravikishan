@@ -36,7 +36,7 @@ export const env = {
   smtpUser: process.env.SMTP_USER || '',
   smtpPass: process.env.SMTP_PASS || '',
   mailFrom: process.env.MAIL_FROM || '',
-  siteUrl: process.env.SITE_URL || 'https://hero000001.netlify.app',
+  siteUrl: process.env.SITE_URL || 'https://ravikisan.netlify.app',
   vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
   vapidPrivateKey: process.env.VAPID_PRIVATE_KEY || '',
   vapidSubject: process.env.VAPID_SUBJECT || 'mailto:harindarsah98172@gmail.com',
