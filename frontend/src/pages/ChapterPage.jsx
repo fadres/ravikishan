@@ -5,27 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import LockedBlockCard from '../components/LockedBlockCard.jsx';
 import BlockRenderer from '../components/blocks/BlockRenderer.jsx';
 import SectionDivider from '../components/blocks/SectionDivider.jsx';
-
-// End-of-section dividers (4d): a pure frontend rendering rule, nothing stored.
-// Insert a divider after a topic group (before the next note_topic), after a
-// concept group (last note_concept in a run), and after the very last block.
-// Chapter dividers take precedence over group dividers.
-function buildItems(blocks) {
-  const items = [];
-  blocks.forEach((block, i) => {
-    items.push({ type: 'block', block });
-    const next = blocks[i + 1];
-    const isLast = !next;
-    if (isLast) {
-      items.push({ type: 'divider', variant: 'chapter' });
-    } else if (next.blockType === 'note_topic' && block.blockType !== 'note_topic') {
-      items.push({ type: 'divider', variant: 'topic' });
-    } else if (block.blockType === 'note_concept' && next.blockType !== 'note_concept') {
-      items.push({ type: 'divider', variant: 'concept' });
-    }
-  });
-  return items;
-}
+import { buildChapterStructure, STRUCTURE_COLORS, STRUCTURE_LEGEND } from '../lib/noteStructure.js';
 
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
@@ -76,7 +56,7 @@ export default function ChapterPage() {
       .catch(() => {});
   }, []);
 
-  const { chapter, subject, blocks: rawBlocks } = data ?? {};
+  const { chapter, subject, blocks: rawBlocks, topics } = data ?? {};
   const viewerLevel = chapter?.viewerAccessLevel ?? 3;
   const hasFullAccess = isAdmin || viewerLevel === 1;
 
@@ -90,31 +70,15 @@ export default function ChapterPage() {
     Boolean(b.diagramData);
   const blocks = (rawBlocks || []).filter((b) => (hasFullAccess ? hasContent(b) : hasContent(b) || Boolean(b.title)));
 
-  // T1, T2, … numbering for topic blocks, in reading order.
-  // Also creates numbered sections like 1.1, 1.2, 1.3 for large chapters
-  const topicLabels = useMemo(() => {
-    const map = new Map();
-    let t = 0;
-    let topicCount = 0;
-    for (const b of blocks) {
-      if (b.blockType === 'note_topic') {
-        t++;
-        topicCount++;
-        map.set(b.id, `T${t}`);
-        // Add numbered sections for large topics (4+ sections per topic)
-        if (topicCount > 4 && topicCount <= 8) {
-          map.set(b.id + '_sub1', `1.1`);
-        } else if (topicCount > 8 && topicCount <= 12) {
-          map.set(b.id + '_sub2', `1.2`);
-        } else if (topicCount > 12 && topicCount <= 16) {
-          map.set(b.id + '_sub3', `1.3`);
-        } else if (topicCount > 16) {
-          map.set(b.id + '_sub4', `1.4`);
-        }
-      }
-    }
-    return map;
-  }, [blocks]);
+  // ── Syllabus structure: Unit letter + numbered topics + roman concepts ──
+  const structure = useMemo(
+    () => buildChapterStructure({ chapter, chapters: siblings, topics: topics || [], blocks }),
+    [chapter, siblings, topics, blocks],
+  );
+
+  const topicJump = (number) => {
+    document.getElementById(`topic-${number}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   if (error) {
     return (
@@ -148,12 +112,61 @@ export default function ChapterPage() {
         <span className="text-slate-200">{chapter.title}</span>
       </nav>
 
-      <div className="mt-4 mb-8">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{chapter.title}</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          {subject.name} · {blocks.length} section{blocks.length === 1 ? '' : 's'}
-        </p>
+      {/* Unit letter + chapter title + legend */}
+      <div className="mt-6 mb-6 text-center">
+        <div className="inline-flex flex-col items-center gap-3">
+          <span
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl text-2xl font-extrabold shadow-[0_0_30px_-6px_rgba(251,191,36,.55)]"
+            style={{
+              color: '#1a1504',
+              background: `linear-gradient(135deg, #fde68a, ${STRUCTURE_COLORS.chapter})`,
+            }}
+            title="Unit letter"
+          >
+            {structure.unitLetter}
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">{chapter.title}</h1>
+          <p className="text-sm text-slate-400">
+            {subject.name} · {blocks.length} section{blocks.length === 1 ? '' : 's'} · {structure.topics.length} topic{structure.topics.length === 1 ? '' : 's'}
+          </p>
+        </div>
+
+        {/* Legend — explains the colour system of the whole page */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          {STRUCTURE_LEGEND.map((entry) => (
+            <span key={entry.symbol} className="inline-flex items-center gap-2 glass rounded-full pl-2 pr-3.5 py-1 text-xs font-bold text-slate-200">
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-extrabold"
+                style={{ background: `${entry.color}22`, color: entry.color, border: `1px solid ${entry.color}66` }}
+              >
+                {entry.symbol}
+              </span>
+              {entry.label}
+            </span>
+          ))}
+        </div>
       </div>
+
+      {/* Outline chips — jump to any topic in the chapter */}
+      {structure.topics.length > 1 && (
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-1.5 -mx-1 px-1">
+          {structure.topics.map((t) => (
+            <button
+              key={t.number}
+              onClick={() => topicJump(t.number)}
+              className="shrink-0 inline-flex items-center gap-2 glass rounded-full pl-1.5 pr-3.5 py-1.5 text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+            >
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-extrabold"
+                style={{ background: `${STRUCTURE_COLORS.topic}22`, color: STRUCTURE_COLORS.topic, border: `1px solid ${STRUCTURE_COLORS.topic}66` }}
+              >
+                {t.number}
+              </span>
+              <span className="max-w-[160px] truncate">{t.topic.title}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Home / Back / Next — always visible, pinned below the header */}
       <div
@@ -194,71 +207,80 @@ export default function ChapterPage() {
         </div>
       </div>
 
-      <div className="space-y-6">
-        {buildItems(blocks).map((item, i) => {
-          if (item.type === 'divider') {
-            return <SectionDivider key={`div-${i}`} variant={item.variant === 'chapter' ? 'chapter' : 'section'} />;
-          }
-          const topicLabel = topicLabels.get(item.block.id);
-          const subLabel = topicLabels.get(item.block.id + '_sub1') || 
-            topicLabels.get(item.block.id + '_sub2') || 
-            topicLabels.get(item.block.id + '_sub3') || 
-            topicLabels.get(item.block.id + '_sub4');
-          return hasFullAccess ? (
-            <BlockRenderer
-              key={item.block.id}
-              block={item.block}
-              themeColor={subject.themeColor}
-              labelOverride={topicLabel ? `T${topicLabel}` : undefined}
-            />
-          ) : (
-            <LockedBlockCard
-              key={item.block.id}
-              block={item.block}
-              themeColor={subject.themeColor}
-              topicLabel={topicLabel ? `T${topicLabel}` : undefined}
-              contactEmail={contactEmail}
-            />
-          );
-        })}
-        {blocks.length === 0 && (
-          <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
-            This chapter has no notes yet.
-          </p>
-        )}
+      {structure.topics.length === 0 && (
+        <p className="glass rounded-2xl p-10 text-center text-slate-400 text-sm">
+          This chapter has no notes yet.
+        </p>
+      )}
 
-        {/* Render numbered sub-sections for large chapters */}
-        {blocks.filter(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub1')).length > 0 && (
-          <div className="mt-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub1'))?.id + '_sub1') && (
-                <div className="p-4 glass rounded-xl border-l-4 border-aqua-400">
-                  <h4 className="text-sm font-bold text-aqua-300 mb-2">Section 1.1</h4>
-                  <p className="text-xs text-slate-400">Introduction and overview</p>
-                </div>
-              )}
-              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub2'))?.id + '_sub2') && (
-                <div className="p-4 glass rounded-xl border-l-4 border-emerald-400">
-                  <h4 className="text-sm font-bold text-emerald-300 mb-2">Section 1.2</h4>
-                  <p className="text-xs text-slate-400">Detailed concepts and applications</p>
-                </div>
-              )}
-              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub3'))?.id + '_sub3') && (
-                <div className="p-4 glass rounded-xl border-l-4 border-purple-400">
-                  <h4 className="text-sm font-bold text-purple-300 mb-2">Section 1.3</h4>
-                  <p className="text-xs text-slate-400">Advanced topics and case studies</p>
-                </div>
-              )}
-              {topicLabels.get(blocks.find(b => b.blockType === 'note_topic' && topicLabels.has(b.id + '_sub4'))?.id + '_sub4') && (
-                <div className="p-4 glass rounded-xl border-l-4 border-orange-400">
-                  <h4 className="text-sm font-bold text-orange-300 mb-2">Section 1.4</h4>
-                  <p className="text-xs text-slate-400">Summary and future directions</p>
-                </div>
-              )}
-            </div>
+      {structure.topics.map((t, ti) => (
+        <section key={t.topic.id ?? `untitled-${t.number}`} id={`topic-${t.number}`} className="relative pl-11 sm:pl-14">
+          {/* Topic rail — the numbered left margin */}
+          <div className="absolute left-0 top-1 bottom-0 flex flex-col items-center w-8 sm:w-10">
+            <span
+              className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-sm font-extrabold shrink-0 shadow-[0_0_18px_-4px_rgba(56,189,248,.6)]"
+              style={{ color: STRUCTURE_COLORS.topic, border: `1.5px solid ${STRUCTURE_COLORS.topic}88`, background: `${STRUCTURE_COLORS.topic}1a` }}
+            >
+              {t.number}
+            </span>
+            <span className="mt-2 w-px flex-1" style={{ background: `linear-gradient(to bottom, ${STRUCTURE_COLORS.topic}66, transparent)` }} />
           </div>
-        )}
-      </div>
+
+          <h2 className="text-lg sm:text-xl font-extrabold text-white leading-snug" style={{ marginLeft: 2 }}>
+            {t.topic.title}
+          </h2>
+          {t.topic.description && <p className="text-sm text-slate-400 mt-1">{t.topic.description}</p>}
+
+          <div className="mt-4 space-y-8">
+            {t.concepts.map((c, ci) => {
+              const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
+              const numeralBadge = (
+                <span
+                  className="inline-flex items-center justify-center min-w-[2rem] h-6 px-1.5 rounded-full text-xs font-extrabold shrink-0"
+                  style={{ color: STRUCTURE_COLORS.concept, border: `1.5px solid ${STRUCTURE_COLORS.concept}88`, background: `${STRUCTURE_COLORS.concept}1a` }}
+                >
+                  {c.numeral}
+                </span>
+              );
+              return (
+                <div key={ci} className="space-y-3">
+                  <div className="flex items-center gap-2.5">
+                    {numeralBadge}
+                    {headBlock?.title && <h3 className="text-base font-bold text-white leading-snug">{headBlock.title}</h3>}
+                  </div>
+                  <div className="space-y-4">
+                    {c.blocks.map((block, bi) => {
+                      const isHead = block === headBlock;
+                      return hasFullAccess ? (
+                        <BlockRenderer
+                          key={block.id ?? `${t.number}-${ci}-${bi}`}
+                          block={block}
+                          themeColor={subject.themeColor}
+                          hideTitle={isHead && block.title}
+                        />
+                      ) : (
+                        <LockedBlockCard
+                          key={block.id ?? `${t.number}-${ci}-${bi}`}
+                          block={block}
+                          themeColor={subject.themeColor}
+                          topicLabel={`${t.number}.${ci + 1}`}
+                          contactEmail={contactEmail}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {ti < structure.topics.length - 1 ? (
+            <SectionDivider variant="section" />
+          ) : (
+            <SectionDivider variant="chapter" />
+          )}
+        </section>
+      ))}
     </div>
   );
 }

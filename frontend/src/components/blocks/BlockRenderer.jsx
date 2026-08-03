@@ -145,7 +145,7 @@ function SymbolsTable({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, labelOverride }) {
+export default function BlockRenderer({ block, labelOverride, hideTitle = false }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
