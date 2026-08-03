@@ -5,6 +5,7 @@ import { AppError } from '../middleware/error.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
+import { getQuickQuestions } from '../services/quickQuestions.js';
 import {
   sectionIndexForBlockType,
   sectionLabelForBlockType,
@@ -296,6 +297,16 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
     })),
     blocks: blocks.map((b) => decorateBlock(b, viewerLevel)),
   });
+});
+
+// GET /api/quick/questions — home-page quick review pool. Always 4 options,
+// correct answer index included so the box can reveal it and keep a history.
+// Questions come from published quiz MCQs + content blocks (keywords, formulas,
+// concepts), gated by the viewer's access level.
+router.get('/quick/questions', async (req, res) => {
+  const viewerLevel = req.user?.accessLevel ?? 3;
+  const questions = await getQuickQuestions(viewerLevel);
+  res.json({ questions, count: questions.length });
 });
 
 const searchSchema = z.object({

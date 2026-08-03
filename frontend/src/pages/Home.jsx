@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { streakDays } from '../utils/streak.js';
+import { QUICK_INSPIRE } from '../data/inspire.js';
+import QuickReviewBox from '../components/QuickReviewBox.jsx';
 
 const IDIOMS = [
   { text: 'Practice makes perfect.', author: 'Proverb' },
@@ -215,6 +217,20 @@ function IdiomsStrip() {
   );
 }
 
+// Quick-inspire flash — one short line, changing with a flash effect.
+function QuickInspire() {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * QUICK_INSPIRE.length));
+  useEffect(() => {
+    const timer = setInterval(() => setIndex((i) => (i + 1) % QUICK_INSPIRE.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
+  return (
+    <span key={index} className="inspire-flash block mt-3 text-sm sm:text-base font-semibold text-emerald-200/90 italic leading-snug max-w-md mx-auto">
+      “{QUICK_INSPIRE[index]}”
+    </span>
+  );
+}
+
 // Growing tree with leaves — "Improvement is Life".
 function TreeIcon({ size = 46 }) {
   return (
@@ -374,6 +390,9 @@ export default function Home() {
             {user ? `Keep growing, ${user.displayName || 'friend'}. ` : 'Small steps every day. '}
             Little by little, everything grows.
           </p>
+
+          <QuickInspire />
+
           <span className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-bold px-3 py-1 rounded-full bg-orange-400/15 text-orange-300 border border-orange-400/25">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2c2.5 4.5 5 6.5 5 10a5 5 0 1 1-10 0c0-3.5 2.5-5.5 5-10z" />
@@ -384,6 +403,8 @@ export default function Home() {
       </section>
 
       <IdiomsStrip />
+
+      <QuickReviewBox />
 
       {/* Four main sections */}
       <section className="mt-8">
