@@ -76,25 +76,8 @@ export default function ChapterPage() {
       .catch(() => {});
   }, []);
 
-  if (error) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <p className="text-slate-300">{error}</p>
-        <Link to="/" className="inline-block mt-4 text-aqua-300 hover:text-aqua-100">← Back home</Link>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <span className="w-8 h-8 border-2 border-aqua-400/40 border-t-aqua-400 rounded-full animate-spin inline-block" />
-      </div>
-    );
-  }
-
-  const { chapter, subject, blocks: rawBlocks } = data;
-  const viewerLevel = chapter.viewerAccessLevel ?? 3;
+  const { chapter, subject, blocks: rawBlocks } = data ?? {};
+  const viewerLevel = chapter?.viewerAccessLevel ?? 3;
   const hasFullAccess = isAdmin || viewerLevel === 1;
 
   // Empty boxes never render: only blocks with real content survive for full
@@ -105,7 +88,7 @@ export default function ChapterPage() {
     Boolean((b.contentCode || '').trim()) ||
     Boolean(b.mindmapJson) ||
     Boolean(b.diagramData);
-  const blocks = rawBlocks.filter((b) => (hasFullAccess ? hasContent(b) : hasContent(b) || Boolean(b.title)));
+  const blocks = (rawBlocks || []).filter((b) => (hasFullAccess ? hasContent(b) : hasContent(b) || Boolean(b.title)));
 
   // T1, T2, … numbering for topic blocks, in reading order.
   // Also creates numbered sections like 1.1, 1.2, 1.3 for large chapters
@@ -132,6 +115,23 @@ export default function ChapterPage() {
     }
     return map;
   }, [blocks]);
+
+  if (error) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <p className="text-slate-300">{error}</p>
+        <Link to="/" className="inline-block mt-4 text-aqua-300 hover:text-aqua-100">← Back home</Link>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <span className="w-8 h-8 border-2 border-aqua-400/40 border-t-aqua-400 rounded-full animate-spin inline-block" />
+      </div>
+    );
+  }
 
   const idx = siblings.findIndex((c) => c.slug === chapterSlug);
   const prevChapter = idx > 0 ? siblings[idx - 1] : null;
@@ -204,11 +204,21 @@ export default function ChapterPage() {
             topicLabels.get(item.block.id + '_sub2') || 
             topicLabels.get(item.block.id + '_sub3') || 
             topicLabels.get(item.block.id + '_sub4');
-          const shared = { key: item.block.id, block: item.block, themeColor: subject.themeColor };
           return hasFullAccess ? (
-            <BlockRenderer {...shared} labelOverride={topicLabel ? `T${topicLabel}` : undefined} />
+            <BlockRenderer
+              key={item.block.id}
+              block={item.block}
+              themeColor={subject.themeColor}
+              labelOverride={topicLabel ? `T${topicLabel}` : undefined}
+            />
           ) : (
-            <LockedBlockCard {...shared} topicLabel={topicLabel ? `T${topicLabel}` : undefined} contactEmail={contactEmail} />
+            <LockedBlockCard
+              key={item.block.id}
+              block={item.block}
+              themeColor={subject.themeColor}
+              topicLabel={topicLabel ? `T${topicLabel}` : undefined}
+              contactEmail={contactEmail}
+            />
           );
         })}
         {blocks.length === 0 && (
