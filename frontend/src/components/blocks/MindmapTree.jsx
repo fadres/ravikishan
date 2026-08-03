@@ -1,56 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
+import { latexToPlain } from '../../lib/markdown.jsx';
 
 // ── Mind map design system ────────────────────────────────────────────────
-// Every mind map follows these rules automatically — current content AND all
-// future additions:
-//   • each box is 7× larger than the base text-fit size (BOX_SCALE = 7)
-//   • label letters are 3× smaller (FONT_DIVISOR = 3, floor MIN_FONT)
-//   • labels auto-fit inside their box, so text never overflows → boxes
-//     never overlap
-//   • pinch (touch) or wheel (desktop) expands and contracts the whole map
-//     from the fitted view up to MAX_ZOOM, and dragging pans around it
+// Every mind map follows these readable rules automatically — current content
+// AND all future additions:
+//   • boxes are large and easy to read & tap (tall, sized to the label)
+//   • labels use a readable font (min 11px) — never microscopic, so they are
+//     always visible to the naked eye
+//   • long labels wrap-free but auto-shrink only down to the readable floor
+//   • tapping ANY box opens a large detail view of that branch where every
+//     element is shown as full-size text — nothing is ever unreadable
+//   • pinch (touch), wheel (desktop) or +/- buttons expand the whole map,
+//     and dragging pans around it
 // ──────────────────────────────────────────────────────────────────────────
 
-const BOX_SCALE = 7; // box size multiplier (7× larger)
-const FONT_DIVISOR = 3; // font divisor (3× smaller letters)
-const MIN_FONT = 5; // absolute minimum label size
 const MAX_ZOOM = 8; // how far the map can expand on pinch/wheel
+const FIT_FLOOR = 0.5; // fit mode never shrinks below 50% — keeps text visible
 
-const NODE_H = 34 * BOX_SCALE; // 238px tall boxes
-const SIBLING_GAP = 18 * BOX_SCALE; // spacing between sibling boxes
-const LEVEL_GAP = 18 * BOX_SCALE; // vertical spacing between levels
+const NODE_H = 58; // tall boxes: easy to read and tap
+const SIBLING_GAP = 22; // spacing between sibling boxes
+const LEVEL_GAP = 34; // vertical spacing between levels
 
 function textLen(s) {
   return [...String(s)].length;
 }
 
-// Box dimensions come from the label length, then the system scales them.
+// Box dimensions come from the label length. Letters stay readable (11–16px):
+// short labels get large letters, long labels shrink but never below 11px.
 // Because this runs per node at render time, every new mind map that gets
 // uploaded automatically follows the same rules.
 function boxFor(name) {
-  const len = textLen(name);
-  const base = Math.min(320, Math.max(104, 24 + len * 6.6));
-  return { width: Math.round(base * BOX_SCALE), font: Math.max(MIN_FONT, 12.5 / FONT_DIVISOR) };
+  const len = textLen(latexToPlain(name));
+  const font = len > 30 ? 11 : len > 18 ? 12 : len > 9 ? 13 : 15;
+  const width = Math.min(440, Math.max(130, 44 + len * font * 0.66));
+  return { width: Math.round(width), font };
 }
 
 // In-order leaf placement: each leaf is centred at the current cursor and the
 // cursor advances by its own width + gap, so sibling boxes never overlap.
-function layout(node, collapsed = new Set(), walk = { cursor: 0 }) {
-  const children = node.children && node.children.length && !collapsed.has(node.name) ? node.children : [];
+// Keys follow the "parent > child" path so same-named nodes stay unique.
+function layout(node, collapsed = new Set(), parentKey = '', walk = { cursor: 0 }) {
+  const key = parentKey ? `${parentKey} > ${node.name}` : node.name;
+  const children = node.children && node.children.length && !collapsed.has(key) ? node.children : [];
   if (!children.length) {
     const meta = boxFor(node.name);
     const x = walk.cursor + meta.width / 2;
     walk.cursor += meta.width + SIBLING_GAP;
-    return { meta, x, children: [], node };
+    return { key, meta, x, children: [], node };
   }
-  const childNodes = children.map((c) => layout(c, collapsed, walk));
+  const childNodes = children.map((c) => layout(c, collapsed, key, walk));
   const x = childNodes.reduce((s, c) => s + c.x, 0) / childNodes.length;
-  return { meta: boxFor(node.name), x, children: childNodes, node };
+  return { key, meta: boxFor(node.name), x, children: childNodes, node };
 }
 
 export default function MindmapTree({ data }) {
   const [collapsed, setCollapsed] = useState(new Set());
-  const [mode, setMode] = useState('fit'); // 'fit' | 'scroll'
+  const [detailKey, setDetailKey] = useState(null); // branch opened in detail view
 
   const tree = data ? layout(data, collapsed) : null;
   if (!tree) return <p className="text-slate-400 text-sm">No mind map data.</p>;
@@ -59,7 +64,7 @@ export default function MindmapTree({ data }) {
   const edges = [];
 
   const walk = (entry, depth, parentKey) => {
-    const key = parentKey ? `${parentKey} > ${entry.node.name}` : entry.node.name;
+    const { key } = entry;
     const y = depth * (NODE_H + LEVEL_GAP);
     nodes.push({
       key,
@@ -70,6 +75,7 @@ export default function MindmapTree({ data }) {
       font: entry.meta.font,
       isCollapsed: collapsed.has(key),
       hasChildren: entry.children.length > 0,
+      entry,
     });
     if (parentKey) edges.push({ from: parentKey, to: key });
     if (!collapsed.has(key)) {
@@ -82,9 +88,9 @@ export default function MindmapTree({ data }) {
   const left = Math.min(...nodes.map((n) => n.x - n.width / 2));
   const right = Math.max(...nodes.map((n) => n.x + n.width / 2));
   const bottom = Math.max(...nodes.map((n) => n.y + NODE_H));
-  const shiftX = 30 - left;
-  const width = right - left + 60;
-  const height = bottom + 50;
+  const shiftX = 16 - left;
+  const width = right - left + 32;
+  const height = bottom + 24;
 
   const toggleNode = (key) => {
     setCollapsed((prev) => {
@@ -114,55 +120,55 @@ export default function MindmapTree({ data }) {
   const svg = (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
       {edges.map((e, i) => (
-        <g key={i}>
+        <g key={`e${i}`}>
           <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="2" />
-          <circle r="3" fill="rgba(125,211,252,0.5)" transform={arrow(e.to)} />
+          <circle r="4" fill="rgba(125,211,252,0.5)" transform={arrow(e.to)} />
         </g>
       ))}
       {nodes.map((n) => {
-        const isRoot = n.key === tree.node.name;
-        const estTextWidth = textLen(n.name) * n.font * 0.62;
-        const fitText = estTextWidth > n.width - 24 ? n.width - 24 : undefined;
+        const isRoot = n.key === tree.key;
+        const label = latexToPlain(n.name);
         return (
           <g
             key={n.key}
             transform={`translate(${n.x + shiftX}, ${n.y})`}
             className="cursor-pointer"
-            onClick={() => n.hasChildren && toggleNode(n.key)}
+            onClick={() => setDetailKey(n.key)}
           >
-            <title>{n.name}</title>
+            <title>{label}</title>
             <rect
               x={-n.width / 2}
               width={n.width}
               height={NODE_H}
-              rx={22}
-              fill={isRoot ? 'rgba(56,189,248,0.16)' : 'rgba(255,255,255,0.05)'}
-              stroke={isRoot ? 'rgba(56,189,248,0.6)' : 'rgba(255,255,255,0.15)'}
+              rx={14}
+              fill={isRoot ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.06)'}
+              stroke={isRoot ? 'rgba(56,189,248,0.7)' : 'rgba(255,255,255,0.2)'}
               strokeWidth={2}
             />
             <text
               x={0}
-              y={NODE_H / 2 + 3}
+              y={NODE_H / 2 + 4}
               textAnchor="middle"
               fill={isRoot ? '#7dd3fc' : '#e2e8f0'}
               fontSize={n.font}
               fontWeight={isRoot ? 700 : 500}
-              textLength={fitText}
-              lengthAdjust="spacingAndGlyphs"
             >
-              {n.name}
+              {label}
             </text>
             {n.hasChildren && (
-              <text
-                x={n.width / 2 - 22}
-                y={NODE_H / 2 + 7}
-                textAnchor="middle"
-                fill="#7dd3fc"
-                fontSize={16}
-                fontWeight={700}
+              <g
+                transform={`translate(${n.width / 2 - 18}, ${NODE_H / 2})`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleNode(n.key);
+                }}
+                className="cursor-pointer"
               >
-                {n.isCollapsed ? '+' : '−'}
-              </text>
+                <rect x={-12} y={-12} width={24} height={24} rx={6} fill="rgba(56,189,248,0.15)" stroke="rgba(56,189,248,0.4)" />
+                <text textAnchor="middle" dominantBaseline="central" fill="#7dd3fc" fontSize={13} fontWeight={700}>
+                  {n.isCollapsed ? '+' : '−'}
+                </text>
+              </g>
             )}
           </g>
         );
@@ -170,55 +176,152 @@ export default function MindmapTree({ data }) {
     </svg>
   );
 
-  const bar = (
-    <div className="flex items-center gap-2 mb-3 flex-wrap">
-      <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
-        {mode === 'fit' ? 'Fit to screen' : 'Full size'}
-      </span>
-      <span className="text-[10px] text-slate-500">
-        Bigger boxes · tiny labels — pinch / wheel to expand, drag to pan
-      </span>
-      <div className="flex gap-1.5 ml-auto">
-        <button
-          onClick={() => setMode('fit')}
-          className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition ${
-            mode === 'fit' ? 'bg-aqua-400/20 border-aqua-400/60 text-aqua-200' : 'border-white/15 text-slate-300 hover:bg-white/10'
-          }`}
-        >
-          Fit
-        </button>
-        <button
-          onClick={() => setMode('scroll')}
-          className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition ${
-            mode === 'scroll' ? 'bg-aqua-400/20 border-aqua-400/60 text-aqua-200' : 'border-white/15 text-slate-300 hover:bg-white/10'
-          }`}
-        >
-          Scroll
-        </button>
-      </div>
-    </div>
-  );
+  const detailEntry = detailKey ? nodes.find((n) => n.key === detailKey) : null;
 
   return (
     <div>
-      {bar}
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+          Mind map
+        </span>
+        <span className="text-[10px] text-slate-500">
+          Tap a box to open it large - use − / + to collapse or expand - pinch / wheel to zoom
+        </span>
+      </div>
       <div className="rounded-xl border border-white/10 bg-deep-950/60 overflow-hidden">
-        <ZoomCanvas fitMode={mode === 'fit'} width={width} height={height}>
-          {svg}
-        </ZoomCanvas>
+        <ZoomCanvas fitFloor={FIT_FLOOR} width={width} height={height} svg={svg} />
+      </div>
+
+      {detailEntry && (
+        <DetailModal entry={detailEntry} root={tree} onClose={() => setDetailKey(null)} />
+      )}
+    </div>
+  );
+}
+
+// ── Large readable detail view ─────────────────────────────────────────────
+// Opens when the user taps the ☰ icon on any box. Shows that branch as a
+// clean indented tree with full-size text (15px+) — every element is clearly
+// visible, no tiny map letters involved. Branch rows are tappable to drill
+// into that branch.
+function BranchTree({ entry, onJump, trail = [] }) {
+  const [open, setOpen] = useState(true);
+  const label = latexToPlain(entry.node.name);
+  const children = entry.children || [];
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => onJump(entry.key)}
+        className="flex items-center gap-2 w-full text-left group"
+      >
+        <span
+          className="text-slate-500 text-[10px] w-4 shrink-0"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (children.length) setOpen((o) => !o);
+          }}
+        >
+          {children.length ? (open ? '▼' : '▶') : '•'}
+        </span>
+        <span className="text-base sm:text-lg font-semibold text-white leading-snug group-hover:text-aqua-200 transition">
+          {label}
+        </span>
+        {children.length > 0 && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
+            {children.length}
+          </span>
+        )}
+      </button>
+      {open && children.length > 0 && (
+        <div className="ml-3 pl-3 border-l border-white/10 space-y-1.5 mt-1.5">
+          {children.map((c, i) => (
+            <BranchTree key={c.key} entry={c} onJump={onJump} trail={[...trail, label]} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DetailModal({ entry, root, onClose }) {
+  const trail = [];
+  const findTrail = (e, path) => {
+    if (e.key === entry.key) {
+      trail.push(...path, e);
+      return true;
+    }
+    for (const c of e.children || []) {
+      if (findTrail(c, [...path, e])) return true;
+    }
+    return false;
+  };
+  findTrail(root, []);
+
+  const [activeKey, setActiveKey] = useState(entry.key);
+  let active = null;
+  const findActive = (e) => {
+    if (e.key === activeKey) return e;
+    for (const c of e.children || []) {
+      const r = findActive(c);
+      if (r) return r;
+    }
+    return null;
+  };
+  active = findActive(root) || entry;
+
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-deep-950/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="glass-strong rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-white/10 shrink-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-aqua-300 font-bold">Mind map detail</p>
+            {trail.length > 1 && (
+              <p className="text-xs text-slate-400 mt-0.5 truncate">
+                {trail.slice(0, -1).map((t) => latexToPlain(t.node.name)).join(' › ')}
+              </p>
+            )}
+            <h3 className="text-xl font-extrabold text-white mt-0.5 break-words">
+              {latexToPlain(active.node.name)}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-slate-400 hover:text-white text-xl leading-none p-1 shrink-0"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="overflow-y-auto px-5 py-4 space-y-2">
+          <BranchTree entry={active} onJump={setActiveKey} />
+          <p className="text-xs text-slate-500 pt-2 border-t border-white/5">
+            Every box is shown at full size here. Tap a branch to jump to it.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-// One zoom engine for both modes:
-//   • Fit mode  — starts fitted to the screen, expands up to MAX_ZOOM on
-//                 pinch/wheel, drag to pan
-//   • Scroll mode — starts at full 100% size (huge boxes, tiny labels),
-//                 expands up to MAX_ZOOM, drag to pan
-// Two pointers control the scale; one pointer pans; wheel zooms around the
-// cursor. Everything stays clamped so the map never drifts away.
-function ZoomCanvas({ fitMode, width, height, children }) {
+// One zoom engine: fits the whole map on screen (never below FIT_FLOOR so
+// labels stay visible), then pinch/wheel/+/- expand up to MAX_ZOOM and drag
+// pans. Two pointers control scale; one pointer pans; wheel zooms around the
+// cursor; everything stays clamped so the map never drifts away.
+function ZoomCanvas({ fitFloor, width, height, svg }) {
   const [fit, setFit] = useState(1);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -231,7 +334,7 @@ function ZoomCanvas({ fitMode, width, height, children }) {
     if (!el) return;
     const apply = () => {
       const avail = el.clientWidth;
-      if (avail > 0 && width > 0) setFit(Math.min(1, avail / width));
+      if (avail > 0 && width > 0) setFit(Math.max(fitFloor, Math.min(1, avail / width)));
     };
     apply();
     const ro = new ResizeObserver(apply);
@@ -241,9 +344,9 @@ function ZoomCanvas({ fitMode, width, height, children }) {
       ro.disconnect();
       window.removeEventListener('resize', apply);
     };
-  }, [width]);
+  }, [width, fitFloor]);
 
-  const base = fitMode ? fit : 1;
+  const base = fit;
   const scale = base * zoom;
   const clampZoom = (z) => Math.min(MAX_ZOOM, Math.max(1, z));
 
@@ -330,31 +433,34 @@ function ZoomCanvas({ fitMode, width, height, children }) {
             transformOrigin: 'top center',
           }}
         >
-          {children}
+          {svg}
         </div>
 
         {/* zoom controls overlay */}
         <div className="absolute top-2 right-2 flex items-center gap-1 bg-deep-950/70 border border-white/10 rounded-xl p-1">
           <button
+            type="button"
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 1.25))}
-            className="w-7 h-7 rounded-lg text-sm font-black text-slate-200 hover:bg-white/10"
+            className="w-8 h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
             aria-label="Expand"
           >
             +
           </button>
           <button
+            type="button"
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 0.8))}
-            className="w-7 h-7 rounded-lg text-sm font-black text-slate-200 hover:bg-white/10"
+            className="w-8 h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
             aria-label="Contract"
           >
             −
           </button>
           <button
+            type="button"
             onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-            className="px-2 h-7 rounded-lg text-[11px] font-bold text-aqua-200 hover:bg-white/10"
+            className="px-2 h-8 rounded-lg text-[11px] font-bold text-aqua-200 hover:bg-white/10"
             aria-label="Reset view"
           >
-            {fitMode ? 'Fit' : '100%'}
+            Reset
           </button>
         </div>
       </div>
