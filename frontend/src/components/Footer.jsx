@@ -78,13 +78,22 @@ export default function Footer() {
           <span className="font-bold text-gradient-purple">Creator ~ Owner: Ravikishan</span>
         </p>
 
-        <p className="mt-4 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
-          Content is designed in line with the Nepal education system — National Examination Board (NEB),
-          Curriculum Development Centre (CDC), Sanothimi, and the Ministry of Education, Science and
-          Technology. All rights reserved.
-        </p>
+        {/* Official accreditation — NEB / CDC */}
+        <div className="mt-6 max-w-xl mx-auto rounded-2xl border border-white/10 p-4">
+          <p className="text-[11px] uppercase tracking-widest font-bold text-aqua-300">
+            Syllabus &amp; Curriculum
+          </p>
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-400">
+            Notes are designed and structured as per the syllabus prescribed by the{' '}
+            <span className="font-semibold text-slate-200">National Examination Board (NEB)</span>,
+            Sanothimi, Bhaktapur, and follow the curriculum developed and approved by the{' '}
+            <span className="font-semibold text-slate-200">Curriculum Development Centre (CDC)</span>,
+            under the Ministry of Education, Science and Technology. This site is not an official
+            NEB or CDC product.
+          </p>
+        </div>
 
-        <p className="mt-4 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
+        <p className="mt-6 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
           Made with curiosity by Ravikishan. All rights reserved. Its your time to shine and make a
           difference! We are committed to delivering the best experience for our audience. We value
           your feedback and suggestions. Stay connected with us for the latest updates and news.
