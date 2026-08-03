@@ -220,7 +220,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
       chapter: { title: '', slug: '' },
       subject: { name: row.name ?? '', slug: row.subjectSlug },
       klass: { name: row.className, slug: row.classSlug },
-      rank: row.isPrefix ? 800 : 700,
+      rank: row.isPrefix ? 950 : 850,
       accessLevel: 3,
       locked: false,
       snippet: null,
