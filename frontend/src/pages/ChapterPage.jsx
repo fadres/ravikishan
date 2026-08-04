@@ -93,10 +93,10 @@ export default function ChapterPage() {
     [chapter, siblings, topics, blocks],
   );
 
-  // ── Duplicate concepts (Type 1/2/3) ─────────────────────────────
+  // ── Duplicate concepts (Original + R1/R2 repeats) ───────────────
   // Blocks with the same body (dupGroupId) are repeated versions of one
   // concept. We collapse each dup group into a single concept box with
-  // Type-1/2/3 tabs; the first occurrence keeps its position and anchor.
+  // tabs — the first occurrence is the Original, repeats are R1, R2, …
   const slotsByTopic = useMemo(() => {
     return structure.topics.map((t) => {
       const groups = new Map();
@@ -762,9 +762,10 @@ function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, 
   );
 }
 
-// Repeated concepts collapse into ONE box: glowing Type-1/2/3 tabs on top,
-// each opening its own interface below. The tab strip hides once the reader
-// scrolls past it (sticky within the box) — scrolling back up reveals it.
+// Repeated concepts collapse into ONE box: glowing tabs on top — the first
+// occurrence is the Original, repeats are R1, R2, … Each tab opens its own
+// interface below. The tab strip hides once the reader scrolls past it
+// (sticky within the box) — scrolling back up reveals it.
 function VariantBox({
   variants,
   topicNumber,
@@ -833,9 +834,9 @@ function VariantBox({
                       : { background: `${STRUCTURE_COLORS.concept}22`, color: STRUCTURE_COLORS.concept }
                   }
                 >
-                  {vi + 1}
+                  {vi === 0 ? 'O' : `R${vi}`}
                 </span>
-                Type {vi + 1}
+                {vi === 0 ? 'Original' : `R${vi}`}
                 {vHead?.title ? <span className="max-w-[130px] truncate text-slate-300">· {vHead.title}</span> : null}
               </button>
             );
@@ -853,9 +854,9 @@ function VariantBox({
             className="inline-flex items-center justify-center min-w-[1.1rem] px-1 rounded-md text-[10px] font-extrabold"
             style={{ background: STRUCTURE_COLORS.concept, color: '#0b0a1f' }}
           >
-            {active + 1}
+            {active === 0 ? 'O' : `R${active}`}
           </span>
-          Type {active + 1} of {variants.length} · show types
+          {active === 0 ? 'Original' : `R${active}`} of {variants.length} · show types
         </button>
       )}
 
@@ -864,11 +865,10 @@ function VariantBox({
         className="mt-3 text-[11px] leading-relaxed text-slate-400 border-l-2 pl-2.5"
         style={{ borderColor: `${STRUCTURE_COLORS.concept}88` }}
       >
-        This concept is recorded {variants.length} times in the syllabus notes — the same idea
-        appears as Type {variants.length > 1 ? '1, 2' : '1'}
-        {variants.length > 2 ? ` and ${variants.length}` : ''}. Type 1 is the original entry;
-        the later types are repeated copies kept exactly as written. Each type opens its own
-        content below — switch to compare wording, formulas or examples across versions.
+        This concept is recorded {variants.length} times in the syllabus notes. The first entry
+        is the Original, kept exactly as written; each repeated copy stays intact in its own tab
+        (R1, R2, …). Switch tabs to compare wording, formulas or examples across versions —
+        nothing is reduced, every version is preserved.
       </p>
 
       {/* Active type's own interface */}
