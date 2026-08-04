@@ -1,28 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { latexToPlain } from '../../lib/markdown.jsx';
 
 // ── Mind map design system ────────────────────────────────────────────────
 // Every mind map follows these readable rules automatically — current content
 // AND all future additions:
 //   • boxes are large and easy to read & tap (tall, sized to the label)
-//   • labels use a readable font (min 11px) — never microscopic, so they are
-//     always visible to the naked eye
-//   • long labels wrap-free but auto-shrink only down to the readable floor
+//   • labels use a readable font (min 11px) — never microscopic
+//   • long labels auto-shrink only down to the readable floor
+//   • the inline preview fits the map to the card width; the big "Open"
+//     workspace fits the whole map to the screen (mobile & laptop) and adds
+//     its own tools: search + jump, expand all / collapse all, pinch / wheel
+//     zoom, drag pan, and a reset view
 //   • tapping ANY box opens a large detail view of that branch where every
-//     element is shown as full-size text — nothing is ever unreadable
-//   • pinch (touch), wheel (desktop) or +/- buttons expand the whole map,
-//     and dragging pans around it
+//     element is shown as full-size text
 // ──────────────────────────────────────────────────────────────────────────
 
 const MAX_ZOOM = 8; // how far the map can expand on pinch/wheel
-const FIT_FLOOR = 0.5; // fit mode never shrinks below 50% — keeps text visible
+const FIT_FLOOR = 0.35; // fit mode never shrinks below this — keeps text visible
 
-// Big, spacious boxes with compact labels — the "bigger box, smaller letter"
-// look. Tap any box to open the full-size detail view where everything is
-// readable at a large size.
-const BOX_H = 76; // tall, roomy boxes
+const NODE_H = 76; // tall, roomy boxes
 const SIBLING_GAP = 24; // spacing between sibling boxes
-const LEVEL_GAP = 40; // vertical spacing between levels
+const LEVEL_GAP = 44; // vertical spacing between levels
 
 function textLen(s) {
   return [...String(s)].length;
@@ -30,8 +28,6 @@ function textLen(s) {
 
 // Box dimensions come from the label length. Labels stay compact (9–14px);
 // boxes are wide and tall so the map reads as big tiles with small letters.
-// Because this runs per node at render time, every new mind map that gets
-// uploaded automatically follows the same rules.
 function boxFor(name) {
   const len = textLen(latexToPlain(name));
   const font = len > 30 ? 9 : len > 20 ? 10 : len > 10 ? 11 : len > 4 ? 12 : 14;
@@ -39,11 +35,15 @@ function boxFor(name) {
   return { width: Math.round(width), font };
 }
 
+// Path-based key so same-named nodes stay unique: "root > child > leaf".
+function keyFor(parentKey, name) {
+  return parentKey ? `${parentKey} > ${name}` : name;
+}
+
 // In-order leaf placement: each leaf is centred at the current cursor and the
 // cursor advances by its own width + gap, so sibling boxes never overlap.
-// Keys follow the "parent > child" path so same-named nodes stay unique.
 function layout(node, collapsed = new Set(), parentKey = '', walk = { cursor: 0 }) {
-  const key = parentKey ? `${parentKey} > ${node.name}` : node.name;
+  const key = keyFor(parentKey, node.name);
   const children = node.children && node.children.length && !collapsed.has(key) ? node.children : [];
   if (!children.length) {
     const meta = boxFor(node.name);
@@ -56,44 +56,38 @@ function layout(node, collapsed = new Set(), parentKey = '', walk = { cursor: 0 
   return { key, meta: boxFor(node.name), x, children: childNodes, node };
 }
 
+// Walk a laid-out tree collecting nodes + edges + ancestor paths.
+function flatten(entry, collapsed, depth = 0, parentKey = '', out = { nodes: [], edges: [], pathOf: new Map() }) {
+  out.nodes.push({
+    key: entry.key,
+    name: entry.node.name,
+    x: entry.x,
+    y: depth * (NODE_H + LEVEL_GAP),
+    width: entry.meta.width,
+    font: entry.meta.font,
+    isCollapsed: collapsed.has(entry.key),
+    hasChildren: entry.children.length > 0,
+    entry,
+  });
+  out.pathOf.set(entry.key, out.nodes.length - 1);
+  if (parentKey) out.edges.push({ from: parentKey, to: entry.key });
+  if (!collapsed.has(entry.key)) {
+    for (const child of entry.children) flatten(child, collapsed, depth + 1, entry.key, out);
+  }
+  return out;
+}
+
 export default function MindmapTree({ data }) {
   const [collapsed, setCollapsed] = useState(new Set());
-  const [detailKey, setDetailKey] = useState(null); // branch opened in detail view
+  const [open, setOpen] = useState(false);
+  const [openFocus, setOpenFocus] = useState(null);
 
-  const tree = data ? layout(data, collapsed) : null;
-  if (!tree) return <p className="text-slate-400 text-sm">No mind map data.</p>;
+  const tree = useMemo(() => (data ? layout(data, collapsed) : null), [data, collapsed]);
+  const view = useMemo(() => (tree ? flatten(tree, collapsed) : null), [tree, collapsed]);
 
-  const nodes = [];
-  const edges = [];
+  if (!tree || !view) return <p className="text-slate-400 text-sm">No mind map data.</p>;
 
-  const walk = (entry, depth, parentKey) => {
-    const { key } = entry;
-    const y = depth * (NODE_H + LEVEL_GAP);
-    nodes.push({
-      key,
-      name: entry.node.name,
-      x: entry.x,
-      y,
-      width: entry.meta.width,
-      font: entry.meta.font,
-      isCollapsed: collapsed.has(key),
-      hasChildren: entry.children.length > 0,
-      entry,
-    });
-    if (parentKey) edges.push({ from: parentKey, to: key });
-    if (!collapsed.has(key)) {
-      for (const child of entry.children) walk(child, depth + 1, key);
-    }
-  };
-  walk(tree, 0, null);
-
-  // Canvas is inset to the whole tree so the viewBox fits the content exactly.
-  const left = Math.min(...nodes.map((n) => n.x - n.width / 2));
-  const right = Math.max(...nodes.map((n) => n.x + n.width / 2));
-  const bottom = Math.max(...nodes.map((n) => n.y + NODE_H));
-  const shiftX = 16 - left;
-  const width = right - left + 32;
-  const height = bottom + 24;
+  const totalNodes = useMemo(() => countNodes(data), [data]);
 
   const toggleNode = (key) => {
     setCollapsed((prev) => {
@@ -103,6 +97,87 @@ export default function MindmapTree({ data }) {
       return next;
     });
   };
+
+  const openWorkspace = (key = null) => {
+    // Ensure ancestors of the tapped node are expanded so it is visible.
+    if (key) {
+      const ancestors = [];
+      const find = (e) => {
+        if (e.key === key) return true;
+        for (const c of e.children || []) {
+          if (find(c)) {
+            ancestors.push(e.key);
+            return true;
+          }
+        }
+        return false;
+      };
+      find(tree);
+      setCollapsed((prev) => {
+        const next = new Set(prev);
+        ancestors.forEach((k) => next.delete(k));
+        return next;
+      });
+    }
+    setOpenFocus(key);
+    setOpen(true);
+  };
+
+  const canvas = buildCanvas(tree, view, collapsed, null, '', {
+    onTap: (key) => openWorkspace(key),
+    onToggle: toggleNode,
+  });
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Mind map</span>
+        <span className="text-[10px] text-slate-500 hidden sm:inline">
+          {totalNodes} nodes · tap a box to open the full view · drag to pan · scroll to zoom
+        </span>
+        <button
+          type="button"
+          onClick={() => openWorkspace()}
+          className="ml-auto px-4 py-1.5 rounded-full bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 text-xs font-extrabold hover:brightness-110 transition shrink-0"
+        >
+          Open
+        </button>
+      </div>
+
+      <div className="rounded-xl border border-white/10 bg-deep-950/60 overflow-hidden">
+        <ZoomCanvas
+          fitMode="width"
+          fitFloor={FIT_FLOOR}
+          width={canvas.width}
+          height={canvas.height}
+          svg={canvas.svg}
+        />
+      </div>
+
+      {open && <MindmapWorkspace data={data} initialFocusKey={openFocus} onClose={() => setOpen(false)} />}
+    </div>
+  );
+}
+
+function countNodes(node) {
+  let n = 1;
+  for (const c of node?.children || []) n += countNodes(c);
+  return n;
+}
+
+// Builds the shared SVG scene (nodes + edges) for a given tree view.
+// opts.onTap(key) fires when a box is tapped; opts.onToggle(key) fires when a
+// subtree's +/- handle is tapped.
+function buildCanvas(tree, view, collapsed, focusKey = null, query = '', opts = {}) {
+  const { onTap, onToggle } = opts;
+  const { nodes, edges } = view;
+  const left = Math.min(...nodes.map((n) => n.x - n.width / 2));
+  const right = Math.max(...nodes.map((n) => n.x + n.width / 2));
+  const bottom = Math.max(...nodes.map((n) => n.y + NODE_H));
+  const shiftX = 16 - left;
+  const width = right - left + 32;
+  const height = bottom + 24;
+  const q = query.trim().toLowerCase();
 
   const edgePath = (from, to) => {
     const a = nodes.find((n) => n.key === from);
@@ -115,28 +190,28 @@ export default function MindmapTree({ data }) {
     return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
   };
 
-  const arrow = (to) => {
-    const b = nodes.find((n) => n.key === to);
-    return `translate(${b.x + shiftX} ${b.y - 2}) rotate(180)`;
-  };
-
   const svg = (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
       {edges.map((e, i) => (
         <g key={`e${i}`}>
           <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="2" />
-          <circle r="4" fill="rgba(125,211,252,0.5)" transform={arrow(e.to)} />
+          <circle r="4" fill="rgba(125,211,252,0.5)" transform={`translate(${nodes.find((n) => n.key === e.to).x + shiftX} ${nodes.find((n) => n.key === e.to).y - 2}) rotate(180)`} />
         </g>
       ))}
       {nodes.map((n) => {
         const isRoot = n.key === tree.key;
+        const isFocused = focusKey === n.key;
+        const matches = q && latexToPlain(n.name).toLowerCase().includes(q);
         const label = latexToPlain(n.name);
         return (
           <g
             key={n.key}
             transform={`translate(${n.x + shiftX}, ${n.y})`}
             className="cursor-pointer"
-            onClick={() => setDetailKey(n.key)}
+            onClick={(e) => {
+              if (e.target.closest('[data-toggle]')) return;
+              onTap?.(n.key);
+            }}
           >
             <title>{label}</title>
             <rect
@@ -144,26 +219,27 @@ export default function MindmapTree({ data }) {
               width={n.width}
               height={NODE_H}
               rx={14}
-              fill={isRoot ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.06)'}
-              stroke={isRoot ? 'rgba(56,189,248,0.7)' : 'rgba(255,255,255,0.2)'}
-              strokeWidth={2}
+              fill={isRoot ? 'rgba(56,189,248,0.18)' : matches ? 'rgba(52,211,153,0.14)' : 'rgba(255,255,255,0.06)'}
+              stroke={isFocused ? 'rgba(56,189,248,1)' : matches ? 'rgba(52,211,153,0.8)' : isRoot ? 'rgba(56,189,248,0.7)' : 'rgba(255,255,255,0.2)'}
+              strokeWidth={isFocused || matches ? 3 : 2}
             />
             <text
               x={0}
               y={NODE_H / 2 + 4}
               textAnchor="middle"
-              fill={isRoot ? '#7dd3fc' : '#e2e8f0'}
+              fill={isRoot ? '#7dd3fc' : matches ? '#6ee7b7' : '#e2e8f0'}
               fontSize={n.font}
-              fontWeight={isRoot ? 700 : 500}
+              fontWeight={isRoot || matches ? 700 : 500}
             >
               {label}
             </text>
             {n.hasChildren && (
               <g
+                data-toggle
                 transform={`translate(${n.width / 2 - 18}, ${NODE_H / 2})`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleNode(n.key);
+                  onToggle?.(n.key);
                 }}
                 className="cursor-pointer"
               >
@@ -179,152 +255,14 @@ export default function MindmapTree({ data }) {
     </svg>
   );
 
-  const detailEntry = detailKey ? nodes.find((n) => n.key === detailKey) : null;
-
-  return (
-    <div>
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
-          Mind map
-        </span>
-        <span className="text-[10px] text-slate-500">
-          Tap a box to open it large - use − / + to collapse or expand - pinch / wheel to zoom
-        </span>
-      </div>
-      <div className="rounded-xl border border-white/10 bg-deep-950/60 overflow-hidden">
-        <ZoomCanvas fitFloor={FIT_FLOOR} width={width} height={height} svg={svg} />
-      </div>
-
-      {detailEntry && (
-        <DetailModal entry={detailEntry} root={tree} onClose={() => setDetailKey(null)} />
-      )}
-    </div>
-  );
+  return { svg, width, height, shiftX };
 }
 
-// ── Large readable detail view ─────────────────────────────────────────────
-// Opens when the user taps the ☰ icon on any box. Shows that branch as a
-// clean indented tree with full-size text (15px+) — every element is clearly
-// visible, no tiny map letters involved. Branch rows are tappable to drill
-// into that branch.
-function BranchTree({ entry, onJump, trail = [] }) {
-  const [open, setOpen] = useState(true);
-  const label = latexToPlain(entry.node.name);
-  const children = entry.children || [];
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={() => onJump(entry.key)}
-        className="flex items-center gap-2 w-full text-left group"
-      >
-        <span
-          className="text-slate-500 text-[10px] w-4 shrink-0"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (children.length) setOpen((o) => !o);
-          }}
-        >
-          {children.length ? (open ? '▼' : '▶') : '•'}
-        </span>
-        <span className="text-base sm:text-lg font-semibold text-white leading-snug group-hover:text-aqua-200 transition">
-          {label}
-        </span>
-        {children.length > 0 && (
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
-            {children.length}
-          </span>
-        )}
-      </button>
-      {open && children.length > 0 && (
-        <div className="ml-3 pl-3 border-l border-white/10 space-y-1.5 mt-1.5">
-          {children.map((c, i) => (
-            <BranchTree key={c.key} entry={c} onJump={onJump} trail={[...trail, label]} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function DetailModal({ entry, root, onClose }) {
-  const trail = [];
-  const findTrail = (e, path) => {
-    if (e.key === entry.key) {
-      trail.push(...path, e);
-      return true;
-    }
-    for (const c of e.children || []) {
-      if (findTrail(c, [...path, e])) return true;
-    }
-    return false;
-  };
-  findTrail(root, []);
-
-  const [activeKey, setActiveKey] = useState(entry.key);
-  let active = null;
-  const findActive = (e) => {
-    if (e.key === activeKey) return e;
-    for (const c of e.children || []) {
-      const r = findActive(c);
-      if (r) return r;
-    }
-    return null;
-  };
-  active = findActive(root) || entry;
-
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-deep-950/80 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="glass-strong rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-white/10 shrink-0">
-          <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-wider text-aqua-300 font-bold">Mind map detail</p>
-            {trail.length > 1 && (
-              <p className="text-xs text-slate-400 mt-0.5 truncate">
-                {trail.slice(0, -1).map((t) => latexToPlain(t.node.name)).join(' › ')}
-              </p>
-            )}
-            <h3 className="text-xl font-extrabold text-white mt-0.5 break-words">
-              {latexToPlain(active.node.name)}
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-slate-400 hover:text-white text-xl leading-none p-1 shrink-0"
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </div>
-        <div className="overflow-y-auto px-5 py-4 space-y-2">
-          <BranchTree entry={active} onJump={setActiveKey} />
-          <p className="text-xs text-slate-500 pt-2 border-t border-white/5">
-            Every box is shown at full size here. Tap a branch to jump to it.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// One zoom engine: fits the whole map on screen (never below FIT_FLOOR so
+// One zoom engine. Fits the whole map on screen (never below fitFloor so
 // labels stay visible), then pinch/wheel/+/- expand up to MAX_ZOOM and drag
 // pans. Two pointers control scale; one pointer pans; wheel zooms around the
 // cursor; everything stays clamped so the map never drifts away.
-function ZoomCanvas({ fitFloor, width, height, svg }) {
+function ZoomCanvas({ fitMode, fitFloor, width, height, svg, focus = null, containerClass = '' }) {
   const [fit, setFit] = useState(1);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -336,8 +274,16 @@ function ZoomCanvas({ fitFloor, width, height, svg }) {
     const el = ref.current;
     if (!el) return;
     const apply = () => {
-      const avail = el.clientWidth;
-      if (avail > 0 && width > 0) setFit(Math.max(fitFloor, Math.min(1, avail / width)));
+      if (fitMode === 'viewport') {
+        const availW = el.clientWidth;
+        const availH = el.clientHeight;
+        if (availW > 0 && width > 0) {
+          setFit(Math.max(fitFloor, Math.min(1, availW / width, availH / height)));
+        }
+      } else {
+        const avail = el.clientWidth;
+        if (avail > 0 && width > 0) setFit(Math.max(fitFloor, Math.min(1, avail / width)));
+      }
     };
     apply();
     const ro = new ResizeObserver(apply);
@@ -347,10 +293,9 @@ function ZoomCanvas({ fitFloor, width, height, svg }) {
       ro.disconnect();
       window.removeEventListener('resize', apply);
     };
-  }, [width, fitFloor]);
+  }, [width, height, fitMode, fitFloor]);
 
-  const base = fit;
-  const scale = base * zoom;
+  const scale = fit * zoom;
   const clampZoom = (z) => Math.min(MAX_ZOOM, Math.max(1, z));
 
   const zoomAt = (sx, sy, next) => {
@@ -411,13 +356,28 @@ function ZoomCanvas({ fitFloor, width, height, svg }) {
     pinch.current = null;
   };
 
+  // Jump to a node: center it and make sure it is at a readable zoom.
+  useEffect(() => {
+    if (!focus || !ref.current) return;
+    const el = ref.current;
+    const availW = el.clientWidth;
+    const availH = el.clientHeight;
+    const next = Math.max(zoom, 1.6);
+    setZoom(clampZoom(next));
+    setPan({ x: width / 2 - focus.x, y: availH / (2 * scale) - focus.y });
+  }, [focus, width, height, scale]);
+
   const { x: panX = 0, y: panY = 0 } = pan;
 
   return (
     <div
       ref={ref}
-      className="relative w-full overflow-hidden select-none"
-      style={{ touchAction: 'none', cursor: 'grab', height: Math.round(height * scale) }}
+      className={`relative w-full overflow-hidden select-none ${containerClass}`}
+      style={{
+        touchAction: 'none',
+        cursor: 'grab',
+        ...(fitMode === 'viewport' ? {} : { height: Math.round(height * scale) }),
+      }}
     >
       <div
         onPointerDown={onPointerDown}
@@ -440,31 +400,261 @@ function ZoomCanvas({ fitFloor, width, height, svg }) {
         </div>
 
         {/* zoom controls overlay */}
-        <div className="absolute top-2 right-2 flex items-center gap-1 bg-deep-950/70 border border-white/10 rounded-xl p-1">
+        <div className="absolute bottom-2 right-2 sm:bottom-2 sm:right-2 flex items-center gap-1 bg-deep-950/70 border border-white/10 rounded-xl p-1">
           <button
             type="button"
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 1.25))}
-            className="w-8 h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
-            aria-label="Expand"
+            className="w-9 h-9 sm:w-8 sm:h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
+            aria-label="Zoom in"
           >
             +
           </button>
           <button
             type="button"
             onClick={() => zoomAt(width / 2, 0, clampZoom(zoom * 0.8))}
-            className="w-8 h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
-            aria-label="Contract"
+            className="w-9 h-9 sm:w-8 sm:h-8 rounded-lg text-lg font-black text-slate-200 hover:bg-white/10"
+            aria-label="Zoom out"
           >
             −
           </button>
           <button
             type="button"
-            onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-            className="px-2 h-8 rounded-lg text-[11px] font-bold text-aqua-200 hover:bg-white/10"
+            onClick={() => {
+              setZoom(1);
+              setPan({ x: 0, y: 0 });
+            }}
+            className="px-2.5 h-9 sm:h-8 rounded-lg text-[11px] font-bold text-aqua-200 hover:bg-white/10"
             aria-label="Reset view"
           >
             Reset
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Full-screen workspace ─────────────────────────────────────────────────
+// The big "Open" view. Fits the entire map to the screen (auto-fit on mobile
+// and laptop), then gives the reader their own tools: search + jump, expand
+// all / collapse all, tap-to-focus a branch, zoom and pan.
+function MindmapWorkspace({ data, initialFocusKey = null, onClose }) {
+  const [collapsed, setCollapsed] = useState(new Set());
+  const [focusKey, setFocusKey] = useState(initialFocusKey);
+  const [query, setQuery] = useState('');
+  const [focusTick, setFocusTick] = useState(0);
+
+  // When a node is tapped in the inline preview, jump straight to it here.
+  useEffect(() => {
+    if (initialFocusKey) {
+      const tree = layout(data, new Set());
+      const ancestors = [];
+      const find = (e) => {
+        if (e.key === initialFocusKey) return true;
+        for (const c of e.children || []) {
+          if (find(c)) {
+            ancestors.push(e.key);
+            return true;
+          }
+        }
+        return false;
+      };
+      find(tree);
+      // Expand the path: drop ancestor keys from the collapsed set.
+      setCollapsed((prev) => {
+        const next = new Set(prev);
+        ancestors.forEach((k) => next.delete(k));
+        return next;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFocusKey]);
+
+  const tree = useMemo(() => layout(data, collapsed), [data, collapsed]);
+  const view = useMemo(() => flatten(tree, collapsed), [tree, collapsed]);
+  const nonLeafKeys = useMemo(() => {
+    const keys = [];
+    const walk = (n) => {
+      if (n.children && n.children.length) {
+        keys.push(n.key);
+        for (const c of n.children) walk(c);
+      }
+    };
+    walk(tree);
+    return keys;
+  }, [tree]);
+
+  // Esc closes the workspace.
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const expandAll = () => setCollapsed(new Set());
+  const collapseAll = () => setCollapsed(new Set(nonLeafKeys));
+
+  const toggleNode = (key) => {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  // Focus a node: expand its ancestors so it is visible, then center on it.
+  const focusNode = (key) => {
+    const ancestors = [];
+    const find = (e) => {
+      if (e.key === key) return true;
+      for (const c of e.children || []) {
+        if (find(c)) {
+          ancestors.push(e.key);
+          return true;
+        }
+      }
+      return false;
+    };
+    find(tree);
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      ancestors.forEach((k) => next.delete(k));
+      return next;
+    });
+    setFocusKey(key);
+    setFocusTick((t) => t + 1);
+  };
+
+  const focusNodeEntry = focusKey ? view.nodes[view.pathOf.get(focusKey)] : null;
+  const canvas = buildCanvas(tree, view, collapsed, focusKey, query, {
+    onTap: (key) => {
+      // Tap = jump/center that branch (and read it in the detail pane).
+      focusNode(key);
+    },
+    onToggle: toggleNode,
+  });
+
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return view.nodes.filter((n) => latexToPlain(n.name).toLowerCase().includes(q));
+  }, [query, view]);
+
+  // When the search narrows the tree to nothing visible, expand to reveal matches.
+  useEffect(() => {
+    if (query.trim() && matches.length) {
+      const needed = new Set(collapsed);
+      matches.forEach((m) => {
+        const find = (e) => {
+          if (e.key === m.key) return true;
+          for (const c of e.children || []) {
+            if (find(c)) {
+              needed.delete(e.key);
+              return true;
+            }
+          }
+          return false;
+        };
+        find(tree);
+      });
+      if (needed.size !== collapsed.size) setCollapsed(needed);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex items-center justify-center p-0 sm:p-4 bg-deep-950/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="glass-strong rounded-none sm:rounded-3xl w-full h-full sm:h-auto sm:max-h-[92vh] sm:w-[min(1100px,94vw)] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-white/10 shrink-0 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] uppercase tracking-wider text-aqua-300 font-bold">Mind map · full view</p>
+            <h3 className="text-lg sm:text-xl font-extrabold text-white truncate">{latexToPlain(data.name)}</h3>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="relative">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search nodes…"
+                className="w-40 sm:w-56 bg-white/5 border border-white/15 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-aqua-400/60"
+              />
+              {matches.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-aqua-400 text-deep-900 text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
+                  {matches.length}
+                </span>
+              )}
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white text-xs"
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={expandAll}
+              className="px-3 h-9 rounded-xl text-xs font-bold text-slate-200 bg-white/5 border border-white/10 hover:bg-white/10 transition"
+            >
+              Expand all
+            </button>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="px-3 h-9 rounded-xl text-xs font-bold text-slate-200 bg-white/5 border border-white/10 hover:bg-white/10 transition"
+            >
+              Collapse all
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-3.5 h-9 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-aqua-400 to-aqua-300 text-deep-900 hover:brightness-110 transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+
+        {/* Canvas — auto-fits the whole map to whatever screen size */}
+        <div className="flex-1 min-h-0 relative">
+          <ZoomCanvas
+            fitMode="viewport"
+            fitFloor={FIT_FLOOR}
+            width={canvas.width}
+            height={canvas.height}
+            svg={canvas.svg}
+            containerClass="h-full"
+            focus={focusNodeEntry ? { x: focusNodeEntry.x + canvas.shiftX, y: focusNodeEntry.y, tick: focusTick } : null}
+          />
+
+          {/* tap-to-focus hint + match count */}
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 pointer-events-none">
+            {matches.length > 0 ? (
+              <span className="text-[11px] font-bold bg-emerald-400/15 border border-emerald-400/30 text-emerald-200 rounded-full px-3 py-1">
+                {matches.length} match{matches.length === 1 ? '' : 'es'} highlighted — click one to jump
+              </span>
+            ) : (
+              <span className="hidden sm:block text-[11px] text-slate-500 bg-deep-950/50 border border-white/5 rounded-full px-3 py-1">
+                Click any box to focus it · drag to pan · scroll / pinch to zoom
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile hint bar */}
+        <div className="sm:hidden px-4 py-2 border-t border-white/10 text-[11px] text-slate-500 text-center shrink-0">
+          Drag to pan · pinch to zoom · tap a box to focus
         </div>
       </div>
     </div>

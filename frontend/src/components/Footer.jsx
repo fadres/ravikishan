@@ -78,6 +78,37 @@ export default function Footer() {
           <span className="font-bold text-gradient-purple">Creator ~ Owner: Ravikishan</span>
         </p>
 
+        {/* Owner introduction — Owner · Developer · Management */}
+        <div className="mt-6 max-w-xl mx-auto rounded-2xl glass-strong p-5 text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-aqua-400 to-aqua-300 text-deep-900 font-black text-xl flex items-center justify-center shrink-0 shadow-[0_0_18px_-4px_rgba(56,189,248,0.7)]">
+              R
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-widest font-bold text-aqua-300">
+                Meet the creator
+              </p>
+              <h3 className="glow-gold text-lg font-extrabold leading-tight">Ravikishan</h3>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-aqua-400/15 border border-aqua-400/35 text-aqua-200">
+              Owner
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-400/15 border border-emerald-400/35 text-emerald-200">
+              Developer
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400/15 border border-amber-400/35 text-amber-200">
+              Management
+            </span>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-slate-400">
+            Ravikishan is the owner, developer and manager of Study Vault. Every line of code, every
+            curated note and every feature on this platform is built and managed personally, driven
+            by a single goal — helping every student master their NEB board exams with confidence.
+          </p>
+        </div>
+
         {/* Official accreditation — NEB / CDC */}
         <div className="mt-6 max-w-xl mx-auto rounded-2xl border border-white/10 p-4">
           <p className="text-[11px] uppercase tracking-widest font-bold text-aqua-300">
