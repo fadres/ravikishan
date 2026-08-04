@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { ScoreGauge, MatchBars, CompressionChart } from '../components/AiCharts.jsx';
 
 const inputCls =
   'w-full rounded-xl bg-white/10 border border-white/15 px-4 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60';
@@ -261,9 +262,14 @@ export default function AiToolsPage() {
               <h2 className="text-sm font-bold uppercase tracking-wider text-aqua-300 mb-3">Summary</h2>
               <Pre>{result.summary}</Pre>
               {result.stats && (
-                <p className="mt-2 text-xs text-slate-500">
-                  {result.stats.totalWords} words → {result.stats.summaryWords} bullet points
-                </p>
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <CompressionChart
+                    before={result.stats.totalWords}
+                    after={result.stats.summaryWords}
+                    beforeLabel="Chapter notes"
+                    afterLabel="Your summary"
+                  />
+                </div>
               )}
             </section>
           )}
@@ -283,15 +289,14 @@ export default function AiToolsPage() {
               <h2 className="text-sm font-bold uppercase tracking-wider text-aqua-300 mb-3">Answer</h2>
               <Pre>{result.answer}</Pre>
               {result.sources?.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Sources</p>
-                  <ul className="space-y-1.5">
-                    {result.sources.map((s) => (
-                      <li key={s.id} className="text-xs text-slate-400">
-                        {s.title} · {s.match}% match
-                      </li>
-                    ))}
-                  </ul>
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                    Where this answer came from · relevance
+                  </p>
+                  <MatchBars
+                    color="#34d399"
+                    items={result.sources.map((s) => ({ label: s.title, value: s.match }))}
+                  />
                 </div>
               )}
             </section>
@@ -360,15 +365,20 @@ export default function AiToolsPage() {
           {result.verdict && (
             <section className="glass rounded-2xl p-5">
               <h2 className="text-sm font-bold uppercase tracking-wider text-aqua-300 mb-3">Verdict</h2>
-              <p className={`text-lg font-extrabold ${result.verdict === 'correct' ? 'text-emerald-300' : result.verdict === 'partial' ? 'text-amber-300' : 'text-rose-300'}`}>
-                {result.verdict.toUpperCase()} · {result.score}%
-              </p>
-              {result.feedback && <Pre>{result.feedback}</Pre>}
-              {result.missingPoints?.length > 0 && (
-                <p className="mt-2 text-xs text-slate-400">
-                  Missing keywords: {result.missingPoints.join(', ')}
-                </p>
-              )}
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <ScoreGauge score={result.score} label="How well your answer matched the model answer." />
+                <div className="flex-1 min-w-0">
+                  <p className={`text-lg font-extrabold ${result.verdict === 'correct' ? 'text-emerald-300' : result.verdict === 'partial' ? 'text-amber-300' : 'text-rose-300'}`}>
+                    {result.verdict.toUpperCase()}
+                  </p>
+                  {result.feedback && <div className="mt-1"><Pre>{result.feedback}</Pre></div>}
+                  {result.missingPoints?.length > 0 && (
+                    <p className="mt-2 text-xs text-slate-400">
+                      Missing keywords: {result.missingPoints.join(', ')}
+                    </p>
+                  )}
+                </div>
+              </div>
             </section>
           )}
 
@@ -393,9 +403,15 @@ export default function AiToolsPage() {
                 ))}
               </ul>
               {result.weakSubjects?.length > 0 && (
-                <p className="mt-4 text-xs text-slate-400">
-                  Watch out for: {result.weakSubjects.map((s) => `${s.subject} (${s.accuracy}%)`).join(', ')}
-                </p>
+                <div className="mt-5 pt-4 border-t border-white/10">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                    Accuracy by subject · weakest first
+                  </p>
+                  <MatchBars
+                    color="#fb7185"
+                    items={result.weakSubjects.map((s) => ({ label: s.subject, value: s.accuracy }))}
+                  />
+                </div>
               )}
             </section>
           )}
