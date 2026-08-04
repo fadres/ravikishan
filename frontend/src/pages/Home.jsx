@@ -334,7 +334,7 @@ export default function Home() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Compact welcome */}
-      <section className="glass rounded-2xl px-6 py-6 text-center relative overflow-hidden">
+      <section className="hero-gradient glass rounded-2xl px-6 py-6 text-center relative overflow-hidden">
         <span
           aria-hidden="true"
           className="absolute -top-20 -right-16 w-64 h-64 rounded-full opacity-40 blur-3xl"
@@ -393,7 +393,8 @@ export default function Home() {
 
           <QuickInspire />
 
-          <span className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-bold px-3 py-1 rounded-full bg-orange-400/15 text-orange-300 border border-orange-400/25">
+          {/* Warm off-white streak bar — .topbar-warm styles this chip */}
+          <span className="topbar-warm inline-flex items-center gap-1.5 mt-3 text-[11px] font-bold px-3 py-1 rounded-full border border-orange-300/40">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2c2.5 4.5 5 6.5 5 10a5 5 0 1 1-10 0c0-3.5 2.5-5.5 5-10z" />
             </svg>

@@ -91,6 +91,24 @@ export default function Footer() {
             under the Ministry of Education, Science and Technology. This site is not an official
             NEB or CDC product.
           </p>
+          <dl className="mt-3 pt-3 border-t border-white/10 grid gap-2 text-left">
+            <div>
+              <dt className="text-[11px] font-bold text-slate-200">CDC — Curriculum Development Centre</dt>
+              <dd className="mt-0.5 text-[11px] leading-relaxed text-slate-400">
+                The professional body under the Ministry of Education, Science and Technology,
+                Sanothimi, Bhaktapur, that develops, reviews and approves the national school
+                curriculum, textbooks and study materials for Grades 1 to 12.
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] font-bold text-slate-200">NEB — National Examinations Board</dt>
+              <dd className="mt-0.5 text-[11px] leading-relaxed text-slate-400">
+                The statutory board based in Sanothimi, Bhaktapur that formulates the approved
+                syllabus, conducts the Grade 11 and 12 board examinations (and the previous SLC/SEE
+                era exams) and publishes the national results nationwide.
+              </dd>
+            </div>
+          </dl>
         </div>
 
         <p className="mt-6 max-w-2xl mx-auto text-xs leading-relaxed text-slate-500">
