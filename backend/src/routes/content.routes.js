@@ -193,10 +193,15 @@ const blockMetaOnly = (b) => ({
   sortOrder: b.sortOrder,
 });
 
-const decorateBlock = (b, viewerLevel) => {
+const decorateBlock = (b, viewerLevel, dupInfo = new Map()) => {
   const sectionIndex = b.sectionIndex ?? sectionIndexForBlockType(b.blockType);
   const visible = isSectionVisible(sectionIndex, b.accessLevel, viewerLevel);
+  const dup = dupInfo.get(b.id);
+  const dupFields = dup
+    ? { dupGroupId: dup.dupGroupId, dupTypeIndex: dup.dupTypeIndex, dupCount: dup.dupCount }
+    : { dupGroupId: null, dupTypeIndex: null, dupCount: null };
   const base = {
+    ...dupFields,
     id: b.id,
     topicId: b.topicId,
     blockType: b.blockType,
@@ -219,6 +224,34 @@ const decorateBlock = (b, viewerLevel) => {
     metadata: b.metadata,
     isDuplicateOf: b.isDuplicateOf,
   };
+};
+
+// Duplicate detection: blocks whose normalized body is identical within the
+// same topic are treated as repeated versions of one concept. The first is the
+// original (type 1); repeats are type 2, 3, ... The API exposes dupGroupId,
+// dupTypeIndex and dupCount so the frontend can collapse them into one box
+// with per-version (Type 1/2/3) interfaces.
+const normalizeBody = (s) => (s || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+const computeDuplicateGroups = (blocks) => {
+  const groups = new Map();
+  for (const b of blocks) {
+    const body = normalizeBody(b.contentRichtext);
+    if (!body || body.length < 40) continue;
+    const key = `${b.topicId || 'untitled'}|${b.blockType}|${body}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(b);
+  }
+  const info = new Map();
+  let groupSeq = 0;
+  for (const [, group] of groups) {
+    if (group.length < 2) continue;
+    const groupId = `dup-${++groupSeq}`;
+    group.forEach((b, i) =>
+      info.set(b.id, { dupGroupId: groupId, dupTypeIndex: i + 1, dupCount: group.length })
+    );
+  }
+  return info;
 };
 
 // GET /api/subjects/:subjectSlug/chapters/:chapterSlug
@@ -265,6 +298,7 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
   ]);
 
   // Degradation: compute per-topic coverage and hide out-of-tier sections.
+  const dupInfo = computeDuplicateGroups(blocks);
   const topicCoverage = new Map();
   const blocksByTopic = new Map();
   for (const b of blocks) {
@@ -295,7 +329,7 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
       coveragePercent: topicCoverage.get(t.id) ?? 0,
       premium: topicCoverage.get(t.id) === 100,
     })),
-    blocks: blocks.map((b) => decorateBlock(b, viewerLevel)),
+    blocks: blocks.map((b) => decorateBlock(b, viewerLevel, dupInfo)),
   });
 });
 

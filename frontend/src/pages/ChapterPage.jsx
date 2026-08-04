@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -93,6 +93,48 @@ export default function ChapterPage() {
     [chapter, siblings, topics, blocks],
   );
 
+  // ── Duplicate concepts (Type 1/2/3) ─────────────────────────────
+  // Blocks with the same body (dupGroupId) are repeated versions of one
+  // concept. We collapse each dup group into a single concept box with
+  // Type-1/2/3 tabs; the first occurrence keeps its position and anchor.
+  const slotsByTopic = useMemo(() => {
+    return structure.topics.map((t) => {
+      const groups = new Map();
+      const used = new Set();
+      const dupOf = (c) => {
+        const b = c.blocks.find((x) => x.dupGroupId);
+        return b ? { groupId: b.dupGroupId, typeIndex: b.dupTypeIndex } : null;
+      };
+      t.concepts.forEach((c, ci) => {
+        const d = dupOf(c);
+        if (d) {
+          if (!groups.has(d.groupId)) groups.set(d.groupId, []);
+          groups.get(d.groupId).push({ ci, typeIndex: d.typeIndex });
+        }
+      });
+      const slots = [];
+      for (let ci = 0; ci < t.concepts.length; ci++) {
+        if (used.has(ci)) continue;
+        const d = dupOf(t.concepts[ci]);
+        if (d && groups.has(d.groupId)) {
+          const members = groups.get(d.groupId);
+          members.forEach((m) => used.add(m.ci));
+          const sorted = [...members].sort((a, b) => a.typeIndex - b.typeIndex);
+          slots.push({
+            kind: 'group',
+            groupId: d.groupId,
+            conceptIndex: sorted[0].ci,
+            variantIndexes: sorted.map((m) => m.ci),
+          });
+        } else if (!d) {
+          used.add(ci);
+          slots.push({ kind: 'concept', conceptIndex: ci });
+        }
+      }
+      return slots;
+    });
+  }, [structure]);
+
   // ── Reading tracker ─────────────────────────────────────────────
   useEffect(() => {
     if (!chapter?.id) return;
@@ -115,16 +157,17 @@ export default function ChapterPage() {
 
   const markRead = (key) => setReadMap((m) => (m[key] ? m : { ...m, [key]: true }));
 
-  const totalConcepts = structure.topics.reduce((n, t) => n + t.concepts.length, 0);
+  const totalConcepts = slotsByTopic.reduce((n, slots) => n + slots.length, 0);
   const readCount = structure.topics.reduce(
-    (n, t) => n + t.concepts.filter((c, ci) => readMap[`${t.number}-${ci}`]).length,
+    (n, t, ti) => n + slotsByTopic[ti].filter((s) => readMap[`${t.number}-${s.conceptIndex}`]).length,
     0,
   );
   const percent = totalConcepts ? Math.round((readCount / totalConcepts) * 100) : 0;
 
-  const topicRead = (t) => {
-    const total = t.concepts.length;
-    const done = t.concepts.filter((c, ci) => readMap[`${t.number}-${ci}`]).length;
+  const topicRead = (t, ti) => {
+    const slots = slotsByTopic[ti] || [];
+    const total = slots.length;
+    const done = slots.filter((s) => readMap[`${t.number}-${s.conceptIndex}`]).length;
     return { done, total, complete: total > 0 && done === total };
   };
 
@@ -331,8 +374,8 @@ export default function ChapterPage() {
       {/* Outline chips — jump to any topic; shows read progress */}
       {structure.topics.length > 1 && (
         <div className="mb-8 flex gap-2 overflow-x-auto pb-1.5 -mx-1 px-1">
-          {structure.topics.map((t) => {
-            const tr = topicRead(t);
+          {structure.topics.map((t, ti) => {
+            const tr = topicRead(t, ti);
             const active = activeTopic === t.number;
             return (
               <button
@@ -499,7 +542,7 @@ export default function ChapterPage() {
       )}
 
       {structure.topics.map((t, ti) => {
-        const tr = topicRead(t);
+        const tr = topicRead(t, ti);
         const synonyms = Array.isArray(t.topic.metadata?.synonyms) ? t.topic.metadata.synonyms.filter(Boolean) : [];
         const topicColor = tr.complete ? '#34d399' : STRUCTURE_COLORS.topic;
         return (
@@ -551,7 +594,29 @@ export default function ChapterPage() {
 
                 {/* Concepts + every block embedded in this one box */}
                 <div className="mt-5">
-                  {t.concepts.map((c, ci) => {
+                  {slotsByTopic[ti].map((slot) => {
+                    if (slot.kind === 'group') {
+                      const anchor = conceptAnchor(t.number, slot.conceptIndex);
+                      return (
+                        <div key={`g-${slot.groupId}`} id={anchor} className="scroll-mt-32 mt-6 first:mt-0">
+                          <VariantBox
+                            variants={slot.variantIndexes.map((ci) => ({ c: t.concepts[ci], ci }))}
+                            topicNumber={t.number}
+                            themeColor={subject.themeColor}
+                            contactEmail={contactEmail}
+                            hasContent={hasContent}
+                            readMap={readMap}
+                            flashId={flashId}
+                            copyAnchor={copyAnchor}
+                            copiedAnchor={copiedAnchor}
+                            anchor={anchor}
+                            headerH={headerH}
+                          />
+                        </div>
+                      );
+                    }
+                    const ci = slot.conceptIndex;
+                    const c = t.concepts[ci];
                     const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
                     const anchor = conceptAnchor(t.number, ci);
                     const isRead = Boolean(readMap[`${t.number}-${ci}`]);
@@ -626,6 +691,202 @@ export default function ChapterPage() {
           </section>
         );
       })}
+    </div>
+  );
+}
+
+// One concept's full interface: numeral badge + head title + link button +
+// its embedded blocks. Used both for single concepts and as the inner panel
+// of a VariantBox (each Type gets its own interface).
+function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, flashId, copyAnchor, copiedAnchor, anchorOverride }) {
+  const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
+  const anchor = anchorOverride || conceptAnchor(t.number, ci);
+  const isRead = Boolean(readMap[`${t.number}-${ci}`]);
+  const numeralBadge = (
+    <span
+      className="inline-flex items-center justify-center min-w-[2rem] h-6 px-1.5 rounded-full text-xs font-extrabold shrink-0"
+      style={
+        isRead
+          ? { color: '#34d399', border: `1.5px solid #34d39988`, background: '#34d3991a' }
+          : { color: STRUCTURE_COLORS.concept, border: `1.5px solid ${STRUCTURE_COLORS.concept}88`, background: `${STRUCTURE_COLORS.concept}1a` }
+      }
+    >
+      {isRead ? '✓' : c.numeral}
+    </span>
+  );
+  return (
+    <div>
+      <div className="flex items-center gap-2.5">
+        {numeralBadge}
+        {headBlock?.title && <h3 className="text-base font-bold text-white leading-snug">{headBlock.title}</h3>}
+        <button
+          onClick={() => copyAnchor(anchor)}
+          title="Copy link to this concept"
+          className="ml-auto shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full glass text-slate-300 hover:text-aqua-200 hover:border-aqua-400/50 transition"
+        >
+          {copiedAnchor === anchor ? 'Copied ✓' : 'Link'}
+        </button>
+      </div>
+      <div className="mt-3 divide-y divide-white/5 rounded-2xl border border-white/10 bg-black/20 px-3.5 sm:px-5">
+        {c.blocks.map((block, bi) => {
+          const isHead = block === headBlock;
+          const bKey = `${t.number}-${ci}-${bi}`;
+          return (
+            <div
+              key={block.id ?? bKey}
+              id={`b-${bKey}`}
+              data-block-id={block.id || ''}
+              className={`py-3.5 scroll-mt-32 ${flashId === bKey ? 'rk-flash' : ''}`}
+            >
+              {hasContent(block) ? (
+                <BlockRenderer
+                  block={block}
+                  themeColor={themeColor}
+                  hideTitle={isHead && block.title}
+                  showSection
+                  embedded
+                />
+              ) : (
+                <LockedBlockCard
+                  block={block}
+                  themeColor={themeColor}
+                  topicLabel={`${t.number}.${ci + 1}`}
+                  contactEmail={contactEmail}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Repeated concepts collapse into ONE box: glowing Type-1/2/3 tabs on top,
+// each opening its own interface below. The tab strip hides once the reader
+// scrolls past it (sticky within the box) — scrolling back up reveals it.
+function VariantBox({
+  variants,
+  topicNumber,
+  themeColor,
+  contactEmail,
+  hasContent,
+  readMap,
+  flashId,
+  copyAnchor,
+  copiedAnchor,
+  anchor,
+  headerH,
+}) {
+  const [active, setActive] = useState(0);
+  const stripRef = useRef(null);
+  const [stripHidden, setStripHidden] = useState(false);
+
+  useEffect(() => {
+    const el = stripRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => setStripHidden(!e.isIntersecting),
+      { rootMargin: `-${headerH + 56}px 0px -75% 0px`, threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [headerH, active]);
+
+  const showStrip = () => {
+    stripRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setStripHidden(false);
+  };
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/25 px-3.5 sm:px-5 py-4">
+      {/* Type tabs — one glowing box per version; hidden after scrolling */}
+      <div ref={stripRef} className={`scroll-mt-32 transition-opacity duration-200 ${stripHidden ? 'invisible pointer-events-none' : ''}`}>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">
+          Same concept · {variants.length} version{variants.length > 1 ? 's' : ''} in the notes
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          {variants.map((v, vi) => {
+            const isActive = vi === active;
+            const vHead = v.c.blocks.find((b) => b.blockType === 'note_topic');
+            return (
+              <button
+                key={v.ci}
+                onClick={() => setActive(vi)}
+                aria-pressed={isActive}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition ${
+                  isActive
+                    ? 'text-white'
+                    : 'glass text-slate-300 hover:text-white hover:border-violet-400/50'
+                }`}
+                style={
+                  isActive
+                    ? { background: `${STRUCTURE_COLORS.concept}33`, border: `1.5px solid ${STRUCTURE_COLORS.concept}`, boxShadow: `0 0 18px -4px ${STRUCTURE_COLORS.concept}` }
+                    : undefined
+                }
+              >
+                <span
+                  className="inline-flex items-center justify-center min-w-[1.1rem] px-1 rounded-md text-[10px] font-extrabold"
+                  style={
+                    isActive
+                      ? { background: STRUCTURE_COLORS.concept, color: '#0b0a1f' }
+                      : { background: `${STRUCTURE_COLORS.concept}22`, color: STRUCTURE_COLORS.concept }
+                  }
+                >
+                  {vi + 1}
+                </span>
+                Type {vi + 1}
+                {vHead?.title ? <span className="max-w-[130px] truncate text-slate-300">· {vHead.title}</span> : null}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Collapsed chip — lets the reader bring the tabs back */}
+      {stripHidden && (
+        <button
+          onClick={showStrip}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-bold text-violet-200 hover:text-white hover:border-violet-400/50 transition"
+        >
+          <span
+            className="inline-flex items-center justify-center min-w-[1.1rem] px-1 rounded-md text-[10px] font-extrabold"
+            style={{ background: STRUCTURE_COLORS.concept, color: '#0b0a1f' }}
+          >
+            {active + 1}
+          </span>
+          Type {active + 1} of {variants.length} · show types
+        </button>
+      )}
+
+      {/* Marginal conceptual paragraph — explains what the types are */}
+      <p
+        className="mt-3 text-[11px] leading-relaxed text-slate-400 border-l-2 pl-2.5"
+        style={{ borderColor: `${STRUCTURE_COLORS.concept}88` }}
+      >
+        This concept is recorded {variants.length} times in the syllabus notes — the same idea
+        appears as Type {variants.length > 1 ? '1, 2' : '1'}
+        {variants.length > 2 ? ` and ${variants.length}` : ''}. Type 1 is the original entry;
+        the later types are repeated copies kept exactly as written. Each type opens its own
+        content below — switch to compare wording, formulas or examples across versions.
+      </p>
+
+      {/* Active type's own interface */}
+      <div className="mt-3">
+        <ConceptBody
+          c={variants[active].c}
+          ci={variants[active].ci}
+          t={{ number: topicNumber }}
+          themeColor={themeColor}
+          contactEmail={contactEmail}
+          hasContent={hasContent}
+          readMap={readMap}
+          flashId={flashId}
+          copyAnchor={copyAnchor}
+          copiedAnchor={copiedAnchor}
+          anchorOverride={anchor}
+        />
+      </div>
     </div>
   );
 }
