@@ -1,8 +1,36 @@
+import { useEffect, useMemo, useState } from 'react';
+
 // Mini markdown → React renderer.
 // Deliberately dependency-free and XSS-safe: all input is HTML-escaped first;
 // only bold/italic/inline-code/list/quote/heading tokens are parsed.
-// LaTeX is NOT rendered — $...$ math and \commands are converted to plain,
-// readable text by latexToPlain() so no raw LaTeX ever reaches the screen.
+// LaTeX is only rendered when a block actually contains math: markdown()
+// detects $...$ / $$...$$ delimiters and lazily loads KaTeX just for that
+// page — every other page stays lean (no KaTeX bytes in the bundle). Until
+// KaTeX arrives (or on load failure), $...$ math falls back to readable
+// plain text via latexToPlain() so nothing is ever left raw or blank.
+
+const MATH_DETECT_RE = /\$[^$]+\$/;
+
+// True when the content contains at least one $...$ / $$...$$ math span.
+export function hasMath(content) {
+  return MATH_DETECT_RE.test(String(content || ''));
+}
+
+// Splits text into plain segments and $...$ math spans (in document order).
+function splitMath(text) {
+  const parts = [];
+  const re = /\$[^$\n]+\$/g;
+  let last = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parts.push({ text: text.slice(last, m.index) });
+    parts.push({ math: m[0] });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push({ text: text.slice(last) });
+  if (!parts.length) parts.push({ text });
+  return parts;
+}
 
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (c) => ({
@@ -64,11 +92,12 @@ export function latexToPlain(input) {
   return s;
 }
 
-// Inline tokenizer: `code`, **bold**, *italic* — math was already cleaned by
-// latexToPlain() upstream, so nothing raw can appear. HTML already escaped.
-function renderInline(text, keyPrefix) {
+// Inline tokenizer: `code`, **bold**, *italic*, and $math$ — math is rendered
+// with KaTeX when loaded, otherwise converted to plain text by latexToPlain().
+// HTML already escaped.
+function renderInline(text, keyPrefix, katex) {
   const tokens = [];
-  const regex = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g;
+  const regex = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*|\$[^$\n]+\$)/g;
   let last = 0;
   let m;
   let i = 0;
@@ -88,6 +117,27 @@ function renderInline(text, keyPrefix) {
           {token.slice(2, -2)}
         </strong>,
       );
+    } else if (token.startsWith('$')) {
+      const math = token.slice(1, -1).trim();
+      if (katex) {
+        try {
+          tokens.push(
+            <span
+              key={key}
+              className="inline-block align-middle"
+              dangerouslySetInnerHTML={{ __html: katex.renderToString(math, { throwOnError: false }) }}
+            />,
+          );
+          continue;
+        } catch {
+          /* fall through to plain-text rendering */
+        }
+      }
+      tokens.push(
+        <span key={key} className="text-aqua-100 font-mono text-[0.95em]">
+          {latexToPlain(math)}
+        </span>,
+      );
     } else {
       tokens.push(
         <em key={key} className="italic">
@@ -101,8 +151,35 @@ function renderInline(text, keyPrefix) {
   return tokens;
 }
 
-function renderText(text, keyPrefix) {
-  return renderInline(escapeHtml(latexToPlain(text)), keyPrefix);
+function renderText(text, keyPrefix, katex) {
+  if (!hasMath(text)) return renderInline(escapeHtml(latexToPlain(text)), keyPrefix, katex);
+  // Math present: keep $...$ spans intact (so KaTeX can render them), clean
+  // the surrounding text through latexToPlain, and merge everything in order.
+  return splitMath(text).flatMap((part, pi) => {
+    const kp = `${keyPrefix}-m${pi}`;
+    if (part.math) {
+      const math = part.math.slice(1, -1).trim();
+      if (katex) {
+        try {
+          return [
+            <span
+              key={kp}
+              className="inline-block align-middle"
+              dangerouslySetInnerHTML={{ __html: katex.renderToString(math, { throwOnError: false }) }}
+            />,
+          ];
+        } catch {
+          /* fall through to plain-text rendering */
+        }
+      }
+      return [
+        <span key={kp} className="text-aqua-100 font-mono text-[0.95em]">
+          {latexToPlain(math)}
+        </span>,
+      ];
+    }
+    return renderInline(escapeHtml(latexToPlain(part.text)), kp, katex);
+  });
 }
 
 // Table cells render as plain, standard text: LaTeX is converted (never
@@ -116,7 +193,7 @@ function InlineBlock({ children, key }) {
 }
 
 // Nested list renderer: builds a tree from indented "- " / "1. " lines.
-function ListGroup({ items, keyPrefix }) {
+function ListGroup({ items, keyPrefix, katex }) {
   const buildTree = () => {
     const root = { children: [] };
     const stack = [{ indent: -1, node: root }];
@@ -148,7 +225,7 @@ function ListGroup({ items, keyPrefix }) {
         >
           {group.map((node, gi) => (
             <li key={`${keyPrefix}-i${depth}-${gi}`} className={depth ? 'ml-2' : ''}>
-              {renderText(node.text, `${keyPrefix}-t${depth}-${gi}`)}
+              {renderText(node.text, `${keyPrefix}-t${depth}-${gi}`, katex)}
               {node.children.length > 0 && renderLevel(node.children, depth + 1)}
             </li>
           ))}
@@ -163,9 +240,50 @@ function ListGroup({ items, keyPrefix }) {
 }
 
 // Block parser: handles paragraphs, #/##/### headings, > quotes,
-// - and 1. lists (with nested indentation), $$ display math (as plain text),
-// --- rules, and pipe/tab tables.
+// - and 1. lists (with nested indentation), $$ display math (as plain text
+// when KaTeX is not loaded yet), --- rules, and pipe/tab tables.
 export default function Markdown({ content, className = '' }) {
+  const [katex, setKatex] = useState(null);
+
+  // Lazy-load KaTeX only when this block actually contains math, so pages
+  // without equations never pay the KaTeX bundle cost. Falls back to
+  // plain-text rendering while loading or on any failure.
+  const needsMath = useMemo(() => hasMath(content), [content]);
+  useEffect(() => {
+    if (!needsMath) return;
+    let cancelled = false;
+    import('katex')
+      .then(async (mod) => {
+        if (cancelled) return;
+        const katexMod = mod.default || mod;
+        await import('katex/dist/katex.min.css');
+        if (!cancelled) setKatex(katexMod);
+      })
+      .catch(() => {
+        /* leave katex null → plain-text fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsMath]);
+
+  const renderMath = (math, displayMode) => {
+    if (katex) {
+      try {
+        return (
+          <span
+            dangerouslySetInnerHTML={{
+              __html: katex.renderToString(math, { throwOnError: false, displayMode }),
+            }}
+          />
+        );
+      } catch {
+        /* fall through to plain-text rendering */
+      }
+    }
+    return <span className="text-aqua-100 font-mono">{latexToPlain(math)}</span>;
+  };
+
   const lines = String(content || '').split(/\r?\n/);
   const out = [];
   let i = 0;
@@ -175,7 +293,7 @@ export default function Markdown({ content, className = '' }) {
   while (i < lines.length) {
     const line = lines[i];
 
-    // display math block — rendered as plain, readable text (no KaTeX)
+    // display math block — rendered with KaTeX when loaded, plain text otherwise
     const dm = line.match(/^\$\$(.*?)\$\$\s*$/);
     if (dm) {
       const cleaned = latexToPlain(dm[1]);
@@ -185,7 +303,7 @@ export default function Markdown({ content, className = '' }) {
             key={nextKey()}
             className="my-3 overflow-x-auto py-2 px-3 rounded-xl bg-white/5 border border-white/10 font-mono text-[15px] text-aqua-100"
           >
-            {cleaned}
+            {renderMath(dm[1].trim(), true)}
           </div>,
         );
       }
@@ -200,7 +318,7 @@ export default function Markdown({ content, className = '' }) {
       const Tag = level === 1 ? 'h3' : level === 2 ? 'h4' : 'h5';
       out.push(
         <Tag key={nextKey()} className={`${level === 1 ? 'text-lg' : 'text-base'} font-bold text-white mt-4 mb-2`}>
-          {renderText(h[2], nextKey())}
+          {renderText(h[2], nextKey(), katex)}
         </Tag>,
       );
       i += 1;
@@ -223,7 +341,7 @@ export default function Markdown({ content, className = '' }) {
       }
       out.push(
         <blockquote key={nextKey()} className="my-2 border-l-2 border-aqua-400/60 pl-3 py-1 text-slate-200 bg-white/5 rounded-r-lg">
-          {renderText(quote.join(' '), nextKey())}
+          {renderText(quote.join(' '), nextKey(), katex)}
         </blockquote>,
       );
       continue;
@@ -289,7 +407,7 @@ export default function Markdown({ content, className = '' }) {
         items.push(lines[i]);
         i += 1;
       }
-      out.push(<ListGroup key={nextKey()} items={items} keyPrefix={nextKey()} />);
+      out.push(<ListGroup key={nextKey()} items={items} keyPrefix={nextKey()} katex={katex} />);
       continue;
     }
 
@@ -311,7 +429,7 @@ export default function Markdown({ content, className = '' }) {
       para.push(lines[i]);
       i += 1;
     }
-    out.push(<InlineBlock key={nextKey()}>{renderText(para.join(' '), nextKey())}</InlineBlock>);
+    out.push(<InlineBlock key={nextKey()}>{renderText(para.join(' '), nextKey(), katex)}</InlineBlock>);
   }
 
   return <div className={`text-slate-200 text-[15px] ${className}`}>{out}</div>;
