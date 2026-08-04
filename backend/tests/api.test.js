@@ -94,7 +94,11 @@ test('unauthenticated /api/auth/me is rejected', async () => {
 // higher tiers must never leave the server — not hidden anywhere in the body.
 
 test('guest sees titles of premium blocks but never their content', async () => {
-  const res = await request(app).get('/api/subjects/physics/chapters/kinematics');
+  const loginRes = await login('guest@test.ravikishan', 'testpass123');
+  assert.equal(loginRes.body.user.accessLevel, 3);
+  const res = await request(app)
+    .get('/api/subjects/physics/chapters/kinematics')
+    .set(authHeaders(loginRes.body.accessToken));
   assert.equal(res.status, 200);
   assert.equal(res.body.chapter.canRead, true);
   assert.equal(res.body.chapter.viewerAccessLevel, 3);

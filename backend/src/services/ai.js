@@ -43,14 +43,20 @@ async function loadChapter(userId, chapterId) {
   const chapter = await prisma.chapter.findUnique({
     where: { id: chapterId },
     include: {
-      subject: { select: { id: true, name: true } },
+      subject: { select: { id: true, name: true, slug: true, class: { select: { slug: true } } } },
       blocks: {
         where: { accessLevel: { gte: viewerLevel } },
         orderBy: { sortOrder: 'asc' },
       },
     },
   });
-  return chapter ?? null;
+  if (!chapter) return null;
+  const link = {
+    classSlug: chapter.subject?.class?.slug ?? null,
+    subjectSlug: chapter.subject?.slug ?? null,
+    chapterSlug: chapter.slug ?? null,
+  };
+  return { ...chapter, blocks: chapter.blocks.map((b) => ({ ...b, link })) };
 }
 
 async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
@@ -71,10 +77,28 @@ async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
       title: true,
       contentRichtext: true,
       contentCode: true,
-      chapter: { select: { id: true, title: true, slug: true } },
+      chapter: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          subject: { select: { slug: true, class: { select: { slug: true } } } },
+        },
+      },
     },
   });
-  return blocks;
+  return blocks.map((b) => {
+    const { chapter, ...rest } = b;
+    return {
+      ...rest,
+      chapter,
+      link: {
+        classSlug: chapter?.subject?.class?.slug ?? null,
+        subjectSlug: chapter?.subject?.slug ?? null,
+        chapterSlug: chapter?.slug ?? null,
+      },
+    };
+  });
 }
 
 // ── Optional LLM upgrade ────────────────────────────
@@ -135,6 +159,7 @@ export async function solveDoubt(userId, { question, chapterId }) {
     blockType: block.blockType,
     passage: truncate([block.contentRichtext, block.contentCode].filter(Boolean).join('\n'), 900),
     match: Math.round(score * 100),
+    link: block.link ?? null,
   }));
 
   const grounding = {
@@ -236,7 +261,7 @@ export async function explainConcept(userId, { concept, chapterId }) {
       ? `**${concept}**\n\n${definition}\n\nTo master this concept: (1) write it in your own words, (2) teach it to someone else, (3) solve a related numerical or example question.`
       : `**${concept}**\n\nThis concept is not yet covered in the study library. Try searching the chapter for related terms, or ask me to explain it with a broader term.`,
     found: Boolean(definition),
-    source: match ? { id: match.block.id, title: match.block.title } : null,
+    source: match ? { id: match.block.id, title: match.block.title, link: match.block.link ?? null } : null,
   };
 
   const result = await llmOr(grounding, [
