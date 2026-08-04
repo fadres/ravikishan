@@ -8,6 +8,7 @@ import { authenticate } from './middleware/auth.js';
 import { notFound, errorHandler } from './middleware/error.js';
 import { requestLogger } from './middleware/logger.js';
 import { perfMiddleware, registerPerf } from './middleware/perf.js';
+import { clearCachedJson } from './lib/jsonCache.js';
 import authRoutes from './routes/auth.routes.js';
 import accessRoutes from './routes/access.routes.js';
 import contentRoutes from './routes/content.routes.js';
@@ -152,6 +153,18 @@ export function createApp() {
   app.use('/api/access-requests', requestLimiter, accessRoutes);
   app.use('/api', contentRoutes);
 app.use('/api/admin', adminRoutes);
+// Any successful admin mutation invalidates the public /api/classes cache so
+// structural edits (new subject/chapter/publish) show up immediately.
+app.use('/api/admin', (req, res, next) => {
+  if (['POST', 'PATCH', 'PUT', 'DELETE'].includes(req.method)) {
+    const prev = res.json.bind(res);
+    res.json = (body) => {
+      if (res.statusCode >= 200 && res.statusCode < 300) clearCachedJson('classes');
+      return prev(body);
+    };
+  }
+  next();
+});
 app.use('/api/upload', uploadRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/users', userRoutes);

@@ -6,6 +6,7 @@ import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
 import { getQuickQuestions } from '../services/quickQuestions.js';
+import { sendJsonCached, clearCachedJson } from '../lib/jsonCache.js';
 import {
   sectionIndexForBlockType,
   sectionLabelForBlockType,
@@ -41,12 +42,13 @@ const CLASS_SELECT = {
 };
 
 // GET /api/classes — public: structure (names/slugs/icons) only, never content.
-router.get('/classes', async (_req, res) => {
+// Cached in-memory (30s TTL + ETag) — this endpoint fires on every page load.
+router.get('/classes', async (req, res) => {
   const classes = await prisma.class.findMany({
     orderBy: { sortOrder: 'asc' },
     select: CLASS_SELECT,
   });
-  res.json({ classes });
+  sendJsonCached(req, res, 'classes', { classes });
 });
 
 // GET /api/classes/:slug
