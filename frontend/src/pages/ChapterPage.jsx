@@ -500,98 +500,122 @@ export default function ChapterPage() {
 
       {structure.topics.map((t, ti) => {
         const tr = topicRead(t);
+        const synonyms = Array.isArray(t.topic.metadata?.synonyms) ? t.topic.metadata.synonyms.filter(Boolean) : [];
+        const topicColor = tr.complete ? '#34d399' : STRUCTURE_COLORS.topic;
         return (
-          <section key={t.topic.id ?? `untitled-${t.number}`} id={`topic-${t.number}`} className="relative pl-11 sm:pl-14">
-            {/* Topic rail — the numbered left margin */}
-            <div className="absolute left-0 top-1 bottom-0 flex flex-col items-center w-8 sm:w-10">
-              <span
-                className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-sm font-extrabold shrink-0 shadow-[0_0_18px_-4px_rgba(56,189,248,.6)]"
-                style={
-                  tr.complete
-                    ? { color: '#34d399', border: `1.5px solid #34d39988`, background: '#34d3991a' }
-                    : activeTopic === t.number
-                      ? { color: '#fff', border: `1.5px solid ${STRUCTURE_COLORS.topic}`, background: `${STRUCTURE_COLORS.topic}55` }
-                      : { color: STRUCTURE_COLORS.topic, border: `1.5px solid ${STRUCTURE_COLORS.topic}88`, background: `${STRUCTURE_COLORS.topic}1a` }
-                }
-              >
-                {tr.complete ? '✓' : t.number}
-              </span>
-              <span className="mt-2 w-px flex-1" style={{ background: `linear-gradient(to bottom, ${STRUCTURE_COLORS.topic}66, transparent)` }} />
-            </div>
+          <section key={t.topic.id ?? `untitled-${t.number}`} id={`topic-${t.number}`} className="scroll-mt-32">
+            {/* One box per topic — every related piece (statement, examples
+                with their answers, summary, meaning, terminology) lives
+                inside this single box. */}
+            <div
+              className="glass rounded-3xl relative overflow-hidden"
+              style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 0 34px -14px ${topicColor}88` }}
+            >
+              <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${topicColor}, transparent)` }} />
 
-            <h2 className="text-lg sm:text-xl font-extrabold text-white leading-snug" style={{ marginLeft: 2 }}>
-              {t.topic.title}
-            </h2>
-            {t.topic.description && <p className="text-sm text-slate-400 mt-1">{t.topic.description}</p>}
-            {totalConcepts > 0 && (
-              <p className="text-[11px] text-slate-500 mt-1">
-                {tr.complete ? 'Topic complete ✓' : `${tr.done} / ${tr.total} concept${tr.total === 1 ? '' : 's'} read`}
-              </p>
-            )}
-
-            <div className="mt-4 space-y-8">
-              {t.concepts.map((c, ci) => {
-                const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
-                const anchor = conceptAnchor(t.number, ci);
-                const isRead = Boolean(readMap[`${t.number}-${ci}`]);
-                const numeralBadge = (
+              <div className="px-4 sm:px-6 pt-4 pb-5">
+                {/* Topic header — number badge + title + synonyms */}
+                <div className="flex items-start gap-3">
                   <span
-                    className="inline-flex items-center justify-center min-w-[2rem] h-6 px-1.5 rounded-full text-xs font-extrabold shrink-0"
+                    className="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full text-sm font-extrabold shrink-0 shadow-[0_0_18px_-4px_rgba(56,189,248,.6)]"
                     style={
-                      isRead
+                      tr.complete
                         ? { color: '#34d399', border: `1.5px solid #34d39988`, background: '#34d3991a' }
-                        : { color: STRUCTURE_COLORS.concept, border: `1.5px solid ${STRUCTURE_COLORS.concept}88`, background: `${STRUCTURE_COLORS.concept}1a` }
+                        : activeTopic === t.number
+                          ? { color: '#fff', border: `1.5px solid ${STRUCTURE_COLORS.topic}`, background: `${STRUCTURE_COLORS.topic}55` }
+                          : { color: STRUCTURE_COLORS.topic, border: `1.5px solid ${STRUCTURE_COLORS.topic}88`, background: `${STRUCTURE_COLORS.topic}1a` }
                     }
                   >
-                    {isRead ? '✓' : c.numeral}
+                    {tr.complete ? '✓' : t.number}
                   </span>
-                );
-                return (
-                  <div key={ci} id={anchor} className="space-y-3 scroll-mt-32">
-                    <div className="flex items-center gap-2.5">
-                      {numeralBadge}
-                      {headBlock?.title && <h3 className="text-base font-bold text-white leading-snug">{headBlock.title}</h3>}
-                      <button
-                        onClick={() => copyAnchor(anchor)}
-                        title="Copy link to this concept"
-                        className="ml-auto shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full glass text-slate-300 hover:text-aqua-200 hover:border-aqua-400/50 transition"
-                      >
-                        {copiedAnchor === anchor ? 'Copied ✓' : 'Link'}
-                      </button>
-                    </div>
-                    <div className="space-y-4">
-                      {c.blocks.map((block, bi) => {
-                        const isHead = block === headBlock;
-                        const bKey = `${t.number}-${ci}-${bi}`;
-                        return (
-                          <div
-                            key={block.id ?? bKey}
-                            id={`b-${bKey}`}
-                            data-block-id={block.id || ''}
-                            className={`rounded-2xl scroll-mt-32 ${flashId === bKey ? 'rk-flash' : ''}`}
-                          >
-                            {hasContent(block) ? (
-                              <BlockRenderer
-                                block={block}
-                                themeColor={subject.themeColor}
-                                hideTitle={isHead && block.title}
-                                showSection
-                              />
-                            ) : (
-                              <LockedBlockCard
-                                block={block}
-                                themeColor={subject.themeColor}
-                                topicLabel={`${t.number}.${ci + 1}`}
-                                contactEmail={contactEmail}
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-lg sm:text-xl font-extrabold text-white leading-snug">{t.topic.title}</h2>
+                    {t.topic.description && <p className="text-sm text-slate-400 mt-1">{t.topic.description}</p>}
+                    {totalConcepts > 0 && (
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        {tr.complete ? 'Topic complete ✓' : `${tr.done} / ${tr.total} concept${tr.total === 1 ? '' : 's'} read`}
+                      </p>
+                    )}
+
+                    {/* Synonyms — small glowing box under the topic title */}
+                    {synonyms.length > 0 && (
+                      <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-3 py-1 border border-amber-300/40 bg-amber-300/10 text-amber-100 text-[11px] font-bold shadow-[0_0_18px_-4px_rgba(251,191,36,.85)]">
+                        <span className="text-[10px]" aria-hidden="true">⚡</span>
+                        <span className="text-amber-200/70 uppercase tracking-wider text-[9px]">also known as</span>
+                        {synonyms.join(' · ')}
+                      </div>
+                    )}
                   </div>
-                );
-              })}
+                </div>
+
+                {/* Concepts + every block embedded in this one box */}
+                <div className="mt-5">
+                  {t.concepts.map((c, ci) => {
+                    const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
+                    const anchor = conceptAnchor(t.number, ci);
+                    const isRead = Boolean(readMap[`${t.number}-${ci}`]);
+                    const numeralBadge = (
+                      <span
+                        className="inline-flex items-center justify-center min-w-[2rem] h-6 px-1.5 rounded-full text-xs font-extrabold shrink-0"
+                        style={
+                          isRead
+                            ? { color: '#34d399', border: `1.5px solid #34d39988`, background: '#34d3991a' }
+                            : { color: STRUCTURE_COLORS.concept, border: `1.5px solid ${STRUCTURE_COLORS.concept}88`, background: `${STRUCTURE_COLORS.concept}1a` }
+                        }
+                      >
+                        {isRead ? '✓' : c.numeral}
+                      </span>
+                    );
+                    return (
+                      <div key={ci} id={anchor} className="scroll-mt-32 mt-6 first:mt-0">
+                        <div className="flex items-center gap-2.5">
+                          {numeralBadge}
+                          {headBlock?.title && <h3 className="text-base font-bold text-white leading-snug">{headBlock.title}</h3>}
+                          <button
+                            onClick={() => copyAnchor(anchor)}
+                            title="Copy link to this concept"
+                            className="ml-auto shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full glass text-slate-300 hover:text-aqua-200 hover:border-aqua-400/50 transition"
+                          >
+                            {copiedAnchor === anchor ? 'Copied ✓' : 'Link'}
+                          </button>
+                        </div>
+                        <div className="mt-3 divide-y divide-white/5 rounded-2xl border border-white/10 bg-black/20 px-3.5 sm:px-5">
+                          {c.blocks.map((block, bi) => {
+                            const isHead = block === headBlock;
+                            const bKey = `${t.number}-${ci}-${bi}`;
+                            return (
+                              <div
+                                key={block.id ?? bKey}
+                                id={`b-${bKey}`}
+                                data-block-id={block.id || ''}
+                                className={`py-3.5 scroll-mt-32 ${flashId === bKey ? 'rk-flash' : ''}`}
+                              >
+                                {hasContent(block) ? (
+                                  <BlockRenderer
+                                    block={block}
+                                    themeColor={subject.themeColor}
+                                    hideTitle={isHead && block.title}
+                                    showSection
+                                    embedded
+                                  />
+                                ) : (
+                                  <LockedBlockCard
+                                    block={block}
+                                    themeColor={subject.themeColor}
+                                    topicLabel={`${t.number}.${ci + 1}`}
+                                    contactEmail={contactEmail}
+                                  />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
             {ti < structure.topics.length - 1 ? (

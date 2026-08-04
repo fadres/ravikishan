@@ -57,6 +57,13 @@ export async function updateTopic(id, data, user) {
   if (data.description !== undefined) updateData.description = data.description;
   if (data.sortOrder !== undefined) updateData.sortOrder = data.sortOrder;
   if (data.status !== undefined) updateData.status = data.status;
+  if (data.synonyms !== undefined) {
+    // Synonyms live inside the topic's metadata JSON (no schema migration).
+    updateData.metadata = {
+      ...(topic.metadata || {}),
+      synonyms: data.synonyms,
+    };
+  }
   const updated = await prisma.topic.update({ where: { id }, data: updateData });
   await recordAudit(user, 'topic.updated', 'Topic', topic.id, updateData);
   return updated;

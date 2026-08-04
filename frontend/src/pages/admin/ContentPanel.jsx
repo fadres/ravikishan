@@ -42,6 +42,7 @@ export default function ContentPanel() {
   const [editor, setEditor] = useState(null); // { block?, subjectType } | null
   const [newChapterTitle, setNewChapterTitle] = useState('');
   const [newTopicTitle, setNewTopicTitle] = useState('');
+  const [editingTopic, setEditingTopic] = useState(null); // topic being edited | null
 
   const loadClasses = async () => {
     const data = await api('/api/classes');
@@ -185,6 +186,32 @@ export default function ContentPanel() {
       setBlocks(next);
     } catch (e) {
       setError(e.message);
+    }
+  };
+
+  const saveTopic = async (e) => {
+    e.preventDefault();
+    if (!editingTopic) return;
+    setError('');
+    try {
+      const synonyms = (editingTopic.synonyms || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .slice(0, 12);
+      await api(`/api/admin/topics/${editingTopic.id}`, {
+        method: 'PATCH',
+        body: { title: editingTopic.title.trim(), synonyms },
+      });
+      setTopics((prev) =>
+        prev.map((t) =>
+          t.id === editingTopic.id ? { ...t, title: editingTopic.title.trim(), metadata: { ...(t.metadata || {}), synonyms } } : t,
+        ),
+      );
+      setNotice(`Topic "${editingTopic.title.trim()}" updated.`);
+      setEditingTopic(null);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -337,7 +364,10 @@ export default function ContentPanel() {
             ) : (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {topics.map((t) => (
-                  <span key={t.id} className="inline-flex items-center gap-1.5 glass rounded-full pl-1.5 pr-3 py-1 text-xs font-semibold">
+                  <span
+                    key={t.id}
+                    className="inline-flex items-center gap-1.5 glass rounded-full pl-1.5 pr-2 py-1 text-xs font-semibold"
+                  >
                     <span
                       className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-extrabold"
                       style={{ background: '#38bdf822', color: '#38bdf8', border: '1px solid #38bdf866' }}
@@ -345,9 +375,56 @@ export default function ContentPanel() {
                       {(topics.indexOf(t) + 1)}
                     </span>
                     <span className="text-slate-200">{t.title}</span>
+                    {Array.isArray(t.metadata?.synonyms) && t.metadata.synonyms.length > 0 && (
+                      <span className="text-[10px] text-amber-300/90">
+                        ⚡ {t.metadata.synonyms.join(' · ')}
+                      </span>
+                    )}
+                    <button
+                      onClick={() =>
+                        setEditingTopic({
+                          id: t.id,
+                          title: t.title,
+                          synonyms: Array.isArray(t.metadata?.synonyms) ? t.metadata.synonyms.join(', ') : '',
+                        })
+                      }
+                      className="text-[10px] p-1 rounded text-slate-400 hover:text-aqua-300 hover:bg-white/10 transition"
+                      title="Edit title or synonyms"
+                      aria-label={`Edit topic ${t.title}`}
+                    >
+                      ✎
+                    </button>
                   </span>
                 ))}
               </div>
+            )}
+            {editingTopic && (
+              <form onSubmit={saveTopic} className="mt-3 flex flex-col gap-2 glass rounded-xl p-3">
+                <input
+                  value={editingTopic.title}
+                  onChange={(e) => setEditingTopic({ ...editingTopic, title: e.target.value })}
+                  placeholder="Topic title"
+                  className="w-full bg-white/10 border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60"
+                />
+                <input
+                  value={editingTopic.synonyms}
+                  onChange={(e) => setEditingTopic({ ...editingTopic, synonyms: e.target.value })}
+                  placeholder="Synonyms — comma separated (shown as a glowing chip: e.g. Mole concept, Avogadro concept)"
+                  className="w-full bg-white/10 border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60"
+                />
+                <div className="flex items-center gap-2">
+                  <button className="px-3 py-1.5 rounded-lg text-xs font-bold text-aqua-900 bg-aqua-400/30 text-aqua-100 border border-aqua-400/40 hover:bg-aqua-400/40">
+                    Save topic
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingTopic(null)}
+                    className="px-3 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/10"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             )}
             <form onSubmit={addTopic} className="mt-3 flex items-center gap-2">
               <input

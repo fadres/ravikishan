@@ -146,7 +146,61 @@ function SymbolsTable({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, labelOverride, hideTitle = false, showSection = false }) {
+// Solved examples / numericals usually contain "**Problem:**" then
+// "**Solution:**" in one block. Split them so the answer sits visually
+// directly below the question — problem in a plain box, solution in a
+// highlighted "answer" box.
+function QaSplit({ content }) {
+  const lines = (content || '').split(/\r?\n/);
+  const segments = [];
+  let current = null;
+  const push = (label, line) => {
+    if (!current || current.label !== label) {
+      current = { label, lines: [] };
+      segments.push(current);
+    }
+    current.lines.push(line);
+  };
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const m = trimmed.match(/^(?:[-•*]\s+)?\*{0,2}\s*(Problem|Solution|Answer|Result|Conclusion|Given|To Find|Formula Used)\s*:\s*\*{0,2}\s*/i);
+    if (m) {
+      push(m[1].toLowerCase(), trimmed.replace(m[0], ''));
+    } else {
+      push('text', line);
+    }
+  }
+  if (segments.length <= 1) return <Markdown content={content} />;
+  return (
+    <div className="space-y-2">
+      {segments.map((seg, i) => {
+        const body = seg.lines.join('\n').trim();
+        if (!body) return null;
+        if (seg.label === 'solution' || seg.label === 'answer' || seg.label === 'result') {
+          return (
+            <div key={i} className="rounded-xl border border-emerald-400/25 bg-emerald-400/[0.07] px-3.5 py-2.5">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-300 mb-1">
+                {seg.label === 'solution' ? 'Solution' : seg.label === 'result' ? 'Result' : 'Answer'}
+              </p>
+              <Markdown content={body} />
+            </div>
+          );
+        }
+        if (seg.label === 'problem') {
+          return (
+            <div key={i} className="rounded-xl border border-rose-400/20 bg-rose-400/[0.05] px-3.5 py-2.5">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-rose-300 mb-1">Problem</p>
+              <Markdown content={body} />
+            </div>
+          );
+        }
+        return <Markdown key={i} content={body} />;
+      })}
+    </div>
+  );
+}
+
+export default function BlockRenderer({ block, labelOverride, hideTitle = false, showSection = false, embedded = false }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
@@ -162,6 +216,10 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
 
   const renderBody = () => {
     switch (block.blockType) {
+      case 'numerical':
+      case 'solved_example':
+      case 'pyq':
+        return <QaSplit content={block.contentRichtext} />;
       case 'keywords':
         return <KeywordsTags content={block.contentRichtext} />;
       case 'important_points':
@@ -202,7 +260,37 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
     }
   };
 
-return (
+  if (embedded) {
+    // Embedded mode: the topic provides the box, this block is a row inside
+    // it — label strip + title + body. Hairline separators live on the
+    // wrapper in ChapterPage.
+    return (
+      <div>
+        {section && (
+          <div className="flex items-center gap-2 mb-1.5">
+            <span
+              className="text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
+              style={{ color: section.color, background: `${section.color}1a`, border: `1px solid ${section.color}44` }}
+            >
+              {section.label}
+            </span>
+          </div>
+        )}
+        {block.title && !hideTitle && (
+          <h3 className="text-[15px] font-bold text-white mb-1.5">
+            {block.title}
+            {block.subLevel && block.blockType !== 'byakaran' && (
+              <span className="ml-2 text-xs font-semibold text-slate-400">· {block.subLevel}</span>
+            )}
+          </h3>
+        )}
+        {renderBody()}
+        {block.contentCode && <CodeBlock code={block.contentCode} language={block.codeLanguage} title={block.title} />}
+      </div>
+    );
+  }
+
+  return (
     <div className="space-y-1">
       {section && (
         <div className="flex items-center gap-2 pl-1">

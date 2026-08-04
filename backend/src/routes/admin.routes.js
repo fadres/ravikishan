@@ -515,6 +515,9 @@ router.patch('/topics/:id', validate(userIdSchema, 'params'), validate(z.object(
   description: z.string().trim().max(2000).optional(),
   sortOrder: z.number().int().min(0).optional(),
   status: z.enum(['draft', 'published', 'archived']).optional(),
+  // Topic synonyms / alternate names, shown as a small glowing "also known as"
+  // chip on the topic header. Stored inside the topic's metadata JSON.
+  synonyms: z.array(z.string().trim().min(1).max(120)).max(12).optional(),
 })), async (req, res) => {
   const topic = await updateTopic(req.params.id, req.validated, req.user);
   res.json({ topic });
