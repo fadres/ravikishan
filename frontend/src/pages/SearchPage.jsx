@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { TypeBadge, AccessBadge, typeMeta } from '../utils/blockMeta.jsx';
+import { sectionStyleForKey } from '../lib/noteStructure.js';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -43,7 +44,9 @@ function FilterChip({ active, color, onClick, children }) {
 
 function resultPath(r) {
   if (r.kind === 'subject') return `/class/${r.klass.slug}/subject/${r.subject.slug}`;
-  return `/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`;
+  const base = `/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`;
+  if (r.kind === 'block' && r.id) return `${base}?block=${encodeURIComponent(r.id)}`;
+  return base;
 }
 
 function resultBreadcrumb(r) {
@@ -71,6 +74,7 @@ export default function SearchPage() {
   const [subjectFilter, setSubjectFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [accessFilter, setAccessFilter] = useState(0);
+  const [sectionFilter, setSectionFilter] = useState('');
 
   useEffect(() => {
     const q = params.get('q') || '';
@@ -117,9 +121,18 @@ export default function SearchPage() {
       if (subjectFilter && r.subject.slug !== subjectFilter) return false;
       if (typeFilter && r.blockType !== typeFilter) return false;
       if (accessFilter && (r.accessLevel ?? 3) < accessFilter) return false;
+      if (sectionFilter && (r.sectionKey ?? '') !== sectionFilter) return false;
       return true;
     });
-  }, [results, subjectFilter, typeFilter, accessFilter]);
+  }, [results, subjectFilter, typeFilter, accessFilter, sectionFilter]);
+
+  const sectionOptions = useMemo(() => {
+    const seen = new Set();
+    for (const r of filtered) {
+      if (r.sectionKey) seen.add(r.sectionKey);
+    }
+    return [...seen].map((key) => ({ key, ...sectionStyleForKey(key) }));
+  }, [filtered]);
 
   const subjectOptions = useMemo(() => {
     const seen = new Map();
@@ -241,6 +254,29 @@ export default function SearchPage() {
                 </div>
               )}
 
+              {sectionOptions.length > 1 && (
+                <div className="flex items-start gap-2 flex-wrap">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
+                    Section
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    <FilterChip active={!sectionFilter} onClick={() => setSectionFilter('')}>
+                      All
+                    </FilterChip>
+                    {sectionOptions.map((s) => (
+                      <FilterChip
+                        key={s.key}
+                        active={sectionFilter === s.key}
+                        color={s.color}
+                        onClick={() => setSectionFilter(sectionFilter === s.key ? '' : s.key)}
+                      >
+                        {s.label}
+                      </FilterChip>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-start gap-2 flex-wrap">
                 <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
                   Access
@@ -271,6 +307,7 @@ export default function SearchPage() {
                       setSubjectFilter('');
                       setTypeFilter('');
                       setAccessFilter(0);
+                      setSectionFilter('');
                     }}
                     className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
                   >
@@ -304,6 +341,14 @@ export default function SearchPage() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-bold text-white">{r.title}</h3>
                           {r.accessLevel && <AccessBadge accessLevel={r.accessLevel} />}
+                          {r.sectionKey && (
+                            <span
+                              className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full"
+                              style={{ color: sectionStyleForKey(r.sectionKey).color, background: `${sectionStyleForKey(r.sectionKey).color}1a`, border: `1px solid ${sectionStyleForKey(r.sectionKey).color}44` }}
+                            >
+                              {sectionStyleForKey(r.sectionKey).label}
+                            </span>
+                          )}
                           <span className="ml-auto">
                             <TypeBadge blockType={r.blockType} />
                           </span>

@@ -23,6 +23,32 @@ export const STRUCTURE_LEGEND = [
   { symbol: 'i', color: STRUCTURE_COLORS.concept, label: 'Concept' },
 ];
 
+// Stable colour + short label per syllabus section, used for the section chip
+// on every note block and the in-chapter Find filters. Mirrors the backend
+// SECTION_ORDER keys 1:1 so any blockType/sectionKey is covered automatically.
+export const SECTION_STYLE = {
+  topic: { color: '#fbbf24', label: 'Topic' },
+  learning: { color: '#4ade80', label: 'Learning Outcomes' },
+  diagram: { color: '#818cf8', label: 'Topic Diagram' },
+  concept: { color: '#a78bfa', label: 'Concept' },
+  examples: { color: '#38bdf8', label: 'Examples' },
+  important: { color: '#fb7185', label: 'Important Points' },
+  mind_recall: { color: '#facc15', label: 'Mind Recall' },
+  pyq: { color: '#f87171', label: 'Past Year Questions' },
+  solved: { color: '#fb923c', label: 'Solved Examples' },
+  premium: { color: '#e879f9', label: 'Advanced Learning' },
+  references: { color: '#94a3b8', label: 'References' },
+};
+
+export function sectionStyleForKey(key) {
+  return SECTION_STYLE[key] || { color: '#7dd3fc', label: key || 'Section' };
+}
+
+// Stable scroll anchor for a concept: "topic-2-concept-3" → #topic-2-concept-3
+export function conceptAnchor(topicNumber, conceptIndex) {
+  return `topic-${topicNumber}-concept-${conceptIndex + 1}`;
+}
+
 // 1 → A, 2 → B, … 26 → Z, 27 → AA (Excel-style column letters).
 export function chapterLetter(n) {
   let out = '';

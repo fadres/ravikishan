@@ -242,6 +242,21 @@ body {
   to { width: 0%; }
 }
 
+/* In-chapter Find: block flashes cyan after jumping to a match. */
+.rk-flash {
+  animation: rkFlash 1.6s ease-out;
+}
+@keyframes rkFlash {
+  0% { box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.9), 0 0 26px -6px rgba(56, 189, 248, 0.8); }
+  100% { box-shadow: 0 0 0 3px rgba(56, 189, 248, 0), 0 0 26px -6px rgba(56, 189, 248, 0); }
+}
+
+/* Anchored topics/concepts keep clear of the sticky bars when deep-linked. */
+#topic-1, #topic-2, #topic-3, #topic-4, #topic-5, #topic-6, #topic-7, #topic-8,
+#topic-9, #topic-10, #topic-11, #topic-12 {
+  scroll-margin-top: 9.5rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

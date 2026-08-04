@@ -3,6 +3,7 @@ import Markdown, { latexToPlain } from '../../lib/markdown.jsx';
 import CodeBlock from './CodeBlock.jsx';
 import MindmapTree from './MindmapTree.jsx';
 import DiagramCompare from './DiagramCompare.jsx';
+import { sectionStyleForKey } from '../../lib/noteStructure.js';
 
 const BLOCK_STYLE = {
   note_topic: { color: '#38bdf8', icon: ICONS.topic, label: 'Topic' },
@@ -145,7 +146,7 @@ function SymbolsTable({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, labelOverride, hideTitle = false }) {
+export default function BlockRenderer({ block, labelOverride, hideTitle = false, showSection = false }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
@@ -157,6 +158,7 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false 
   const { color, icon } = style;
   const label = labelOverride || style.label;
   const glow = block.blockType === 'note_important';
+  const section = showSection ? sectionStyleForKey(block.sectionKey) : null;
 
   const renderBody = () => {
     switch (block.blockType) {
@@ -167,7 +169,7 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false 
       case 'byakaran':
         return <ByakaranBody block={block} />;
       case 'mindmap':
-        return (
+  return (
           <div>
             <MindmapTree data={block.mindmapJson} />
             {block.mindmapJson?.legend?.length > 0 && (
@@ -200,10 +202,20 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false 
     }
   };
 
-  return (
+return (
     <div className="space-y-1">
+      {section && (
+        <div className="flex items-center gap-2 pl-1">
+          <span
+            className="text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
+            style={{ color: section.color, background: `${section.color}1a`, border: `1px solid ${section.color}44` }}
+          >
+            {section.label}
+          </span>
+        </div>
+      )}
       <BlockCard color={color} icon={icon} label={label} glow={glow}>
-        {block.title && (
+{block.title && (
           <h3 className="text-lg font-bold text-white mb-2 mt-1.5">
             {block.title}
             {block.subLevel && block.blockType !== 'byakaran' && (
