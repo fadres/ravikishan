@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api, ApiError } from '../../api/client.js';
+import { RichText } from '../../lib/markdown.jsx';
 
 function fmt(seconds) {
   const m = Math.floor(seconds / 60);
@@ -149,7 +150,7 @@ export default function QuizTakePage() {
             <div className="flex items-start justify-between gap-3 mb-3">
               <h2 className="font-bold text-white">
                 <span className="text-aqua-300 mr-2">Q{idx + 1}.</span>
-                {q.question}
+                <RichText text={q.question} />
               </h2>
               <span className="text-xs text-slate-400 shrink-0">{q.points} pts</span>
             </div>
@@ -172,8 +173,7 @@ export default function QuizTakePage() {
               </div>
             )}
 
-            {q.questionType === 'mcq' && (
-              <div className="space-y-2">
+            {q.questionType === 'mcq' && (              <div className="space-y-2">
                 {(q.options || []).map((opt) => (
                   <button
                     key={opt}
@@ -184,7 +184,7 @@ export default function QuizTakePage() {
                         : 'bg-white/5 border-white/15 text-slate-300 hover:bg-white/10'
                     }`}
                   >
-                    {opt}
+                    <RichText text={opt} />
                   </button>
                 ))}
               </div>

@@ -16,6 +16,18 @@ function stripMarkdown(s) {
     .trim();
 }
 
+// HTML-escape before the snippet is injected via dangerouslySetInnerHTML —
+// note content is author-supplied, so it must never reach the DOM raw.
+function escHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[c]);
+}
+
 export default function ChapterPage() {
   const { classSlug, subjectSlug, chapterSlug } = useParams();
   const location = useLocation();
@@ -315,7 +327,7 @@ export default function ChapterPage() {
           out.push({
             key,
             title: b.title || `${t.topic.title} — concept ${c.numeral}`,
-            snippet: `${hay.slice(Math.max(0, idx - 34), idx)}<b>${hay.slice(idx, idx + q.length)}</b>${hay.slice(idx + q.length, idx + q.length + 42)}`,
+            snippet: `${escHtml(hay.slice(Math.max(0, idx - 34), idx))}<b>${escHtml(hay.slice(idx, idx + q.length))}</b>${escHtml(hay.slice(idx + q.length, idx + q.length + 42))}`,
             anchor: conceptAnchor(t.number, ci),
             done: Boolean(readMap[`${t.number}-${ci}`]),
           });

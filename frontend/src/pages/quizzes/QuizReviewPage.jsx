@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../../api/client.js';
+import { RichText } from '../../lib/markdown.jsx';
 
 export default function QuizReviewPage() {
   const { attemptId } = useParams();
@@ -79,7 +80,7 @@ export default function QuizReviewPage() {
             <div className="flex items-start justify-between gap-3 mb-2">
               <h2 className="font-bold text-white">
                 <span className="mr-2">{q.correct ? '✅' : '❌'}</span>
-                {q.question}
+                <RichText text={q.question} />
               </h2>
               <span className="text-xs text-slate-400 shrink-0">
                 {q.pointsEarned}/{q.points} pts
@@ -102,7 +103,7 @@ export default function QuizReviewPage() {
                             : 'bg-white/5 border-white/10 text-slate-300'
                       }`}
                     >
-                      {opt} {isCorrect && '← correct'} {isGiven && !isCorrect && '← your answer'}
+                      <RichText text={opt} /> {isCorrect && '← correct'} {isGiven && !isCorrect && '← your answer'}
                     </div>
                   );
                 })}
@@ -133,7 +134,7 @@ export default function QuizReviewPage() {
 
             {q.explanation && (
               <p className="mt-3 text-sm text-slate-400 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5">
-                💡 {q.explanation}
+                💡 <RichText text={q.explanation} />
               </p>
             )}
           </section>

@@ -1,5 +1,5 @@
 import BlockCard, { ICONS } from './BlockCard.jsx';
-import Markdown, { latexToPlain } from '../../lib/markdown.jsx';
+import Markdown, { MathSpan, RichText } from '../../lib/markdown.jsx';
 import CodeBlock from './CodeBlock.jsx';
 import MindmapTree from './MindmapTree.jsx';
 import DiagramCompare from './DiagramCompare.jsx';
@@ -41,7 +41,7 @@ function KeywordsTags({ content }) {
           key={i}
           className="text-sm px-3 py-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-100"
         >
-          {latexToPlain(item)}
+          <RichText text={item} />
         </span>
       ))}
     </div>
@@ -60,7 +60,9 @@ function PointsList({ content }) {
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-400/15 border border-orange-400/40 text-orange-300 text-xs font-bold shrink-0 mt-0.5">
             {i + 1}
           </span>
-          <span className="leading-relaxed">{latexToPlain(item.replace(/^\d+\.\s*/, ''))}</span>
+          <span className="leading-relaxed">
+            <RichText text={item.replace(/^\d+\.\s*/, '')} />
+          </span>
         </li>
       ))}
     </ol>
@@ -85,7 +87,10 @@ function ByakaranBody({ block }) {
 }
 
 // Formula section: equation lines (those containing "=") render as centered
-// mono pills; the rest flows as normal markdown.
+// KaTeX-display pills; the rest flows as normal markdown. Leading labels like
+// "Given:" / "Formula:" are stripped for typesetting but kept in the plain
+// fallback so nothing is ever lost.
+const FORMULA_LABEL_RE = /^(?:given|formula|using|since|as|where|to\s+find)\s*[:=]\s*/i;
 function FormulaBody({ content }) {
   const lines = (content || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
   return (
@@ -94,9 +99,9 @@ function FormulaBody({ content }) {
         /[a-zA-Z0-9)\]]\s*=\s*[a-zA-Z0-9(+\-]/.test(line) ? (
           <div
             key={i}
-            className="rounded-xl border border-aqua-400/30 bg-aqua-400/10 px-4 py-2.5 text-center font-mono text-[15px] text-aqua-100 overflow-x-auto"
+            className="rounded-xl border border-aqua-400/30 bg-aqua-400/10 px-4 py-2.5 text-center overflow-x-auto"
           >
-            {latexToPlain(line)}
+            <MathSpan math={line.replace(FORMULA_LABEL_RE, '')} displayMode className="text-[15px]" />
           </div>
         ) : (
           <Markdown key={i} content={line} />
@@ -126,7 +131,7 @@ function SymbolsTable({ content }) {
         <thead>
           <tr className="text-left text-[11px] uppercase tracking-wider text-violet-300 bg-violet-400/10 border-b border-white/10">
             {header.map((h, i) => (
-              <th key={i} className="px-4 py-2 font-bold whitespace-nowrap">{latexToPlain(h)}</th>
+              <th key={i} className="px-4 py-2 font-bold whitespace-nowrap"><RichText text={h} /></th>
             ))}
           </tr>
         </thead>
@@ -135,7 +140,7 @@ function SymbolsTable({ content }) {
             <tr key={i} className="border-b border-white/5 last:border-0">
               {[0, 1, 2].map((c) => (
                 <td key={c} className={`px-4 py-2 ${c === 0 ? 'font-mono font-bold text-violet-100' : 'text-slate-300'}`}>
-                  {latexToPlain(r[c] || '')}
+                  <RichText text={r[c] || ''} />
                 </td>
               ))}
             </tr>
@@ -241,7 +246,7 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
                       key={entry}
                       className="text-xs text-slate-300 bg-white/5 border border-white/10 rounded-full px-2.5 py-1"
                     >
-                      {latexToPlain(entry)}
+                      <RichText text={entry} />
                     </span>
                   ))}
                 </div>
