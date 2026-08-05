@@ -18,10 +18,23 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%; /* stop iOS text auto-zoom on rotation */
+  overflow-x: clip; /* never a horizontal page scrollbar on any device */
 }
 
 body {
   font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+/* background-attachment: fixed repaints badly on mobile — let it scroll
+   naturally on small screens so every device stays smooth */
+@media (max-width: 767px) {
+  .ocean-bg,
+  .wp-mountain,
+  .wp-ocean {
+    background-attachment: scroll;
+  }
 }
 
 /* Deep-ocean page backdrop (theme-aware via --color-* vars) */

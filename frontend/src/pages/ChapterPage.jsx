@@ -474,21 +474,22 @@ export default function ChapterPage() {
 
       {/* Home / Back / Next + Find + progress — always visible, pinned below the header */}
       <div
-        className="sticky z-30 mb-6 flex items-center justify-between gap-2 glass rounded-2xl px-2.5 sm:px-4 py-2"
+        className="sticky z-30 mb-6 flex items-center justify-between gap-1.5 sm:gap-2 glass rounded-2xl px-2 sm:px-4 py-2"
         style={{ top: headerH }}
       >
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+          aria-label="Home"
+          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
         >
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
             <path d="M3 10.5L12 3l9 7.5" />
             <path d="M5 9.5V21h14V9.5" />
           </svg>
-          Home
+          <span className="hidden sm:inline">Home</span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <span
             className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400"
             title={`${readCount} of ${totalConcepts} concepts read`}
@@ -504,34 +505,34 @@ export default function ChapterPage() {
               onClick={toggleBookmark}
               title={bookmarked ? 'Remove bookmark' : 'Bookmark this chapter'}
               aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this chapter'}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition ${
+              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-full text-xs font-bold transition ${
                 bookmarked
                   ? 'text-amber-200 bg-amber-400/15 border border-amber-400/50'
                   : 'glass text-slate-200 hover:text-white hover:border-aqua-400/50'
               }`}
             >
-              {bookmarked ? '★' : '☆'}
+              <span aria-hidden="true">{bookmarked ? '★' : '☆'}</span>
               <span className="hidden sm:inline">{bookmarked ? 'Saved' : 'Bookmark'}</span>
             </button>
           )}
 
           <button
             onClick={() => setFindOpen((v) => !v)}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition ${
+            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-full text-xs font-bold transition ${
               findOpen ? 'text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300' : 'glass text-slate-200 hover:text-white hover:border-aqua-400/50'
             }`}
             aria-label="Find in chapter"
           >
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" className="shrink-0">
               <circle cx="11" cy="11" r="7" />
               <path d="M20 20l-3.5-3.5" />
             </svg>
-            Find
+            <span className="hidden sm:inline">Find</span>
           </button>
 
           <Link
             to={prevChapter ? chapterHref(prevChapter) : `/class/${classSlug}/subject/${subjectSlug}`}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
+            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
           >
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M11 18l-6-6 6-6" />
