@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { TypeBadge } from '../utils/blockMeta.jsx';
+import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -59,10 +60,11 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
 
   const goTo = (r) => {
     setOpen(false);
+    const sectionId = r.sectionId || sectionIdFromClassSlug(r.klass?.slug);
     if (r.kind === 'subject') {
-      navigate(`/class/${r.klass.slug}/subject/${r.subject.slug}`);
+      navigate(sectionPath(sectionId, r.subject.slug));
     } else {
-      navigate(`/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`);
+      navigate(sectionPath(sectionId, r.subject.slug, r.chapter.slug));
     }
   };
 

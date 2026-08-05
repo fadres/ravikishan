@@ -6,6 +6,7 @@ import LockedBlockCard from '../components/LockedBlockCard.jsx';
 import BlockRenderer from '../components/blocks/BlockRenderer.jsx';
 import SectionDivider from '../components/blocks/SectionDivider.jsx';
 import { buildChapterStructure, STRUCTURE_COLORS, STRUCTURE_LEGEND, conceptAnchor, romanNumeral } from '../lib/noteStructure.js';
+import { sectionById, sectionPath } from '../lib/sectionLinks.js';
 
 const READ_KEY = (chapterId) => `rk_read_v1:${chapterId}`;
 
@@ -29,7 +30,8 @@ function escHtml(text) {
 }
 
 export default function ChapterPage() {
-  const { classSlug, subjectSlug, chapterSlug } = useParams();
+  const { sectionId, subjectSlug, chapterSlug } = useParams();
+  const section = sectionById(sectionId);
   const location = useLocation();
   const { user, isAdmin } = useAuth();
   const [data, setData] = useState(null);
@@ -70,13 +72,13 @@ export default function ChapterPage() {
   const load = useCallback(() => {
     setData(null);
     setError('');
-    api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${classSlug}`)
+    api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${section.classSlug}`)
       .then((d) => setData(d))
       .catch(() => setError('Chapter not found.'));
-    api(`/api/subjects/${subjectSlug}?class=${classSlug}`)
+    api(`/api/subjects/${subjectSlug}?class=${section.classSlug}`)
       .then((d) => setSiblings(d.subject?.chapters || []))
       .catch(() => setSiblings([]));
-  }, [subjectSlug, chapterSlug, classSlug]);
+  }, [subjectSlug, chapterSlug, sectionId]);
 
   useEffect(() => {
     load();
@@ -360,14 +362,14 @@ export default function ChapterPage() {
   const idx = siblings.findIndex((c) => c.slug === chapterSlug);
   const prevChapter = idx > 0 ? siblings[idx - 1] : null;
   const nextChapter = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
-  const chapterHref = (c) => `/class/${classSlug}/subject/${subjectSlug}/chapter/${c.slug}`;
+  const chapterHref = (c) => sectionPath(sectionId, subjectSlug, c.slug);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
       <nav className="flex items-center gap-2 text-sm text-slate-400 flex-wrap">
-        <Link to={`/class/${classSlug}`} className="hover:text-aqua-300 transition">{classSlug === 'class-11' ? 'Class 11' : 'Class 12'}</Link>
+        <Link to={sectionPath(sectionId)} className="hover:text-aqua-300 transition">{section.label}</Link>
         <span className="text-slate-600">›</span>
-        <Link to={`/class/${classSlug}/subject/${subjectSlug}`} className="hover:text-aqua-300 transition">{subject.name}</Link>
+        <Link to={sectionPath(sectionId, subjectSlug)} className="hover:text-aqua-300 transition">{subject.name}</Link>
         <span className="text-slate-600">›</span>
         <span className="text-slate-200">{chapter.title}</span>
       </nav>
@@ -531,7 +533,7 @@ export default function ChapterPage() {
           </button>
 
           <Link
-            to={prevChapter ? chapterHref(prevChapter) : `/class/${classSlug}/subject/${subjectSlug}`}
+            to={prevChapter ? chapterHref(prevChapter) : sectionPath(sectionId, subjectSlug)}
             className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-xs font-bold text-slate-200 hover:text-white hover:border-aqua-400/50 transition"
           >
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -541,7 +543,7 @@ export default function ChapterPage() {
           </Link>
 
           <Link
-            to={nextChapter ? chapterHref(nextChapter) : `/class/${classSlug}/subject/${subjectSlug}`}
+            to={nextChapter ? chapterHref(nextChapter) : sectionPath(sectionId, subjectSlug)}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-deep-900 bg-gradient-to-r from-aqua-400 to-aqua-300 hover:brightness-110 transition"
           >
             {nextChapter ? 'Next' : 'Done'}

@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { TypeBadge, AccessBadge, typeMeta } from '../utils/blockMeta.jsx';
 import { sectionStyleForKey } from '../lib/noteStructure.js';
+import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -43,8 +44,9 @@ function FilterChip({ active, color, onClick, children }) {
 }
 
 function resultPath(r) {
-  if (r.kind === 'subject') return `/class/${r.klass.slug}/subject/${r.subject.slug}`;
-  const base = `/class/${r.klass.slug}/subject/${r.subject.slug}/chapter/${r.chapter.slug}`;
+  const sectionId = r.sectionId || sectionIdFromClassSlug(r.klass?.slug);
+  if (r.kind === 'subject') return sectionPath(sectionId, r.subject.slug);
+  const base = sectionPath(sectionId, r.subject.slug, r.chapter.slug);
   if (r.kind === 'block' && r.id) return `${base}?block=${encodeURIComponent(r.id)}`;
   return base;
 }

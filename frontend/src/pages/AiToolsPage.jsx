@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ScoreGauge, MatchBars, CompressionChart, scoreLabel, scoreColor } from '../components/AiCharts.jsx';
+import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
 
 const inputCls =
   'w-full rounded-xl bg-white/10 border border-white/15 px-4 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60';
@@ -125,7 +126,7 @@ function Skeleton() {
 // Clickable source link — deep-links to the exact block in the chapter.
 function SourceLink({ s }) {
   if (!s?.link?.chapterSlug) return null;
-  const href = `/class/${s.link.classSlug}/subject/${s.link.subjectSlug}/chapter/${s.link.chapterSlug}?block=${s.id}`;
+  const href = `${sectionPath(sectionIdFromClassSlug(s.link.classSlug), s.link.subjectSlug, s.link.chapterSlug)}?block=${s.id}`;
   return (
     <Link
       to={href}

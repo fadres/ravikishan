@@ -1,8 +1,9 @@
 import { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
+import { sectionFromClassSlug, sectionPath } from './lib/sectionLinks.js';
 
 // Route-level code splitting: KaTeX + Prism + admin tooling load on demand.
 const Home = lazy(() => import('./pages/Home.jsx'));
@@ -47,6 +48,16 @@ function PageLoader() {
   );
 }
 
+// Legacy /class/<classSlug>/... URLs redirect into the section namespace.
+// Class slugs without a registered section go home — the track does not
+// exist yet.
+function LegacySectionRedirect() {
+  const { classSlug, subjectSlug, chapterSlug } = useParams();
+  const section = sectionFromClassSlug(classSlug);
+  if (!section) return <Navigate to="/" replace />;
+  return <Navigate to={sectionPath(section.id, subjectSlug, chapterSlug)} replace />;
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -67,11 +78,17 @@ function Shell() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/class/:classSlug" element={<ClassPage />} />
-            <Route path="/class/:classSlug/subject/:subjectSlug" element={<SubjectPage />} />
+            <Route path="/:sectionId" element={<ClassPage />} />
+            <Route path="/:sectionId/subject/:subjectSlug" element={<SubjectPage />} />
+            <Route
+              path="/:sectionId/subject/:subjectSlug/chapter/:chapterSlug"
+              element={<ChapterPage />}
+            />
+            <Route path="/class/:classSlug" element={<LegacySectionRedirect />} />
+            <Route path="/class/:classSlug/subject/:subjectSlug" element={<LegacySectionRedirect />} />
             <Route
               path="/class/:classSlug/subject/:subjectSlug/chapter/:chapterSlug"
-              element={<ChapterPage />}
+              element={<LegacySectionRedirect />}
             />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />

@@ -4,10 +4,11 @@ import SearchBar from './SearchBar.jsx';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme, WALLPAPERS, HEADER_STYLES, FOOTER_STYLES } from '../context/ThemeContext.jsx';
+import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
 
 const NAV = [
   { to: '/', label: 'Home', icon: 'home', end: true },
-  { to: '/class/class-11', label: 'Subjects', icon: 'book' },
+  { to: sectionPath('class-11'), label: 'Subjects', icon: 'book' },
   { to: '/search', label: 'Search', icon: 'search' },
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
 ];
@@ -202,7 +203,7 @@ export default function Header() {
     klass.subjects.map((s) => (
       <Link
         key={s.id}
-        to={`/class/${klass.slug}/subject/${s.slug}`}
+        to={sectionPath(sectionIdFromClassSlug(klass.slug), s.slug)}
         onClick={() => setSubjectsOpen(false)}
         className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-white/10 transition"
       >
@@ -662,7 +663,7 @@ export default function Header() {
               {klass.subjects.map((s) => (
                 <Link
                   key={s.id}
-                  to={`/class/${klass.slug}/subject/${s.slug}`}
+                  to={sectionPath(sectionIdFromClassSlug(klass.slug), s.slug)}
                   onClick={() => setMobileNav(false)}
                   className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm text-slate-300 hover:bg-white/10"
                 >

@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api/client.js';
+import { sectionIdFromClassSlug, sectionPath } from '../../lib/sectionLinks.js';
+
+function chapterTo(chapter) {
+  return chapter.subject.classSlug
+    ? sectionPath(sectionIdFromClassSlug(chapter.subject.classSlug), chapter.subject.slug, chapter.slug)
+    : '#';
+}
 
 function ProgressBar({ pct, color = 'aqua' }) {
   return (
@@ -205,7 +212,7 @@ export default function StudentDashboard() {
               {progress.map((p) => (
                 <Link
                   key={p.chapter.id}
-                  to={`/class/${p.chapter.subject.classSlug || '#'}/subject/${p.chapter.subject.slug}/chapter/${p.chapter.slug}`}
+                  to={chapterTo(p.chapter)}
                   className="glass rounded-2xl p-4 block hover:border-aqua-400/40 transition focus:outline-none focus:ring-2 focus:ring-aqua-400"
                   tabIndex={0}
                   role="link"
@@ -234,7 +241,7 @@ export default function StudentDashboard() {
               {bookmarks.slice(0, 10).map((b) => (
                 <Link
                   key={b.id}
-                  to={`/class/${b.chapter.subject.classSlug || '#'}/subject/${b.chapter.subject.slug}/chapter/${b.chapter.slug}`}
+                  to={chapterTo(b.chapter)}
                   className="glass rounded-2xl p-4 block hover:border-aqua-400/40 transition"
                 >
                   <h3 className="font-bold text-white text-sm">{b.chapter.title}</h3>

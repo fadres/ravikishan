@@ -2,18 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import SubjectIcon from '../components/SubjectIcon.jsx';
+import { sectionById, sectionPath } from '../lib/sectionLinks.js';
 
 export default function SubjectPage() {
-  const { classSlug, subjectSlug } = useParams();
+  const { sectionId, subjectSlug } = useParams();
+  const section = sectionById(sectionId);
   const [subject, setSubject] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     setSubject(null);
-    api(`/api/subjects/${subjectSlug}?class=${classSlug}`)
+    api(`/api/subjects/${subjectSlug}?class=${section.classSlug}`)
       .then((d) => setSubject(d.subject))
       .catch(() => setError('Subject not found.'));
-  }, [subjectSlug]);
+  }, [subjectSlug, sectionId]);
 
   if (error) {
     return (
@@ -37,7 +39,7 @@ export default function SubjectPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
       <Link
-        to={`/class/${classSlug}`}
+        to={sectionPath(sectionId)}
         className="text-sm text-slate-400 hover:text-aqua-300 transition"
       >
         ← {subject.class?.name || 'Back'}
@@ -70,7 +72,7 @@ export default function SubjectPage() {
         {subject.chapters.map((chapter, idx) => (
           <Link
             key={chapter.id}
-            to={`/class/${classSlug}/subject/${subjectSlug}/chapter/${chapter.slug}`}
+            to={sectionPath(sectionId, subjectSlug, chapter.slug)}
             className="glass rounded-2xl px-5 py-4 flex items-center justify-between gap-4 hover:border-aqua-400/40 hover:bg-white/8 transition group"
           >
             <div className="min-w-0 flex items-center gap-3.5">

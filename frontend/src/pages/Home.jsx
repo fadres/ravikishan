@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { streakDays } from '../utils/streak.js';
 import { QUICK_INSPIRE } from '../data/inspire.js';
 import QuickReviewBox from '../components/QuickReviewBox.jsx';
+import { sectionPath } from '../lib/sectionLinks.js';
 
 const IDIOMS = [
   { text: 'Practice makes perfect.', author: 'Proverb' },
@@ -269,7 +270,7 @@ export default function Home() {
   const buildOptions = ({ subjects, loksewa, gk }) => {
     const options = [
       {
-        to: '/class/class-11',
+        to: sectionPath('class-11'),
         name: 'Class 11',
         desc: 'All subjects · NCE syllabus',
         meta: `${subjects.length} subjects`,
@@ -282,7 +283,7 @@ export default function Home() {
         ),
       },
       {
-        to: '/class/class-12',
+        to: sectionPath('class-12'),
         name: 'Class 12',
         desc: 'Higher secondary content',
         meta: 'Coming soon',
@@ -295,7 +296,7 @@ export default function Home() {
         ),
       },
       {
-        to: '/class/class-11/subject/loksewa',
+        to: sectionPath('class-11', 'loksewa'),
         name: 'Loksewa Knowledge',
         desc: 'Service commission prep',
         meta: loksewa ? `${loksewa._count.chapters} chapters` : '',
@@ -308,7 +309,7 @@ export default function Home() {
         ),
       },
       {
-        to: '/class/class-11/subject/general-knowledge',
+        to: sectionPath('class-11', 'general-knowledge'),
         name: 'General Knowledge',
         desc: 'Awareness, facts & current affairs',
         meta: gk ? `${gk._count.chapters} chapters` : '',

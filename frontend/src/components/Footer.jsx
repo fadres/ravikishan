@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext.jsx';
+import { sectionPath } from '../lib/sectionLinks.js';
 
 const LINKS = [
   { to: '/', label: 'Home' },
   { to: '/search', label: 'Search' },
-  { to: '/class/class-11', label: 'Subjects' },
+  { to: sectionPath('class-11'), label: 'Subjects' },
   { to: '/login', label: 'Log in' },
 ];
 

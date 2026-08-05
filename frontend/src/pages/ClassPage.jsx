@@ -2,18 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import SubjectIcon from '../components/SubjectIcon.jsx';
+import { sectionById, sectionPath } from '../lib/sectionLinks.js';
 
 export default function ClassPage() {
-  const { classSlug } = useParams();
+  const { sectionId } = useParams();
+  const section = sectionById(sectionId);
   const [klass, setKlass] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     setKlass(null);
-    api(`/api/classes/${classSlug}`)
+    api(`/api/classes/${section.classSlug}`)
       .then((d) => setKlass(d.klass))
-      .catch(() => setError('Class not found.'));
-  }, [classSlug]);
+      .catch(() => setError('Section not found.'));
+  }, [sectionId]);
 
   if (error) {
     return (
@@ -47,7 +49,7 @@ export default function ClassPage() {
         {klass.subjects.map((subject) => (
           <Link
             key={subject.id}
-            to={`/class/${klass.slug}/subject/${subject.slug}`}
+            to={sectionPath(sectionId, subject.slug)}
             className="watermark glass rounded-2xl p-5 hover:border-aqua-400/40 hover:bg-white/8 transition group"
           >
             <div className="flex items-start justify-between">
