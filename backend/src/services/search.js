@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '../config/db.js';
+import { prisma, prismaForSection } from '../config/db.js';
+import { requireSection } from '../lib/sections.config.js';
 import {
   sectionIndexForBlockType,
   sectionLabelForBlockType,
@@ -35,7 +36,10 @@ const SECTION_TYPE_SQL = new Map([
   ['learning', Prisma.sql`cb."blockType" = 'learning_outcome'`],
 ]);
 
-export async function searchContent(q, viewerLevel = 3, filters = {}) {
+// The client is a parameter so section-scoped search can run against a
+// section's own database (searchWithinSection) while the global endpoint
+// keeps using the global client.
+export async function searchContent(q, viewerLevel = 3, filters = {}, db = prisma) {
   const { subjectSlug, classSlug, blockType, accessLevel, section, page = 1, perPage = 25 } = filters;
   const offset = (page - 1) * perPage;
   const sectionFilter = section ? SECTION_TYPE_SQL.get(section) : null;
@@ -46,7 +50,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
 
   const englishQuery = hasDevanagari
     ? Promise.resolve([])
-    : prisma.$queryRaw`
+    : db.$queryRaw`
     SELECT cb.id,
            cb.title,
            cb."blockType",
@@ -80,7 +84,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     LIMIT ${perPage} OFFSET ${offset}
   `;
 
-  const simpleQuery = prisma.$queryRaw`
+  const simpleQuery = db.$queryRaw`
     SELECT cb.id,
            cb.title,
            cb."blockType",
@@ -114,7 +118,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     LIMIT ${perPage} OFFSET ${offset}
   `;
 
-  const countQuery = prisma.$queryRaw`
+  const countQuery = db.$queryRaw`
     SELECT COUNT(DISTINCT cb.id)::int AS total
     FROM "ContentBlock" cb
     JOIN "Chapter" ch ON ch.id = cb."chapterId"
@@ -128,7 +132,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     ${filterSql(filters, viewerLevel)}
   `;
 
-  const chapterRows = prisma.$queryRaw`
+  const chapterRows = db.$queryRaw`
     SELECT ch.id, ch.title, ch.slug AS "chapterSlug",
            s.name AS "subjectName", s.slug AS "subjectSlug",
            c.slug AS "classSlug", c.name AS "className",
@@ -144,7 +148,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     LIMIT 8
   `;
 
-  const chapterCountRows = prisma.$queryRaw`
+  const chapterCountRows = db.$queryRaw`
     SELECT COUNT(*)::int AS total
     FROM "Chapter" ch
     JOIN "Subject" s ON s.id = ch."subjectId"
@@ -155,7 +159,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     ${classSlug ? Prisma.sql`AND c.slug = ${classSlug}` : Prisma.empty}
   `;
 
-  const subjectRows = prisma.$queryRaw`
+  const subjectRows = db.$queryRaw`
     SELECT s.id, s.name, s.slug AS "subjectSlug",
            c.slug AS "classSlug", c.name AS "className",
            (s.name ILIKE ${q + '%'})::int AS "isPrefix"
@@ -168,7 +172,7 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     LIMIT 6
   `;
 
-  const subjectCountRows = prisma.$queryRaw`
+  const subjectCountRows = db.$queryRaw`
     SELECT COUNT(*)::int AS total
     FROM "Subject" s
     JOIN "Class" c ON c.id = s."classId"
@@ -263,6 +267,25 @@ export async function searchContent(q, viewerLevel = 3, filters = {}) {
     Number(subjectCount?.[0]?.total ?? 0);
 
   return { results, totalCount, page, perPage, totalPages: Math.ceil(totalCount / perPage) };
+}
+
+/**
+ * Section-scoped search: runs the full search pipeline against ONE section's
+ * own database and answers only from that section's content. Unknown section
+ * ids throw UNKNOWN_SECTION (never fall back to another section's DB). Every
+ * result is tagged with sectionId so cross-section consumers (and the
+ * frontend) can attribute it.
+ */
+export async function searchWithinSection(sectionId, q, viewerLevel = 3, filters = {}) {
+  const section = requireSection(sectionId);
+  const db = prismaForSection(section.id);
+  const { results, ...rest } = await searchContent(q, viewerLevel, filters, db);
+  return {
+    ...rest,
+    sectionId: section.id,
+    sectionLabel: section.label,
+    results: results.map((r) => ({ ...r, sectionId: section.id })),
+  };
 }
 
 export async function searchGlobal(q, viewerLevel = 3) {

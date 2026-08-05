@@ -5,9 +5,10 @@
 // AI_ENDPOINT + AI_API_KEY are configured, requests are upgraded with an
 // LLM pass and the offline result is used as grounding/fallback.
 
-import { prisma } from '../config/db.js';
+import { prisma, prismaForSection } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
 import { env } from '../config/env.js';
+import { requireSection } from '../lib/sections.config.js';
 import { normalizeText, words, keywordOverlap, gradeAnswer } from './quiz.js';
 import { recordEvent } from './progress.js';
 
@@ -34,13 +35,15 @@ function sentences(s) {
 }
 
 // ── Library access (viewer-gated) ───────────────────
+// The client is a parameter so section-scoped AI (askSection) reads only
+// that section's own database; the global tools keep the global client.
 
-async function loadChapter(userId, chapterId) {
+async function loadChapter(userId, chapterId, db = prisma) {
   if (!chapterId) return null;
   const viewerLevel = userId
-    ? ((await prisma.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
+    ? ((await db.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
     : 4;
-  const chapter = await prisma.chapter.findUnique({
+  const chapter = await db.chapter.findUnique({
     where: { id: chapterId },
     include: {
       subject: { select: { id: true, name: true, slug: true, class: { select: { slug: true } } } },
@@ -59,11 +62,11 @@ async function loadChapter(userId, chapterId) {
   return { ...chapter, blocks: chapter.blocks.map((b) => ({ ...b, link })) };
 }
 
-async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
+async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}, db = prisma) {
   const viewerLevel = userId
-    ? ((await prisma.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
+    ? ((await db.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
     : 4;
-  const blocks = await prisma.contentBlock.findMany({
+  const blocks = await db.contentBlock.findMany({
     where: {
       accessLevel: { gte: viewerLevel },
       ...(subjectId ? { chapter: { subjectId } } : {}),
@@ -102,18 +105,20 @@ async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}) {
 }
 
 // ── Optional LLM upgrade ────────────────────────────
+// `ai` is the endpoint/key/model config: the global env by default, or a
+// section's own (registry aiEndpoint/aiApiKey/aiModel) for section AI.
 
-async function callLlm(messages, { temperature = 0.4, maxTokens = 900 } = {}) {
-  if (!env.aiEndpoint || !env.aiApiKey) return null;
+async function callLlm(messages, { temperature = 0.4, maxTokens = 900 } = {}, ai = env) {
+  if (!ai.aiEndpoint || !ai.aiApiKey) return null;
   try {
-    const res = await fetch(env.aiEndpoint, {
+    const res = await fetch(ai.aiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${env.aiApiKey}`,
+        Authorization: `Bearer ${ai.aiApiKey}`,
       },
       body: JSON.stringify({
-        model: env.aiModel,
+        model: ai.aiModel,
         messages,
         temperature,
         max_tokens: maxTokens,
@@ -127,20 +132,23 @@ async function callLlm(messages, { temperature = 0.4, maxTokens = 900 } = {}) {
   }
 }
 
-async function llmOr(grounding, messages) {
-  const llm = await callLlm(messages);
+async function llmOr(grounding, messages, ai = env) {
+  const llm = await callLlm(messages, {}, ai);
   return llm ? { generated: true, content: llm } : grounding;
 }
 
 // ── 1. Doubt solver ─────────────────────────────────
 
-export async function solveDoubt(userId, { question, chapterId }) {
+// Core doubt-solving flow, parameterized by the database and the AI config:
+// global tools run on the global client + env AI, section tools on the
+// section's client + the section's own aiEndpoint (see askSection below).
+async function solveDoubtCore(userId, { question, chapterId, subjectId }, db = prisma, ai = env) {
   if (!question) throw new AppError(400, 'Question is required');
   const q = String(question).slice(0, 2000);
   const qWords = new Set(words(q).filter((w) => w.length > 3));
   const blocks = chapterId
-    ? (await loadChapter(userId, chapterId))?.blocks ?? []
-    : await loadLibrary(userId, { limit: 80 });
+    ? (await loadChapter(userId, chapterId, db))?.blocks ?? []
+    : await loadLibrary(userId, { subjectId, limit: 80 }, db);
 
   const scored = blocks
     .map((b) => {
@@ -172,10 +180,32 @@ export async function solveDoubt(userId, { question, chapterId }) {
   const result = await llmOr(grounding, [
     { role: 'system', content: 'You are a patient tutor for a Class 11/12 student. Answer the doubt concisely using the provided notes as grounding. Reply in the same language as the question.' },
     { role: 'user', content: `Notes:\n${passages.map((p) => `${p.title}: ${p.passage}`).join('\n---\n')}\n\nStudent's doubt: ${q}` },
-  ]);
+  ], ai);
 
   await recordEvent(userId, 'ai.doubt', chapterId ?? undefined, undefined, { question: q }).catch(() => {});
   return { tool: 'doubt_solver', query: q, ...result };
+}
+
+export async function solveDoubt(userId, payload) {
+  return solveDoubtCore(userId, payload);
+}
+
+/**
+ * Section-scoped AI: answers a doubt using ONLY the given section's own
+ * database and that section's own local AI endpoint (from the section
+ * registry). Unknown section ids throw UNKNOWN_SECTION — the request never
+ * falls back to another section's data (see ARCHITECTURE.md).
+ */
+export async function askSection(userId, sectionId, payload) {
+  const section = requireSection(sectionId);
+  const db = prismaForSection(section.id);
+  const sectionAi = {
+    aiEndpoint: section.aiEndpoint,
+    aiApiKey: section.aiApiKey,
+    aiModel: section.aiModel,
+  };
+  const result = await solveDoubtCore(userId, payload, db, sectionAi);
+  return { sectionId: section.id, sectionLabel: section.label, ...result };
 }
 
 // ── 2. Note summarizer ──────────────────────────────

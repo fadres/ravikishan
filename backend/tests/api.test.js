@@ -473,3 +473,65 @@ test('audit trail records who approved what', async () => {
   assert.equal(audit.status, 200);
   assert.ok(audit.body.logs.some((l) => l.action === 'access.approved' && l.actorEmail === 'owner@test.ravikishan'));
 });
+
+// ── Section-scoped search + AI (multi-section architecture) ───────────────
+
+test('GET /api/sections/class-11/search finds content only in that section, tagged with its id', async () => {
+  const res = await request(app).get('/api/sections/class-11/search?q=kinematics');
+  assert.equal(res.status, 200);
+  assert.equal(res.body.sectionId, 'class-11');
+  assert.ok(res.body.results.length >= 1, 'kinematics fixture must be searchable');
+  for (const r of res.body.results) {
+    assert.equal(r.sectionId, 'class-11', 'every result is attributed to the section');
+    assert.equal(r.klass.slug, 'class-11', 'results only come from the class-11 tree');
+  }
+  assert.ok(
+    res.body.results.some((r) => r.title.includes('Kinematics') || r.kind === 'chapter'),
+    'the Kinematics fixture surfaces in results',
+  );
+});
+
+test('GET /api/sections/class-11/search degrades premium snippets for anonymous viewers', async () => {
+  const free = await request(app).get('/api/sections/class-11/search?q=secret');
+  assert.equal(free.status, 200);
+  for (const r of free.body.results) {
+    if (r.title.includes('Secret Topic')) {
+      assert.equal(r.locked, true, 'level-2 block is locked for anonymous viewers');
+      assert.equal(r.snippet, null, 'locked blocks never leak snippets');
+    }
+  }
+});
+
+test('GET /api/sections/<unknown>/search returns 404 (fail-fast, no fallback)', async () => {
+  const res = await request(app).get('/api/sections/class-12-test/search?q=kinematics');
+  assert.equal(res.status, 404);
+});
+
+test('POST /api/sections/class-11/ai/ask answers from section content (authenticated)', async () => {
+  const loginRes = await login('owner@test.ravikishan', 'testpass123');
+  const res = await request(app)
+    .post('/api/sections/class-11/ai/ask')
+    .set(authHeaders(loginRes.body.accessToken))
+    .send({ question: 'What is kinematics and how is it studied?' });
+  assert.equal(res.status, 200);
+  assert.equal(res.body.sectionId, 'class-11');
+  assert.equal(res.body.tool, 'doubt_solver');
+  assert.ok(typeof res.body.answer === 'string' && res.body.answer.length > 0);
+  assert.ok(Array.isArray(res.body.sources));
+});
+
+test('POST /api/sections/class-11/ai/ask requires authentication', async () => {
+  const res = await request(app)
+    .post('/api/sections/class-11/ai/ask')
+    .send({ question: 'What is kinematics and how is it studied?' });
+  assert.equal(res.status, 401);
+});
+
+test('POST /api/sections/<unknown>/ai/ask returns 404 (fail-fast, no fallback)', async () => {
+  const loginRes = await login('owner@test.ravikishan', 'testpass123');
+  const res = await request(app)
+    .post('/api/sections/class-12-test/ai/ask')
+    .set(authHeaders(loginRes.body.accessToken))
+    .send({ question: 'What is kinematics and how is it studied?' });
+  assert.equal(res.status, 404);
+});
