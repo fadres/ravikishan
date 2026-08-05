@@ -1,0 +1,198 @@
+// ─────────────────────────────────────────────────────────────────────────
+// CLASS 11 section content schema — the content tables of the first
+// section (Class 11): classes, subjects, chapters, blocks, topics, and the
+// versioning/publish/content-tag tables.
+//
+// Multi-section boundary — see ARCHITECTURE.md at the repo root.
+// Today this schema points at the same connection as the global schema
+// (NEON_CLASS11_URL / DATABASE_URL) — no split has happened yet. When a
+// SECOND section is introduced, its content schema lives in a brand-new
+// Neon project with a DIFFERENT DATABASE_URL, and its content tables are
+// created there from day one — never in this one.
+// ─────────────────────────────────────────────────────────────────────────
+
+model Class {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  subjects  Subject[]
+}
+
+model Subject {
+  id             String            @id @default(uuid())
+  classId        String
+  class          Class             @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name           String
+  slug           String
+  subjectType    SubjectType
+  icon           String?
+  themeColor     String?
+  isLocked       Boolean           @default(true)
+  sortOrder      Int               @default(0)
+  status         ContentStatus     @default(draft)
+  description    String?
+  difficulty     Difficulty        @default(easy)
+  chapters       Chapter[]
+  customSubjects CustomSubject[]
+  quizzes        Quiz[]
+  flashcardDecks FlashcardDeck[]
+  exams          Exam[]
+
+  @@unique([classId, slug])
+  @@index([subjectType])
+  @@index([status])
+}
+
+model CustomSubject {
+  id        String   @id @default(uuid())
+  name      String
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subjectId])
+}
+
+model Chapter {
+  id             String            @id @default(uuid())
+  subjectId      String
+  subject        Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  title          String
+  slug           String
+  isLocked       Boolean           @default(true)
+  sortOrder      Int               @default(0)
+  status         ContentStatus     @default(draft)
+  prerequisites  String?
+  readingTime    Int?
+  metadata       Json?             @default("{}")
+  blocks         ContentBlock[]
+  topics         Topic[]
+  userProgress   UserProgress[]
+  bookmarks      Bookmark[]
+  quizzes        Quiz[]
+  flashcardDecks FlashcardDeck[]
+
+  @@unique([subjectId, slug])
+  @@index([subjectId])
+}
+
+model ContentBlock {
+  id              String         @id @default(uuid())
+  chapterId       String
+  chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topicId         String?
+  topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  blockType       BlockType
+  status          ContentStatus  @default(draft)
+  accessLevel     Int            @default(3)
+  difficulty      Difficulty     @default(easy)
+  title           String?
+  contentRichtext String?
+  contentCode     String?
+  codeLanguage    String?
+  mindmapJson     Json?
+  diagramData     Json?
+  subLevel        String?
+  classifiedBy    String?
+  sectionIndex    Int?
+  metadata        Json?
+  isDuplicateOf   String?
+  searchVectorEnglish Unsupported("tsvector")? @map("search_vector_english")
+  searchVectorSimple  Unsupported("tsvector")? @map("search_vector_simple")
+  sortOrder       Int            @default(0)
+  decisionMaker   DecisionMaker?
+  versions        ContentVersion[]
+  blockTags       BlockTag[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([chapterId, sortOrder])
+  @@index([sortOrder])
+  @@index([accessLevel])
+  @@index([blockType])
+  @@index([difficulty])
+  @@index([topicId])
+  @@index([sectionIndex])
+  @@index([searchVectorEnglish(type: Gin)], map: "idx_content_search_english")
+  @@index([searchVectorSimple(type: Gin)], map: "idx_content_search_simple")
+}
+
+model DecisionMaker {
+  id             String       @id @default(uuid())
+  contentBlockId String       @unique
+  contentBlock   ContentBlock @relation(fields: [contentBlockId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  decidedAt      DateTime     @default(now())
+
+  @@index([userId])
+}
+
+// ── CMS ──────────────────────────────────────────────────────────
+
+model Topic {
+  id          String   @id @default(uuid())
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  title       String
+  slug        String
+  description String?
+  sortOrder   Int      @default(0)
+  status      ContentStatus @default(draft)
+  metadata    Json?
+  validationReport Json?
+  blocks      ContentBlock[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  quizzes     Quiz[]
+  flashcardDecks FlashcardDeck[]
+
+  @@unique([chapterId, slug])
+  @@index([chapterId])
+}
+
+model ContentVersion {
+  id          String   @id @default(uuid())
+  blockId     String
+  block       ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  version     Int
+  title       String?
+  contentRichtext String?
+  contentCode     String?
+  codeLanguage    String?
+  mindmapJson     Json?
+  diagramData     Json?
+  subLevel        String?
+  changedBy   String?
+  user        User?    @relation(fields: [changedById], references: [id], onDelete: SetNull)
+  changedById String?
+  createdAt   DateTime @default(now())
+
+  @@unique([blockId, version])
+  @@index([blockId])
+  @@index([changedById])
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+
+  blockTags   BlockTag[]
+}
+
+model BlockTag {
+  id        String   @id @default(uuid())
+  blockId   String
+  tagId     String
+  block     ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  tag       Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([blockId, tagId])
+  @@index([blockId])
+  @@index([tagId])
+}

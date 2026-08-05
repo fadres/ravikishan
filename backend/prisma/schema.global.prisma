@@ -1,0 +1,503 @@
+// ─────────────────────────────────────────────────────────────────────────
+// GLOBAL layer schema — accounts, auth, progress, gamification,
+// notifications, admin core, audit log, and the structural systems
+// (quizzes / flashcards / planner) that FK into section content.
+//
+// Multi-section boundary — see ARCHITECTURE.md at the repo root.
+// These tables stay GLOBAL forever: when a second section is introduced
+// this schema remains in the current Neon project, which becomes the
+// permanent global DB. Only section-content tables (schema.class11.prisma,
+// and future schema.<section>.prisma files) move to brand-new Neon
+// projects.
+// ─────────────────────────────────────────────────────────────────────────
+
+model User {
+  id               String        @id @default(uuid())
+  email            String        @unique
+  displayName      String?
+  avatarUrl        String?
+  bio              String?
+  role             Role          @default(guest)
+  isApproved       Boolean       @default(false)
+  emailVerified    Boolean       @default(false)
+  accessLevel      Int           @default(3)
+  totalXp          Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  lastActiveAt     DateTime?
+  passwordHashes   PasswordHash[]
+  refreshTokens    RefreshToken[]
+  accessRequests   AccessRequest[]
+  resolvedRequests AccessRequest[] @relation("ResolvedBy")
+  auditLogs        AuditLog[]
+  decisionMakers   DecisionMaker[]
+  r2Uploads        R2Upload[]
+  contentVersions  ContentVersion[]
+  userProgress     UserProgress[]
+  bookmarks        Bookmark[]
+  studyStreak      StudyStreak?
+  learningAnalytics LearningAnalytics[]
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  loginHistory     LoginHistory[]
+  notifications    Notification[]
+  pushSubscriptions PushSubscription[]
+  xpEntries        XpEntry[]
+  userBadges       UserBadge[]
+  quizzesCreated   Quiz[]
+  quizAttempts     QuizAttempt[]
+  flashcardDecks   FlashcardDeck[]
+  studyGoals       StudyGoal[]
+  exams            Exam[]
+  studyPlanItems   StudyPlanItem[]
+  dailyStudy       DailyStudy[]
+
+  @@index([role])
+  @@index([accessLevel])
+  @@index([totalXp])
+}
+
+model PasswordHash {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  hash      String
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  expiresAt DateTime
+  revoked   Boolean   @default(false)
+  userAgent String?
+  ip        String?
+  lastUsedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model LoginHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ip        String?
+  userAgent String?
+  device    String?
+  location  String?
+  success   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}
+
+model AccessRequest {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  email        String
+  message      String?
+  status       RequestStatus @default(pending)
+  requestedAt  DateTime      @default(now())
+  resolvedAt   DateTime?
+  resolvedById String?
+  resolvedBy   User?         @relation("ResolvedBy", fields: [resolvedById], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([status])
+  @@index([userId, status])
+  @@index([resolvedById])
+}
+
+model R2Upload {
+  id               String        @id @default(uuid())
+  key              String        @unique
+  originalFilename String
+  fileUrl          String?
+  bucket           String?
+  fileSize         Int?
+  mimeType         String
+  fileHash         String?
+  status           UploadStatus  @default(pending)
+  uploadedBy       User          @relation(fields: [uploadedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  uploadedById     String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([uploadedById])
+  @@index([createdAt])
+  @@index([status])
+  @@index([fileHash])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  actorId    String?
+  action     String
+  targetType String
+  targetId   String?
+  detail     Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt, targetId])
+  @@index([actorId])
+  @@index([action])
+}
+
+// ── Progress Tracking ────────────────────────────────────────────
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blocksCompleted Int  @default(0)
+  totalBlocks    Int   @default(0)
+  lastBlockId   String?
+  lastAccessedAt DateTime @default(now())
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blockId   String?
+  label     String?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, chapterId, blockId])
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model StudyStreak {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  streak      Int      @default(1)
+  lastDate    DateTime @default(now())
+  longestStreak Int   @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId])
+}
+
+model LearningAnalytics {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType   String
+  chapterId   String?
+  blockId     String?
+  timeSpent   Int      @default(0)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// ── Notifications & Push ────────────────────────────
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String?
+  link      String?
+  icon      String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  keys      Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Gamification ────────────────────────────────────
+
+model XpEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  source    String
+  sourceId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([source])
+}
+
+model Badge {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String
+  icon        String
+  criteria    Json
+  createdAt   DateTime @default(now())
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String
+  badgeId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt  DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+}
+
+model DailyStudy {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime
+  minutesStudied Int   @default(0)
+  quizzesTaken Int     @default(0)
+  cardsReviewed Int    @default(0)
+  blocksCompleted Int  @default(0)
+  goalsCompleted Int   @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, date])
+}
+
+// ── Quiz System ─────────────────────────────────────
+
+model Quiz {
+  id                String        @id @default(uuid())
+  title             String
+  description       String?
+  subjectId         String?
+  subject           Subject?      @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  chapterId         String?
+  chapter           Chapter?      @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  topicId           String?
+  topic             Topic?        @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  status            ContentStatus @default(draft)
+  timeLimitSeconds  Int?
+  shuffle           Boolean       @default(true)
+  isTimed           Boolean       @default(false)
+  questionCount     Int           @default(0)
+  createdBy         User?         @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdById       String?
+  questions         QuizQuestion[]
+  attempts          QuizAttempt[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([topicId])
+  @@index([status])
+}
+
+model QuizQuestion {
+  id          String       @id @default(uuid())
+  quizId      String
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  questionType QuestionType
+  question    String
+  options     Json?
+  correctAnswer String
+  explanation String?
+  points      Int          @default(1)
+  sortOrder   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([quizId, sortOrder])
+}
+
+model QuizAttempt {
+  id            String        @id @default(uuid())
+  quizId        String
+  quiz          Quiz          @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        AttemptStatus @default(in_progress)
+  startedAt     DateTime      @default(now())
+  submittedAt   DateTime?
+  score         Int           @default(0)
+  totalPoints   Int           @default(0)
+  correctCount  Int           @default(0)
+  totalQuestions Int          @default(0)
+  timeSpentSeconds Int        @default(0)
+  answers       Json?
+  xpEarned      Int           @default(0)
+  createdAt     DateTime      @default(now())
+
+  @@index([quizId])
+  @@index([userId, createdAt])
+}
+
+// ── Flashcards ──────────────────────────────────────
+
+model FlashcardDeck {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  subjectId   String?
+  subject     Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  chapterId   String?
+  chapter     Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  topicId     String?
+  topic       Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  isFavorite  Boolean  @default(false)
+  cards       Flashcard[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subjectId])
+  @@index([chapterId])
+  @@index([topicId])
+}
+
+model Flashcard {
+  id            String        @id @default(uuid())
+  deckId        String
+  deck          FlashcardDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  front         String
+  back          String
+  hint          String?
+  difficulty    Difficulty    @default(easy)
+  isBookmarked  Boolean       @default(false)
+  ease          Float         @default(2.5)
+  interval      Int           @default(0)
+  repetitions   Int           @default(0)
+  dueAt         DateTime      @default(now())
+  lastReviewedAt DateTime?
+  timesReviewed Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([deckId])
+  @@index([dueAt])
+}
+
+// ── Study Planner ───────────────────────────────────
+
+model StudyGoal {
+  id          String     @id @default(uuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  period      GoalPeriod @default(daily)
+  targetUnits Int        @default(1)
+  unitType    String     @default("minutes")
+  progress    Int        @default(0)
+  date        DateTime?
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId, period])
+  @@index([userId, date])
+}
+
+model Exam {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  subjectId String?
+  subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  examDate  DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([examDate])
+  @@index([subjectId])
+}
+
+model StudyPlanItem {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  date            DateTime
+  time            String?
+  durationMinutes Int       @default(30)
+  chapterId       String?
+  topicId         String?
+  reminderEnabled Boolean   @default(false)
+  reminderTime    String?
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId, date])
+  @@index([chapterId])
+  @@index([topicId])
+}

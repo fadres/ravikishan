@@ -16,6 +16,13 @@ if (process.env.NODE_ENV === 'production') {
 
 export const env = {
   databaseUrl: process.env.DATABASE_URL,
+  // The existing Neon project is officially the CLASS 11 database.
+  // NEON_CLASS11_URL is its canonical name (alias of DATABASE_URL — the
+  // connection string is NOT duplicated, so this keeps working today and
+  // the rename costs nothing when the split happens). Future sections get
+  // their own NEW Neon projects with their own env vars — never this one.
+  // See ARCHITECTURE.md.
+  class11DbUrl: process.env.NEON_CLASS11_URL || process.env.DATABASE_URL,
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET || 'dev-access-secret-change-me',
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-me',
   accessTtl: process.env.ACCESS_TOKEN_TTL || '15m',
