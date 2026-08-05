@@ -117,6 +117,59 @@ When fewer than 3 results match, `recommendations` returns sibling topics.
 
 ---
 
+## Sections (`/api/sections/*`) — section-scoped surface
+
+Sections are independent study tracks, each with its own database and its own
+local AI instance (see `ARCHITECTURE.md`). The content endpoints above read
+the global DB; every section endpoint resolves the section from the registry
+and only ever touches that section's own database. Unknown section ids always
+return **404** — never a fallback to Class 11.
+
+### GET `/api/sections`
+Public registry listing — identity + status only; DB URLs and AI keys are
+never exposed.
+
+**200** → `{ sections: [{ id, label, classSlug, status }] }` (active sections).
+
+### GET `/api/sections/:sectionId`
+**200** → `{ section: { id, label, classSlug, status } }`
+**404** → unknown section id.
+
+### GET `/api/sections/search?q=…` *(auth optional)*
+Cross-section fan-out search: runs the same pipeline against **every active
+section's own database in parallel** (`Promise.allSettled`), merges ranked
+results and reports per-section failures instead of failing the request.
+Same query params as `/api/search`. Every result carries a `sectionId` tag.
+
+**200** →
+```json
+{
+  "query": "kinematics",
+  "results": [ { "id", "title", "blockType", "sectionId", "chapter": {…}, "subject": {…}, "klass": {…}, "rank", "locked", "snippet" } ],
+  "recommendations": [ … ],
+  "totalCount": 3,
+  "totalPages": 1,
+  "page": 1,
+  "failed": [ { "sectionId": "class-12", "error": "…" } ]
+}
+```
+
+### GET `/api/sections/:sectionId/search?q=…` *(auth optional)*
+Section-scoped search — identical pipeline and degradation rules to
+`/api/search`, but reads only that section's database. Results carry
+`sectionId`. **404** → unknown section id.
+
+### POST `/api/sections/:sectionId/ai/ask` *(auth, rate-limited)*
+Grounded Q&A over the section's own content, answered through the section's
+own local AI endpoint (the registry's `aiEndpoint`).
+
+Body: `{ question: string (5–2000), chapterId?: uuid, subjectId?: uuid }`
+
+**200** → `{ sectionId, sectionLabel, …answer (same shape as the global AI tools) }`
+**404** → unknown section id.
+
+---
+
 ## Admin (`/api/admin/*`) — requires `owner` or `admin`
 
 ### Access requests

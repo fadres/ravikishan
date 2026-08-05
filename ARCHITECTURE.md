@@ -119,6 +119,22 @@ through the codebase. Adding a new section is purely additive: provision its
 own new Neon, add one registry entry, add its content folder — Class 11's
 systems are never touched.
 
+### Frontend section mapping
+
+- `frontend/src/lib/sectionLinks.js` — the frontend registry mirror: one
+  entry per section (`id`, `label`, `classSlug`) plus the link builders
+  (`sectionPath()`, `sectionIdFromClassSlug()`). Every content link in the
+  app (header, footer, landing cards, pages, search results, AI source
+  links, dashboard) resolves through it — no hardcoded `/class/class-11`
+  strings.
+- Routes are **section-namespaced**: `/:sectionId`,
+  `/:sectionId/subject/:subjectSlug`,
+  `/:sectionId/subject/:subjectSlug/chapter/:chapterSlug`. The section id
+  is the first URL segment, so a new section works with **zero router
+  changes**.
+- Legacy `/class/:classSlug/…` URLs redirect into the section namespace;
+  class slugs without a registered section go home.
+
 ### Prisma schema files
 
 - `backend/prisma/schema.prisma` — generator + datasource + shared enums.
@@ -168,9 +184,10 @@ where it is (this DB effectively becomes the permanent global DB too).
 5. **Verify isolation** — confirm the new section's import and local AI only
    touch its own Neon; confirm Class 11's `NEON_CLASS11_URL` connection string
    appears nowhere in the new section's config, scripts or CI.
-6. **Frontend** — add the section to `frontend/src/lib/sectionLinks.js` (and
-   any landing-page cards); routes are already section-namespaced, so
-   `/class-12/physics/…` works with zero router changes.
+6. **Frontend** — add the section to `frontend/src/lib/sectionLinks.js`
+   (one `{ id, label, classSlug }` entry) and update any landing-page cards
+   via `sectionPath()`. The routes are already section-namespaced, so
+   `/class-12/subject/physics/…` works with zero router changes.
 
 **Zero changes are allowed** to: global auth, progress, gamification, admin
 core, or audit code. If you need to change those, you are doing it wrong.

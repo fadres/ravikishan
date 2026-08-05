@@ -60,6 +60,19 @@ working owner/admin panel.
   after each topic group and concept group, and a prominent
   "— END OF CHAPTER —" badge after the last block of a chapter.
 
+### Sections (multi-track architecture)
+
+The platform is structured around **sections** — independent study tracks,
+each with its own database and its own local AI instance. Today exactly one
+section exists (**Class 11**, id `class-11`); Class 12 and other tracks
+follow the same shape when built. The single seam is the **section registry**
+(`backend/src/lib/sections.config.js`); content lives in per-section trees
+under `backend/content/<section-id>/`, and the frontend namespaces routes by
+section id (`/class-11/subject/physics/chapter/…`). Read
+`ARCHITECTURE.md` (repo root) before touching any section-related code —
+it is the canonical reference, including the checklist for adding a new
+section and the per-section AI / fan-out search design.
+
 ---
 
 ## Project layout
@@ -68,19 +81,23 @@ working owner/admin panel.
 ravikishan/
 ├── backend/
 │   ├── prisma/
-│   │   ├── schema.prisma          # models + enums
+│   │   ├── schema.prisma          # generator + datasource + shared enums
+│   │   ├── schema.global.prisma   # global tables (auth, progress, admin…)
+│   │   ├── schema.class11.prisma  # Class 11 content tables
 │   │   ├── migrations/            # versioned SQL migrations (incl. tsvector)
-│   │   ├── import-data/           # content source of truth (navigation + topic JSONs)
-│   │   ├── import-content.js      # pushes import-data/ into the DB (idempotent)
+│   │   ├── import-notes.js        # 7-tab taxonomy importer (--section aware)
+│   │   ├── import-data/           # legacy content importer (navigation JSONs)
 │   │   └── seed.js                # demo content skeleton (idempotent)
+│   ├── content/                   # per-section content trees: content/<section-id>/class/subject/…
 │   ├── src/
 │   │   ├── server.js / app.js     # entry, middleware, rate limits
-│   │   ├── config/                # env + Prisma client
+│   │   ├── config/                # env + global Prisma client (db.js)
+│   │   ├── lib/sections.config.js # the section registry — the single seam
 │   │   ├── middleware/            # auth, roles, validation, errors
-│   │   ├── routes/                # auth, access, content, admin, search
-│   │   ├── services/              # audit, full-text search, content classifier
+│   │   ├── routes/                # auth, access, content, admin, search, sections
+│   │   ├── services/              # audit, full-text search, AI, classifier
 │   │   └── utils/                 # JWT + refresh-token helpers
-│   ├── tests/                     # auth flow, locked-content rule, classifier tests
+│   ├── tests/                     # auth flow, locked-content rule, classifier, sections tests
 │   ├── render.yaml                # Render blueprint
 │   └── .env.example
 ├── frontend/
@@ -92,7 +109,7 @@ ravikishan/
 │       │   └── blocks/            # note cards, CodeBlock, MindmapTree, DiagramCompare, SectionDivider…
 │       ├── pages/                 # Home, Class, Subject, Chapter, Search, Login…
 │       │   └── admin/             # Requests, Users, Content CRUD (auto-detect), Audit
-│       └── lib/                   # markdown + KaTeX renderer, classifier mirror
+│       └── lib/                   # markdown + KaTeX renderer, classifier mirror, sectionLinks.js
 ├── docs/
 │   ├── README.md                  # you are here
 │   └── API.md                     # every endpoint
@@ -117,7 +134,7 @@ npm install
 npx prisma migrate deploy       # apply migrations
 npm run migrate                 # = migrations + content import (idempotent)
 npm run seed                    # owner + demo content (idempotent)
-npm test                        # 45 tests — auth, access levels, classifier
+npm test                        # 108 tests — auth, access, classifier, sections
 npm run dev                     # API on http://localhost:4000
 
 # 3. Frontend
