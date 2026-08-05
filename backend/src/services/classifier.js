@@ -17,6 +17,212 @@
 
 import { sectionIndexForBlockType } from '../lib/sections.js';
 
+// ── Import-notes classifier (7-tab taxonomy) ──────────────────────────────
+//
+// classify() is a pure function used by prisma/import-notes.js. The folder
+// path is the PRIMARY, deterministic signal — a file inside .../pyqs/ is a
+// PYQ no matter what its text says. Content heuristics only run when the
+// path is ambiguous (file directly in the chapter folder) or the file sits
+// in the generic notes/ folder that could hold mixed types.
+//
+// Tab types (7):
+//   concept → core explanatory notes   example → worked/solved examples
+//   note    → quick-reference notes    formula → equations only
+//   pyq     → previous-year questions  set     → grouped drill question sets
+//   mindmap → concept-relationship maps
+
+export const TAB_TYPES = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap'];
+
+// Default tab presentation order for a chapter (overridable per chapter via
+// chapter.metadata.tabOrder; block rendering still follows sectionIndex).
+export const DEFAULT_TAB_ORDER = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap'];
+
+// Tab type → existing BlockType enum (extend, don't replace).
+export const TAB_TO_BLOCK_TYPE = {
+  concept: 'note_concept',
+  note: 'note_important',
+  example: 'note_example',
+  formula: 'formula',
+  pyq: 'pyq',
+  set: 'solved_example',
+  mindmap: 'mindmap',
+};
+
+// Tab type → access tier (3 = free, 2 = member, 1 = premium).
+export const TAB_ACCESS_LEVEL = {
+  concept: 3,
+  note: 2,
+  example: 2,
+  formula: 1,
+  pyq: 2,
+  set: 2,
+  mindmap: 1,
+};
+
+// Confidence below this is flagged for manual review instead of importing.
+export const CLASSIFICATION_THRESHOLD = 0.7;
+
+// Type-folder names (canonical + common variants) → tab type. The type
+// folder is the 4th path level: class/subject/chapter/<type>/file.json.
+const FOLDER_TYPE_MAP = {
+  concepts: 'concept',
+  concept: 'concept',
+  notes: 'note',
+  note: 'note',
+  examples: 'example',
+  example: 'example',
+  formula: 'formula',
+  formulas: 'formula',
+  pyqs: 'pyq',
+  pyq: 'pyq',
+  sets: 'set',
+  set: 'set',
+  mindmap: 'mindmap',
+  mindmaps: 'mindmap',
+  'mind-map': 'mindmap',
+};
+
+/**
+ * Deterministic folder signal. Returns the tab type when the path carries a
+ * recognized type folder (level 4), otherwise { type: null }.
+ */
+export function tabTypeFromFolder(filePath) {
+  const segs = String(filePath || '').replace(/\\/g, '/').split('/').filter(Boolean);
+  // class / subject / chapter / <typeFolder> / file.json  → ≥ 5 segments.
+  if (segs.length < 5) return { type: null, folder: null };
+  const folder = segs[segs.length - 2].toLowerCase();
+  return { type: FOLDER_TYPE_MAP[folder] ?? null, folder: segs[segs.length - 2] };
+}
+
+/**
+ * Strict flat-schema validation: { title: string, notes: string[] } plus the
+ * optional per-type fields (order: int, year, examSource, latex: bool,
+ * type). Invalid files are rejected — no silent coercion.
+ */
+export function validateNoteSchema(note) {
+  if (typeof note !== 'object' || note === null || Array.isArray(note)) {
+    return { valid: false, errors: ['note must be a JSON object'] };
+  }
+  const errors = [];
+  if (typeof note.title !== 'string' || !note.title.trim()) {
+    errors.push('"title" must be a non-empty string');
+  }
+  if (!Array.isArray(note.notes) || note.notes.length === 0) {
+    errors.push('"notes" must be a non-empty array of strings');
+  } else if (!note.notes.every((n) => typeof n === 'string')) {
+    errors.push('every entry in "notes" must be a string');
+  }
+  if (note.order !== undefined && (!Number.isInteger(note.order) || note.order < 0)) {
+    errors.push('"order" must be a non-negative integer');
+  }
+  if (note.type !== undefined && !TAB_TYPES.includes(note.type)) {
+    errors.push(`"type" must be one of: ${TAB_TYPES.join(', ')}`);
+  }
+  if (note.latex !== undefined && typeof note.latex !== 'boolean') {
+    errors.push('"latex" must be a boolean');
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+// ── Content signals (heuristic fallback) ──────────────────────────────────
+
+const SIGNALS = {
+  definition: /(is|are)\s+(defined\s+as|known\s+as|called|termed|referred\s+to\s+as)|refers\s+to\s+(a|the|an)|is\s+the\s+\w+\s+of/i,
+  exampleHeading: /^\s*(worked\s*|solved\s*)?examples?\s*:?\s*$/im,
+  workedExample: /worked\s+example|solved\s+example|example\s+\d+[.:)]/i,
+  solution: /^\s*(solution|answer|sol\.?)\s*[:—–-]/im,
+  question: /^\s*(q\d*|question\s*\d*)\s*[:.)-]/im,
+  yearExam: /\b(pyq|past\s*year|previous\s*year|board\s+question|entrance\s+(exam|question)|neb\s+question|old\s+question|20\d\d\s+exam|exam\s+20\d\d)\b/i,
+  setHeading: /^\s*(practice\s+set|question\s+set|drill|exercise\s+set|set\s+\d+)\s*[:—–-]/im,
+  formulaHeading: /^\s*formulas?\s*[:—–-]/im,
+  latex: /\$\$?[^$\n]+\$\$?/,
+  equation: /(^|\n)\s*[a-zA-Z]\s*=\s*[^\n=]{1,40}(?:$|\n)/,
+  keyPoints: /^\s*(key\s+points?|important\s+points?|quick\s+(notes?|revision|reference)|rapid\s+revision|must\s+remember|mnemonic|trick)\s*[:—–-]/im,
+  mapHeading: /^\s*(mind\s*map|concept\s*map)\s*[:—–-]/im,
+};
+
+// Baseline 0.2 everywhere; strong signals push a type past the threshold.
+function contentScores(text, metadata) {
+  const s = { concept: 0.2, note: 0.2, example: 0.2, formula: 0.2, pyq: 0.2, set: 0.2, mindmap: 0.2 };
+  const lines = text.split('\n');
+  const bullets = (text.match(/^\s*[-•*]\s+/gm) || []).length;
+  const questionCount = (text.match(/^\s*(q\d*|question\s*\d*)\s*[:.)-]/gim) || []).length;
+  const eqLines = lines.filter((l) => SIGNALS.equation.test(l)).length;
+  const has = (k) => SIGNALS[k].test(text);
+
+  if (has('mapHeading') || (bullets >= 4 && lines.some((l) => /→|->/i.test(l)))) s.mindmap = 0.92;
+  if (has('latex')) s.formula = Math.max(s.formula, 0.95);
+  if (has('formulaHeading') || (eqLines >= 2 && eqLines / lines.length >= 0.4)) s.formula = Math.max(s.formula, 0.85);
+  if (has('yearExam')) s.pyq = Math.max(s.pyq, 0.9);
+  if (has('workedExample')) s.example = Math.max(s.example, 0.9);
+  if (has('exampleHeading')) s.example = Math.max(s.example, 0.75);
+  if (has('setHeading')) s.set = Math.max(s.set, 0.88);
+  if (questionCount >= 5 && has('solution')) s.set = Math.max(s.set, 0.8);
+  if (questionCount >= 1 && has('solution')) s.example = Math.max(s.example, 0.7);
+  if (questionCount >= 2 && !has('solution') && s.pyq === 0.2) s.pyq = Math.max(s.pyq, 0.6);
+  if (has('keyPoints') || (bullets >= 3 && !questionCount && !has('solution'))) s.note = Math.max(s.note, 0.8);
+  if (has('definition')) s.concept = Math.max(s.concept, 0.85);
+  if (
+    text.length > 300 && !questionCount && !has('solution') && !has('latex') &&
+    !has('equation') && !has('yearExam') && !has('mapHeading') && !has('keyPoints')
+  ) {
+    s.concept = Math.max(s.concept, 0.6);
+  }
+
+  if (metadata?.latex === true) s.formula = Math.max(s.formula, 0.95);
+  if (metadata?.year || metadata?.examSource) s.pyq = Math.max(s.pyq, 0.9);
+  return s;
+}
+
+// Ties resolve to the first type in this fixed order — always deterministic.
+const TIEBREAK_ORDER = ['pyq', 'set', 'example', 'formula', 'concept', 'note', 'mindmap'];
+
+/**
+ * Pure, idempotent classifier for the import-notes pipeline.
+ * @param {object} note     parsed note file ({ title, notes, ... })
+ * @param {string} filePath path relative to the content root (folder-first)
+ * @param {object} metadata optional frontmatter ({ type, year, examSource, latex })
+ * @returns {{ type: string|null, confidence: number, reason: string, needsReview: boolean }}
+ */
+export function classify(note, filePath = '', metadata = {}) {
+  const schema = validateNoteSchema(note);
+  if (!schema.valid) {
+    return { type: null, confidence: 0, reason: `schema-error: ${schema.errors.join('; ')}`, needsReview: true };
+  }
+  if (metadata?.type && TAB_TYPES.includes(metadata.type)) {
+    return { type: metadata.type, confidence: 1, reason: 'explicit metadata.type', needsReview: false };
+  }
+
+  const folder = tabTypeFromFolder(filePath);
+  if (folder.type && folder.type !== 'note') {
+    // Deterministic: concepts/ examples/ formula/ pyqs/ sets/ mindmap/ are
+    // always their type, whatever the text says.
+    return { type: folder.type, confidence: 1, reason: `folder "${folder.folder}/"`, needsReview: false };
+  }
+
+  // Generic notes/ folder or no type folder → content heuristics decide.
+  const text = Array.isArray(note.notes) ? note.notes.join('\n') : '';
+  const scores = contentScores(text, metadata);
+  let best = 'note';
+  let bestScore = -1;
+  for (const t of TIEBREAK_ORDER) {
+    if (scores[t] > bestScore) {
+      best = t;
+      bestScore = scores[t];
+    }
+  }
+  const needsReview = bestScore < CLASSIFICATION_THRESHOLD;
+  const type = needsReview && folder.type ? folder.type : best;
+  return {
+    type,
+    confidence: bestScore,
+    reason: needsReview
+      ? `weak content signals (best "${best}" @ ${bestScore.toFixed(2)} < ${CLASSIFICATION_THRESHOLD}); flagged for manual review`
+      : `content heuristics: "${best}" detected`,
+    needsReview,
+  };
+}
+
 // ── Allowed types per subject (admin API validation + auto-coercion) ──────
 export const ALLOWED_BLOCK_TYPES = {
   science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'formula', 'symbols', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary'],

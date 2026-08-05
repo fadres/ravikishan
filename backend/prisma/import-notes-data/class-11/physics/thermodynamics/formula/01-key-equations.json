@@ -1,0 +1,11 @@
+{
+  "title": "Key Equations — Thermodynamics",
+  "latex": true,
+  "notes": [
+    "$$ΔU = Q − W$$",
+    "$$PV = nRT$$",
+    "$$\\eta = 1 - \\frac{T_c}{T_h}$$",
+    "$$\\Delta S = \\frac{Q_{rev}}{T}$$",
+    "$$W = P\\Delta V$$"
+  ]
+}

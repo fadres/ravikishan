@@ -271,6 +271,7 @@ model Chapter {
   status         ContentStatus     @default(draft)
   prerequisites  String?
   readingTime    Int?
+  metadata       Json?             @default("{}")
   blocks         ContentBlock[]
   topics         Topic[]
   userProgress   UserProgress[]
@@ -289,6 +290,7 @@ model ContentBlock {
   topicId         String?
   topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   blockType       BlockType
+  status          ContentStatus  @default(draft)
   accessLevel     Int            @default(3)
   difficulty      Difficulty     @default(easy)
   title           String?

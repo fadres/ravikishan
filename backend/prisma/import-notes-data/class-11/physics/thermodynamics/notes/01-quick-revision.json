@@ -1,0 +1,11 @@
+{
+  "title": "Quick Revision — Thermodynamics",
+  "notes": [
+    "- Isothermal process: constant temperature (ΔU = 0, all heat becomes work)",
+    "- Adiabatic process: no heat exchange (Q = 0)",
+    "- Isochoric process: constant volume (W = 0)",
+    "- Isobaric process: constant pressure",
+    "- Work done = area under the P–V curve",
+    "- Efficiency of a Carnot engine: η = 1 − Tc/Th"
+  ]
+}

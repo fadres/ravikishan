@@ -1,0 +1,11 @@
+{
+  "title": "Practice Set 1 — MCQ Drill",
+  "order": 1,
+  "notes": [
+    "Q1. Which process takes place at constant temperature?\nAnswer: Isothermal",
+    "Q2. In an adiabatic process, which quantity remains constant?\nAnswer: Heat exchanged (Q = 0)",
+    "Q3. The SI unit of entropy is:\nAnswer: J/K",
+    "Q4. A Carnot engine operating between two fixed temperatures has maximum efficiency when the process is:\nAnswer: Reversible",
+    "Q5. The first law of thermodynamics is a statement of:\nAnswer: Conservation of energy"
+  ]
+}

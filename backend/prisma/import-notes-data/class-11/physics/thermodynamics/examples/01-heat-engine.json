@@ -1,0 +1,9 @@
+{
+  "title": "Worked Example: Heat Engine",
+  "notes": [
+    "A Carnot engine absorbs 600 J of heat from a reservoir at 500 K and rejects heat to a sink at 300 K. Calculate the work done and the efficiency.",
+    "Solution: Efficiency η = 1 − Tc/Th = 1 − 300/500 = 0.4.",
+    "Work done W = η × Qh = 0.4 × 600 = 240 J.",
+    "Heat rejected Qc = Qh − W = 600 − 240 = 360 J."
+  ]
+}

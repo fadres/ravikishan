@@ -1,0 +1,17 @@
+{
+  "title": "Thermodynamics Concept Map",
+  "notes": [
+    "- Thermodynamics",
+    "  - Laws",
+    "    - Zeroth law → temperature",
+    "    - First law → internal energy",
+    "    - Second law → entropy",
+    "  - Processes",
+    "    - Isothermal → constant T",
+    "    - Adiabatic → Q = 0",
+    "    - Isochoric → constant V",
+    "  - Cycles",
+    "    - Carnot → most efficient",
+    "    - Refrigerator → reverse cycle"
+  ]
+}

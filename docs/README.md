@@ -220,6 +220,110 @@ UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-api.onren
 
 ---
 
+## Importing notes — 7-tab taxonomy pipeline
+
+New-style content is imported by `prisma/import-notes.js` (a production-grade
+alternative to the legacy `import-content` pipeline). It classifies every file
+into one of **seven tab types**, driven primarily by the folder it sits in.
+
+### Folder taxonomy (the classification backbone)
+
+```
+backend/prisma/import-notes-data/
+  class-11/
+    physics/
+      thermodynamics/
+        concepts/01-first-law.json     → concept  (block: note_concept)
+        notes/01-quick-revision.json   → note     (block: note_important)
+        examples/01-heat-engine.json   → example  (block: note_example)
+        formula/01-key-equations.json  → formula  (block: formula)
+        pyqs/01-neb-2023.json          → pyq      (block: pyq)
+        sets/01-drill-set.json         → set      (block: solved_example)
+        mindmap/01-thermo-map.json     → mindmap  (block: mindmap)
+```
+
+- Path maps directly to `class → subject → chapter → contentType`.
+- **Every file is a flat JSON object** — strict schema, no coercion:
+  `{ "title": string, "notes": string[], ... }`
+- Optional per-type fields: `order` (int), `year` + `examSource` (pyq),
+  `latex` (bool, formula), `type` (explicit classification override).
+- Files that violate the schema are rejected at parse time (reported as
+  errors, never silently fixed).
+
+### Classification (`backend/src/services/classifier.js`)
+
+`classify(note, filePath, metadata)` → `{ type, confidence, reason, needsReview }`
+
+1. **Folder path is the primary signal** — a file inside `pyqs/` is always a
+   PYQ, whatever its text says (confidence 1.0). The type folder is the 4th
+   path level: `class/subject/chapter/<type>/file.json`.
+2. **Content heuristics only run when the path is ambiguous** — files directly
+   in the chapter folder, or in the generic `notes/` folder that may hold
+   mixed types (a PYQ dropped in `notes/` is still detected as a PYQ).
+3. **Confidence score (0–1)** per result; anything below the threshold
+   (default 0.7) is flagged `needs-review` and never silently imported.
+4. Idempotent: same input always yields the same classification.
+
+### CLI
+
+```bash
+# Dry-run (default): full classification + diff report, zero DB writes
+npm run import-notes -- --dry-run
+
+# Real import: new blocks default to "draft"
+npm run import-notes -- --apply
+
+# Publish: new blocks are "published"; changed published blocks applied live
+npm run import-notes -- --apply --publish
+
+# Create missing class/subject/chapter records from the folder names
+npm run import-notes -- --apply --allow-create
+
+# Archive blocks whose source file was removed from the content dir
+npm run import-notes -- --apply --archive-missing
+```
+
+| Flag | Meaning |
+|---|---|
+| `--apply` | write to the DB (without it the run is read-only) |
+| `--dry-run` | explicit dry-run (this is the default) |
+| `--publish` | new imports get `status: published`; changed published blocks are applied in place |
+| `--allow-create` | create missing class/subject/chapter records instead of failing |
+| `--archive-missing` | mark previously imported blocks whose file vanished as `archived` |
+| `--dir <path>` | content root (default `prisma/import-notes-data/`, env `NOTES_DIR`) |
+| `--log-dir <path>` | run-log output dir (default `prisma/logs/`, env `NOTES_LOG_DIR`) |
+| `--threshold <n>` | confidence threshold for `needs-review` (default 0.7) |
+
+### Safety guarantees
+
+- **Dry-run by default** — prints a `filepath → type → confidence → action`
+  table and a summary (`created / updated / pending-version / archived /
+  skipped / needs-review / errors`) before anything touches the DB.
+- **Idempotent upserts** — stable key `chapterId + blockType + title`;
+  unchanged blocks are skipped, so re-running writes nothing.
+- **Published blocks are never silently altered** — a changed, published
+  block gets a pending `ContentVersion` while its live content stays
+  untouched until `--publish` or an admin-panel action applies it.
+- **One bad file never aborts the run** — errors are collected and reported
+  (`X imported, Y skipped, Z errors`); the process exits 1 if any occurred.
+- **Audit trail** — every decision is written to
+  `prisma/logs/import-notes-<timestamp>.log`, structured per line.
+
+### Adding a new content type in future
+
+1. `backend/src/services/classifier.js` — add the type to `TAB_TYPES`,
+   `TAB_TO_BLOCK_TYPE` (reuse an existing `BlockType` enum value — new enum
+   values need a schema migration) and `TAB_ACCESS_LEVEL`, then add a folder
+   alias to `FOLDER_TYPE_MAP` and a content signal + score line in
+   `contentScores`.
+2. `backend/prisma/import-notes.js` — nothing to change; it is driven by the
+   classifier tables.
+3. `backend/tests/import-notes.test.js` — extend the folder/heuristic case
+   tables.
+4. README — document the new folder name in the taxonomy tree above.
+
+---
+
 ## Common tasks
 
 | Task | Command |
@@ -228,6 +332,8 @@ UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-api.onren
 | New migration (local dev only) | `cd backend && npx prisma migrate dev --name <name>` |
 | Regenerate Prisma client | `cd backend && npx prisma generate` |
 | Re-import content from `import-data/` | `cd backend && npm run content:import` |
+| Import notes (7-tab taxonomy, dry-run) | `cd backend && npm run import-notes -- --dry-run` |
+| Import notes (apply + publish) | `cd backend && npm run import-notes -- --apply --publish --allow-create` |
 | Re-seed demo content | `cd backend && npm run seed` |
 | Run tests | `cd backend && npm test` |
 | Build frontend | `cd frontend && npm run build` |

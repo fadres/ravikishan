@@ -1,0 +1,11 @@
+{
+  "title": "NEB 2023 — Thermodynamics",
+  "year": 2023,
+  "examSource": "NEB",
+  "notes": [
+    "Q1. State the first law of thermodynamics and explain its limitations. [2]",
+    "Q2. Derive an expression for the work done during the isothermal expansion of an ideal gas. [3]",
+    "Q3. Define entropy. Show that the entropy of the universe increases in a spontaneous process. [3]",
+    "Q4. A Carnot engine works between 600 K and 300 K. Find its efficiency. [2]"
+  ]
+}

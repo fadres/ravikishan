@@ -1,0 +1,9 @@
+{
+  "title": "First Law of Thermodynamics",
+  "notes": [
+    "The first law of thermodynamics states that energy can neither be created nor destroyed; it can only be transformed from one form to another.",
+    "For a system undergoing a change: ΔU = Q − W, where ΔU is the change in internal energy, Q is the heat supplied to the system and W is the work done by the system.",
+    "This law is essentially the law of conservation of energy applied to thermodynamic systems.",
+    "ADDED LINE: A cyclic process returns the system to its initial state, so ΔU = 0 and Q = W."
+  ]
+}
