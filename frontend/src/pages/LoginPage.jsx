@@ -4,7 +4,7 @@ import Logo from '../components/Logo.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api, ApiError } from '../api/client.js';
 
-const FALLBACK_CONTACT = 'harindarsah98172@gmail.com';
+const FALLBACK_CONTACT = 'ravikishan1814@gmail.com';
 
 export default function LoginPage() {
   const { login, user } = useAuth();

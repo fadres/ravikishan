@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { api } from '../../api/client.js';
 import { classifyBlock } from '../../lib/classifier.js';
 
 const TYPE_LABELS = {
@@ -43,6 +44,77 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [histOpen, setHistOpen] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [selectedTagIds, setSelectedTagIds] = useState(() => new Set((block?.tags || []).map((t) => t.tagId)));
+  const [newTag, setNewTag] = useState('');
+  const [versions, setVersions] = useState([]);
+
+  useEffect(() => {
+    if (!block) return;
+    api('/api/admin/tags')
+      .then((d) => setTags(d.tags || []))
+      .catch(() => {});
+    api(`/api/admin/blocks/${block.id}/versions`)
+      .then((d) => setVersions(d.versions || []))
+      .catch(() => {});
+  }, [block?.id]);
+
+  const toggleTag = async (tagId) => {
+    if (!block) return;
+    setError('');
+    try {
+      const next = new Set(selectedTagIds);
+      if (next.has(tagId)) next.delete(tagId);
+      else next.add(tagId);
+      await api(`/api/admin/blocks/${block.id}/tags`, { method: 'POST', body: { tagIds: [...next] } });
+      setSelectedTagIds(next);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const addTag = async (e) => {
+    e.preventDefault();
+    if (!newTag.trim() || !block) return;
+    setError('');
+    try {
+      const d = await api('/api/admin/tags', { method: 'POST', body: { name: newTag.trim() } });
+      const next = new Set(selectedTagIds);
+      next.add(d.tag.id);
+      await api(`/api/admin/blocks/${block.id}/tags`, { method: 'POST', body: { tagIds: [...next] } });
+      setTags((t) => [...t, d.tag].sort((a, b) => a.name.localeCompare(b.name)));
+      setSelectedTagIds(next);
+      setNewTag('');
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const restoreVersion = (v) => {
+    setForm((f) => ({
+      ...f,
+      title: v.title ?? '',
+      contentRichtext: v.contentRichtext ?? '',
+      contentCode: v.contentCode ?? '',
+      codeLanguage: v.codeLanguage ?? f.codeLanguage,
+      mindmapJson: v.mindmapJson ? JSON.stringify(v.mindmapJson, null, 2) : '',
+      subLevel: v.subLevel ?? '',
+      diagramData: v.diagramData
+        ? {
+            leftName: v.diagramData.left?.name || '',
+            leftPoints: (v.diagramData.left?.points || []).join('\n'),
+            rightName: v.diagramData.right?.name || '',
+            rightPoints: (v.diagramData.right?.points || []).join('\n'),
+            similarities: (v.diagramData.similarities || []).join('\n'),
+            differences: (v.diagramData.differences || [])
+              .map((d) => `${d.left} <> ${d.right}`)
+              .join('\n'),
+          }
+        : f.diagramData,
+    }));
+    setHistOpen(true);
+  };
 
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
@@ -290,6 +362,93 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
               <label className={labelCls}>Differences ({'"left <> right"'} per line)</label>
               <textarea rows={4} value={form.diagramData.differences} onChange={(e) => set('diagramData', { ...form.diagramData, differences: e.target.value })} className={`${inputCls} font-mono text-[13px]`} placeholder={'Nucleus absent <> Nucleus present'} />
             </div>
+          </div>
+        )}
+
+        {block && (
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <button
+              type="button"
+              onClick={() => setHistOpen((v) => !v)}
+              className="inline-flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-aqua-200 transition"
+            >
+              <span className={`text-[10px] transition-transform ${histOpen ? 'rotate-90' : ''}`}>▶</span>
+              History &amp; tags
+            </button>
+
+            {histOpen && (
+              <div className="mt-3 space-y-5">
+                <div>
+                  <label className={labelCls}>Tags</label>
+                  {tags.length === 0 && (
+                    <p className="text-xs text-slate-500 mb-2">No tags yet — create the first one below.</p>
+                  )}
+                  <div className="flex flex-wrap gap-1.5">
+                    {tags.map((t) => {
+                      const on = selectedTagIds.has(t.id);
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => toggleTag(t.id)}
+                          className={`rounded-full px-2.5 py-1 text-[11px] font-bold border transition ${
+                            on
+                              ? 'text-aqua-100 bg-aqua-400/20 border-aqua-400/60'
+                              : 'text-slate-300 bg-white/5 border-white/15 hover:bg-white/10'
+                          }`}
+                        >
+                          {t.name} {on ? ' ✓' : ''}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <form onSubmit={addTag} className="mt-2 flex gap-1.5">
+                    <input
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      placeholder="New tag name…"
+                      className={`${inputCls} !py-1.5 text-xs`}
+                    />
+                    <button className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-aqua-100 bg-aqua-400/20 border border-aqua-400/40 hover:bg-aqua-400/30">
+                      + Tag
+                    </button>
+                  </form>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Version history</label>
+                  {versions.length === 0 ? (
+                    <p className="text-xs text-slate-500">
+                      No versions yet — every future save snapshots the previous state here.
+                    </p>
+                  ) : (
+                    <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                      {versions.map((v) => (
+                        <div key={v.id} className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2">
+                          <span className="shrink-0 text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-aqua-400/15 text-aqua-200 border border-aqua-400/30">
+                            v{v.version}
+                          </span>
+                          <span className="flex-1 min-w-0 truncate text-xs text-slate-300">
+                            {v.title || '(no title)'}
+                          </span>
+                          <span className="shrink-0 text-[10px] text-slate-500">
+                            {new Date(v.createdAt).toLocaleString()}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => restoreVersion(v)}
+                            className="shrink-0 text-[11px] font-bold text-aqua-200 hover:text-aqua-100"
+                            title="Load this version into the form (then save to apply)"
+                          >
+                            Restore
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

@@ -32,6 +32,9 @@ export default function ChapterPage() {
   const [activeKey, setActiveKey] = useState('');
   const [copiedAnchor, setCopiedAnchor] = useState('');
   const [readMap, setReadMap] = useState({});
+  const [bookmarked, setBookmarked] = useState(false);
+  const syncTimer = useRef(null);
+  const streakSynced = useRef(false);
 
   // The sticky Home/Back/Next bar sits directly below the fixed header, so it
   // must track the header's real height (mobile header is two rows tall).
@@ -156,6 +159,59 @@ export default function ChapterPage() {
   }, [readMap, chapter?.id]);
 
   const markRead = (key) => setReadMap((m) => (m[key] ? m : { ...m, [key]: true }));
+
+  // ── Server sync for signed-in readers ────────────────────────
+  // Bookmarks: load this chapter's bookmark state.
+  useEffect(() => {
+    if (!user || !chapter?.id) return;
+    api('/api/progress/bookmarks')
+      .then((d) => {
+        const bm = (d.bookmarks || []).find((b) => b.chapter?.id === chapter.id && !b.blockId);
+        setBookmarked(Boolean(bm));
+      })
+      .catch(() => {});
+  }, [user, chapter?.id]);
+
+  // Progress: once the reader actually reads, bump the streak (once per
+  // chapter visit) and debounce-push the concept count to the server.
+  useEffect(() => {
+    if (!user || !chapter?.id || totalConcepts === 0) return;
+    if (!streakSynced.current) {
+      streakSynced.current = true;
+      api('/api/progress/streak', { method: 'POST' }).catch(() => {});
+      api('/api/progress/analytics/events', {
+        method: 'POST',
+        body: { eventType: 'chapter_read', chapterId: chapter.id },
+      }).catch(() => {});
+    }
+    if (readCount === 0) return;
+    clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => {
+      api(`/api/progress/${chapter.id}`, {
+        method: 'PATCH',
+        body: { blocksCompleted: readCount, completed: readCount >= totalConcepts },
+      }).catch(() => {});
+    }, 1200);
+    return () => clearTimeout(syncTimer.current);
+  }, [readCount, user, chapter?.id, totalConcepts]);
+
+  const toggleBookmark = async () => {
+    if (!user || !chapter) return;
+    try {
+      if (bookmarked) {
+        await api(`/api/progress/bookmarks/${chapter.id}`, { method: 'DELETE' });
+        setBookmarked(false);
+      } else {
+        await api('/api/progress/bookmarks', {
+          method: 'POST',
+          body: { chapterId: chapter.id, label: chapter.title },
+        });
+        setBookmarked(true);
+      }
+    } catch {
+      /* best-effort */
+    }
+  };
 
   const totalConcepts = slotsByTopic.reduce((n, slots) => n + slots.length, 0);
   const readCount = structure.topics.reduce(
@@ -430,6 +486,22 @@ export default function ChapterPage() {
             </svg>
             {percent}%
           </span>
+
+          {user && (
+            <button
+              onClick={toggleBookmark}
+              title={bookmarked ? 'Remove bookmark' : 'Bookmark this chapter'}
+              aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this chapter'}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition ${
+                bookmarked
+                  ? 'text-amber-200 bg-amber-400/15 border border-amber-400/50'
+                  : 'glass text-slate-200 hover:text-white hover:border-aqua-400/50'
+              }`}
+            >
+              {bookmarked ? '★' : '☆'}
+              <span className="hidden sm:inline">{bookmarked ? 'Saved' : 'Bookmark'}</span>
+            </button>
+          )}
 
           <button
             onClick={() => setFindOpen((v) => !v)}

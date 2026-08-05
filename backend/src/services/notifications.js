@@ -6,7 +6,7 @@ import { prisma } from '../config/db.js';
 import { env } from '../config/env.js';
 
 export async function createNotification(userId, type, title, body, link, icon) {
-  return prisma.notification.create({
+  const notification = await prisma.notification.create({
     data: {
       userId,
       type,
@@ -16,6 +16,16 @@ export async function createNotification(userId, type, title, body, link, icon) 
       icon: icon ?? null,
     },
   });
+  // Best-effort browser push alongside the in-app notification.
+  sendPushToUser(userId, {
+    title: notification.title,
+    body: notification.body,
+    icon,
+    link,
+    notificationId: notification.id,
+    type,
+  }).catch(() => {});
+  return notification;
 }
 
 export async function listNotifications(userId, { limit = 30, unreadOnly = false } = {}) {

@@ -30,6 +30,48 @@ router.use(requireRole('owner', 'admin'));
 
 const userIdSchema = z.object({ id: z.string().uuid() });
 
+// ── Content tree (all statuses) ─────────────────────────────────────────
+// The public endpoints only expose published subjects/chapters; the admin
+// panel needs the full tree so draft/archived items can be published again.
+
+router.get('/content-tree', async (_req, res) => {
+  const classes = await prisma.class.findMany({
+    orderBy: { sortOrder: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      sortOrder: true,
+      subjects: {
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          subjectType: true,
+          icon: true,
+          themeColor: true,
+          isLocked: true,
+          status: true,
+          sortOrder: true,
+          chapters: {
+            orderBy: { sortOrder: 'asc' },
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              isLocked: true,
+              status: true,
+              sortOrder: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  res.json({ classes });
+});
+
 // ── Access requests ──────────────────────────────────────────────────────
 
 router.get('/requests', async (req, res) => {
@@ -246,6 +288,7 @@ router.get('/chapters/:id/blocks', async (req, res) => {
   const blocks = await prisma.contentBlock.findMany({
     where: { chapterId: chapter.id },
     orderBy: { sortOrder: 'asc' },
+    include: { tags: { include: { tag: { select: { id: true, name: true, slug: true } } } } },
   });
   res.json({ chapter, blocks });
 });
@@ -316,6 +359,22 @@ router.patch('/blocks/:id', validate(userIdSchema, 'params'), validate(blockPatc
     data.classifiedBy = 'manual';
     data.sectionIndex = data.sectionIndex ?? sectionIndexForBlockType(data.blockType);
   }
+
+  // Snapshot the previous state as a content version (v1, v2, …) so the
+  // version history in the editor can restore earlier drafts.
+  await createVersion(
+    block.id,
+    {
+      title: block.title,
+      contentRichtext: block.contentRichtext,
+      contentCode: block.contentCode,
+      codeLanguage: block.codeLanguage,
+      mindmapJson: block.mindmapJson,
+      diagramData: block.diagramData,
+      subLevel: block.subLevel,
+    },
+    req.user,
+  );
 
   const updated = await prisma.contentBlock.update({
     where: { id: block.id },

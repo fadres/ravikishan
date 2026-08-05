@@ -61,3 +61,35 @@ self.addEventListener('fetch', (event) => {
     }),
   );
 });
+
+// Push messages: show a notification that opens the app (or the notification
+// link) on click.
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    /* non-JSON payload — fall back to defaults */
+  }
+  const title = payload.title || 'Ravikishan';
+  const options = {
+    body: payload.body || '',
+    icon: payload.icon || '/favicon.svg',
+    badge: '/favicon.svg',
+    data: { url: payload.link || '/' },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      for (const client of windowClients) {
+        if ('focus' in client) return client.navigate(target).then(() => client.focus());
+      }
+      return clients.openWindow(target);
+    }),
+  );
+});

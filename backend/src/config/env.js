@@ -30,6 +30,9 @@ export const env = {
   authRateLimit: parseInt(process.env.AUTH_RATE_LIMIT || '20', 10),
   aiRateLimit: parseInt(process.env.AI_RATE_LIMIT || '40', 10),
   ownerEmail: process.env.OWNER_EMAIL || 'harindarsah98172@gmail.com',
+  // Public contact email shown on the site (login/access cards). Separate from
+  // OWNER_EMAIL so the owner login account can keep its own identity.
+  contactEmail: process.env.CONTACT_EMAIL || 'ravikishan1814@gmail.com',
   ownerPassword: process.env.OWNER_PASSWORD || '',
   smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
   smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
@@ -39,7 +42,7 @@ export const env = {
   siteUrl: process.env.SITE_URL || 'https://ravikisan.netlify.app',
   vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
   vapidPrivateKey: process.env.VAPID_PRIVATE_KEY || '',
-  vapidSubject: process.env.VAPID_SUBJECT || 'mailto:harindarsah98172@gmail.com',
+  vapidSubject: process.env.VAPID_SUBJECT || 'mailto:ravikishan1814@gmail.com',
   aiEndpoint: process.env.AI_ENDPOINT || '',
   aiApiKey: process.env.AI_API_KEY || '',
   aiModel: process.env.AI_MODEL || 'gpt-4o-mini',

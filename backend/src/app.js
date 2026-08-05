@@ -116,7 +116,9 @@ export function createApp() {
   });
 
   app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'ravikishan-api' }));
-  app.get('/api/meta', (_req, res) => res.json({ contactEmail: env.ownerEmail }));
+  app.get('/api/meta', (_req, res) =>
+    res.json({ contactEmail: env.contactEmail, vapidPublicKey: env.vapidPublicKey || null }),
+  );
 
   // SEO: sitemap.xml
   app.get('/sitemap.xml', async (_req, res) => {

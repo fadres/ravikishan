@@ -100,7 +100,7 @@ export async function createVersion(blockId, data, user) {
   const nextVersion = (maxVersion._max.version ?? 0) + 1;
   const version = await prisma.contentVersion.create({
     data: {
-      blockId,
+      block: { connect: { id: blockId } },
       version: nextVersion,
       title: data.title ?? block.title,
       contentRichtext: data.contentRichtext ?? block.contentRichtext,
@@ -109,7 +109,7 @@ export async function createVersion(blockId, data, user) {
       mindmapJson: data.mindmapJson ?? block.mindmapJson,
       diagramData: data.diagramData ?? block.diagramData,
       subLevel: data.subLevel ?? block.subLevel,
-      changedBy: user.id,
+      ...(user ? { changedBy: user.id, user: { connect: { id: user.id } } } : {}),
     },
   });
   await recordAudit(user, 'version.created', 'ContentVersion', version.id, {

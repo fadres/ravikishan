@@ -44,34 +44,38 @@ export default function ContentPanel() {
   const [newTopicTitle, setNewTopicTitle] = useState('');
   const [editingTopic, setEditingTopic] = useState(null); // topic being edited | null
 
-  const loadClasses = async () => {
-    const data = await api('/api/classes');
-    setClasses(data.classes);
+  const loadTree = async () => {
+    const data = await api('/api/admin/content-tree');
+    setClasses(data.classes || []);
     if (!classSlug && data.classes[0]) setClassSlug(data.classes[0].slug);
   };
 
   useEffect(() => {
-    loadClasses().catch((e) => setError(e.message));
+    loadTree().catch((e) => setError(e.message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!classSlug) return;
-    api(`/api/classes/${classSlug}`)
-      .then((d) => {
-        setSubjects(d.klass.subjects);
-        if (!subjectSlug && d.klass.subjects[0]) setSubjectSlug(d.klass.subjects[0].slug);
-      })
-      .catch((e) => setError(e.message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classSlug]);
+    if (!classSlug) {
+      setSubjects([]);
+      return;
+    }
+    const klass = classes.find((c) => c.slug === classSlug);
+    const subs = klass?.subjects || [];
+    setSubjects(subs);
+    if (subs.length > 0) {
+      if (!subs.some((s) => s.slug === subjectSlug)) setSubjectSlug(subs[0].slug);
+    } else {
+      setSubjectSlug('');
+    }
+  }, [classSlug, classes]);
 
   useEffect(() => {
-    if (!subjectSlug) return;
-    api(`/api/subjects/${subjectSlug}?class=${classSlug}`)
-      .then((d) => setSubject(d.subject))
-      .catch((e) => setError(e.message));
-  }, [subjectSlug]);
+    if (!classSlug || !subjectSlug) return;
+    const klass = classes.find((c) => c.slug === classSlug);
+    const found = klass?.subjects?.find((s) => s.slug === subjectSlug);
+    setSubject(found || null);
+  }, [classSlug, subjectSlug, classes]);
 
   const loadBlocks = async (chapterId) => {
     const data = await api(`/api/admin/chapters/${chapterId}/blocks`);
@@ -105,6 +109,58 @@ export default function ContentPanel() {
         chapters: prev.chapters.map((ch) => (ch.id === c.id ? { ...ch, isLocked: !c.isLocked } : ch)),
       }));
       setNotice(`Chapter "${c.title}" is now ${!c.isLocked ? 'locked' : 'open'}.`);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const publishSubject = async (s) => {
+    setError('');
+    try {
+      await api(`/api/admin/subjects/${s.id}/publish`, { method: 'POST' });
+      setSubject((prev) => (prev ? { ...prev, status: 'published' } : prev));
+      setNotice(`"${s.name}" published — it is now live on the site.`);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const archiveSubject = async (s) => {
+    if (!window.confirm(`Archive "${s.name}"? It will disappear from the public site (content is kept).`)) return;
+    setError('');
+    try {
+      await api(`/api/admin/subjects/${s.id}/archive`, { method: 'POST' });
+      setSubject((prev) => (prev ? { ...prev, status: 'archived' } : prev));
+      setNotice(`"${s.name}" archived.`);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const publishChapter = async (c) => {
+    setError('');
+    try {
+      await api(`/api/admin/chapters/${c.id}/publish`, { method: 'POST' });
+      setSubject((prev) => ({
+        ...prev,
+        chapters: prev.chapters.map((ch) => (ch.id === c.id ? { ...ch, status: 'published' } : ch)),
+      }));
+      setNotice(`Chapter "${c.title}" published.`);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const archiveChapter = async (c) => {
+    if (!window.confirm(`Archive chapter "${c.title}"? It will disappear from the public site (content is kept).`)) return;
+    setError('');
+    try {
+      await api(`/api/admin/chapters/${c.id}/archive`, { method: 'POST' });
+      setSubject((prev) => ({
+        ...prev,
+        chapters: prev.chapters.map((ch) => (ch.id === c.id ? { ...ch, status: 'archived' } : ch)),
+      }));
+      setNotice(`Chapter "${c.title}" archived.`);
     } catch (e) {
       setError(e.message);
     }
@@ -260,7 +316,7 @@ export default function ContentPanel() {
           >
             {subjects.map((s) => (
               <option key={s.id} value={s.slug} className="bg-deep-800">
-                {s.name} {s.isLocked ? '(locked)' : '(open)'}
+                {s.name} {s.status === 'archived' ? '(archived)' : s.isLocked ? '(locked)' : '(open)'}
               </option>
             ))}
           </select>
@@ -270,16 +326,45 @@ export default function ContentPanel() {
           <div>
             <div className="flex items-center justify-between">
               <label className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Chapters</label>
-              <button
-                onClick={() => toggleSubject(subject)}
-                className={`text-[11px] font-bold px-2 py-1 rounded-md border transition ${
-                  subject.isLocked
-                    ? 'text-amber-300 border-amber-400/40 hover:bg-amber-400/10'
-                    : 'text-emerald-300 border-emerald-400/40 hover:bg-emerald-400/10'
-                }`}
-              >
-                {subject.isLocked ? '🔒 Locked' : '🔓 Open'}
-              </button>
+              <span className="flex items-center gap-1.5">
+                <span
+                  className={`text-[10px] font-bold px-2 py-1 rounded-md border ${
+                    subject.status === 'archived'
+                      ? 'text-slate-400 border-slate-500/40'
+                      : subject.status === 'published'
+                        ? 'text-emerald-300 border-emerald-400/40'
+                        : 'text-amber-300 border-amber-400/40'
+                  }`}
+                >
+                  {subject.status || 'draft'}
+                </span>
+                {subject.status !== 'published' && (
+                  <button
+                    onClick={() => publishSubject(subject)}
+                    className="text-[10px] font-bold px-2 py-1 rounded-md border text-emerald-300 border-emerald-400/40 hover:bg-emerald-400/10"
+                  >
+                    Publish
+                  </button>
+                )}
+                {subject.status !== 'archived' && (
+                  <button
+                    onClick={() => archiveSubject(subject)}
+                    className="text-[10px] font-bold px-2 py-1 rounded-md border text-slate-400 border-slate-500/40 hover:bg-slate-400/10"
+                  >
+                    Archive
+                  </button>
+                )}
+                <button
+                  onClick={() => toggleSubject(subject)}
+                  className={`text-[11px] font-bold px-2 py-1 rounded-md border transition ${
+                    subject.isLocked
+                      ? 'text-amber-300 border-amber-400/40 hover:bg-amber-400/10'
+                      : 'text-emerald-300 border-emerald-400/40 hover:bg-emerald-400/10'
+                  }`}
+                >
+                  {subject.isLocked ? '🔒 Locked' : '🔓 Open'}
+                </button>
+              </span>
             </div>
             <div className="mt-1.5 space-y-1 max-h-72 overflow-y-auto pr-1">
               {subject.chapters.map((c) => (
@@ -300,6 +385,36 @@ export default function ContentPanel() {
                     {c.title}
                   </button>
                   <span className="flex items-center gap-1 shrink-0">
+                    <span
+                      title={`status: ${c.status || 'draft'}`}
+                      className={`w-2 h-2 rounded-full ${
+                        c.status === 'archived'
+                          ? 'bg-slate-500'
+                          : c.status === 'published'
+                            ? 'bg-emerald-400'
+                            : 'bg-amber-400'
+                      }`}
+                    />
+                    {c.status !== 'published' && (
+                      <button
+                        onClick={() => publishChapter(c)}
+                        title={`Publish ${c.title}`}
+                        aria-label={`Publish ${c.title}`}
+                        className="text-[10px] p-1 rounded text-emerald-300 hover:bg-emerald-400/10"
+                      >
+                        ⬆
+                      </button>
+                    )}
+                    {c.status !== 'archived' && (
+                      <button
+                        onClick={() => archiveChapter(c)}
+                        title={`Archive ${c.title}`}
+                        aria-label={`Archive ${c.title}`}
+                        className="text-[10px] p-1 rounded text-slate-500 hover:bg-slate-400/10"
+                      >
+                        🗃
+                      </button>
+                    )}
                     <button
                       onClick={() => toggleChapter(c)}
                       aria-label={c.isLocked ? `Open ${c.title}` : `Lock ${c.title}`}
