@@ -37,6 +37,31 @@ test('askSection fails fast for unknown sections — no AI request is ever made'
   await assert.rejects(() => askSection('user-1', '', { question: 'What is kinematics?' }), { code: 'UNKNOWN_SECTION' });
 });
 
+test('searchAcrossSections tolerates a failing section without a failing search', async () => {
+  // Simulate a section whose DB is unreachable: the merged result must
+  // still return, with the section listed in `failed`.
+  const { searchAcrossSections } = await import('../src/services/search.js?fanout=1');
+  // No query suffix here: the search chain imports db.js without one, so
+  // this resolves to the SAME module instance (and client cache) it uses.
+  const { prismaForSection } = await import('../src/config/db.js');
+  const realClient = prismaForSection('class-11');
+  const original = realClient.$queryRaw.bind(realClient);
+  realClient.$queryRaw = async () => {
+    throw new Error('connection refused (simulated)');
+  };
+  try {
+    const out = await searchAcrossSections('kinematics', 4, {});
+    assert.ok(Array.isArray(out.failed), 'failures are surfaced, not thrown');
+    assert.ok(
+      out.failed.length > 0 && out.failed[0].sectionId === 'class-11',
+      'the broken section is reported in failed',
+    );
+  } finally {
+    realClient.$queryRaw = original;
+    await realClient.$disconnect();
+  }
+});
+
 test('registry resolves NEON_CLASS11_URL when set, else falls back to DATABASE_URL', async () => {
   const prevNeon = process.env.NEON_CLASS11_URL;
   const prevDb = process.env.DATABASE_URL;

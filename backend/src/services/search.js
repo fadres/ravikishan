@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma, prismaForSection } from '../config/db.js';
-import { requireSection } from '../lib/sections.config.js';
+import { requireSection, activeSections } from '../lib/sections.config.js';
 import {
   sectionIndexForBlockType,
   sectionLabelForBlockType,
@@ -285,6 +285,53 @@ export async function searchWithinSection(sectionId, q, viewerLevel = 3, filters
     sectionId: section.id,
     sectionLabel: section.label,
     results: results.map((r) => ({ ...r, sectionId: section.id })),
+  };
+}
+
+/**
+ * Cross-section search: fans out to every ACTIVE section in parallel and
+ * merges the ranked results. Each section is queried through its own client
+ * (searchWithinSection) — one section's outage or unknown-id failure is
+ * reported in `failed` and never takes the whole search down. Results keep
+ * their sectionId tags so consumers can attribute them.
+ */
+export async function searchAcrossSections(q, viewerLevel = 3, filters = {}) {
+  const sections = activeSections();
+  const perSectionFilters = { ...filters, page: 1, perPage: Math.max(filters.perPage ?? 25, 100) };
+
+  const settled = await Promise.allSettled(
+    sections.map((s) => searchWithinSection(s.id, q, viewerLevel, perSectionFilters)),
+  );
+
+  const failed = [];
+  const merged = new Map();
+  let totalCount = 0;
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+    const outcome = settled[i];
+    if (outcome.status === 'rejected') {
+      failed.push({ sectionId: section.id, error: outcome.reason?.message ?? 'section search failed' });
+      continue;
+    }
+    totalCount += outcome.value.totalCount;
+    for (const result of outcome.value.results) {
+      merged.set(`${section.id}:${result.kind}:${result.id}`, result);
+    }
+  }
+
+  const all = [...merged.values()].sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0));
+  const page = filters.page ?? 1;
+  const perPage = filters.perPage ?? 25;
+  const offset = (page - 1) * perPage;
+
+  return {
+    sectionIds: sections.map((s) => s.id),
+    results: all.slice(offset, offset + perPage),
+    totalCount,
+    page,
+    perPage,
+    totalPages: Math.ceil(totalCount / perPage),
+    failed,
   };
 }
 

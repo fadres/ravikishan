@@ -527,11 +527,39 @@ test('POST /api/sections/class-11/ai/ask requires authentication', async () => {
   assert.equal(res.status, 401);
 });
 
-test('POST /api/sections/<unknown>/ai/ask returns 404 (fail-fast, no fallback)', async () => {
+test('GET /api/sections/<unknown>/ai/ask returns 404 (fail-fast, no fallback)', async () => {
   const loginRes = await login('owner@test.ravikishan', 'testpass123');
   const res = await request(app)
     .post('/api/sections/class-12-test/ai/ask')
     .set(authHeaders(loginRes.body.accessToken))
     .send({ question: 'What is kinematics and how is it studied?' });
   assert.equal(res.status, 404);
+});
+
+// ── Cross-section search (fan-out over active sections) ───────────────────
+
+test('GET /api/sections/search fans out over active sections and merges ranked results', async () => {
+  const res = await request(app).get('/api/sections/search?q=kinematics');
+  assert.equal(res.status, 200);
+  assert.deepEqual(res.body.sectionIds, ['class-11']);
+  assert.ok(Array.isArray(res.body.failed), 'per-section failures are reported, not fatal');
+  assert.ok(res.body.results.length >= 1);
+  for (const r of res.body.results) {
+    assert.equal(r.sectionId, 'class-11', 'results are attributed to their section');
+  }
+  // Cross-section ranking: sorted by rank descending.
+  const ranks = res.body.results.map((r) => r.rank ?? 0);
+  assert.deepEqual(ranks, [...ranks].sort((a, b) => b - a));
+  assert.ok(res.body.totalCount >= res.body.results.length);
+  assert.equal(res.body.page, 1);
+  assert.ok(res.body.totalPages >= 1);
+});
+
+test('GET /api/sections/search does not collide with /api/sections/:sectionId', async () => {
+  const one = await request(app).get('/api/sections/search?q=kinematics');
+  assert.equal(one.status, 200);
+  assert.ok(Array.isArray(one.body.results));
+  const two = await request(app).get('/api/sections/class-11');
+  assert.equal(two.status, 200);
+  assert.equal(two.body.section.id, 'class-11');
 });
