@@ -22,6 +22,7 @@ import plannerRoutes from './routes/planner.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import gamificationRoutes from './routes/gamification.routes.js';
 import aiRoutes from './routes/ai.routes.js';
+import sectionsRoutes from './routes/sections.routes.js';
 
 export function createApp() {
   const app = express();
@@ -154,6 +155,10 @@ export function createApp() {
   app.use('/api/auth', authLimiter, authRoutes);
   app.use('/api/access-requests', requestLimiter, accessRoutes);
   app.use('/api', contentRoutes);
+  // MUST stay above the /api-scoped router-level auth mounts (quiz/planner/
+  // gamification use router.use(requireAuth)) — the public section registry
+  // is reachable by anonymous viewers.
+  app.use('/api/sections', sectionsRoutes);
 app.use('/api/admin', adminRoutes);
 // Any successful admin mutation invalidates the public /api/classes cache so
 // structural edits (new subject/chapter/publish) show up immediately.
@@ -175,7 +180,7 @@ app.use('/api/flashcards', flashcardRoutes);
 app.use('/api', plannerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/gamification', gamificationRoutes);
-app.use('/api/ai', aiLimiter, aiRoutes);
+  app.use('/api/ai', aiLimiter, aiRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

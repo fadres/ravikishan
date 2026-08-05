@@ -5,12 +5,10 @@
 //
 // NOTE: this is NOT the topic-content sections file (src/lib/sections.js —
 // the Concept / Examples / PYQ / … note taxonomy). That file is unrelated.
+//
+// Every route/service that needs to know "which section's DB do I hit"
+// reads from this registry — no hardcoded Class 11 references anywhere.
 // ─────────────────────────────────────────────────────────────────────────
-
-// TODO: not yet wired into routes — see ARCHITECTURE.md
-// This stub declares the registry as a real, present file. Wiring (section
-// lookups, per-section Prisma clients, section-scoped search/AI/import) is
-// tracked in ARCHITECTURE.md and lands in the commits that follow this one.
 
 export const sections = [
   {
@@ -26,8 +24,9 @@ export const sections = [
     dbUrl: process.env.NEON_CLASS11_URL || process.env.DATABASE_URL,
     // Own local AI endpoint; defaults to the shared AI_ENDPOINT (same
     // provider/key unless a section explicitly needs a different one).
-    aiEndpoint: process.env.CLASS11_AI_ENDPOINT || process.env.AI_ENDPOINT,
-    aiApiKey: process.env.AI_API_KEY,
+    // '' means offline-first mode (see src/services/ai.js).
+    aiEndpoint: process.env.CLASS11_AI_ENDPOINT || process.env.AI_ENDPOINT || '',
+    aiApiKey: process.env.AI_API_KEY || '',
     aiModel: process.env.AI_MODEL || 'gpt-4o-mini',
     status: 'active',
   },
@@ -36,3 +35,33 @@ export const sections = [
   // local AI, own storage), NEVER sharing NEON_CLASS11_URL. See the
   // checklist in ARCHITECTURE.md before adding one.
 ];
+
+const INDEX = new Map(sections.map((s) => [s.id, s]));
+
+/** Look up a section by id. Returns null when the id is not registered. */
+export function getSection(id) {
+  return INDEX.get(id) ?? null;
+}
+
+/**
+ * Look up a section by id, failing loudly on unknown ids. This is the
+ * fail-safe seam: an unknown section must NEVER silently fall back to
+ * Class 11's DB (or any other section's). Throws a plain Error with
+ * `code = 'UNKNOWN_SECTION'` — HTTP layers map it to 404 themselves.
+ */
+export function requireSection(id) {
+  const section = getSection(id);
+  if (!section) {
+    const err = new Error(
+      `Unknown section "${id}" — registered: ${sections.map((s) => s.id).join(', ') || '(none)'}`,
+    );
+    err.code = 'UNKNOWN_SECTION';
+    throw err;
+  }
+  return section;
+}
+
+/** Sections that are currently live (participate in cross-section fan-out). */
+export function activeSections() {
+  return sections.filter((s) => s.status === 'active');
+}
