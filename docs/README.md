@@ -229,8 +229,8 @@ into one of **seven tab types**, driven primarily by the folder it sits in.
 ### Folder taxonomy (the classification backbone)
 
 ```
-backend/prisma/import-notes-data/
-  class-11/
+backend/content/
+  class-11/                            ← the section's own folder
     physics/
       thermodynamics/
         concepts/01-first-law.json     → concept  (block: note_concept)
@@ -242,7 +242,9 @@ backend/prisma/import-notes-data/
         mindmap/01-thermo-map.json     → mindmap  (block: mindmap)
 ```
 
-- Path maps directly to `class → subject → chapter → contentType`.
+- Path maps directly to `class → subject → chapter → contentType` (the
+  section's classSlug folder is taken from the section registry — content
+  of other sections is skipped, never read or written).
 - **Every file is a flat JSON object** — strict schema, no coercion:
   `{ "title": string, "notes": string[], ... }`
 - Optional per-type fields: `order` (int), `year` + `examSource` (pyq),
@@ -276,21 +278,25 @@ npm run import-notes -- --apply
 # Publish: new blocks are "published"; changed published blocks applied live
 npm run import-notes -- --apply --publish
 
-# Create missing class/subject/chapter records from the folder names
+# Create missing subject/chapter records from the folder names
 npm run import-notes -- --apply --allow-create
 
 # Archive blocks whose source file was removed from the content dir
 npm run import-notes -- --apply --archive-missing
+
+# Target a different section (id from the section registry)
+npm run import-notes -- --section class-12 --apply
 ```
 
 | Flag | Meaning |
 |---|---|
+| `--section <id>` | section id from the registry (default `class-11`); unknown ids fail fast with exit 1 before any DB access |
 | `--apply` | write to the DB (without it the run is read-only) |
 | `--dry-run` | explicit dry-run (this is the default) |
 | `--publish` | new imports get `status: published`; changed published blocks are applied in place |
-| `--allow-create` | create missing class/subject/chapter records instead of failing |
+| `--allow-create` | create missing subject/chapter records instead of failing |
 | `--archive-missing` | mark previously imported blocks whose file vanished as `archived` |
-| `--dir <path>` | content root (default `prisma/import-notes-data/`, env `NOTES_DIR`) |
+| `--dir <path>` | content root (default `backend/content/`, env `NOTES_DIR`) |
 | `--log-dir <path>` | run-log output dir (default `prisma/logs/`, env `NOTES_LOG_DIR`) |
 | `--threshold <n>` | confidence threshold for `needs-review` (default 0.7) |
 

@@ -17,7 +17,11 @@ import {
   contentHash,
   buildMindmapTree,
   buildBlockData,
+  parseArgs,
+  resolveSectionFromFlags,
+  isSectionFile,
 } from '../prisma/import-notes.js';
+import { sections } from '../src/lib/sections.config.js';
 
 const CONCEPTS_PATH = 'class-11/physics/thermodynamics/concepts/01-first-law.json';
 const PYG_PATH = 'class-11/physics/thermodynamics/pyqs/01-neb-2023.json';
@@ -251,4 +255,44 @@ test('discoverNoteFiles walks recursively and sorts deterministically', () => {
 // Sanity: the exported taxonomy is exactly the 7 tab types.
 test('TAB_TYPES contains exactly the 7 required tab types', () => {
   assert.deepEqual(TAB_TYPES, ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap']);
+});
+
+// ── Section-awareness (Task 3: --section flag, fail-fast, tree guard) ─────
+
+test('parseArgs defaults to the class-11 section and accepts --section', () => {
+  const base = parseArgs(['node', 'import-notes.js']);
+  assert.equal(base.section, 'class-11');
+  assert.equal(base.dir, null, 'content dir resolves from the registry when unset');
+
+  const viaSpace = parseArgs(['node', 'import-notes.js', '--section', 'class-11']);
+  assert.equal(viaSpace.section, 'class-11');
+
+  const viaEquals = parseArgs(['node', 'import-notes.js', '--section=class-11']);
+  assert.equal(viaEquals.section, 'class-11');
+
+  const other = parseArgs(['node', 'import-notes.js', '--section', 'class-12']);
+  assert.equal(other.section, 'class-12');
+});
+
+test('resolveSectionFromFlags fails fast (exit code 1, no section) for unknown ids', () => {
+  const prevCode = process.exitCode;
+  try {
+    process.exitCode = 0;
+    const result = resolveSectionFromFlags({ section: 'class-12-test' });
+    assert.equal(result, null);
+    assert.equal(process.exitCode, 1);
+  } finally {
+    process.exitCode = prevCode;
+  }
+  const ok = resolveSectionFromFlags({ section: 'class-11' });
+  assert.equal(ok.id, 'class-11');
+});
+
+test('isSectionFile keeps only the section-owned tree (foreign trees are skipped, never imported)', () => {
+  const section = sections[0];
+  assert.equal(section.classSlug, 'class-11');
+  assert.equal(isSectionFile(pathParts('class-11/physics/thermo/concepts/a.json'), section), true);
+  assert.equal(isSectionFile(pathParts('class-11/physics/thermo/pyqs/01.json'), section), true);
+  assert.equal(isSectionFile(pathParts('class-12/physics/thermo/concepts/a.json'), section), false);
+  assert.equal(isSectionFile(pathParts('class-12/physics/thermo/pyqs/01.json'), section), false);
 });
