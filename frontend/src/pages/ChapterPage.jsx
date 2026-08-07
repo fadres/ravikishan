@@ -786,11 +786,13 @@ export default function ChapterPage() {
 
 // One concept's full interface: numeral badge + head title + link button +
 // its embedded blocks. Used both for single concepts and as the inner panel
-// of a VariantBox (each Type gets its own interface).
-function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, flashId, copyAnchor, copiedAnchor, anchorOverride }) {
+// of a VariantBox (each Type gets its own interface). `readCi` lets a
+// variant share its group's read badge (all types of one concept are the
+// same "concept read" in the tracker).
+function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, flashId, copyAnchor, copiedAnchor, anchorOverride, readCi }) {
   const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
   const anchor = anchorOverride || conceptAnchor(t.number, ci);
-  const isRead = Boolean(readMap[`${t.number}-${ci}`]);
+  const isRead = Boolean(readMap[`${t.number}-${readCi ?? ci}`]);
   const numeralBadge = (
     <span
       className="inline-flex items-center justify-center min-w-[2rem] h-6 px-1.5 rounded-full text-xs font-extrabold shrink-0"
@@ -974,6 +976,7 @@ function VariantBox({
           copyAnchor={copyAnchor}
           copiedAnchor={copiedAnchor}
           anchorOverride={anchor}
+          readCi={variants[0].ci}
         />
       </div>
     </div>

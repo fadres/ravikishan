@@ -44,7 +44,8 @@ function keyFor(parentKey, name) {
 // cursor advances by its own width + gap, so sibling boxes never overlap.
 function layout(node, collapsed = new Set(), parentKey = '', walk = { cursor: 0 }) {
   const key = keyFor(parentKey, node.name);
-  const children = node.children && node.children.length && !collapsed.has(key) ? node.children : [];
+  const children =
+    Array.isArray(node.children) && node.children.length && !collapsed.has(key) ? node.children : [];
   if (!children.length) {
     const meta = boxFor(node.name);
     const x = walk.cursor + meta.width / 2;
@@ -57,6 +58,9 @@ function layout(node, collapsed = new Set(), parentKey = '', walk = { cursor: 0 
 }
 
 // Walk a laid-out tree collecting nodes + edges + ancestor paths.
+// hasChildren reflects the RAW subtree (not the collapsed-filtered view) so
+// a collapsed node keeps its +/− handle — otherwise it could never be
+// expanded again.
 function flatten(entry, collapsed, depth = 0, parentKey = '', out = { nodes: [], edges: [], pathOf: new Map() }) {
   out.nodes.push({
     key: entry.key,
@@ -66,7 +70,7 @@ function flatten(entry, collapsed, depth = 0, parentKey = '', out = { nodes: [],
     width: entry.meta.width,
     font: entry.meta.font,
     isCollapsed: collapsed.has(entry.key),
-    hasChildren: entry.children.length > 0,
+    hasChildren: Boolean(entry.node.children && entry.node.children.length),
     entry,
   });
   out.pathOf.set(entry.key, out.nodes.length - 1);
@@ -82,12 +86,14 @@ export default function MindmapTree({ data }) {
   const [open, setOpen] = useState(false);
   const [openFocus, setOpenFocus] = useState(null);
 
+  // Hooks MUST all run before any early return — a conditional hook here
+  // changed the render hook count as soon as `data` arrived and React tore
+  // down the whole page (the white-screen crash).
+  const totalNodes = useMemo(() => (data ? countNodes(data) : 0), [data]);
   const tree = useMemo(() => (data ? layout(data, collapsed) : null), [data, collapsed]);
   const view = useMemo(() => (tree ? flatten(tree, collapsed) : null), [tree, collapsed]);
 
   if (!tree || !view) return <p className="text-slate-400 text-sm">No mind map data.</p>;
-
-  const totalNodes = useMemo(() => countNodes(data), [data]);
 
   const toggleNode = (key) => {
     setCollapsed((prev) => {
@@ -171,6 +177,7 @@ function countNodes(node) {
 function buildCanvas(tree, view, collapsed, focusKey = null, query = '', opts = {}) {
   const { onTap, onToggle } = opts;
   const { nodes, edges } = view;
+  if (!nodes.length) return { svg: null, width: 0, height: 0, shiftX: 0 };
   const left = Math.min(...nodes.map((n) => n.x - n.width / 2));
   const right = Math.max(...nodes.map((n) => n.x + n.width / 2));
   const bottom = Math.max(...nodes.map((n) => n.y + NODE_H));
@@ -357,15 +364,22 @@ function ZoomCanvas({ fitMode, fitFloor, width, height, svg, focus = null, conta
   };
 
   // Jump to a node: center it and make sure it is at a readable zoom.
+  // Reads zoom from a ref so the effect never re-triggers on zoom changes,
+  // and keys on focus.tick so it only fires for a NEW jump target — the
+  // old version depended on a freshly-created focus object every render,
+  // which re-ran this effect endlessly (freeze / white screen).
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
   useEffect(() => {
     if (!focus || !ref.current) return;
     const el = ref.current;
-    const availW = el.clientWidth;
     const availH = el.clientHeight;
-    const next = Math.max(zoom, 1.6);
-    setZoom(clampZoom(next));
-    setPan({ x: width / 2 - focus.x, y: availH / (2 * scale) - focus.y });
-  }, [focus, width, height, scale]);
+    const next = clampZoom(Math.max(zoomRef.current, 1.6));
+    const s = fit * next;
+    setZoom(next);
+    setPan({ x: width / 2 - focus.x, y: availH / (2 * s) - focus.y });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus?.tick, width, height, fit]);
 
   const { x: panX = 0, y: panY = 0 } = pan;
 

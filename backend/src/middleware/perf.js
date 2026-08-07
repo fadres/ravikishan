@@ -8,7 +8,7 @@ import { performance } from 'node:perf_hooks';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { env } from '../config/env.js';
 
-export const perfStore = new AsyncLocalStorage();
+const perfStore = new AsyncLocalStorage();
 
 export function registerPerf(prisma) {
   if (env.perfLog !== '1') return;

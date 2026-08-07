@@ -1,8 +1,8 @@
 {
-  "title": "Calculus — Syllabus Overview",
+  "title": "Syllabus Overview",
   "syllabus": "Mat. 007",
   "notes": [
-    "<p><strong>Calculus</strong> · 48 working hours</p>",
+    "<p><strong>Calculus</strong> &middot; 48 working hours</p>",
     "<h2>Syllabus Topics</h2>",
     "<ul>\n  <li>Limits and continuity: Indeterminate forms, limit theorems, continuity, types of discontinuity</li>\n  <li>Derivatives: Definition, rules of differentiation, implicit/parametric functions, higher-order derivatives, geometric interpretation, monotonicity, extreme values, concavity, inflection points</li>\n  <li>Anti-derivatives: Basic integrals, integration by substitution and parts, definite integrals, area under/between curves</li>\n</ul>"
   ]

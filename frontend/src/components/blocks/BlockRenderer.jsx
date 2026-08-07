@@ -3,6 +3,7 @@ import Markdown, { MathSpan, RichText } from '../../lib/markdown.jsx';
 import CodeBlock from './CodeBlock.jsx';
 import MindmapTree from './MindmapTree.jsx';
 import DiagramCompare from './DiagramCompare.jsx';
+import ErrorBoundary from '../ErrorBoundary.jsx';
 import { sectionStyleForKey } from '../../lib/noteStructure.js';
 
 const BLOCK_STYLE = {
@@ -234,7 +235,9 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
       case 'mindmap':
   return (
           <div>
-            <MindmapTree data={block.mindmapJson} />
+            <ErrorBoundary fallback={() => <p className="text-sm text-slate-400">This mind map could not be rendered.</p>}>
+              <MindmapTree data={block.mindmapJson} />
+            </ErrorBoundary>
             {block.mindmapJson?.legend?.length > 0 && (
               <div className="mt-4 pt-3 border-t border-white/10">
                 <p className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-2">

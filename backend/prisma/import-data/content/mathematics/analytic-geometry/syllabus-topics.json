@@ -1,8 +1,8 @@
 {
-  "title": "Analytic Geometry — Syllabus Overview",
+  "title": "Syllabus Overview",
   "syllabus": "Mat. 007",
   "notes": [
-    "<p><strong>Analytic Geometry</strong> · 20 working hours</p>",
+    "<p><strong>Analytic Geometry</strong> &middot; 20 working hours</p>",
     "<h2>Syllabus Topics</h2>",
     "<ul>\n  <li>Straight Line: Perpendicular distance, bisectors of angles between lines</li>\n  <li>Pair of straight lines: Second-degree general/homogeneous equations, angle between lines, angle bisectors</li>\n  <li>Coordinates in space: Points in space, distance formula, direction cosines and ratios</li>\n</ul>"
   ]

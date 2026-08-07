@@ -8,7 +8,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 1: Biomolecules and Cell Biology — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "biomolecules-detail",
@@ -35,11 +35,11 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 2: Floral Diversity — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "botany5.1",
-          "title": "Botany5.1"
+          "title": "Botany 5.1 — The Living World & Biological Classification"
         }
       ]
     },
@@ -50,7 +50,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 3: Introductory Microbiology — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -61,7 +61,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 4: Ecology — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -72,7 +72,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 5: Vegetation — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -83,7 +83,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 6: Introduction to Biology — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -94,7 +94,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 7: Evolutionary Biology — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -105,7 +105,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 8: Faunal Diversity — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -116,7 +116,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 9: Biota and Environment — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 10: Conservation Biology — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     }

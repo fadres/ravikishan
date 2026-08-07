@@ -5,7 +5,7 @@ import { AppError } from '../middleware/error.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, recommendBlocks } from '../services/search.js';
-import { getQuickQuestions } from '../services/quickQuestions.js';
+import { getQuickQuestionsAcrossSections } from '../services/quickQuestions.js';
 import { sendJsonCached, clearCachedJson } from '../lib/jsonCache.js';
 import {
   sectionIndexForBlockType,
@@ -335,13 +335,18 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
   });
 });
 
-// GET /api/quick/questions — home-page quick review pool. Always 4 options,
-// correct answer index included so the box can reveal it and keep a history.
-// Questions come from published quiz MCQs + content blocks (keywords, formulas,
-// concepts), gated by the viewer's access level.
+// GET /api/quick/questions — home-page / dashboard quick review pool. Always
+// 4 options, correct answer index included so the box can reveal it and keep
+// a history. Questions come from published quiz MCQs + content blocks
+// (keywords, formulas, concepts) across EVERY active section, gated by the
+// viewer's access level.
 router.get('/quick/questions', async (req, res) => {
   const viewerLevel = req.user?.accessLevel ?? 4;
-  const questions = await getQuickQuestions(viewerLevel);
+  const limit = Math.min(60, Math.max(10, Number.parseInt(req.query.limit, 10) || 40));
+  const questions = await getQuickQuestionsAcrossSections(viewerLevel, {
+    limit,
+    token: req.headers.authorization ?? null,
+  });
   res.json({ questions, count: questions.length });
 });
 
@@ -377,7 +382,15 @@ router.get('/search', authenticate, validate(searchSchema, 'query'), async (req,
       ? await recommendBlocks(data.results.map((r) => r.id), viewerLevel)
       : [];
 
-  res.json({ query: q, results: data.results, totalCount: data.totalCount, page: data.page, totalPages: data.totalPages, recommendations });
+  res.json({
+    query: q,
+    results: data.results,
+    totalCount: data.totalCount,
+    page: data.page,
+    totalPages: data.totalPages,
+    recommendations,
+    suggestions: data.suggestions ?? [],
+  });
 });
 
 export default router;

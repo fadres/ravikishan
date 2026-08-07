@@ -8,7 +8,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 1: Foundation and Fundamentals — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "introduction",
@@ -39,7 +39,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 2: Stoichiometry — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "formula-mass",
@@ -47,7 +47,7 @@
         },
         {
           "id": "numerical",
-          "title": "Numerical"
+          "title": "Stoichiometry and Gas Law Numericals"
         },
         {
           "id": "relative-molecular-mass",
@@ -62,7 +62,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 3: Atomic Structure — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "atomic-mass-def",
@@ -113,7 +113,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 4: Classification of Elements and Periodic Table — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -124,7 +124,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 5: Chemical Bonding and Shapes of Molecules — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "water",
@@ -139,7 +139,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 6: Oxidation and Reduction — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -150,7 +150,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 7: States of Matter — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "boyles-law",
@@ -185,7 +185,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 8: Chemical Equilibrium — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -196,7 +196,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 9: Chemistry of Non-metals — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -207,7 +207,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 10: Chemistry of Metals — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -218,7 +218,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 11: Bio-inorganic Chemistry — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -229,7 +229,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 12: Basic Concept of Organic Chemistry — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "carbon-classification",
@@ -256,7 +256,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 13: Fundamental Principles of Organic Chemistry — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -267,7 +267,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 14: Hydrocarbons — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -278,7 +278,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 15: Aromatic Hydrocarbons — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -289,7 +289,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 16: Fundamentals of Applied Chemistry — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -300,7 +300,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 17: Modern Chemical Manufactures — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     }

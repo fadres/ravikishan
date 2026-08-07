@@ -8,27 +8,23 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Algebra — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "evaluate-determinants",
           "title": "Exercise 5.2 - Question 1: Evaluate Determinants"
         },
         {
-          "id": "matrix-5.2",
-          "title": "Matrix5.2"
-        },
-        {
           "id": "matrix.0001",
-          "title": "Matrix.0001"
+          "title": "Matrix Fundamentals — Definitions"
         },
         {
           "id": "matrix.5.02",
-          "title": "Matrix5.02"
+          "title": "Determinant Proofs — Practice Set"
         },
         {
           "id": "matrix5.2",
-          "title": "Matrix5.2"
+          "title": "Determinant Proofs — Exercise 5.2"
         },
         {
           "id": "minors,cofactors,determinants",
@@ -47,7 +43,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Trigonometry — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -58,7 +54,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Analytic Geometry — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "geometry.9-1",
@@ -73,7 +69,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Vectors — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -84,7 +80,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Statistics and Probability — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -95,7 +91,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Calculus — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "limit5.01",
@@ -107,19 +103,19 @@
         },
         {
           "id": "limits",
-          "title": "Limits"
+          "title": "Limits — Core Techniques"
         },
         {
           "id": "limits5.1",
-          "title": "Limits5.1"
+          "title": "Limits and Continuity — Exercise 15.1"
         },
         {
           "id": "limits5.2",
-          "title": "Limits5.2"
+          "title": "Limits and Continuity — Exercise 15.2"
         },
         {
           "id": "limits5.3",
-          "title": "Limits5.3"
+          "title": "Limits and Continuity — Theory and Exercise 15.4"
         },
         {
           "id": "topic-1",
@@ -138,7 +134,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Computational Methods OR Mechanics — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     }

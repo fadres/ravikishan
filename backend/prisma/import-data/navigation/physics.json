@@ -8,7 +8,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 1: Physical Quantities — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "accurate-measurement",
@@ -16,7 +16,7 @@
         },
         {
           "id": "c,q-and-mcq",
-          "title": "C,Q and MCQ"
+          "title": "Conceptual Questions and MCQs"
         },
         {
           "id": "derived-quantities",
@@ -60,7 +60,7 @@
         },
         {
           "id": "l,s,a,q-and-n",
-          "title": "L,S,A,Q and N"
+          "title": "Solved Questions and Practice Problems"
         },
         {
           "id": "least-count-error",
@@ -68,11 +68,11 @@
         },
         {
           "id": "m,p-errors",
-          "title": "M,P Errors"
+          "title": "Mean and Percentage Errors"
         },
         {
           "id": "numerical-p",
-          "title": "Numerical P"
+          "title": "Numerical Examples"
         },
         {
           "id": "physical-quantity-types",
@@ -115,7 +115,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 2: Vectors — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "collinear-vector",
@@ -202,7 +202,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 3: Kinematics — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -213,7 +213,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 4: Dynamics — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -224,7 +224,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 5: Work, Energy and Power — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -235,7 +235,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 6: Circular Motion — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -246,7 +246,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 7: Gravitation — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -257,7 +257,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 8: Elasticity — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -268,7 +268,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 9: Heat and Temperature — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "h-and-t",
@@ -291,7 +291,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 10: Thermal Expansion — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -302,7 +302,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 11: Quantity of Heat — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "quantity-of-heat",
@@ -317,7 +317,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 12: Rate of Heat Flow — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -328,7 +328,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 13: Ideal Gas — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -339,15 +339,15 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 14: Reflection at Curved Mirror — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "n1",
-          "title": "N1"
+          "title": "Sign Conventions and Solved Numericals"
         },
         {
           "id": "opticsn1",
-          "title": "OPTICS N1"
+          "title": "Mirror Sign Conventions — Two Systems"
         },
         {
           "id": "reflection-at-curve-surface",
@@ -362,7 +362,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 15: Refraction at Plane Surfaces — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -373,7 +373,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 16: Refraction Through Prisms — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -384,15 +384,15 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 17: Lenses — Syllabus Overview"
+          "title": "Syllabus Overview"
         },
         {
           "id": "n2",
-          "title": "N2"
+          "title": "Lens Numericals — Solving Strategies"
         },
         {
           "id": "n3",
-          "title": "N3"
+          "title": "Numericals — Magnification and Image Behaviour"
         },
         {
           "id": "on1",
@@ -407,7 +407,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 18: Dispersion — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -418,7 +418,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 19: Electric Charges — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -429,7 +429,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 20: Electric Field — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -440,7 +440,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 21: Potential, Potential Difference and Potential Energy — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -451,7 +451,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 22: Capacitor — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -462,7 +462,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 23: DC Circuits — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -473,7 +473,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 24: Nuclear Physics — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -484,7 +484,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 25: Solids — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     },
@@ -495,7 +495,7 @@
       "topics": [
         {
           "id": "syllabus-topics",
-          "title": "Unit 26: Recent Trends in Physics — Syllabus Overview"
+          "title": "Syllabus Overview"
         }
       ]
     }

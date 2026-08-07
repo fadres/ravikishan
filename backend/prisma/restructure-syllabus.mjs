@@ -109,7 +109,7 @@ const SUBJECTS = [
     moves: [
       { from: 'matrix (algebra)', to: 'algebra', all: true },
       { from: 'analytical-geometry', to: 'analytic-geometry', all: true },
-      { from: 'calculus', to: 'calculus', all: true },
+      { from: 'algebra', drop: ['matrix-5.2.json'] },
     ],
   },
   {
@@ -137,7 +137,9 @@ function overviewJson(subject, chapter, unitOrArea) {
   const hourLine = chapter.blurb;
   const list = topics.map((t) => `  <li>${t}</li>`).join('\n');
   return {
-    title: `${chapter.title} — Syllabus Overview`,
+    // The topic lives INSIDE the chapter, whose title already reads
+    // "Unit N: …" — repeating it here just duplicated the name.
+    title: 'Syllabus Overview',
     syllabus: subject.syllabus.code,
     notes: [
       `<p><strong>${chapter.title}</strong> &middot; ${hourLine}</p>`,

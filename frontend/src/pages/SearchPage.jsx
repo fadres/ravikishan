@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { TypeBadge, AccessBadge, typeMeta } from '../utils/blockMeta.jsx';
 import { sectionStyleForKey } from '../lib/noteStructure.js';
 import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
+import { searchTokens, highlight } from '../utils/searchHighlight.jsx';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -21,6 +22,14 @@ const ACCESS_OPTIONS = [
   { value: 3, label: 'Free' },
   { value: 2, label: 'Members' },
   { value: 1, label: 'Premium' },
+];
+
+const DIFFICULTY_OPTIONS = [
+  { value: '', label: 'All levels' },
+  { value: 'easy', label: 'Easy', color: '#34d399' },
+  { value: 'medium', label: 'Medium', color: '#fbbf24' },
+  { value: 'hard', label: 'Hard', color: '#fb7185' },
+  { value: 'expert', label: 'Expert', color: '#f472b6' },
 ];
 
 function FilterChip({ active, color, onClick, children }) {
@@ -70,6 +79,7 @@ export default function SearchPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [suggestions, setSuggestions] = useState([]);
 
   // Filters live client-side: chips react instantly on the loaded results,
   // no server round trip per click.
@@ -77,6 +87,7 @@ export default function SearchPage() {
   const [typeFilter, setTypeFilter] = useState('');
   const [accessFilter, setAccessFilter] = useState(0);
   const [sectionFilter, setSectionFilter] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('');
 
   useEffect(() => {
     const q = params.get('q') || '';
@@ -84,6 +95,7 @@ export default function SearchPage() {
     if (!q.trim()) {
       setResults([]);
       setRecommendations([]);
+      setSuggestions([]);
       setSearched(false);
       return;
     }
@@ -102,6 +114,7 @@ export default function SearchPage() {
         setTotalPages(data.totalPages);
         setPage(data.page);
         setRecommendations(data.recommendations);
+        setSuggestions(data.suggestions || []);
         setSearched(true);
       } catch {
         setError('Search failed — please try again.');
@@ -124,9 +137,10 @@ export default function SearchPage() {
       if (typeFilter && r.blockType !== typeFilter) return false;
       if (accessFilter && (r.accessLevel ?? 3) < accessFilter) return false;
       if (sectionFilter && (r.sectionKey ?? '') !== sectionFilter) return false;
+      if (difficultyFilter && r.difficulty && r.difficulty !== difficultyFilter) return false;
       return true;
     });
-  }, [results, subjectFilter, typeFilter, accessFilter, sectionFilter]);
+  }, [results, subjectFilter, typeFilter, accessFilter, sectionFilter, difficultyFilter]);
 
   const sectionOptions = useMemo(() => {
     const seen = new Set();
@@ -162,6 +176,8 @@ export default function SearchPage() {
     }
     groupMap.get(key).items.push(r);
   }
+
+  const tokens = searchTokens(query);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -296,6 +312,39 @@ export default function SearchPage() {
                   ))}
                 </div>
               </div>
+
+              <div className="flex items-start gap-2 flex-wrap">
+                <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-1.5 w-14 shrink-0">
+                  Level
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {DIFFICULTY_OPTIONS.map((d) => (
+                    <FilterChip
+                      key={d.value || 'all'}
+                      active={difficultyFilter === d.value}
+                      color={d.color}
+                      onClick={() => setDifficultyFilter(difficultyFilter === d.value ? '' : d.value)}
+                    >
+                      {d.label}
+                    </FilterChip>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {suggestions.length > 0 && filtered.length < 3 && (
+            <div className="glass rounded-2xl px-4 py-3 mb-5 flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-slate-300 font-semibold">Did you mean:</span>
+              {suggestions.map((s) => (
+                <button
+                  key={s.text}
+                  onClick={() => setParams({ q: s.text, page: '1' })}
+                  className="text-sm font-bold px-3 py-1 rounded-full bg-aqua-400/10 border border-aqua-400/40 text-aqua-200 hover:bg-aqua-400/25 hover:text-aqua-50 transition"
+                >
+                  {s.text}
+                </button>
+              ))}
             </div>
           )}
 
@@ -310,6 +359,7 @@ export default function SearchPage() {
                       setTypeFilter('');
                       setAccessFilter(0);
                       setSectionFilter('');
+                      setDifficultyFilter('');
                     }}
                     className="mt-3 text-sm font-bold text-aqua-300 hover:text-aqua-100 transition"
                   >
@@ -341,7 +391,7 @@ export default function SearchPage() {
                         style={{ borderLeft: `3px solid ${g.color}` }}
                       >
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-bold text-white">{r.title}</h3>
+                          <h3 className="font-bold text-white">{highlight(r.title, tokens)}</h3>
                           {r.accessLevel && <AccessBadge accessLevel={r.accessLevel} />}
                           {r.sectionKey && (
                             <span
@@ -356,7 +406,7 @@ export default function SearchPage() {
                           </span>
                         </div>
                         <p className="text-xs text-slate-400 mt-0.5">{resultBreadcrumb(r)}</p>
-                        {r.snippet && <p className="text-sm text-slate-300 mt-2 leading-relaxed">{r.snippet}</p>}
+                        {r.snippet && <p className="text-sm text-slate-300 mt-2 leading-relaxed">{highlight(r.snippet, tokens)}</p>}
                       </Link>
                     ))}
                   </div>

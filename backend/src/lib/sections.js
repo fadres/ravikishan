@@ -102,10 +102,6 @@ export function sectionIndexForBlockType(blockType) {
   return INDEX.get(blockType) ?? 0;
 }
 
-export function sectionForIndex(index) {
-  return SECTION_ORDER[index] ?? SECTION_ORDER[0];
-}
-
 export function sectionKeyForBlockType(blockType) {
   const i = sectionIndexForBlockType(blockType);
   return SECTION_ORDER[i]?.key ?? 'topic';

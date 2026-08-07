@@ -6,6 +6,7 @@ import { AppError } from '../middleware/error.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { searchContent, getSearchSuggestions, recommendBlocks } from '../services/search.js';
+import { getQuickQuestions } from '../services/quickQuestions.js';
 import { sendJsonCached } from '../lib/jsonCache.js';
 import {
   sectionIndexForBlockType,
@@ -315,6 +316,17 @@ router.get('/subjects/:subjectSlug/chapters/:chapterSlug', authenticate, async (
     })),
     blocks: blocks.map((b) => decorateBlock(b, viewerLevel, dupInfo)),
   });
+});
+
+// GET /api/quick/questions — 4-option question pool for THIS section's
+// contents (keywords, formulas, concepts). The global backend proxies here
+// so the quick-review boxes draw from every section. Gated by the viewer's
+// access level (shared JWT).
+router.get('/quick/questions', async (req, res) => {
+  const viewerLevel = req.user?.accessLevel ?? 4;
+  const limit = Math.min(60, Math.max(10, Number.parseInt(req.query.limit, 10) || 40));
+  const questions = await getQuickQuestions(viewerLevel, { limit });
+  res.json({ questions, count: questions.length });
 });
 
 const searchSchema = z.object({

@@ -85,3 +85,12 @@ export async function remoteSectionAsk(section, payload, token = null) {
   });
   return { sectionId: section.id, sectionLabel: section.label, ...data };
 }
+
+/** Proxy GET /quick/questions → {backendUrl}/api/quick/questions. */
+export async function remoteSectionQuickQuestions(section, viewerLevel, token = null, { limit = 12 } = {}) {
+  const data = await remoteFetch(section.backendUrl, '/api/quick/questions', {
+    token,
+    query: { limit },
+  });
+  return data.questions ?? [];
+}

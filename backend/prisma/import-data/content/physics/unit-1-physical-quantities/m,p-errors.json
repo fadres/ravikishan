@@ -1,5 +1,5 @@
 {
-  "title": "M,P Errors",
+  "title": "Mean and Percentage Errors",
   "notes": [
     "<h2>Mean Value of a Set of Measurements</h2>",
     "<p>If A₁, A₂, ..... A<sub>n</sub> be the values calculated in the measurement then their mean value as a real value is given by</p>",

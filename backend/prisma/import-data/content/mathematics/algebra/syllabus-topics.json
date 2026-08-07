@@ -1,8 +1,8 @@
 {
-  "title": "Algebra — Syllabus Overview",
+  "title": "Syllabus Overview",
   "syllabus": "Mat. 007",
   "notes": [
-    "<p><strong>Algebra</strong> · 44 working hours</p>",
+    "<p><strong>Algebra</strong> &middot; 44 working hours</p>",
     "<h2>Syllabus Topics</h2>",
     "<ul>\n  <li>Logic and Set: Statements, logical connectives, truth tables, set operation theorems</li>\n  <li>Real numbers: Geometric representation, interval, absolute value</li>\n  <li>Function: Domain and range, inverse and composite functions, algebraic (linear, quadratic, cubic) & transcendental (trigonometric, exponential, logarithmic) functions</li>\n  <li>Curve sketching: Odd/even functions, periodicity, symmetry, monotonicity, graphing quadratic, cubic, rational, trigonometric, exponential, and logarithmic functions</li>\n  <li>Sequence and series: Arithmetic, geometric, and harmonic sequences/series, AM/GM/HM relations, sum of infinite geometric series</li>\n  <li>Matrices and determinants: Transpose, minors, cofactors, adjoint, inverse matrix, determinant properties</li>\n  <li>Quadratic equation: Roots, nature of roots, relations with coefficients, symmetric roots, common roots</li>\n  <li>Complex number: Imaginary unit, algebra, geometric representation, modulus, conjugate, square root</li>\n</ul>"
   ]

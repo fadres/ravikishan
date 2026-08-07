@@ -1,5 +1,5 @@
 {
-  "title": "Limits",
+  "title": "Limits — Core Techniques",
   "notes": [
     "<h1>The Core Philosophy of Limits</h1>",
     "<p>A limit asks: as <i>x</i> gets infinitely close to a number, what value is the function heading toward? Sometimes the function has a 'hole' at that exact spot — plugging the number in directly gives 0/0, called an <b>Indeterminate Form</b>. This does <u>not</u> mean the limit doesn't exist; it means the answer is hidden and needs algebra or calculus to expose it.</p><p>Think of <b>Direct Substitution</b> as checking the front door: if it's unlocked (gives a real number), you walk right in. If it's locked with a 0/0 sign, you need the right tool to pick the lock.</p>",

@@ -21,6 +21,7 @@ export default class ErrorBoundary extends Component {
   render() {
     const { error } = this.state;
     if (!error) return this.props.children;
+    if (this.props.fallback) return this.props.fallback(error);
     return (
       <div className="max-w-xl mx-auto px-4 py-24 text-center">
         <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-rose-400/15 border border-rose-400/30 text-2xl mb-4">

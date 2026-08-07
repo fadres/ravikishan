@@ -1,23 +1,20 @@
-// Quick Review pool — powers the home-page "changing question" box and the
-// dashboard "Daily Challenge".
+// Quick Review pool for THIS section (Class 12) — mirrors the global
+// backend's quickQuestions service, minus the quiz-MCQ source (this section's
+// schema has no QuizQuestion model). The global backend's
+// getQuickQuestionsAcrossSections proxies to this endpoint so the
+// home-page / dashboard boxes draw from every section's contents.
 //
-// Every question is guaranteed to be answerable from the study library and
-// always carries exactly 4 options with one correct answer:
-//   • mcq      — real questions harvested from published quiz papers
+// Every question carries exactly 4 options with one correct answer:
 //   • term     — "which term appears in chapter X?" from keywords blocks
 //   • formula  — "which formula is studied in chapter X?" from formula blocks
 //   • concept  — "which concept belongs to chapter X?" from concept/statement blocks
 // Distractors are pulled from OTHER chapters so the correct one is unique.
-//
-// getQuickQuestionsAcrossSections pools questions from EVERY active section
-// (Class 11 local DB + every independent-service section via its own
-// /api/quick/questions), so the boxes draw from all contents.
 
 import { prisma } from '../config/db.js';
-import { activeSections } from '../lib/sections.config.js';
-import { remoteSectionQuickQuestions } from './remoteSection.js';
 
-const OPTION_SOURCES = {
+const TERM_SOURCES = ['keywords', 'formula', 'note_concept', 'note_statement', 'note_topic', 'note_important'];
+
+const QUESTION_LABEL = {
   keywords: { kind: 'term', label: 'key term' },
   formula: { kind: 'formula', label: 'formula' },
   note_concept: { kind: 'concept', label: 'concept' },
@@ -25,8 +22,6 @@ const OPTION_SOURCES = {
   note_topic: { kind: 'concept', label: 'topic' },
   note_important: { kind: 'concept', label: 'concept' },
 };
-
-const TERM_SOURCES = ['keywords', 'formula', 'note_concept', 'note_statement', 'note_topic', 'note_important'];
 
 function normalize(s) {
   return String(s || '')
@@ -55,13 +50,11 @@ function pickDistinct(pool, exclude, n) {
   return out;
 }
 
-// A 4-option puzzle: [correct + 3 distractors] shuffled, returns the index.
 function makeOptions(correct, distractors) {
   const options = shuffle([correct, ...distractors]);
   return { options, correctIndex: options.findIndex((o) => normalize(o) === normalize(correct)) };
 }
 
-// Split a keywords/formula block into individual items (terms or formula lines).
 function splitItems(block) {
   if (block.blockType === 'keywords') {
     return String(block.contentRichtext || '')
@@ -87,38 +80,6 @@ function shortText(s, n = 90) {
 export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
   const questions = [];
 
-  // ── 1. Real MCQs from published quizzes ──────────────────────────
-  const mcqRows = await prisma.quizQuestion.findMany({
-    where: { questionType: 'mcq', quiz: { status: 'published' } },
-    orderBy: { createdAt: 'desc' },
-    take: 120,
-    select: {
-      id: true,
-      question: true,
-      options: true,
-      correctAnswer: true,
-      explanation: true,
-      quiz: { select: { title: true, chapter: { select: { title: true } } } },
-    },
-  });
-  for (const q of mcqRows) {
-    const opts = Array.isArray(q.options) ? q.options.map((o) => String(o).trim()) : [];
-    const correctIndex = opts.findIndex((o) => normalize(o) === normalize(q.correctAnswer));
-    if (opts.length >= 2 && correctIndex >= 0) {
-      questions.push({
-        id: `mcq-${q.id}`,
-        kind: 'mcq',
-        question: q.question,
-        options: opts.slice(0, 4),
-        correctIndex: correctIndex < 4 ? correctIndex : null,
-        source: q.quiz.title,
-        chapterName: q.quiz.chapter?.title || '',
-        explanation: shortText(q.explanation, 180) || undefined,
-      });
-    }
-  }
-
-  // ── 2. Knowledge-graph "belongs to chapter" questions ────────────────
   const blocks = await prisma.contentBlock.findMany({
     where: {
       accessLevel: { gte: Math.min(viewerLevel, 3) },
@@ -136,8 +97,7 @@ export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
     },
   });
 
-  // Pre-digest every block into "statements" we can use as options.
-  const statements = []; // { text, chapterTitle, chapterId, blockType }
+  const statements = [];
   for (const b of blocks) {
     const items = splitItems(b);
     if (b.blockType === 'keywords' || b.blockType === 'formula') {
@@ -150,12 +110,6 @@ export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
     }
   }
 
-  const byChapter = new Map();
-  for (const s of statements) {
-    if (!byChapter.has(s.chapterId)) byChapter.set(s.chapterId, []);
-    byChapter.get(s.chapterId).push(s);
-  }
-
   for (const s of statements) {
     const others = statements.filter((x) => x.chapterId !== s.chapterId && x.blockType === s.blockType);
     const distractors = pickDistinct(others.map((x) => x.text), s.text, 3);
@@ -164,7 +118,7 @@ export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
     const { options, correctIndex } = makeOptions(s.text, distractors);
     if (correctIndex < 0) continue;
 
-    const meta = OPTION_SOURCES[s.blockType];
+    const meta = QUESTION_LABEL[s.blockType];
     const qKind = s.blockType === 'keywords' ? 'term' : s.blockType === 'formula' ? 'formula' : 'concept';
     const chapterName = s.chapterTitle || 'this chapter';
     const question =
@@ -180,59 +134,15 @@ export async function getQuickQuestions(viewerLevel = 3, { limit = 40 } = {}) {
       options,
       correctIndex,
       chapterName,
-      occurrences: byChapter.get(s.chapterId).length,
     });
   }
 
-  // Shuffle, de-dup and cap.
   const seen = new Set();
   const picked = [];
   for (const q of shuffle(questions)) {
     if (picked.length >= limit) break;
     if (q.correctIndex === null || q.correctIndex === undefined) continue;
     const key = `${q.kind}:${q.id}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    picked.push(q);
-  }
-
-  return picked;
-}
-
-/**
- * Pool questions from EVERY active section: the local (Class 11) database
- * plus each independent-service section's own /api/quick/questions endpoint.
- * One section being down never kills the pool — it simply contributes
- * nothing. Results are shuffled, de-duplicated and capped at `limit`.
- */
-export async function getQuickQuestionsAcrossSections(viewerLevel = 3, { limit = 40, token = null } = {}) {
-  const sections = activeSections();
-  const remote = sections.filter((s) => s.backendUrl);
-
-  // Keep the local library as the base; remote sections top it up so no
-  // single section dominates the pool.
-  const localShare = Math.max(12, Math.ceil(limit * 0.7));
-  const remoteShare = Math.max(6, Math.floor((limit * 0.3) / Math.max(1, remote.length)));
-
-  const settled = await Promise.allSettled(
-    remote.map((s) => remoteSectionQuickQuestions(s, viewerLevel, token, { limit: remoteShare })),
-  );
-
-  const [local] = await Promise.all([
-    getQuickQuestions(viewerLevel, { limit: localShare }).catch(() => []),
-  ]);
-
-  const merged = [...local];
-  remote.forEach((s, i) => {
-    if (settled[i].status !== 'fulfilled') return;
-    for (const q of settled[i].value) merged.push({ ...q, sectionId: s.id });
-  });
-
-  const seen = new Set();
-  const picked = [];
-  for (const q of shuffle(merged)) {
-    if (picked.length >= limit) break;
-    const key = `${q.sectionId || 'local'}:${q.id}`;
     if (seen.has(key)) continue;
     seen.add(key);
     picked.push(q);

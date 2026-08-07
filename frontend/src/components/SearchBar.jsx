@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { TypeBadge } from '../utils/blockMeta.jsx';
 import { sectionIdFromClassSlug, sectionPath } from '../lib/sectionLinks.js';
+import { searchTokens, highlight } from '../utils/searchHighlight.jsx';
 
 const SUBJECT_COLORS = {
   physics: '#38bdf8',
@@ -19,6 +20,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -39,6 +41,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
     if (q.length < 2) {
       setResults([]);
       setRecommendations([]);
+      setSuggestions([]);
       setLoading(false);
       return;
     }
@@ -48,6 +51,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
         const data = await api(`/api/search?q=${encodeURIComponent(q)}`);
         setResults(data.results);
         setRecommendations(data.recommendations);
+        setSuggestions(data.suggestions || []);
         setOpen(true);
       } catch {
         setResults([]);
@@ -81,6 +85,8 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
     navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
+  const tokens = searchTokens(query);
+
   return (
     <div className="relative w-full" ref={boxRef}>
       <form onSubmit={submit} className="relative">
@@ -109,7 +115,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
         )}
       </form>
 
-      {open && (results.length > 0 || recommendations.length > 0) && (
+      {open && (results.length > 0 || recommendations.length > 0 || suggestions.length > 0) && (
         <div className="absolute left-0 right-0 mt-2 glass-strong rounded-2xl overflow-hidden shadow-2xl z-50">
           {results.length > 0 && (
             <div className="max-h-80 overflow-y-auto">
@@ -132,7 +138,7 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2">
-                      <span className="block text-sm text-white font-medium truncate">{r.title}</span>
+                      <span className="block text-sm text-white font-medium truncate">{highlight(r.title, tokens)}</span>
                       <TypeBadge blockType={r.blockType} className="shrink-0" />
                     </span>
                     <span className="block text-xs text-slate-400 truncate">
@@ -143,8 +149,30 @@ export default function SearchBar({ autoFocus = false, placeholder = 'Search sub
                       {breadcrumb(r)}
                       {r.locked && ' · reserved'}
                     </span>
-                    {r.snippet && <span className="block text-xs text-slate-300 mt-0.5 line-clamp-2">{r.snippet}</span>}
+                    {r.snippet && (
+                      <span className="block text-xs text-slate-300 mt-0.5 line-clamp-2">{highlight(r.snippet, tokens)}</span>
+                    )}
                   </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {suggestions.length > 0 && (
+            <div className="border-t border-white/10 px-4 py-2.5 flex items-center gap-1.5 flex-wrap">
+              <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mr-1">
+                Did you mean
+              </span>
+              {suggestions.map((s) => (
+                <button
+                  key={s.text}
+                  onClick={() => {
+                    setOpen(false);
+                    navigate(`/search?q=${encodeURIComponent(s.text)}`);
+                  }}
+                  className="text-xs font-bold px-2.5 py-1 rounded-full bg-aqua-400/10 border border-aqua-400/40 text-aqua-200 hover:bg-aqua-400/25 hover:text-aqua-50 transition"
+                >
+                  {s.text}
                 </button>
               ))}
             </div>

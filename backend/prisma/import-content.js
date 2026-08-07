@@ -833,14 +833,38 @@ function chapterTitle(chapterName, nav) {
   return (navChapter?.title || '').trim() || humanize(chapterName);
 }
 
-function topicTitle(file, nav, chapterId) {
+// Topic naming standards — the permanent rules that keep every topic title
+// unambiguous, no matter what the source corpus calls the file:
+//   1. repair mojibake (an old corpus wrote "—" as "\uFFFD?");
+//   2. "… — Syllabus Overview" inside a chapter is redundant (the chapter
+//      title already names the unit) → plain "Syllabus Overview";
+//   3. a title that re-states the chapter title verbatim ("Unit 2: Vectors —
+//      …") drops the repeated prefix, because the topic is shown under it;
+//   4. whitespace is collapsed and the title trimmed.
+function cleanTopicTitle(title, chapterTitleText) {
+  const t = String(title || '')
+    .replace(/\uFFFD/g, '—')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!t) return t;
+  if (/—\s*Syllabus Overview$/i.test(t)) return 'Syllabus Overview';
+  const chapter = String(chapterTitleText || '').replace(/\s+/g, ' ').trim();
+  if (chapter && t.toLowerCase().startsWith(chapter.toLowerCase() + ' — ')) {
+    const rest = t.slice(chapter.length + 3).trim();
+    if (rest) return rest;
+  }
+  return t;
+}
+
+function topicTitle(file, nav, chapterId, chapterTitleText) {
   const parsed = loadJson(file);
   const topicName = basename(file, extname(file));
-  if (parsed && parsed.title) return String(parsed.title).trim();
+  const raw = parsed && parsed.title ? String(parsed.title).trim() : '';
   const navTopic = nav?.chapters
     ?.find((c) => slugify(c.id) === chapterId)
     ?.topics?.find((t) => slugify(t.id) === slugify(topicName));
-  return (navTopic?.title || '').trim() || humanize(topicName);
+  const candidate = raw || (navTopic?.title || '').trim() || humanize(topicName);
+  return cleanTopicTitle(candidate, chapterTitleText);
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────
@@ -952,7 +976,7 @@ async function main() {
     for (const file of group.files) {
       const topic = loadJson(file);
       if (!topic) continue;
-      const title = topicTitle(file, nav, chapterSlug);
+      const title = topicTitle(file, nav, chapterSlug, chapterTitle(group.chapterName, nav));
       const { blocks, topicMeta } = buildBlocks(topic, subjectCfg.subjectType, title);
       if (!blocks.length) continue;
 

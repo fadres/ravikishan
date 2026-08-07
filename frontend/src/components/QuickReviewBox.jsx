@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api/client.js';
 
-// Home-page Quick Review box: shows one 4-option question, auto-advances every
-// four seconds, tap an option to answer. Every question seen is kept in an
-// on-screen history (and localStorage) so nothing is lost to the timer.
+// Home-page / Dashboard Quick Review box: shows one 4-option question,
+// auto-advances every `seconds` (4s on Home, 6s on the Dashboard), tap an
+// option to answer. Every question seen is kept in an on-screen history (and
+// localStorage) so nothing is lost to the timer. Questions come from ALL
+// contents — every active section (Class 11 + Class 12) is pooled server-side.
 
 const LOCAL_KEY = 'rk_quick_review_history';
 const KIND_LABELS = {
@@ -13,19 +15,25 @@ const KIND_LABELS = {
   concept: { label: 'Concept', color: '#34d399' },
 };
 
-function loadHistory() {
+function loadHistory(key = LOCAL_KEY) {
   try {
-    return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+    return JSON.parse(localStorage.getItem(key) || '[]');
   } catch {
     return [];
   }
 }
 
-export default function QuickReviewBox() {
+export default function QuickReviewBox({
+  seconds = 4,
+  historyKey = LOCAL_KEY,
+  title = 'Quick Review',
+  subtitle = null,
+  className = '',
+}) {
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null); // { option, isCorrect }
-  const [history, setHistory] = useState(loadHistory);
+  const [history, setHistory] = useState(() => loadHistory(historyKey));
   const [showHistory, setShowHistory] = useState(false);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
@@ -41,12 +49,12 @@ export default function QuickReviewBox() {
     setIndex((i) => (questions.length ? (i + 1) % questions.length : 0));
   }, [questions.length]);
 
-  // Auto-advance every 4s unless paused or history panel is open.
+  // Auto-advance every `seconds` unless paused or history panel is open.
   useEffect(() => {
     if (paused || !questions.length) return;
-    timerRef.current = setTimeout(advance, 4000);
+    timerRef.current = setTimeout(advance, seconds * 1000);
     return () => clearTimeout(timerRef.current);
-  }, [index, paused, questions.length, advance]);
+  }, [index, paused, questions.length, advance, seconds]);
 
   const q = questions[index];
   const seenCount = useMemo(() => Math.min(history.length, questions.length || 1), [history.length, questions.length]);
@@ -69,7 +77,7 @@ export default function QuickReviewBox() {
         ...prev,
       ].slice(0, 60);
       try {
-        localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
+        localStorage.setItem(historyKey, JSON.stringify(next));
       } catch {
         /* storage full — keep in memory */
       }
@@ -82,7 +90,7 @@ export default function QuickReviewBox() {
   const label = KIND_LABELS[q?.kind] || KIND_LABELS.mcq;
 
   return (
-    <section className="glass rounded-2xl mt-5 p-5" aria-label="Quick review questions">
+    <section className={`glass rounded-2xl mt-5 p-5 ${className}`} aria-label="Quick review questions">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2.5">
           <span
@@ -98,8 +106,10 @@ export default function QuickReviewBox() {
             </svg>
           </span>
           <div>
-            <h2 className="text-base font-extrabold text-white leading-tight">Quick Review</h2>
-            <p className="text-[11px] text-slate-400">New question every 4s · {questions.length} in pool</p>
+            <h2 className="text-base font-extrabold text-white leading-tight">{title}</h2>
+            <p className="text-[11px] text-slate-400">
+              {subtitle ?? `New question every ${seconds}s · ${questions.length} in pool`}
+            </p>
           </div>
         </div>
 
@@ -124,7 +134,7 @@ export default function QuickReviewBox() {
           <div
             key={index}
             className="h-full rounded-full bg-gradient-to-r from-aqua-400 to-emerald-400"
-            style={{ width: '100%', animation: 'quickTimer 4s linear forwards' }}
+            style={{ width: '100%', animation: `quickTimer ${seconds}s linear forwards` }}
           />
         </div>
       )}
@@ -187,7 +197,7 @@ export default function QuickReviewBox() {
 
         {!selected && (
           <p className="mt-3 text-[11px] text-slate-500">
-            Tap an answer to record it — question changes in {Math.ceil(3.9)}s.
+            Tap an answer to record it — question changes in {seconds}s.
           </p>
         )}
       </div>

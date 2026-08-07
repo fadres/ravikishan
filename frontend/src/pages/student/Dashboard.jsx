@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api/client.js';
 import { sectionIdFromClassSlug, sectionPath } from '../../lib/sectionLinks.js';
+import QuickReviewBox from '../../components/QuickReviewBox.jsx';
 
 function chapterTo(chapter) {
   return chapter.subject.classSlug
@@ -155,6 +156,13 @@ export default function StudentDashboard() {
       <p className="text-sm text-slate-400 mb-8">Track your learning progress and stay on streak.</p>
 
       <OwnerIntro />
+
+      {/* 4-option question from ALL contents — one every 6 seconds, full history kept */}
+      <QuickReviewBox
+        seconds={6}
+        title="Daily Challenge"
+        subtitle="One question from all Class 11 & 12 content — new one every 6s · tap an option to answer"
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <StatCard label="Chapters" value={totalChapters} icon="📚" />

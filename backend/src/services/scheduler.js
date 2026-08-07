@@ -132,5 +132,3 @@ export function stopScheduler() {
     timer = null;
   }
 }
-
-export { runOnce as runSchedulerOnce };
