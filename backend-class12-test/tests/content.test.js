@@ -23,7 +23,7 @@ test('GET /api/classes lists the section structure (no secrets)', async () => {
   const res = await request(app).get('/api/classes');
   assert.equal(res.status, 200);
   assert.equal(res.body.classes.length, 1);
-  assert.equal(res.body.classes[0].slug, 'class-12-test');
+  assert.equal(res.body.classes[0].slug, 'class-12');
   const subject = res.body.classes[0].subjects[0];
   assert.equal(subject.slug, 'physics');
   assert.equal(subject._count.chapters, 1);

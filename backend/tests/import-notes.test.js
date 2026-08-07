@@ -278,7 +278,7 @@ test('resolveSectionFromFlags fails fast (exit code 1, no section) for unknown i
   const prevCode = process.exitCode;
   try {
     process.exitCode = 0;
-    const result = resolveSectionFromFlags({ section: 'class-12-test' });
+    const result = resolveSectionFromFlags({ section: 'class-13' });
     assert.equal(result, null);
     assert.equal(process.exitCode, 1);
   } finally {
@@ -286,6 +286,8 @@ test('resolveSectionFromFlags fails fast (exit code 1, no section) for unknown i
   }
   const ok = resolveSectionFromFlags({ section: 'class-11' });
   assert.equal(ok.id, 'class-11');
+  const remote = resolveSectionFromFlags({ section: 'class-12-test' });
+  assert.equal(remote.id, 'class-12-test', 'registered independent section resolves from the registry');
 });
 
 test('isSectionFile keeps only the section-owned tree (foreign trees are skipped, never imported)', () => {

@@ -21,19 +21,19 @@ test('prismaForSection returns the same cached client per section', async () => 
 
 test('prismaForSection fails fast for unknown sections — no client is ever created', async () => {
   const { prismaForSection } = await import('../src/config/db.js?section-clients=2');
-  assert.throws(() => prismaForSection('class-12-test'), { code: 'UNKNOWN_SECTION' });
+  assert.throws(() => prismaForSection('class-12'), { code: 'UNKNOWN_SECTION' });
   assert.throws(() => prismaForSection(''), { code: 'UNKNOWN_SECTION' });
 });
 
 test('searchWithinSection fails fast for unknown sections — no search is ever run', async () => {
   const { searchWithinSection } = await import('../src/services/search.js?section-search=1');
-  await assert.rejects(() => searchWithinSection('class-12-test', 'kinematics', 4, {}), { code: 'UNKNOWN_SECTION' });
+  await assert.rejects(() => searchWithinSection('class-12', 'kinematics', 4, {}), { code: 'UNKNOWN_SECTION' });
   await assert.rejects(() => searchWithinSection('', 'kinematics', 4, {}), { code: 'UNKNOWN_SECTION' });
 });
 
 test('askSection fails fast for unknown sections — no AI request is ever made', async () => {
   const { askSection } = await import('../src/services/ai.js?section-ai=1');
-  await assert.rejects(() => askSection('user-1', 'class-12-test', { question: 'What is kinematics?' }), { code: 'UNKNOWN_SECTION' });
+  await assert.rejects(() => askSection('user-1', 'class-12', { question: 'What is kinematics?' }), { code: 'UNKNOWN_SECTION' });
   await assert.rejects(() => askSection('user-1', '', { question: 'What is kinematics?' }), { code: 'UNKNOWN_SECTION' });
 });
 

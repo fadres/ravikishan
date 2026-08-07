@@ -11,6 +11,11 @@ export const sections = [
     label: 'Class 11',
     classSlug: 'class-11',
   },
+  {
+    id: 'class-12-test',
+    label: 'Class 12',
+    classSlug: 'class-12',
+  },
 ];
 
 const byId = new Map(sections.map((s) => [s.id, s]));

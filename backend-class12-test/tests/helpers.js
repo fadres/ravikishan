@@ -77,7 +77,7 @@ export function signToken({ sub = '00000000-0000-4000-8000-000000000001', email 
 }
 
 // Wipe all tables, then seed a minimal fixture:
-// class-12-test / Physics / demo-chapter with a free, a member and a
+// class-12 / Physics / demo-chapter with a free, a member and a
 // premium block (+ maintained tsvector columns so search works).
 export async function resetDb() {
   await prisma.$transaction([
@@ -96,7 +96,7 @@ export async function resetDb() {
   ]);
 
   const klass = await prisma.class.create({
-    data: { name: 'Class 12 (test)', slug: 'class-12-test', sortOrder: 1 },
+    data: { name: 'Class 12', slug: 'class-12', sortOrder: 1 },
   });
   const subject = await prisma.subject.create({
     data: {

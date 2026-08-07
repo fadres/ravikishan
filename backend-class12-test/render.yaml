@@ -35,9 +35,9 @@ services:
       - key: SECTION_ID
         value: class-12-test
       - key: SECTION_LABEL
-        value: Class 12 (test)
+        value: Class 12
       - key: SECTION_CLASS_SLUG
-        value: class-12-test
+        value: class-12
       - key: SECTION_CONTENT_DIR
         value: content/class-12-test
       - key: AI_ENDPOINT

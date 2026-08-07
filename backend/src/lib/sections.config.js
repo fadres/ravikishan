@@ -35,8 +35,8 @@ export const sections = [
   // local AI, own storage), NEVER sharing NEON_CLASS11_URL. See the
   // checklist in ARCHITECTURE.md before adding one.
 
-  // Independent-service section: Class 12 (test fork). Unlike class-11,
-  // this section does NOT run inside the global backend — it is its own
+  // Independent-service section: Class 12. Unlike class-11, this section
+  // does NOT run inside the global backend — it is its own
   // service (backend-class12-test/) with its own Neon (NEON_CLASS12_URL),
   // its own AI endpoint and its own progress outbox. The global backend
   // NEVER connects to its database; it proxies content/search/AI calls to
@@ -44,7 +44,7 @@ export const sections = [
   // progress-sync API (PROGRESS_SYNC_SECRET). See ARCHITECTURE.md §6.
   {
     id: 'class-12-test',
-    label: 'Class 12 (test)',
+    label: 'Class 12',
     classSlug: 'class-12',
     contentDir: 'content/class-12-test',
     // Own Neon — the global backend must NEVER open a connection to it.

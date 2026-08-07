@@ -37,8 +37,8 @@ export const env = {
   aiRateLimit: parseInt(process.env.AI_RATE_LIMIT || '40', 10),
   // Section identity — this service serves exactly one section.
   sectionId: process.env.SECTION_ID || 'class-12-test',
-  sectionLabel: process.env.SECTION_LABEL || 'Class 12 (test)',
-  sectionClassSlug: process.env.SECTION_CLASS_SLUG || 'class-12-test',
+  sectionLabel: process.env.SECTION_LABEL || 'Class 12',
+  sectionClassSlug: process.env.SECTION_CLASS_SLUG || 'class-12',
   sectionContentDir: process.env.SECTION_CONTENT_DIR || 'content/class-12-test',
   aiEndpoint: process.env.AI_ENDPOINT || '',
   aiApiKey: process.env.AI_API_KEY || '',

@@ -28,12 +28,18 @@ test('GET /api/sections lists the active section registry (no secrets leaked)', 
   const res = await request(app).get('/api/sections');
   assert.equal(res.status, 200);
   assert.ok(Array.isArray(res.body.sections));
-  assert.deepEqual(res.body.sections.map((s) => s.id), ['class-11']);
-  const s = res.body.sections[0];
-  assert.equal(s.label, 'Class 11');
-  assert.equal(s.status, 'active');
-  assert.ok(!('dbUrl' in s), 'dbUrl must never be exposed');
-  assert.ok(!('aiEndpoint' in s), 'aiEndpoint must never be exposed');
+  assert.deepEqual(res.body.sections.map((s) => s.id), ['class-11', 'class-12-test']);
+  for (const s of res.body.sections) {
+    assert.equal(s.status, 'active');
+    assert.ok(!('dbUrl' in s), 'dbUrl must never be exposed');
+    assert.ok(!('aiEndpoint' in s), 'aiEndpoint must never be exposed');
+  }
+  const c11 = res.body.sections[0];
+  assert.equal(c11.label, 'Class 11');
+  assert.equal(c11.backendUrl, null, 'local sections expose no backendUrl');
+  const c12 = res.body.sections[1];
+  assert.equal(c12.label, 'Class 12');
+  assert.equal(c12.classSlug, 'class-12');
 });
 
 test('GET /api/sections/class-11 returns the section identity', async () => {
@@ -43,9 +49,16 @@ test('GET /api/sections/class-11 returns the section identity', async () => {
   assert.equal(res.body.section.classSlug, 'class-11');
 });
 
-test('GET /api/sections/<unknown> returns 404 (fail-fast, no fallback)', async () => {
+test('GET /api/sections/class-12-test returns the independent section identity', async () => {
   const res = await request(app).get('/api/sections/class-12-test');
+  assert.equal(res.status, 200);
+  assert.equal(res.body.section.id, 'class-12-test');
+  assert.equal(res.body.section.classSlug, 'class-12');
+});
+
+test('GET /api/sections/<unknown> returns 404 (fail-fast, no fallback)', async () => {
+  const res = await request(app).get('/api/sections/class-12');
   assert.equal(res.status, 404);
-  const res2 = await request(app).get('/api/sections/class-12');
+  const res2 = await request(app).get('/api/sections/class-13');
   assert.equal(res2.status, 404);
 });

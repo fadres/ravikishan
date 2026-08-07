@@ -90,7 +90,7 @@ required when a *second* section is introduced (see §5).
 | Section | DB | Backend | Status |
 |---|---|---|---|
 | **Class 11** (+ global layer, co-located for now) | existing Neon — `NEON_CLASS11_URL` (alias of `DATABASE_URL`) | existing Render service `ravikishan-api` | **active** |
-| *Class 12* *(placeholder — expected shape)* | *brand-new Neon project/account — never `NEON_CLASS11_URL`* | *brand-new Render project/account* | not yet built |
+| **Class 12** (independent service) | own brand-new Neon — `NEON_CLASS12_URL` (never `NEON_CLASS11_URL`) | own Render service `ravikishan-class12-test-api` (repo dir `backend-class12-test/`) | **active** |
 | *Other exam tracks* *(placeholder)* | *brand-new Neon project/account each* | *brand-new Render project/account each* | not yet built |
 
 **Hard rule:** every future section gets its **own separate Render account**

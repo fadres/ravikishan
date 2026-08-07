@@ -27,9 +27,9 @@ export const env = {
   // (POST /internal/progress-sync). Section services send it in the
   // `x-service-secret` header — separate from the JWT secret on purpose.
   progressSyncSecret: process.env.PROGRESS_SYNC_SECRET || '',
-  // Base URL of the independent Class 12 (test) section service. When set,
-  // the global backend proxies class-12-test content/search/AI requests to
-  // it instead of connecting to its Neon directly.
+  // Base URL of the independent Class 12 section service. When set, the
+  // global backend proxies class-12-test content/search/AI requests to it
+  // instead of connecting to its Neon directly.
   class12BackendUrl: process.env.CLASS12_BACKEND_URL || '',
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET || 'dev-access-secret-change-me',
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-me',
