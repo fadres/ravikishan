@@ -1,8 +1,10 @@
 {
   "title": "Uses of Dimensional Equation — Unit Conversion",
   "notes": [
-    "<h1>Definition</h1>\n<p>Dimensional equations are used to convert the value of a physical quantity from one system of units to another using n1u1 = n2u2.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>1 Joule = 10⁷ erg</li>\n  <li>1 Newton = 10⁵ dyne</li>\n  <li>10 Newton = 10⁶ dyne</li>\n  <li>1 gm/cm³ = 1000 kg/m³</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Dimensional equations are used to convert the value of a physical quantity from one system of units to another. The key idea: the <b>physical quantity itself does not change</b> — only the number and the unit change. This is written as</p>\n<p>n₁u₁ = n₂u₂</p>\n<p>where n is the numerical value and u is the unit of the quantity.</p>",
+    "<h2>The Conversion Formula</h2>\n<p>If the quantity has dimension [MᵃLᵇTᶜ], the new numerical value is found from</p>\n<p>n₂ = n₁ × (M₁/M₂)ᵃ × (L₁/L₂)ᵇ × (T₁/T₂)ᶜ</p>\n<p>where the suffix 1 refers to the first system (SI) and the suffix 2 to the new system (CGS). For example, in converting joule to erg: M₁ = 1 kg, L₁ = 1 m, T₁ = 1 s, while M₂ = 1 g, L₂ = 1 cm, T₂ = 1 s, and the dimension of energy [M¹L²T⁻²] supplies the powers a = 1, b = 2, c = −2.</p>",
+    "<h2>Worked Conversions</h2>\n<table><tr><th>Conversion</th><th>Result</th></tr><tr><td>1 joule → erg</td><td>10⁷ erg</td></tr><tr><td>1 newton → dyne</td><td>10⁵ dyne</td></tr><tr><td>10 newton → dyne</td><td>10⁶ dyne</td></tr><tr><td>5 joule → erg</td><td>5 × 10⁷ erg</td></tr><tr><td>1 g/cm³ → kg/m³</td><td>1000 kg/m³</td></tr><tr><td>10 erg → joule</td><td>10⁻⁶ joule</td></tr></table>",
+    "<h2>Why the Time Factor Drops Out</h2>\n<p>In both SI and CGS, time is measured in the same unit — the second. The time ratio T₁/T₂ is therefore 1, and (T₁/T₂)ᶜ = 1 no matter what the power c is. Only the mass and length ratios actually change the number.</p>\n<p>Unit conversion is only possible when the dimensional formula of the quantity is known first — the powers a, b, c decide how each unit ratio is raised in the formula.</p>"
   ],
   "examples": [
     "**Q1: What formula is used for unit conversion using dimensions?**\n\n**Answer:** n1u1 = n2u2, where n is numerical value and u is unit.",

@@ -1,8 +1,9 @@
 {
   "title": "Fundamental Quantities",
   "notes": [
-    "<h1>Definition</h1>\n<p>Physical quantities that are independent of other quantities are called fundamental quantities.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Mass (kg)</li>\n  <li>Length (m)</li>\n  <li>Time (s)</li>\n  <li>Current (A)</li>\n  <li>Temperature (K)</li>\n  <li>Luminous Intensity (cd)</li>\n  <li>Amount of substance (mol)</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Physical quantities that are independent of other quantities are called <b>fundamental (base) quantities</b>. They cannot be defined in terms of any other quantity, and every other quantity is built from them.</p>\n<p>There are <b>seven</b> fundamental quantities in the SI system.</p>",
+    "<h2>The Seven Fundamental Quantities</h2>\n<table><tr><th>Quantity</th><th>SI Unit</th><th>Unit Symbol</th><th>Dimension Symbol</th></tr><tr><td>Mass</td><td>Kilogram</td><td>kg</td><td>M</td></tr><tr><td>Length</td><td>Metre</td><td>m</td><td>L</td></tr><tr><td>Time</td><td>Second</td><td>s</td><td>T</td></tr><tr><td>Electric current</td><td>Ampere</td><td>A</td><td>A</td></tr><tr><td>Temperature</td><td>Kelvin</td><td>K</td><td>K</td></tr><tr><td>Luminous intensity</td><td>Candela</td><td>cd</td><td>cd</td></tr><tr><td>Amount of substance</td><td>Mole</td><td>mol</td><td>mol</td></tr></table>\n<p>Their units are called <b>fundamental (base) units</b>, and the seven base SI units correspond to these seven quantities.</p>",
+    "<h2>Why Are They Fundamental?</h2>\n<p>A quantity is fundamental when it does not depend on any other physical quantity. Mass, for example, is measured directly with a balance — it is not defined through any other quantity. Force, on the other hand, depends on mass and acceleration, so it cannot be fundamental. Similarly, volume depends on length, which is why it is a derived quantity.</p>"
   ],
   "examples": [
     "**Q1: Define fundamental quantities.**\n\n**Answer:** Quantities independent of other quantities, e.g. mass, length, time.",

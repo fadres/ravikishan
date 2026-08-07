@@ -1,8 +1,9 @@
 {
   "title": "Gross Error",
   "notes": [
-    "<h1>Definition</h1>\n<p>Errors that occur due to the carelessness of the person or improper adjustment of the apparatus are called gross errors.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Misreading a scale</li>\n  <li>Recording wrong values</li>\n  <li>Improper apparatus setup</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Errors that occur due to the <b>carelessness of the person</b> or <b>improper adjustment of the apparatus</b> are called <b>gross errors</b>. They are human blunders, not limitations of measurement.</p>",
+    "<h2>Causes and Examples</h2>\n<ul>\n  <li><b>Misreading a scale</b> — reading 15.2 instead of 51.2, or misreading a burette's meniscus.</li>\n  <li><b>Recording wrong values</b> — transcription mistakes in the data book.</li>\n  <li><b>Improper apparatus setup</b> — not zeroing a weighing scale, or using a tilted measuring cylinder.</li>\n</ul>",
+    "<h2>How to Avoid Gross Errors</h2>\n<p>Gross errors are largely <b>avoidable</b>: careful observation, correct apparatus setup and double-checking every reading keep them away. Outlier readings caused by gross errors should be identified and <b>excluded from the mean</b>, since they do not represent the true measurement.</p>\n<p>Gross error is different from both systematic error (a consistent bias) and random error (natural variation): it is a pure mistake, and no amount of averaging can fix it.</p>"
   ],
   "examples": [
     "**Q1: Define gross error.**\n\n**Answer:** Errors occurring due to carelessness of the observer or improper adjustment of the apparatus.",

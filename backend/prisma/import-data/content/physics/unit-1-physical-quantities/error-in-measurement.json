@@ -1,8 +1,8 @@
 {
   "title": "Error in Measurement",
   "notes": [
-    "<h1>Definition</h1>\n<p>The difference between the true value and measured value of a quantity is called error.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Error = True value − Measured value</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>The difference between the <b>true value</b> and the <b>measured value</b> of a quantity is called <b>error</b>.</p>\n<p>Error = True value − Measured value</p>\n<p>The error is positive when the measured value is smaller than the true value, and negative when it is larger. Errors can never be removed completely, but they can be minimized with careful technique, calibration and repeated measurement.</p>",
+    "<h2>Types of Error</h2>\n<p>Errors are classified into four types:</p>\n<table><tr><th>Type</th><th>Cause</th><th>Example</th><th>How to reduce</th></tr><tr><td>Systematic error</td><td>Instrument defect, poor technique, observer bias, environment</td><td>Armpit thermometer always reads low</td><td>Calibration, correct technique</td></tr><tr><td>Random error</td><td>Chance variations in attention</td><td>Stopwatch reaction-time scatter</td><td>Multiple readings + mean</td></tr><tr><td>Least count error</td><td>Resolution of the instrument</td><td>Ruler reads only to 0.1 cm</td><td>Use a finer instrument</td></tr><tr><td>Gross error</td><td>Carelessness, wrong setup</td><td>Misreading the scale</td><td>Care and double-checking</td></tr></table>\n<p>Identifying the type of error matters because each type needs its own correction method: systematic errors are removed by calibration, random errors by averaging, least count errors by a finer instrument, and gross errors by careful practice.</p>"
   ],
   "examples": [
     "**Q1: Define error in measurement.**\n\n**Answer:** The difference between the true value and the measured value of a quantity.",

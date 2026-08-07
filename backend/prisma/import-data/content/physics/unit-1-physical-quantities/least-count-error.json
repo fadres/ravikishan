@@ -1,8 +1,9 @@
 {
   "title": "Least Count Error",
   "notes": [
-    "<h1>Definition</h1>\n<p>The smallest value that can be measured by the measuring instrument is called least count; the associated error is the least count error.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Least count of a ruler is usually 0.1cm</li>\n  <li>Least count of a vernier caliper is usually 0.01cm</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>The <b>least count</b> of an instrument is the smallest value it can measure. The error associated with this limit of resolution is called the <b>least count error</b> — no instrument can detect changes smaller than its least count.</p>",
+    "<h2>Least Counts of Common Instruments</h2>\n<table><tr><th>Instrument</th><th>Least Count</th></tr><tr><td>Simple ruler</td><td>0.1 cm (1 mm)</td></tr><tr><td>Vernier caliper</td><td>0.01 cm</td></tr><tr><td>Screw gauge</td><td>0.001 cm (0.01 mm)</td></tr><tr><td>Stopwatch</td><td>0.1 s (0.01 s for digital)</td></tr></table>\n<p>A smaller least count means a finer, more precise measurement — which is why the diameter of a thin wire is measured with a screw gauge rather than a ruler.</p>",
+    "<h2>Working with Least Count Error</h2>\n<p>Least count error is inherent to the instrument: it does not depend on the observer's skill and cannot be eliminated by calibration. It is reduced only by <b>choosing an instrument with a smaller least count</b>. The error of a reading is usually reported as <b>± half the least count</b>, and the least count also decides how many significant figures a measurement can meaningfully carry.</p>"
   ],
   "examples": [
     "**Q1: Define least count error.**\n\n**Answer:** Error associated with the resolution of the instrument — the smallest value it can measure.",

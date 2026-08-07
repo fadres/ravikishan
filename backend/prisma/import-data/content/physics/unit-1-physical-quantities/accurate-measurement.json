@@ -1,8 +1,9 @@
 {
   "title": "Accurate Measurement",
   "notes": [
-    "<h1>Definition</h1>\n<p>A measurement in which the observed value is closer to the standard value of that physical quantity is called accurate measurement.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>g standard = 9.8 m/s²; measured value 9.79 m/s² is more accurate than 9.67 m/s²</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>A measurement in which the observed value is closer to the <b>standard (true) value</b> of that physical quantity is called an <b>accurate measurement</b>.</p>",
+    "<h2>The Acceleration Due to Gravity Example</h2>\n<p>The standard value of the acceleration due to gravity is g = <b>9.8 m/s²</b>. Two students measure g and obtain:</p>\n<p>9.67 m/s² and 9.79 m/s²</p>\n<p>The value <b>9.79 m/s²</b> is the more accurate one, because it lies closer to the standard value 9.8 m/s².</p>",
+    "<h2>Accuracy vs Precision</h2>\n<table><tr><th>Accuracy</th><th>Precision</th></tr><tr><td>Closeness to the true/standard value</td><td>Closeness among repeated readings</td></tr><tr><td>Reduced by systematic errors, zero error, bad calibration</td><td>Reduced by random errors and scatter</td></tr><tr><td>Checked by comparing with a known standard</td><td>Checked by repeating the experiment</td></tr></table>\n<p>A well-calibrated instrument gives accurate results, while an accurate result needs a correct calibration — not just consistency. An instrument with a zero error is precise (all readings agree) but not accurate (all readings are shifted).</p>"
   ],
   "examples": [
     "**Q1: Define accurate measurement.**\n\n**Answer:** A measurement whose observed value is closer to the standard value of the physical quantity.",

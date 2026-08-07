@@ -1,8 +1,9 @@
 {
   "title": "Physical Quantities (Measurable & Non-measurable)",
   "notes": [
-    "<h1>Definition</h1>\n<p>A physical quantity is anything that can be measured; it is classed as measurable (physical) or non-measurable (like love, beauty).</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Measurable: mass, length, time, temperature</li>\n  <li>Non-measurable: happiness, beauty, honesty</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Anything that can be measured and expressed in numbers with a definite unit is called a <b>physical quantity</b>. Quantities that cannot be measured — like love, beauty or happiness — are called <b>non-measurable quantities</b>.</p>\n<p>Mass can be measured with a balance, length with a ruler and time with a clock, but there is no instrument or unit for measuring beauty. That is why physics deals only with measurable quantities.</p>",
+    "<h2>Measurable and Non-Measurable Quantities</h2>\n<table><tr><th>Measurable quantities</th><th>Non-measurable quantities</th></tr><tr><td>Mass, length, time, temperature</td><td>Love, beauty, happiness, honesty</td></tr><tr><td>Expressed as a number with a unit</td><td>Cannot be expressed in numbers</td></tr><tr><td>Measured with instruments (balance, ruler, clock, thermometer)</td><td>No instrument or unit exists for them</td></tr></table>\n<p>Every physical quantity needs both a <b>number</b> and a <b>unit</b>. Saying \"the length is 5\" is incomplete — we must say \"5 metres\", because a physical quantity always carries an associated unit.</p>",
+    "<h2>Two Classes of Physical Quantities</h2>\n<p>Physical quantities are divided into two classes:</p>\n<ul>\n  <li><b>Fundamental quantities</b> — the seven base quantities that are independent of all others (mass, length, time, etc.).</li>\n  <li><b>Derived quantities</b> — quantities built from fundamental ones (force, velocity, density, etc.).</li>\n</ul>"
   ],
   "examples": [
     "**Q1: What are the two types of quantities?**\n\n**Answer:** Measurable quantities and non-measurable quantities.",

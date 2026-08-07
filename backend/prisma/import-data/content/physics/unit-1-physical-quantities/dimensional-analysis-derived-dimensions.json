@@ -1,8 +1,10 @@
 {
   "title": "Uses of Dimensional Analysis — Finding Dimensions of Derived Quantities",
   "notes": [
-    "<h1>Definition</h1>\n<p>Dimensional analysis is used to derive the dimensional formula of a derived physical quantity from its defining equation.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Density D = mass/volume → [M1L-3T0]</li>\n  <li>Momentum p = mv → [M1L1T-1]</li>\n  <li>Frequency f = 1/T → [T-1]</li>\n  <li>Work w = F×d → [M1L2T-2]</li>\n  <li>Power P = w/t → [M1L2T-3]</li>\n  <li>sinθ = length/length → dimensionless</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Dimensional analysis is used to find the <b>dimensional formula of a derived quantity</b> from its defining equation.</p>",
+    "<h2>How to Find a Dimension</h2>\n<p>Follow three steps:</p>\n<ol>\n  <li>Write the defining formula of the quantity.</li>\n  <li>Substitute the known dimensions of each quantity in the formula.</li>\n  <li>Simplify using the laws of exponents.</li>\n</ol>\n<p>For example, work = force × distance. Force has dimension [M¹L¹T⁻²] and distance has [M⁰L¹T⁰], so work has dimension [M¹L²T⁻²].</p>",
+    "<h2>Dimensions of Common Derived Quantities</h2>\n<table><tr><th>Quantity</th><th>Defining Formula</th><th>Dimension</th></tr><tr><td>Density</td><td>mass ÷ volume</td><td>[M¹L⁻³T⁰]</td></tr><tr><td>Momentum</td><td>mass × velocity</td><td>[M¹L¹T⁻¹]</td></tr><tr><td>Frequency</td><td>1 ÷ time period</td><td>[M⁰L⁰T⁻¹]</td></tr><tr><td>Work / Energy</td><td>force × distance</td><td>[M¹L²T⁻²]</td></tr><tr><td>Power</td><td>work ÷ time</td><td>[M¹L²T⁻³]</td></tr><tr><td>sin θ</td><td>perpendicular ÷ hypotenuse</td><td>[M⁰L⁰T⁰] — dimensionless</td></tr></table>",
+    "<h2>Sin θ — A Dimensionless Quantity</h2>\n<p>sin θ equals the ratio of two lengths (perpendicular over hypotenuse). Because one length cancels the other, the ratio carries no dimension at all — [M⁰L⁰T⁰]. Trigonometric ratios, angles and pure numbers are all dimensionless.</p>"
   ],
   "examples": [
     "**Q1: Find the dimension of density.**\n\n**Answer:** [M1L-3T0], since D = mass/volume.",

@@ -1,8 +1,10 @@
 {
   "title": "Uses of Dimensional Equation — Finding Dimension of Constants",
   "notes": [
-    "<h1>Definition</h1>\n<p>Dimensional analysis can determine the dimensional formula of an unknown constant appearing in a physical relation.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Gravitational constant G = [M-1L3T-2]</li>\n  <li>Gas constant R = [M1L2T-2mol-1K-1]</li>\n  <li>Constants a, b in P=(b-x²)/at</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Dimensional analysis can determine the <b>dimensional formula of an unknown constant</b> appearing in a physical relation. The method: isolate the constant in its governing equation, substitute the known dimensions of the other quantities, and simplify.</p>",
+    "<h2>Gravitational Constant G</h2>\n<p>Newton's law of gravitation gives F = Gm₁m₂/d². Rearranging:</p>\n<p>G = Fd²/(m₁m₂)</p>\n<p>[G] = [M¹L¹T⁻²] × [L²] ÷ [M²] = <b>[M⁻¹L³T⁻²]</b></p>",
+    "<h2>Gas Constant R</h2>\n<p>The ideal gas equation gives PV = nRT, so R = PV/(nT). Using [P] = [M¹L⁻¹T⁻²], [V] = [L³], [n] = mol and [T] = K:</p>\n<p>[R] = <b>[M¹L²T⁻² mol⁻¹ K⁻¹]</b></p>\n<p>In SI base units this is kg m² s⁻² mol⁻¹ K⁻¹. Mole and kelvin appear as their own base units, which is why they show up inside the dimensional formula.</p>",
+    "<h2>Constants Hidden Inside a Relation</h2>\n<p>When a constant hides inside an equation, the principle of homogeneity decides its dimension — each term that is added or subtracted must have the same dimension.</p>\n<p><b>Example:</b> In y = a + bt + ct², where y is a distance, every term must have dimension [L]. So:</p>\n<ul>\n  <li>a has dimension [L] — it is the value of y at t = 0.</li>\n  <li>b has dimension [LT⁻¹] — b × t gives a length.</li>\n  <li>c has dimension [LT⁻²] — c × t² gives a length.</li>\n</ul>\n<p><b>Example:</b> In P = (b − x²)/(at), where P is pressure, the term b must carry the same dimension as x² (they are subtracted). Once that is fixed, a is found by matching the remaining dimensions of P × a × t with those of b − x².</p>"
   ],
   "examples": [
     "**Q1: Find the dimension of gravitational constant G.**\n\n**Answer:** [M-1L3T-2].",

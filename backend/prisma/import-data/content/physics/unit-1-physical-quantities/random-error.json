@@ -1,8 +1,9 @@
 {
   "title": "Random Error",
   "notes": [
-    "<h1>Definition</h1>\n<p>Errors which occur irregularly and at random in magnitude are called random errors.</p>",
-    "<h2>Examples</h2>\n<ul>\n  <li>Slight variation in observer's attention while taking readings</li>\n</ul>"
+    "<h1>Definition</h1>\n<p>Errors which occur <b>irregularly and at random in magnitude</b> are called <b>random errors</b>. They can be positive or negative unpredictably, so the readings scatter above and below the true value.</p>",
+    "<h2>Why Random Errors Happen</h2>\n<p>Random errors arise by chance. The classic cause is a <b>slight variation in the observer's attention</b> while taking readings — for example, small differences in stopwatch readings caused by reaction-time variation. Environmental fluctuations, such as electrical noise in a voltmeter, produce the same kind of scatter.</p>",
+    "<h2>How to Reduce Random Errors</h2>\n<p>Unlike systematic errors, random errors <b>can be reduced by taking multiple readings and calculating the mean</b>. With enough trials the positive and negative deviations tend to cancel each other out, and the average approaches the true value.</p>\n<p>Random error is not the same as gross error: gross error is a human mistake (like misreading the scale), while random error is natural, unavoidable variation that averaging can suppress.</p>"
   ],
   "examples": [
     "**Q1: Define random error.**\n\n**Answer:** Errors which occur irregularly and at random in magnitude.",
