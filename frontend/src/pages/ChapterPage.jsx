@@ -60,13 +60,16 @@ export default function ChapterPage() {
     };
     update();
     window.addEventListener('resize', update);
-    const ro = new ResizeObserver(update);
-    if (header) ro.observe(header);
-    if (searchBar) ro.observe(searchBar);
-    return () => {
-      window.removeEventListener('resize', update);
-      ro.disconnect();
-    };
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(update);
+      if (header) ro.observe(header);
+      if (searchBar) ro.observe(searchBar);
+      return () => {
+        window.removeEventListener('resize', update);
+        ro.disconnect();
+      };
+    }
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   const load = useCallback(() => {

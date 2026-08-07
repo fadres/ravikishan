@@ -167,7 +167,9 @@ export default function MindmapTree({ data }) {
 
 function countNodes(node) {
   let n = 1;
-  for (const c of node?.children || []) n += countNodes(c);
+  if (Array.isArray(node?.children)) {
+    for (const c of node.children) n += countNodes(c);
+  }
   return n;
 }
 
@@ -189,6 +191,7 @@ function buildCanvas(tree, view, collapsed, focusKey = null, query = '', opts = 
   const edgePath = (from, to) => {
     const a = nodes.find((n) => n.key === from);
     const b = nodes.find((n) => n.key === to);
+    if (!a || !b) return '';
     const x1 = a.x + shiftX;
     const y1 = a.y + NODE_H;
     const x2 = b.x + shiftX;
@@ -199,12 +202,16 @@ function buildCanvas(tree, view, collapsed, focusKey = null, query = '', opts = 
 
   const svg = (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-      {edges.map((e, i) => (
-        <g key={`e${i}`}>
-          <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="2" />
-          <circle r="4" fill="rgba(125,211,252,0.5)" transform={`translate(${nodes.find((n) => n.key === e.to).x + shiftX} ${nodes.find((n) => n.key === e.to).y - 2}) rotate(180)`} />
-        </g>
-      ))}
+      {edges.map((e, i) => {
+        const end = nodes.find((n) => n.key === e.to);
+        if (!end) return null;
+        return (
+          <g key={`e${i}`}>
+            <path d={edgePath(e.from, e.to)} fill="none" stroke="rgba(125,211,252,0.35)" strokeWidth="2" />
+            <circle r="4" fill="rgba(125,211,252,0.5)" transform={`translate(${end.x + shiftX} ${end.y - 2}) rotate(180)`} />
+          </g>
+        );
+      })}
       {nodes.map((n) => {
         const isRoot = n.key === tree.key;
         const isFocused = focusKey === n.key;
@@ -293,13 +300,17 @@ function ZoomCanvas({ fitMode, fitFloor, width, height, svg, focus = null, conta
       }
     };
     apply();
-    const ro = new ResizeObserver(apply);
-    ro.observe(el);
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(apply);
+      ro.observe(el);
+      window.addEventListener('resize', apply);
+      return () => {
+        ro.disconnect();
+        window.removeEventListener('resize', apply);
+      };
+    }
     window.addEventListener('resize', apply);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', apply);
-    };
+    return () => window.removeEventListener('resize', apply);
   }, [width, height, fitMode, fitFloor]);
 
   const scale = fit * zoom;
