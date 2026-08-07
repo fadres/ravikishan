@@ -82,6 +82,21 @@ test('splitIntoSections recognizes HTML headings and strips tags', () => {
   assert.match(sections[0].content, /rate/);
 });
 
+test('splitIntoSections keeps inline bold markers as content, not headings', () => {
+  const sections = splitIntoSections('### Example 1\n\n**Answer:** Given\n\n$$A = 6 \\times 7.203^2$$');
+  assert.equal(sections.length, 1);
+  assert.equal(sections[0].title, 'Example 1');
+  assert.match(sections[0].content, /\*\*Answer:\*\* Given/);
+  assert.match(sections[0].content, /\$A = 6/);
+});
+
+test('splitIntoSections keeps standalone bold markers as headings', () => {
+  const sections = splitIntoSections('**Important:**\n\nAlways use SI units.');
+  assert.equal(sections.length, 1);
+  assert.equal(sections[0].title, 'Important');
+  assert.match(sections[0].content, /SI units/);
+});
+
 test('splitIntoSections caps oversized sections into parts', () => {
   const big = `${'word '.repeat(1000)} ${'x'.repeat(9500)}`;
   const sections = splitIntoSections(`### Huge\n\n${big}`);

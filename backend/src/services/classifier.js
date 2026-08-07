@@ -414,11 +414,15 @@ function detectHeading(line) {
   if (html) return html[2].replace(/<[^>]+>/g, '').trim();
   const md =
     line.match(/^#{1,4}\s+(.*)$/) ||
-    // Bold marker headings: "**Example:** text…" or a standalone "**Summary**".
-    // The closing stars may sit before the colon ("**Example:** …") or after
-    // the last word ("**Summary**"), so both shapes are matched here.
-    line.match(/^\*\*([^*]+)[:\u2014-]\*\*/) ||
-    line.match(/^\*\*([^*]+)\*\*$/);
+    // Bold marker headings only when the whole line is the marker: a
+    // standalone "**Summary**" or "**Important:**" (closing stars may sit
+    // before the colon or after the last word). Bold phrases that continue
+    // with inline text — "**Answer:** Given", "**Example:** text…" — are
+    // paragraph content, never headings: treating them as headings would
+    // split the section at every answer and discard the text after the
+    // closing stars.
+    line.match(/^\*\*([^*]+)[:\u2014-]\*\*\s*$/) ||
+    line.match(/^\*\*([^*]+)\*\*\s*$/);
   if (md) return (md[1] || '').trim();
   const trimmed = line.trim();
   // Section markers and all-caps titles (legacy text corpus style). Skip
