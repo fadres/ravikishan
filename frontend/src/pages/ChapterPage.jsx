@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { api } from '../api/client.js';
+import { api, sectionApi } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import LockedBlockCard from '../components/LockedBlockCard.jsx';
 import BlockRenderer from '../components/blocks/BlockRenderer.jsx';
@@ -72,10 +72,12 @@ export default function ChapterPage() {
   const load = useCallback(() => {
     setData(null);
     setError('');
-    api(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${section.classSlug}`)
+    // Content is section-scoped — served by the section's own backend when
+    // it is an independent service (class-12-test), global otherwise.
+    sectionApi(`/api/subjects/${subjectSlug}/chapters/${chapterSlug}?class=${section.classSlug}`, sectionId)
       .then((d) => setData(d))
       .catch(() => setError('Chapter not found.'));
-    api(`/api/subjects/${subjectSlug}?class=${section.classSlug}`)
+    sectionApi(`/api/subjects/${subjectSlug}?class=${section.classSlug}`, sectionId)
       .then((d) => setSiblings(d.subject?.chapters || []))
       .catch(() => setSiblings([]));
   }, [subjectSlug, chapterSlug, sectionId]);

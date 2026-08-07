@@ -1,0 +1,10 @@
+{
+  "title": "Kinematics Fundamentals",
+  "notes": [
+    "- Kinematics is the study of motion without reference to its causes.",
+    "- Displacement is the change in position of an object, a vector quantity.",
+    "- Velocity is defined as displacement per unit time, v = Δx/Δt.",
+    "- Acceleration is the rate of change of velocity, a = Δv/Δt.",
+    "- Key equations of motion apply under uniform acceleration only."
+  ]
+}

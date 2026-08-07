@@ -23,6 +23,7 @@ import notificationRoutes from './routes/notification.routes.js';
 import gamificationRoutes from './routes/gamification.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 import sectionsRoutes from './routes/sections.routes.js';
+import internalRoutes from './routes/internal.routes.js';
 
 export function createApp() {
   const app = express();
@@ -181,6 +182,20 @@ app.use('/api', plannerRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/gamification', gamificationRoutes);
   app.use('/api/ai', aiLimiter, aiRoutes);
+
+  // Internal service-to-service API (section services push progress events
+  // here). Kept outside /api and rate-limited separately — never exposed to
+  // browsers. Rejects with 401/403 when the x-service-secret is missing or
+  // wrong, so a misconfigured section service fails loudly instead of
+  // silently dropping user progress.
+  const internalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many internal requests' },
+  });
+  app.use('/internal', internalLimiter, internalRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

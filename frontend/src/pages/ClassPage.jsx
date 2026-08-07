@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { api } from '../api/client.js';
+import { api, sectionApi } from '../api/client.js';
 import SubjectIcon from '../components/SubjectIcon.jsx';
 import { sectionById, sectionPath } from '../lib/sectionLinks.js';
 
@@ -12,7 +12,7 @@ export default function ClassPage() {
 
   useEffect(() => {
     setKlass(null);
-    api(`/api/classes/${section.classSlug}`)
+    sectionApi(`/api/classes/${section.classSlug}`, sectionId)
       .then((d) => setKlass(d.klass))
       .catch(() => setError('Section not found.'));
   }, [sectionId]);

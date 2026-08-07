@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { api } from '../api/client.js';
+import { api, sectionApi } from '../api/client.js';
 import SubjectIcon from '../components/SubjectIcon.jsx';
 import { sectionById, sectionPath } from '../lib/sectionLinks.js';
 
@@ -12,7 +12,7 @@ export default function SubjectPage() {
 
   useEffect(() => {
     setSubject(null);
-    api(`/api/subjects/${subjectSlug}?class=${section.classSlug}`)
+    sectionApi(`/api/subjects/${subjectSlug}?class=${section.classSlug}`, sectionId)
       .then((d) => setSubject(d.subject))
       .catch(() => setError('Subject not found.'));
   }, [subjectSlug, sectionId]);

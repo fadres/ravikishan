@@ -27,6 +27,10 @@ const safeSection = (s) => ({
   label: s.label,
   classSlug: s.classSlug,
   status: s.status,
+  // Independent-service sections expose their public base URL so the
+  // frontend can call that section's own backend directly (content/search/
+  // AI). Never a DB connection string or an AI key.
+  backendUrl: s.backendUrl ?? null,
 });
 
 const searchSchema = z.object({
@@ -60,7 +64,9 @@ router.get('/search', authenticate, validate(searchSchema, 'query'), async (req,
     page: req.validated.page,
     perPage: req.validated.perPage,
   };
-  const data = await searchAcrossSections(req.validated.q, viewerLevel, filters);
+  const data = await searchAcrossSections(req.validated.q, viewerLevel, filters, {
+    token: req.headers.authorization ?? null,
+  });
   res.json({ query: req.validated.q, ...data });
 });
 
@@ -87,7 +93,9 @@ router.get('/:sectionId/search', authenticate, validate(searchSchema, 'query'), 
     page: req.validated.page,
     perPage: req.validated.perPage,
   };
-  const data = await searchWithinSection(section.id, req.validated.q, viewerLevel, filters);
+  const data = await searchWithinSection(section.id, req.validated.q, viewerLevel, filters, {
+    token: req.headers.authorization ?? null,
+  });
   res.json({ query: req.validated.q, ...data });
 });
 
@@ -113,7 +121,9 @@ const askSchema = z.object({
 router.post('/:sectionId/ai/ask', aiLimiter, requireAuth, validate(askSchema), async (req, res) => {
   const section = getSection(req.params.sectionId);
   if (!section) throw new AppError(404, `Unknown section: ${req.params.sectionId}`);
-  const result = await askSection(req.user.id, section.id, req.body);
+  const result = await askSection(req.user.id, section.id, req.body, {
+    token: req.headers.authorization ?? null,
+  });
   res.json(result);
 });
 

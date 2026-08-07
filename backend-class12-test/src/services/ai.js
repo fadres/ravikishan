@@ -1,17 +1,18 @@
-// Ravikishan AI learning engine.
+// Section-scoped AI learning engine (offline-first).
 //
-// Design: offline-first. Every tool works without any external API by mining
-// the study library (definitions, statements, keywords, formulas). When
-// AI_ENDPOINT + AI_API_KEY are configured, requests are upgraded with an
-// LLM pass and the offline result is used as grounding/fallback.
+// Same design as the global backend's src/services/ai.js, scoped to THIS
+// section: retrieval runs only against this section's own database and the
+// optional LLM pass uses this section's own AI endpoint (own env). The
+// viewer level comes from the shared-JWT payload (req.user.accessLevel) —
+// there is no user table here, so gating never queries a database for the
+// viewer.
 
-import { prisma, prismaForSection } from '../config/db.js';
+import { prisma } from '../config/db.js';
 import { AppError } from '../middleware/error.js';
 import { env } from '../config/env.js';
-import { requireSection } from '../lib/sections.config.js';
-import { remoteSectionAsk } from './remoteSection.js';
+import { SECTION } from '../lib/section.js';
 import { normalizeText, words, keywordOverlap, gradeAnswer } from './quiz.js';
-import { recordEvent } from './progress.js';
+import { queueEvent } from './progressSync.js';
 
 const BLOCK_TEXT_FIELDS = ['contentRichtext', 'contentCode'];
 
@@ -35,16 +36,11 @@ function sentences(s) {
     .filter((x) => x.length > 12);
 }
 
-// ── Library access (viewer-gated) ───────────────────
-// The client is a parameter so section-scoped AI (askSection) reads only
-// that section's own database; the global tools keep the global client.
+// ── Library access (viewer-gated by the token's accessLevel) ─────────────
 
-async function loadChapter(userId, chapterId, db = prisma) {
+async function loadChapter(viewerLevel, chapterId) {
   if (!chapterId) return null;
-  const viewerLevel = userId
-    ? ((await db.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
-    : 4;
-  const chapter = await db.chapter.findUnique({
+  const chapter = await prisma.chapter.findUnique({
     where: { id: chapterId },
     include: {
       subject: { select: { id: true, name: true, slug: true, class: { select: { slug: true } } } },
@@ -63,11 +59,8 @@ async function loadChapter(userId, chapterId, db = prisma) {
   return { ...chapter, blocks: chapter.blocks.map((b) => ({ ...b, link })) };
 }
 
-async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}, db = prisma) {
-  const viewerLevel = userId
-    ? ((await db.user.findUnique({ where: { id: userId }, select: { accessLevel: true } }))?.accessLevel ?? 3)
-    : 4;
-  const blocks = await db.contentBlock.findMany({
+async function loadLibrary(viewerLevel, { subjectId, chapterId, limit = 60 } = {}) {
+  const blocks = await prisma.contentBlock.findMany({
     where: {
       accessLevel: { gte: viewerLevel },
       ...(subjectId ? { chapter: { subjectId } } : {}),
@@ -105,9 +98,7 @@ async function loadLibrary(userId, { subjectId, chapterId, limit = 60 } = {}, db
   });
 }
 
-// ── Optional LLM upgrade ────────────────────────────
-// `ai` is the endpoint/key/model config: the global env by default, or a
-// section's own (registry aiEndpoint/aiApiKey/aiModel) for section AI.
+// ── Optional LLM upgrade ──────────────────────────────────────────────────
 
 async function callLlm(messages, { temperature = 0.4, maxTokens = 900 } = {}, ai = env) {
   if (!ai.aiEndpoint || !ai.aiApiKey) return null;
@@ -133,23 +124,20 @@ async function callLlm(messages, { temperature = 0.4, maxTokens = 900 } = {}, ai
   }
 }
 
-async function llmOr(grounding, messages, ai = env) {
-  const llm = await callLlm(messages, {}, ai);
+async function llmOr(grounding, messages) {
+  const llm = await callLlm(messages, {}, env);
   return llm ? { generated: true, content: llm } : grounding;
 }
 
-// ── 1. Doubt solver ─────────────────────────────────
+// ── 1. Doubt solver (section-scoped) ──────────────────────────────────────
 
-// Core doubt-solving flow, parameterized by the database and the AI config:
-// global tools run on the global client + env AI, section tools on the
-// section's client + the section's own aiEndpoint (see askSection below).
-async function solveDoubtCore(userId, { question, chapterId, subjectId }, db = prisma, ai = env) {
+export async function solveDoubt(viewerLevel, { question, chapterId, subjectId }) {
   if (!question) throw new AppError(400, 'Question is required');
   const q = String(question).slice(0, 2000);
   const qWords = new Set(words(q).filter((w) => w.length > 3));
   const blocks = chapterId
-    ? (await loadChapter(userId, chapterId, db))?.blocks ?? []
-    : await loadLibrary(userId, { subjectId, limit: 80 }, db);
+    ? (await loadChapter(viewerLevel, chapterId))?.blocks ?? []
+    : await loadLibrary(viewerLevel, { subjectId, limit: 80 });
 
   const scored = blocks
     .map((b) => {
@@ -173,7 +161,7 @@ async function solveDoubtCore(userId, { question, chapterId, subjectId }, db = p
 
   const grounding = {
     answer: passages.length
-      ? `Based on your study notes${chapterId ? ' for this chapter' : ''}, here is the most relevant material:\n\n${passages.map((p, i) => `${i + 1}. ${p.title}: ${p.passage}`).join('\n\n')}\n\nTip: if this does not fully answer your doubt, rephrase your question around the key term you are stuck on.`
+      ? `Based on your ${SECTION.label} study notes${chapterId ? ' for this chapter' : ''}, here is the most relevant material:\n\n${passages.map((p, i) => `${i + 1}. ${p.title}: ${p.passage}`).join('\n\n')}\n\nTip: if this does not fully answer your doubt, rephrase your question around the key term you are stuck on.`
       : 'I could not find a strong match in the study library yet. Try asking about a specific topic or chapter so I can pull the right notes.',
     sources: passages,
   };
@@ -181,42 +169,16 @@ async function solveDoubtCore(userId, { question, chapterId, subjectId }, db = p
   const result = await llmOr(grounding, [
     { role: 'system', content: 'You are a patient tutor for a Class 11/12 student. Answer the doubt concisely using the provided notes as grounding. Reply in the same language as the question.' },
     { role: 'user', content: `Notes:\n${passages.map((p) => `${p.title}: ${p.passage}`).join('\n---\n')}\n\nStudent's doubt: ${q}` },
-  ], ai);
+  ]);
 
-  await recordEvent(userId, 'ai.doubt', chapterId ?? undefined, undefined, { question: q }).catch(() => {});
-  return { tool: 'doubt_solver', query: q, ...result };
+  await queueEvent('learning', { source: 'ai.doubt', chapterId: chapterId ?? null, metadata: { question: q } }).catch(() => {});
+  return { sectionId: SECTION.id, sectionLabel: SECTION.label, tool: 'doubt_solver', query: q, ...result };
 }
 
-export async function solveDoubt(userId, payload) {
-  return solveDoubtCore(userId, payload);
-}
+// ── 2. Note summarizer ────────────────────────────────────────────────────
 
-/**
- * Section-scoped AI: answers a doubt using ONLY the given section's own
- * database and that section's own local AI endpoint (from the section
- * registry). Unknown section ids throw UNKNOWN_SECTION — the request never
- * falls back to another section's data (see ARCHITECTURE.md).
- */
-export async function askSection(userId, sectionId, payload, ctx = {}) {
-  const section = requireSection(sectionId);
-  // Independent-service section → proxy to its own backendUrl.
-  if (section.backendUrl) {
-    return remoteSectionAsk(section, payload, ctx.token ?? null);
-  }
-  const db = prismaForSection(section.id);
-  const sectionAi = {
-    aiEndpoint: section.aiEndpoint,
-    aiApiKey: section.aiApiKey,
-    aiModel: section.aiModel,
-  };
-  const result = await solveDoubtCore(userId, payload, db, sectionAi);
-  return { sectionId: section.id, sectionLabel: section.label, ...result };
-}
-
-// ── 2. Note summarizer ──────────────────────────────
-
-export async function summarizeNotes(userId, { chapterId, level = 'short' }) {
-  const chapter = await loadChapter(userId, chapterId);
+export async function summarizeNotes(viewerLevel, { chapterId, level = 'short' }) {
+  const chapter = await loadChapter(viewerLevel, chapterId);
   if (!chapter) throw new AppError(404, 'Chapter not found');
 
   const allText = chapter.blocks.map((b) => cleanText(b.contentRichtext || b.contentCode || '')).filter(Boolean);
@@ -225,8 +187,6 @@ export async function summarizeNotes(userId, { chapterId, level = 'short' }) {
   const ratio = level === 'detailed' ? 0.35 : level === 'medium' ? 0.2 : 0.1;
   const target = Math.min(400, Math.max(80, Math.round(totalWords * ratio)));
 
-  // Extract the most representative sentences (short, definition-like, and
-  // sentences containing the chapter's keywords).
   const allSentences = chapter.blocks.flatMap((b) =>
     sentences(b.contentRichtext || b.contentCode || '').map((s) => ({
       s,
@@ -265,18 +225,18 @@ export async function summarizeNotes(userId, { chapterId, level = 'short' }) {
     { role: 'user', content: truncate(joined, 12000) },
   ]);
 
-  await recordEvent(userId, 'ai.summarize', chapterId, undefined, { level }).catch(() => {});
-  return { tool: 'summarizer', chapter: chapter.title, ...result };
+  await queueEvent('learning', { source: 'ai.summarize', chapterId, metadata: { level } }).catch(() => {});
+  return { sectionId: SECTION.id, sectionLabel: SECTION.label, tool: 'summarizer', chapter: chapter.title, ...result };
 }
 
-// ── 3. Concept explainer ────────────────────────────
+// ── 3. Concept explainer ──────────────────────────────────────────────────
 
-export async function explainConcept(userId, { concept, chapterId }) {
+export async function explainConcept(viewerLevel, { concept, chapterId }) {
   if (!concept) throw new AppError(400, 'Concept is required');
   const conceptLower = concept.toLowerCase();
   const blocks = chapterId
-    ? (await loadChapter(userId, chapterId))?.blocks ?? []
-    : await loadLibrary(userId, { limit: 100 });
+    ? (await loadChapter(viewerLevel, chapterId))?.blocks ?? []
+    : await loadLibrary(viewerLevel, { limit: 100 });
 
   const match = blocks
     .map((b) => {
@@ -304,11 +264,11 @@ export async function explainConcept(userId, { concept, chapterId }) {
     { role: 'user', content: `Concept: ${concept}\nGrounding notes:\n${definition || '(none found)'}` },
   ]);
 
-  await recordEvent(userId, 'ai.explain', chapterId ?? undefined, undefined, { concept }).catch(() => {});
-  return { tool: 'concept_explainer', concept, ...result };
+  await queueEvent('learning', { source: 'ai.explain', chapterId: chapterId ?? null, metadata: { concept } }).catch(() => {});
+  return { sectionId: SECTION.id, sectionLabel: SECTION.label, tool: 'concept_explainer', concept, ...result };
 }
 
-// ── 4. Revision notes ───────────────────────────────
+// ── 4. Revision notes ─────────────────────────────────────────────────────
 
 function extractKeywords(blocks, limit = 12) {
   const freq = new Map();
@@ -322,10 +282,10 @@ function extractKeywords(blocks, limit = 12) {
   return [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([w]) => w);
 }
 
-export async function revisionNotes(userId, { chapterId, subjectId }) {
+export async function revisionNotes(viewerLevel, { chapterId, subjectId }) {
   const blocks = chapterId
-    ? (await loadChapter(userId, chapterId))?.blocks ?? []
-    : await loadLibrary(userId, { subjectId, limit: 80 });
+    ? (await loadChapter(viewerLevel, chapterId))?.blocks ?? []
+    : await loadLibrary(viewerLevel, { subjectId, limit: 80 });
 
   const keywords = extractKeywords(blocks);
   const important = blocks
@@ -343,6 +303,8 @@ export async function revisionNotes(userId, { chapterId, subjectId }) {
     .slice(0, 10);
 
   return {
+    sectionId: SECTION.id,
+    sectionLabel: SECTION.label,
     tool: 'revision_notes',
     keywords,
     important,
@@ -352,12 +314,12 @@ export async function revisionNotes(userId, { chapterId, subjectId }) {
   };
 }
 
-// ── 5. Question generator ───────────────────────────
+// ── 5. Question generator ─────────────────────────────────────────────────
 
-export async function generateQuestions(userId, { chapterId, subjectId, count = 5, types }) {
+export async function generateQuestions(viewerLevel, { chapterId, subjectId, count = 5, types }) {
   const blocks = chapterId
-    ? (await loadChapter(userId, chapterId))?.blocks ?? []
-    : await loadLibrary(userId, { subjectId, limit: 80 });
+    ? (await loadChapter(viewerLevel, chapterId))?.blocks ?? []
+    : await loadLibrary(viewerLevel, { subjectId, limit: 80 });
   if (blocks.length === 0) throw new AppError(404, 'No content found to generate questions from');
 
   const wantTypes = types && types.length ? new Set(types) : new Set(['mcq', 'true_false', 'fill_blank', 'short_answer']);
@@ -433,14 +395,13 @@ export async function generateQuestions(userId, { chapterId, subjectId, count = 
     }
   }
 
-  const result = { tool: 'question_generator', count: questions.length, questions };
-  await recordEvent(userId, 'ai.questions', chapterId ?? undefined, undefined, { count: questions.length }).catch(() => {});
-  return result;
+  await queueEvent('learning', { source: 'ai.questions', chapterId: chapterId ?? null, metadata: { count: questions.length } }).catch(() => {});
+  return { sectionId: SECTION.id, sectionLabel: SECTION.label, tool: 'question_generator', count: questions.length, questions };
 }
 
-// ── 6. Answer checker ───────────────────────────────
+// ── 6. Answer checker ─────────────────────────────────────────────────────
 
-export async function checkAnswer(userId, { question, modelAnswer, userAnswer }) {
+export async function checkAnswer(viewerLevel, { question, modelAnswer, userAnswer }) {
   if (!question || !modelAnswer || !userAnswer) {
     throw new AppError(400, 'question, modelAnswer and userAnswer are required');
   }
@@ -469,67 +430,9 @@ export async function checkAnswer(userId, { question, modelAnswer, userAnswer })
     ],
   );
 
-  await recordEvent(userId, 'ai.check_answer', undefined, undefined, { verdict }).catch(() => {});
-  return { tool: 'answer_checker', question, ...result };
+  await queueEvent('learning', { source: 'ai.check_answer', metadata: { verdict } }).catch(() => {});
+  return { sectionId: SECTION.id, sectionLabel: SECTION.label, tool: 'answer_checker', question, ...result };
 }
 
-// ── 7. Study recommendations ────────────────────────
-
-export async function studyRecommendations(userId) {
-  const [progress, analytics, quizStats, dueCards, streak, daily] = await Promise.all([
-    prisma.userProgress.findMany({
-      where: { userId },
-      include: { chapter: { select: { id: true, title: true, slug: true, subject: { select: { id: true, name: true, slug: true } } } } },
-    }),
-    prisma.learningAnalytics.groupBy({
-      by: ['chapterId'],
-      where: { userId, chapterId: { not: null } },
-      _sum: { timeSpent: true },
-      orderBy: { _sum: { timeSpent: 'desc' } },
-      take: 5,
-    }),
-    prisma.quizAttempt.findMany({
-      where: { userId, status: 'completed' },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-      include: { quiz: { select: { subject: { select: { id: true, name: true } } } } },
-    }),
-    prisma.flashcard.aggregate({
-      where: { deck: { userId }, dueAt: { lte: new Date() } },
-      _count: true,
-    }),
-    prisma.studyStreak.findUnique({ where: { userId } }),
-    prisma.dailyStudy.findMany({ where: { userId }, orderBy: { date: 'desc' }, take: 7 }),
-  ]);
-
-  const weakSubjects = {};
-  for (const a of quizStats) {
-    const name = a.quiz.subject?.name || 'General';
-    weakSubjects[name] = weakSubjects[name] || { total: 0, correct: 0 };
-    weakSubjects[name].total += a.totalQuestions;
-    weakSubjects[name].correct += a.correctCount;
-  }
-  const weak = Object.entries(weakSubjects)
-    .map(([name, v]) => ({ subject: name, accuracy: v.total ? Math.round((v.correct / v.total) * 100) : 0 }))
-    .filter((x) => x.accuracy < 60)
-    .sort((a, b) => a.accuracy - b.accuracy);
-
-  const started = progress.map((p) => ({ id: p.chapter.id, title: p.chapter.title, slug: p.chapter.slug, subject: p.chapter.subject.name, pct: p.totalBlocks ? Math.round((p.blocksCompleted / p.totalBlocks) * 100) : 0 }));
-  const incomplete = started.filter((p) => p.pct < 100).sort((a, b) => a.pct - b.pct).slice(0, 3);
-
-  const minutesLast7 = daily.reduce((s, d) => s + d.minutesStudied, 0);
-
-  const recommendations = [];
-  if (dueCards._count > 0) recommendations.push({ type: 'flashcards', priority: 'high', message: `${dueCards._count} flashcard${dueCards._count === 1 ? '' : 's'} are due for spaced repetition — a 5-minute review keeps your retention high.`, link: '/flashcards' });
-  for (const c of incomplete) recommendations.push({ type: 'chapter', priority: 'medium', message: `Finish "${c.title}" (${c.subject}) — you are ${c.pct}% through.`, link: null, chapterId: c.id });
-  for (const s of weak.slice(0, 2)) recommendations.push({ type: 'quiz', priority: 'medium', message: `Your accuracy in ${s.subject} is ${s.accuracy}% — take a quiz to strengthen it.`, link: '/quizzes' });
-  if (minutesLast7 < 60) recommendations.push({ type: 'routine', priority: 'low', message: 'You studied under 60 minutes this week — try a 20-minute daily goal in the planner.', link: '/planner' });
-  if (streak && streak.streak >= 1 && streak.streak % 3 === 0) recommendations.push({ type: 'milestone', priority: 'low', message: `You are on a ${streak.streak}-day streak — keep it alive today!`, link: '/achievements' });
-  if (recommendations.length === 0) recommendations.push({ type: 'routine', priority: 'low', message: 'Everything looks fresh — pick a chapter you enjoy and take a quiz to stay sharp.', link: '/quizzes' });
-
-  await recordEvent(userId, 'ai.recommendations', undefined, undefined, { count: recommendations.length }).catch(() => {});
-  return { tool: 'recommendations', recommendations, weakSubjects: weak, unfinishedChapters: incomplete };
-}
-
-// Answer-check helper used by quiz.js (exported for reuse).
+// Answer-check helper used by quiz.js-like code (exported for reuse).
 export { gradeAnswer as checkShortAnswer };

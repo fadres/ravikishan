@@ -1,5 +1,9 @@
 // Ravikishan API client — single place for fetch, auth headers and
-// silent token refresh on 401.
+// silent token refresh on 401. Section-aware: section-scoped requests are
+// routed to the section's own backend when it is an independent service
+// (see lib/sectionLinks.js + ARCHITECTURE.md).
+
+import { sectionBackendUrl } from '../lib/sectionLinks.js';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -69,13 +73,17 @@ async function refreshSession() {
   return refreshInFlight;
 }
 
-export async function api(path, { method = 'GET', body, auth = true, retried = false } = {}) {
+export async function api(path, opts = {}) {
+  return request(API_URL, path, opts);
+}
+
+async function request(baseUrl, path, { method = 'GET', body, auth = true, retried = false } = {}) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth && accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
   let res;
   try {
-    res = await fetch(`${API_URL}${path}`, {
+    res = await fetch(`${baseUrl}${path}`, {
       method,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -86,7 +94,7 @@ export async function api(path, { method = 'GET', body, auth = true, retried = f
 
   if (res.status === 401 && auth && accessToken && !retried && !path.startsWith('/api/auth/')) {
     const refreshed = await refreshSession();
-    if (refreshed) return api(path, { method, body, auth, retried: true });
+    if (refreshed) return request(baseUrl, path, { method, body, auth, retried: true });
     throw new ApiError(401, 'Session expired — please log in again.');
   }
 
@@ -97,4 +105,18 @@ export async function api(path, { method = 'GET', body, auth = true, retried = f
     throw new ApiError(res.status, data?.error || `Request failed (${res.status})`, data?.details);
   }
   return data;
+}
+
+/**
+ * Section-aware request: resolves the section's own backend URL from the
+ * section registry (see lib/sectionLinks.js) and calls THAT service for
+ * section-scoped requests (content, section search, section AI). Sections
+ * without their own backend (Class 11 today) fall back to the global API.
+ * Tokens are shared — the same JWT works on every section service.
+ */
+export function sectionApi(path, sectionId, opts = {}) {
+  return sectionBackendUrl(sectionId).then((backendUrl) => {
+    if (!backendUrl) return request(API_URL, path, opts);
+    return request(backendUrl, path, opts);
+  });
 }

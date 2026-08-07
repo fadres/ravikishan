@@ -34,6 +34,31 @@ export const sections = [
   // project/account and its own working systems (own import pipeline, own
   // local AI, own storage), NEVER sharing NEON_CLASS11_URL. See the
   // checklist in ARCHITECTURE.md before adding one.
+
+  // Independent-service section: Class 12 (test fork). Unlike class-11,
+  // this section does NOT run inside the global backend — it is its own
+  // service (backend-class12-test/) with its own Neon (NEON_CLASS12_URL),
+  // its own AI endpoint and its own progress outbox. The global backend
+  // NEVER connects to its database; it proxies content/search/AI calls to
+  // section.backendUrl and receives study events via the internal
+  // progress-sync API (PROGRESS_SYNC_SECRET). See ARCHITECTURE.md §6.
+  {
+    id: 'class-12-test',
+    label: 'Class 12 (test)',
+    classSlug: 'class-12',
+    contentDir: 'content/class-12-test',
+    // Own Neon — the global backend must NEVER open a connection to it.
+    // (Kept for deploy/render tooling and the import pipeline.)
+    dbUrl: process.env.NEON_CLASS12_URL || '',
+    // Base URL of the independent section service. When set, every
+    // content/search/AI request is proxied to it instead of being served
+    // from a section DB connection inside this process.
+    backendUrl: process.env.CLASS12_BACKEND_URL || '',
+    aiEndpoint: process.env.CLASS12_AI_ENDPOINT || process.env.AI_ENDPOINT || '',
+    aiApiKey: process.env.AI_API_KEY || '',
+    aiModel: process.env.AI_MODEL || 'gpt-4o-mini',
+    status: 'active',
+  },
 ];
 
 const INDEX = new Map(sections.map((s) => [s.id, s]));

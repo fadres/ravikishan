@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { prisma, prismaForSection } from '../config/db.js';
-import { requireSection, activeSections } from '../lib/sections.config.js';
-import { remoteSectionSearch } from './remoteSection.js';
+import { prisma } from '../config/db.js';
+import { requireSection, SECTION } from '../lib/section.js';
 import {
   sectionIndexForBlockType,
   sectionLabelForBlockType,
@@ -37,16 +36,14 @@ const SECTION_TYPE_SQL = new Map([
   ['learning', Prisma.sql`cb."blockType" = 'learning_outcome'`],
 ]);
 
-// The client is a parameter so section-scoped search can run against a
-// section's own database (searchWithinSection) while the global endpoint
-// keeps using the global client.
+// Same search pipeline as the global backend, but this service has ONE
+// database: its own. Results are tagged with the section id so consumers
+// can attribute them.
 export async function searchContent(q, viewerLevel = 3, filters = {}, db = prisma) {
   const { subjectSlug, classSlug, blockType, accessLevel, section, page = 1, perPage = 25 } = filters;
   const offset = (page - 1) * perPage;
   const sectionFilter = section ? SECTION_TYPE_SQL.get(section) : null;
 
-  // The 'english' tsvector only indexes latin text, so a Devanagari query can
-  // never match it — skip that query (and its scan) entirely.
   const hasDevanagari = /[\u0900-\u097F]/.test(q);
 
   const englishQuery = hasDevanagari
@@ -198,8 +195,6 @@ export async function searchContent(q, viewerLevel = 3, filters = {}, db = prism
     if (!existing || (row.rank ?? 0) > (existing.rank ?? 0)) merged.set(row.id, row);
   }
 
-  // Chapters and subjects that match the query itself — ranked above content
-  // blocks so "cell" surfaces the chapter, not just inner notes.
   for (const row of chapters) {
     merged.set(`chapter-${row.id}`, {
       id: row.id,
@@ -271,114 +266,24 @@ export async function searchContent(q, viewerLevel = 3, filters = {}, db = prism
 }
 
 /**
- * Section-scoped search: runs the full search pipeline against ONE section's
- * own database and answers only from that section's content. Unknown section
- * ids throw UNKNOWN_SECTION (never fall back to another section's DB). Every
- * result is tagged with sectionId so cross-section consumers (and the
- * frontend) can attribute it.
+ * Search within this section's own database. Kept as a named function (same
+ * shape as the global backend's searchWithinSection) so consumers can swap
+ * implementations; every result is tagged with the section id.
  */
-export async function searchWithinSection(sectionId, q, viewerLevel = 3, filters = {}, ctx = {}) {
-  const section = requireSection(sectionId);
-  // Independent-service section → proxy to its own backendUrl (the global
-  // backend never connects to a hosted section's database).
-  if (section.backendUrl) {
-    return remoteSectionSearch(section, q, viewerLevel, filters, ctx.token ?? null);
-  }
-  const db = prismaForSection(section.id);
-  const { results, ...rest } = await searchContent(q, viewerLevel, filters, db);
+export async function searchWithinSection(sectionId, q, viewerLevel = 3, filters = {}) {
+  requireSection(sectionId);
+  const { results, ...rest } = await searchContent(q, viewerLevel, filters);
   return {
     ...rest,
-    sectionId: section.id,
-    sectionLabel: section.label,
-    results: results.map((r) => ({ ...r, sectionId: section.id })),
-  };
-}
-
-/**
- * Cross-section search: fans out to every ACTIVE section in parallel and
- * merges the ranked results. Each section is queried through its own client
- * (searchWithinSection) — one section's outage or unknown-id failure is
- * reported in `failed` and never takes the whole search down. Results keep
- * their sectionId tags so consumers can attribute them.
- */
-export async function searchAcrossSections(q, viewerLevel = 3, filters = {}, ctx = {}) {
-  const sections = activeSections();
-  const perSectionFilters = { ...filters, page: 1, perPage: Math.max(filters.perPage ?? 25, 100) };
-
-  const settled = await Promise.allSettled(
-    sections.map((s) => searchWithinSection(s.id, q, viewerLevel, perSectionFilters, ctx)),
-  );
-
-  const failed = [];
-  const merged = new Map();
-  let totalCount = 0;
-  for (let i = 0; i < sections.length; i += 1) {
-    const section = sections[i];
-    const outcome = settled[i];
-    if (outcome.status === 'rejected') {
-      failed.push({ sectionId: section.id, error: outcome.reason?.message ?? 'section search failed' });
-      continue;
-    }
-    totalCount += outcome.value.totalCount;
-    for (const result of outcome.value.results) {
-      merged.set(`${section.id}:${result.kind}:${result.id}`, result);
-    }
-  }
-
-  const all = [...merged.values()].sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0));
-  const page = filters.page ?? 1;
-  const perPage = filters.perPage ?? 25;
-  const offset = (page - 1) * perPage;
-
-  return {
-    sectionIds: sections.map((s) => s.id),
-    results: all.slice(offset, offset + perPage),
-    totalCount,
-    page,
-    perPage,
-    totalPages: Math.ceil(totalCount / perPage),
-    failed,
-  };
-}
-
-export async function searchGlobal(q, viewerLevel = 3) {
-  const [blocks, topics, tags] = await Promise.all([
-    searchContent(q, viewerLevel),
-    prisma.topic.findMany({
-      where: {
-        OR: [
-          { title: { contains: q, mode: 'insensitive' } },
-          { description: { contains: q, mode: 'insensitive' } },
-        ],
-      },
-      include: {
-        chapter: { select: { id: true, title: true, slug: true, subject: { select: { name: true, slug: true } } } },
-      },
-      take: 10,
-    }),
-    prisma.tag.findMany({
-      where: { name: { contains: q, mode: 'insensitive' } },
-      take: 10,
-    }),
-  ]);
-
-  return {
-    blocks: blocks.results,
-    topics: topics.map((t) => ({
-      id: t.id,
-      title: t.title,
-      description: t.description,
-      type: 'topic',
-      chapter: { title: t.chapter.title, slug: t.chapter.slug },
-      subject: { name: t.chapter.subject.name, slug: t.chapter.subject.slug },
-    })),
-    tags: tags.map((t) => ({ id: t.id, name: t.name, slug: t.slug, type: 'tag' })),
+    sectionId: SECTION.id,
+    sectionLabel: SECTION.label,
+    results: results.map((r) => ({ ...r, sectionId: SECTION.id })),
   };
 }
 
 export async function getSearchSuggestions(q, viewerLevel = 3) {
   if (q.length < 2) return [];
-  const [blockTitles, topicTitles, tagNames] = await Promise.all([
+  const [blockTitles, topicTitles] = await Promise.all([
     prisma.contentBlock.findMany({
       where: { title: { contains: q, mode: 'insensitive' } },
       select: { title: true },
@@ -389,22 +294,13 @@ export async function getSearchSuggestions(q, viewerLevel = 3) {
       select: { title: true },
       take: 5,
     }),
-    prisma.tag.findMany({
-      where: { name: { contains: q, mode: 'insensitive' } },
-      select: { name: true },
-      take: 5,
-    }),
   ]);
   return [
     ...blockTitles.map((b) => ({ text: b.title, type: 'block' })),
     ...topicTitles.map((t) => ({ text: t.title, type: 'topic' })),
-    ...tagNames.map((t) => ({ text: t.name, type: 'tag' })),
   ];
 }
 
-// Recommendations when the user gets few/no results: sibling blocks from the
-// same chapters as whatever did match (falling back to the same subjects).
-// Only blocks the viewer could actually read are recommended.
 export async function recommendBlocks(excludeIds = [], viewerLevel = 3, limit = 6) {
   const excluded = excludeIds.length ? { id: { notIn: excludeIds } } : {};
   const rows = await prisma.contentBlock.findMany({

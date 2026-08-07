@@ -23,6 +23,14 @@ export const env = {
   // their own NEW Neon projects with their own env vars — never this one.
   // See ARCHITECTURE.md.
   class11DbUrl: process.env.NEON_CLASS11_URL || process.env.DATABASE_URL,
+  // Service-to-service secret for the internal progress-sync API
+  // (POST /internal/progress-sync). Section services send it in the
+  // `x-service-secret` header — separate from the JWT secret on purpose.
+  progressSyncSecret: process.env.PROGRESS_SYNC_SECRET || '',
+  // Base URL of the independent Class 12 (test) section service. When set,
+  // the global backend proxies class-12-test content/search/AI requests to
+  // it instead of connecting to its Neon directly.
+  class12BackendUrl: process.env.CLASS12_BACKEND_URL || '',
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET || 'dev-access-secret-change-me',
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-me',
   accessTtl: process.env.ACCESS_TOKEN_TTL || '15m',
