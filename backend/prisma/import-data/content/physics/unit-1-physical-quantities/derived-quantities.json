@@ -2,7 +2,7 @@
   "title": "Derived Quantities",
   "notes": [
     "<h1>Definition</h1>\n<p>Quantities that depend on one or more fundamental quantities are called <b>derived quantities</b>. Their units are called <b>derived units</b>.</p>",
-    "<h2>Examples of Derived Quantities</h2>\n<table><tr><th>Quantity</th><th>Formula</th><th>SI Unit</th><th>Dimension</th></tr><tr><td>Area</td><td>length × breadth</td><td>m²</td><td>[M⁰L²T⁰]</td></tr><tr><td>Volume</td><td>length × length × length</td><td>m³</td><td>[M⁰L³T⁰]</td></tr><tr><td>Velocity</td><td>displacement ÷ time</td><td>m s⁻¹</td><td>[M⁰L¹T⁻¹]</td></tr><tr><td>Density</td><td>mass ÷ volume</td><td>kg m⁻³</td><td>[M¹L⁻³T⁰]</td></tr><tr><td>Force</td><td>mass × acceleration</td><td>kg m s⁻² (newton)</td><td>[M¹L¹T⁻²]</td></tr></table>",
+    "<h2>Examples of Derived Quantities</h2>\n<table><tr><th>Quantity</th><th>Formula</th><th>SI Unit</th><th>Dimension</th></tr><tr><td>Area</td><td>$A = l \\times b$</td><td>m²</td><td>[M⁰L²T⁰]</td></tr><tr><td>Volume</td><td>$V = l^3$</td><td>m³</td><td>[M⁰L³T⁰]</td></tr><tr><td>Velocity</td><td>$v = s/t$</td><td>m s⁻¹</td><td>[M⁰L¹T⁻¹]</td></tr><tr><td>Density</td><td>$\\rho = m/V$</td><td>kg m⁻³</td><td>[M¹L⁻³T⁰]</td></tr><tr><td>Force</td><td>$F = ma$</td><td>kg m s⁻² (newton)</td><td>[M¹L¹T⁻²]</td></tr></table>",
     "<h2>Fundamental vs Derived</h2>\n<p>Fundamental quantities are measured <b>directly</b> with instruments, while derived quantities are calculated from fundamental ones. A balance measures mass directly, but density must be calculated from mass and volume. A derived unit often combines several fundamental units — the newton (kg m s⁻²), for example, combines mass, length and time.</p>"
   ],
   "examples": [

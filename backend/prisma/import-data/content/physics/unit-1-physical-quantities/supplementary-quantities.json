@@ -1,8 +1,8 @@
 {
   "title": "Supplementary Quantities",
   "notes": [
-    "<h1>Definition</h1>\n<p>Alongside the seven fundamental quantities, the SI system lists <b>two supplementary quantities</b>: <b>plane angle</b> and <b>solid angle</b>. They are treated as a separate category — neither fully fundamental nor derived.</p>",
-    "<h2>Plane Angle and Solid Angle</h2>\n<table><tr><th>Quantity</th><th>Unit</th><th>Unit Symbol</th><th>Definition</th></tr><tr><td>Plane angle</td><td>Radian</td><td>rad</td><td>Arc length ÷ radius</td></tr><tr><td>Solid angle</td><td>Steradian</td><td>sr</td><td>Area ÷ radius²</td></tr></table>\n<p>A full circle is <b>2π radians</b>, and a full sphere is <b>4π steradians</b>.</p>",
+    "<h1>Definition</h1>\n<p>Alongside the seven fundamental quantities, the SI system lists <b>two supplementary quantities</b>: <b>plane angle</b> and <b>solid angle</b>. They are treated as a separate category — <b>neither fully fundamental nor derived</b>.</p>",
+    "<h2>Plane Angle and Solid Angle</h2>\n<table><tr><th>Quantity</th><th>Unit</th><th>Unit Symbol</th><th>Definition</th></tr><tr><td>Plane angle</td><td>Radian</td><td>rad</td><td>$\\theta = s/r$</td></tr><tr><td>Solid angle</td><td>Steradian</td><td>sr</td><td>$\\Omega = A/r^2$</td></tr></table>\n<p>A full circle is <b>2π radians</b>, and a full sphere is <b>4π steradians</b>.</p>",
     "<h2>Why Are They Called Supplementary?</h2>\n<p>Both angles are defined as the ratio of two lengths (or an area and a length squared). Since the lengths cancel, both quantities are <b>dimensionless</b> — their dimension is [M⁰L⁰T⁰]. That is why they are listed separately instead of being counted among the fundamental quantities.</p>\n<p>Plane angles appear everywhere in 2D geometry — the angle between the hands of a clock, or the angle of incidence in optics — while solid angles describe 3D spread, such as the cone of light spreading from a torch.</p>"
   ],
   "examples": [

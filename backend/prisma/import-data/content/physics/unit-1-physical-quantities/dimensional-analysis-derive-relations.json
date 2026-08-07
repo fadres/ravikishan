@@ -2,9 +2,9 @@
   "title": "Uses of Dimensional Equation — Deriving Relations Between Physical Quantities",
   "notes": [
     "<h1>Definition</h1>\n<p>When the quantities involved in a relation are known but the exact formula is not, dimensional analysis can <b>derive the relation</b> between them. The method: assume the quantity is proportional to a product of powers of the relevant variables, equate the dimensions on both sides, and solve for the unknown exponents using the principle of homogeneity.</p>",
-    "<h2>Time Period of a Simple Pendulum</h2>\n<p>Assume the time period depends on length l, mass m and gravity g:</p>\n<p>t ∝ lᵃ mᵇ gᶜ</p>\n<p>Equating the dimensions of both sides gives a = ½, b = 0, c = −½. So:</p>\n<p><b>T = 2π√(l/g)</b></p>\n<p>Notice b = 0 — the mass does not appear in the final formula, because the mass exponents cancelled out.</p>",
-    "<h2>Centripetal Force</h2>\n<p>Assume F ∝ mᵃ vᵇ rᶜ. Equating dimensions gives a = 1, b = 2, c = −1:</p>\n<p><b>F = mv²/r</b></p>",
-    "<h2>Frequency of a Vibrating String</h2>\n<p>For a stretched string, assume n ∝ Fᵃ Lᵇ Mᶜ, where F is the tension, L the length and M the mass per unit length. The exponents come out as a = ½, b = −1, c = −½:</p>\n<p><b>n ∝ (1/L) × √(F/M)</b></p>",
+    "<h2>Time Period of a Simple Pendulum</h2>\n<p>Assume the time period depends on length l, mass m and gravity g:</p>\n<p>$$t \\propto l^a m^b g^c$$</p>\n<p>Equating the dimensions of both sides gives <b>a = ½, b = 0, c = −½</b>. So:</p>\n<p>$$T = 2\\pi\\sqrt{l/g}$$</p>\n<p>Notice <b>b = 0</b> — the mass does not appear in the final formula, because the mass exponents cancelled out.</p>",
+    "<h2>Centripetal Force</h2>\n<p>Assume $F \\propto m^a v^b r^c$. Equating dimensions gives <b>a = 1, b = 2, c = −1</b>:</p>\n<p>$$F = \\frac{mv^2}{r}$$</p>",
+    "<h2>Frequency of a Vibrating String</h2>\n<p>For a stretched string, assume $n \\propto F^a L^b M^c$, where F is the tension, L the length and M the mass per unit length. The exponents come out as <b>a = ½, b = −1, c = −½</b>:</p>\n<p>$$n \\propto \\frac{1}{L} \\times \\sqrt{\\frac{F}{M}}$$</p>",
     "<h2>Why the Constant k Cannot Be Found by Dimensions</h2>\n<p>Every derivation leaves a dimensionless constant (k = 2π for the pendulum). Dimensional analysis cannot determine pure numbers — they carry no dimension to equate — so k must be found experimentally. This is the main limitation of the method: it fixes the powers of the variables but not the constant, and it cannot tell whether some quantity has been left out.</p>"
   ],
   "examples": [
