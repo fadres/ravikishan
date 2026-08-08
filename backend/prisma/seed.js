@@ -181,22 +181,30 @@ async function main() {
         children: [
           {
             name: 'Fundamentals',
-            children: [{ name: 'Scalars' }, { name: 'Vectors' }, { name: 'Distance & Displacement' }],
+            desc: 'The ideas every motion problem starts from',
+            children: [
+              { name: 'Scalars', desc: 'Only magnitude — speed, distance' },
+              { name: 'Vectors', desc: 'Magnitude + direction — velocity, force' },
+              { name: 'Distance & Displacement', desc: 'Path length vs straight-line change' },
+            ],
           },
           {
             name: 'Motion',
+            desc: 'How position changes with time',
             children: [
-              { name: 'Uniform motion' },
+              { name: 'Uniform motion', desc: 'Constant speed in a straight line' },
               {
                 name: 'Uniform acceleration',
+                desc: 'Constant rate of change of velocity',
                 children: [{ name: 'Equations of motion' }, { name: 'Graphs (v–t, s–t)' }],
               },
-              { name: 'Projectile motion' },
+              { name: 'Projectile motion', desc: 'Curved path under gravity only' },
             ],
           },
           {
             name: 'Applications',
-            children: [{ name: 'Free fall' }, { name: 'Relative velocity' }],
+            desc: 'Real situations solved with these rules',
+            children: [{ name: 'Free fall', desc: 'Motion under gravity alone' }, { name: 'Relative velocity' }],
           },
         ],
       },
@@ -255,9 +263,25 @@ async function main() {
       mindmapJson: {
         name: 'Sets',
         children: [
-          { name: 'Notation', children: [{ name: 'Roster form' }, { name: 'Set-builder form' }] },
-          { name: 'Operations', children: [{ name: 'Union' }, { name: 'Intersection' }, { name: 'Complement' }] },
-          { name: 'Relations', children: [{ name: 'Subset' }, { name: 'Power set' }] },
+          {
+            name: 'Notation',
+            desc: 'The two standard ways to write a set',
+            children: [{ name: 'Roster form', desc: 'List elements: {1, 2, 3}' }, { name: 'Set-builder form', desc: 'Rule: {x : x is a natural number}' }],
+          },
+          {
+            name: 'Operations',
+            desc: 'Combining sets to make new ones',
+            children: [
+              { name: 'Union', desc: 'All elements of A or B' },
+              { name: 'Intersection', desc: 'Elements in both A and B' },
+              { name: 'Complement', desc: 'Everything outside A' },
+            ],
+          },
+          {
+            name: 'Relations',
+            desc: 'How sets compare to each other',
+            children: [{ name: 'Subset', desc: 'Every element of A is in B' }, { name: 'Power set', desc: 'Set of all subsets, 2ⁿ of them' }],
+          },
         ],
       },
     },
@@ -294,17 +318,144 @@ async function main() {
     {
       blockType: 'mindmap', title: 'Cell structure mind map',
       mindmapJson: {
-        name: 'Cell',
+        name: 'Cell — The Unit of Life',
+        desc: 'Complete classification: every box shows its meaning and its position (index badge) from the top.',
         children: [
           {
+            name: 'Cell Theory',
+            desc: 'The 3 rules that define what a cell is',
+            children: [
+              { name: 'Schleiden & Schwann', desc: '1838: all organisms are made of cells' },
+              { name: 'Virchow', desc: '1855: cells arise from pre-existing cells' },
+            ],
+          },
+          {
+            name: 'Cell Types',
+            desc: 'Two fundamental architectures of life',
+            children: [
+              {
+                name: 'Prokaryotic',
+                desc: 'No true nucleus — DNA floats free',
+                children: [
+                  { name: 'Bacteria', desc: '70S ribosomes, no organelles' },
+                  { name: 'Archaea', desc: 'Like bacteria, distinct biochemistry' },
+                ],
+              },
+              {
+                name: 'Eukaryotic',
+                desc: 'True nucleus + membrane-bound organelles',
+                children: [
+                  { name: 'Plant cell', desc: 'Cell wall, chloroplasts, big vacuole' },
+                  { name: 'Animal cell', desc: 'No cell wall, has centrioles' },
+                ],
+              },
+            ],
+          },
+          {
             name: 'Membrane systems',
-            children: [{ name: 'Plasma membrane' }, { name: 'ER' }, { name: 'Golgi apparatus' }],
+            desc: 'The factory floor — work stations inside the cell',
+            children: [
+              {
+                name: 'Plasma membrane',
+                desc: 'Gatekeeper — selective barrier',
+                children: [
+                  { name: 'Fluid mosaic model', desc: 'Lipid bilayer + floating proteins' },
+                  { name: 'Selective permeability', desc: 'Passes some molecules, blocks others' },
+                ],
+              },
+              {
+                name: 'Endomembrane system',
+                desc: 'ER → Golgi → lysosomes: one transport chain',
+                children: [
+                  {
+                    name: 'ER',
+                    desc: 'Membrane factory for molecules',
+                    children: [
+                      { name: 'Rough ER', desc: 'Ribosome-studded — makes proteins' },
+                      { name: 'Smooth ER', desc: 'Makes lipids, detoxifies' },
+                    ],
+                  },
+                  { name: 'Golgi apparatus', desc: 'Packs and ships proteins' },
+                  { name: 'Lysosomes', desc: 'Digest waste and invaders' },
+                ],
+              },
+              { name: 'Vacuoles', desc: 'Storage tanks for water and waste' },
+            ],
           },
           {
             name: 'Genetic material',
-            children: [{ name: 'Nucleus' }, { name: 'DNA' }, { name: 'Ribosomes' }],
+            desc: 'The blueprint of life, stored and read',
+            children: [
+              {
+                name: 'Nucleus',
+                desc: 'Brain of the cell — controls activities',
+                children: [
+                  { name: 'Nuclear envelope', desc: 'Double membrane with pores' },
+                  { name: 'Nucleolus', desc: 'Makes ribosome subunits' },
+                  { name: 'Chromatin', desc: 'DNA + histones → chromosomes' },
+                ],
+              },
+              {
+                name: 'Ribosomes',
+                desc: 'Protein factories',
+                children: [
+                  { name: '70S', desc: 'Prokaryotic: 50S + 30S' },
+                  { name: '80S', desc: 'Eukaryotic: 60S + 40S' },
+                ],
+              },
+            ],
           },
-          { name: 'Energy', children: [{ name: 'Mitochondria' }, { name: 'Chloroplasts' }] },
+          {
+            name: 'Energy',
+            desc: 'Powerhouses that make ATP',
+            children: [
+              {
+                name: 'Mitochondria',
+                desc: 'Powerhouse — makes ATP by respiration',
+                children: [
+                  { name: 'Cristae', desc: 'Folded inner membrane' },
+                  { name: 'Matrix', desc: 'Holds Krebs cycle enzymes' },
+                ],
+              },
+              {
+                name: 'Chloroplasts',
+                desc: 'Kitchen — traps sunlight to make food',
+                children: [
+                  { name: 'Thylakoids', desc: 'Discs that catch light' },
+                  { name: 'Stroma', desc: 'Builds glucose (Calvin cycle)' },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Cell division',
+            desc: 'How cells copy themselves',
+            children: [
+              {
+                name: 'Mitosis',
+                desc: 'Identical copies — growth and repair',
+                children: [
+                  { name: 'Prophase', desc: 'Chromosomes condense' },
+                  { name: 'Metaphase', desc: 'Line up at the equator' },
+                  { name: 'Anaphase', desc: 'Chromatids pulled apart' },
+                  { name: 'Telophase', desc: 'Two nuclei form' },
+                ],
+              },
+              {
+                name: 'Meiosis',
+                desc: 'Halves chromosome number — makes gametes',
+                children: [
+                  { name: 'Meiosis I', desc: 'Homologous pairs separate' },
+                  { name: 'Meiosis II', desc: 'Four haploid cells' },
+                ],
+              },
+            ],
+          },
+        ],
+        legend: [
+          'Index badge (1.2) = position counted from the top of the classification',
+          'Grey line under a name = meaning of that box',
+          'Tap any box → unit/topic position + full meaning',
         ],
       },
     },

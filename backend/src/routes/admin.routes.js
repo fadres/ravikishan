@@ -239,7 +239,41 @@ const BLOCK_TYPE_VALUES = [
   'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
   'formula', 'symbols',
   'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary',
+  'graph',
 ];
+
+const graphSchema = z.object({
+  title: z.string().trim().max(200).nullish(),
+  xLabel: z.string().trim().max(200).nullish(),
+  yLabel: z.string().trim().max(200).nullish(),
+  xUnit: z.string().trim().max(50).nullish(),
+  yUnit: z.string().trim().max(50).nullish(),
+  curve: z
+    .object({
+      type: z.enum(['parabola', 'sine', 'line', 'custom']),
+      x0: z.number().nullish(),
+      y0: z.number().nullish(),
+      a: z.number().nullish(),
+      amplitude: z.number().nullish(),
+      frequency: z.number().nullish(),
+      points: z.array(z.tuple([z.number(), z.number()])).max(200).nullish(),
+    })
+    .nullish(),
+  peak: z
+    .object({ x: z.number(), y: z.number(), label: z.string().trim().max(100).nullish() })
+    .nullish(),
+  angle: z
+    .object({
+      degrees: z.number().min(-180).max(180),
+      at: z.tuple([z.number(), z.number()]).nullish(),
+      label: z.string().trim().max(100).nullish(),
+    })
+    .nullish(),
+  showGrid: z.boolean().nullish(),
+  dashedCurve: z.boolean().nullish(),
+  domain: z.tuple([z.number(), z.number()]).nullish(),
+  range: z.tuple([z.number(), z.number()]).nullish(),
+});
 
 const blockSchema = z.object({
   // Omit blockType to let the rule-based classifier (services/classifier.js)
@@ -256,12 +290,15 @@ const blockSchema = z.object({
     })
     .nullish(),
   diagramData: z
-    .object({
-      left: z.object({ name: z.string().max(200), points: z.array(z.string().max(500)).max(20) }),
-      right: z.object({ name: z.string().max(200), points: z.array(z.string().max(500)).max(20) }),
-      similarities: z.array(z.string().max(500)).max(20),
-      differences: z.array(z.object({ left: z.string().max(500), right: z.string().max(500) })).max(20),
-    })
+    .union([
+      z.object({
+        left: z.object({ name: z.string().max(200), points: z.array(z.string().max(500)).max(20) }),
+        right: z.object({ name: z.string().max(200), points: z.array(z.string().max(500)).max(20) }),
+        similarities: z.array(z.string().max(500)).max(20),
+        differences: z.array(z.object({ left: z.string().max(500), right: z.string().max(500) })).max(20),
+      }),
+      z.object({ graph: graphSchema }),
+    ])
     .nullish(),
   subLevel: z.string().trim().max(300).nullish(),
   sortOrder: z.number().int().min(0).nullish(),

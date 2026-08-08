@@ -1,0 +1,11 @@
+{
+  "title": "Extra solution — stopping distance at a signal",
+  "notes": [
+    "**Question:** A car moving at 72 km/h sees a red signal 50 m ahead and applies brakes. It stops exactly at the signal. Find (a) the retardation and (b) the time taken to stop.",
+    "**Solution:** Convert to SI: $u = 72\\ \\text{km/h} = 20\\ \\text{m/s}$, $v = 0$, $s = 50\\ \\text{m}$.",
+    "(a) Using $v^2 = u^2 + 2as$: $0 = 20^2 + 2a(50) \\Rightarrow 100a = -400 \\Rightarrow a = -4\\ \\text{m/s}^2$ (retardation $= 4\\ \\text{m/s}^2$).",
+    "(b) Using $v = u + at$: $0 = 20 - 4t \\Rightarrow t = 5\\ \\text{s}$."
+  ],
+  "type": "example",
+  "order": 1
+}

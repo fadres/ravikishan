@@ -261,13 +261,15 @@ export default function Home() {
   }, []);
 
   const class11 = classes.find((k) => k.slug === 'class-11');
+  const class11e = classes.find((k) => k.slug === 'class-11e');
   const subjects11 = class11?.subjects || [];
+  const subjects11e = class11e?.subjects || [];
   const streak = streakDays();
 
   const loksewa = subjects11.find((s) => s.slug === 'loksewa');
   const gk = subjects11.find((s) => s.slug === 'general-knowledge');
 
-  const buildOptions = ({ subjects, loksewa, gk }) => {
+  const buildOptions = ({ subjects, subjects11e, loksewa, gk }) => {
     const options = [
       {
         to: sectionPath('class-11'),
@@ -279,6 +281,20 @@ export default function Home() {
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+        ),
+      },
+      {
+        to: sectionPath('class-11e'),
+        name: 'Class 11E',
+        desc: 'Extra solutions edition',
+        meta: subjects11e ? `${subjects11e.length} subjects` : '',
+        color: '#f472b6',
+        icon: (
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <path d="M12 6v8M8 10h8" />
           </svg>
         ),
       },
@@ -328,6 +344,7 @@ export default function Home() {
 
   const options = buildOptions({
     subjects: subjects11,
+    subjects11e,
     loksewa,
     gk,
   });

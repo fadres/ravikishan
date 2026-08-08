@@ -11,7 +11,35 @@ const TYPE_LABELS = {
   learning_outcome: 'Learning outcome', mind_recall: 'Mind recall', pyq: 'Past year question',
   solved_example: 'Solved example', premium_expansion: 'Advanced learning',
   reference: 'Reference', revision_summary: 'Revision summary',
+  graph: 'Graph',
 };
+
+const GRAPH_TYPES = ['parabola', 'sine', 'line', 'custom'];
+
+function graphForm(block) {
+  const g = block?.diagramData?.graph ?? {};
+  return {
+    title: g.title || '',
+    xLabel: g.xLabel || '',
+    yLabel: g.yLabel || '',
+    xUnit: g.xUnit || '',
+    yUnit: g.yUnit || '',
+    curveType: g.curve?.type || 'parabola',
+    x0: g.curve?.x0 ?? '',
+    y0: g.curve?.y0 ?? '',
+    a: g.curve?.a ?? '',
+    amplitude: g.curve?.amplitude ?? '',
+    frequency: g.curve?.frequency ?? '',
+    customPoints: (g.curve?.points || []).map((p) => p.join(', ')).join('\n'),
+    peakX: g.peak?.x ?? '',
+    peakY: g.peak?.y ?? '',
+    peakLabel: g.peak?.label || '',
+    angleDeg: g.angle?.degrees ?? 45,
+    angleLabel: g.angle?.label || '',
+    dashed: Boolean(g.dashedCurve),
+    showGrid: g.showGrid !== false,
+  };
+}
 
 // Full block editor: markdown body, code + language picker, mindmap JSON,
 // diagram_compare fields, sub_level nesting for Nepali byakaran.
@@ -38,6 +66,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
             .join('\n'),
         }
       : { leftName: '', leftPoints: '', rightName: '', rightPoints: '', similarities: '', differences: '' },
+    graph: graphForm(block),
     subLevel: block?.subLevel || '',
     accessLevel: block?.accessLevel || 3,
     topicId: block ? block.topicId || '' : (topics[0]?.id || ''),
@@ -100,6 +129,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       codeLanguage: v.codeLanguage ?? f.codeLanguage,
       mindmapJson: v.mindmapJson ? JSON.stringify(v.mindmapJson, null, 2) : '',
       subLevel: v.subLevel ?? '',
+      graph: v.diagramData?.graph ? graphForm({ diagramData: v.diagramData }) : f.graph,
       diagramData: v.diagramData
         ? {
             leftName: v.diagramData.left?.name || '',
@@ -145,7 +175,50 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       }
     }
     const d = form.diagramData;
-    if (d.leftName || d.rightName || d.similarities || d.differences) {
+    if (form.blockType === 'graph') {
+      const num = (v) => (v === '' || v === null || v === undefined ? undefined : Number(v));
+      const g = form.graph;
+      const curve = { type: g.curveType || 'parabola' };
+      if (g.curveType === 'custom') {
+        curve.points = g.customPoints
+          .split('\n')
+          .map((line) => line.split(/[,;]/).map((s) => Number(s.trim())))
+          .filter((p) => p.length === 2 && Number.isFinite(p[0]) && Number.isFinite(p[1]));
+      } else {
+        if (g.x0 !== '') curve.x0 = num(g.x0);
+        if (g.y0 !== '') curve.y0 = num(g.y0);
+        if (g.a !== '') curve.a = num(g.a);
+        if (g.curveType === 'sine') {
+          if (g.amplitude !== '') curve.amplitude = num(g.amplitude);
+          if (g.frequency !== '') curve.frequency = num(g.frequency);
+        }
+      }
+      payload.diagramData = {
+        graph: {
+          title: g.title.trim() || undefined,
+          xLabel: g.xLabel.trim() || undefined,
+          yLabel: g.yLabel.trim() || undefined,
+          xUnit: g.xUnit.trim() || undefined,
+          yUnit: g.yUnit.trim() || undefined,
+          curve,
+          dashedCurve: g.dashed,
+          showGrid: g.showGrid,
+        },
+      };
+      if (g.peakX !== '' && g.peakY !== '') {
+        payload.diagramData.graph.peak = {
+          x: num(g.peakX),
+          y: num(g.peakY),
+          label: g.peakLabel.trim() || undefined,
+        };
+      }
+      if (g.angleDeg !== '' && Number.isFinite(Number(g.angleDeg))) {
+        payload.diagramData.graph.angle = {
+          degrees: Number(g.angleDeg),
+          label: g.angleLabel.trim() || undefined,
+        };
+      }
+    } else if (d.leftName || d.rightName || d.similarities || d.differences) {
       payload.diagramData = {
         left: { name: d.leftName || 'Left', points: d.leftPoints.split('\n').map((s) => s.trim()).filter(Boolean) },
         right: { name: d.rightName || 'Right', points: d.rightPoints.split('\n').map((s) => s.trim()).filter(Boolean) },
@@ -179,6 +252,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
 
   const showMindmap = form.blockType === 'mindmap';
   const showDiagram = form.blockType === 'diagram_compare';
+  const showGraph = form.blockType === 'graph';
 
   const inputCls =
     'w-full bg-white/10 border border-white/15 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-aqua-400/60';
@@ -325,13 +399,13 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
 
         {showMindmap && (
           <div className="mt-4">
-            <label className={labelCls}>Mind map JSON {"{ \"name\": \"Root\", \"children\": [...] }"}</label>
+            <label className={labelCls}>Mind map JSON {"{ \"name\": \"Root\", \"desc\": \"meaning (optional)\", \"children\": [...] }"}</label>
             <textarea
               value={form.mindmapJson}
               onChange={(e) => set('mindmapJson', e.target.value)}
               rows={7}
               className={`${inputCls} font-mono text-[13px] resize-y`}
-              placeholder={'{\n  "name": "Topic",\n  "children": [\n    { "name": "Sub-topic", "children": [] }\n  ]\n}'}
+              placeholder={'{\n  "name": "Topic",\n  "desc": "one-line meaning of this box (shown inside it, any depth works)",\n  "children": [\n    { "name": "Sub-topic", "desc": "meaning", "children": [] }\n  ]\n}'}
             />
           </div>
         )}
@@ -361,6 +435,109 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
             <div>
               <label className={labelCls}>Differences ({'"left <> right"'} per line)</label>
               <textarea rows={4} value={form.diagramData.differences} onChange={(e) => set('diagramData', { ...form.diagramData, differences: e.target.value })} className={`${inputCls} font-mono text-[13px]`} placeholder={'Nucleus absent <> Nucleus present'} />
+            </div>
+          </div>
+        )}
+
+        {showGraph && (
+          <div className="mt-4 space-y-4">
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Graph title (optional caption)</label>
+                <input value={form.graph.title} onChange={(e) => set('graph', { ...form.graph, title: e.target.value })} className={inputCls} placeholder="Trajectory of a projectile" />
+              </div>
+              <div>
+                <label className={labelCls}>Curve type</label>
+                <select value={form.graph.curveType} onChange={(e) => set('graph', { ...form.graph, curveType: e.target.value })} className={inputCls}>
+                  {GRAPH_TYPES.map((t) => (
+                    <option key={t} value={t} className="bg-deep-800">{t}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>X axis label</label>
+                <input value={form.graph.xLabel} onChange={(e) => set('graph', { ...form.graph, xLabel: e.target.value })} className={inputCls} placeholder="Horizontal distance" />
+              </div>
+              <div>
+                <label className={labelCls}>Y axis label</label>
+                <input value={form.graph.yLabel} onChange={(e) => set('graph', { ...form.graph, yLabel: e.target.value })} className={inputCls} placeholder="Height" />
+              </div>
+              <div>
+                <label className={labelCls}>X unit</label>
+                <input value={form.graph.xUnit} onChange={(e) => set('graph', { ...form.graph, xUnit: e.target.value })} className={inputCls} placeholder="m" />
+              </div>
+              <div>
+                <label className={labelCls}>Y unit</label>
+                <input value={form.graph.yUnit} onChange={(e) => set('graph', { ...form.graph, yUnit: e.target.value })} className={inputCls} placeholder="m" />
+              </div>
+            </div>
+
+            {form.graph.curveType !== 'custom' ? (
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div>
+                  <label className={labelCls}>{form.graph.curveType === 'sine' ? 'Midline y (y0)' : 'Vertex x (x0)'}</label>
+                  <input value={form.graph.x0} onChange={(e) => set('graph', { ...form.graph, x0: e.target.value })} className={inputCls} placeholder="e.g. 5" />
+                </div>
+                <div>
+                  <label className={labelCls}>{form.graph.curveType === 'sine' ? 'Amplitude' : 'Vertex y (y0 / peak height)'}</label>
+                  <input value={form.graph.y0} onChange={(e) => set('graph', { ...form.graph, y0: e.target.value })} className={inputCls} placeholder="e.g. 2.5" />
+                </div>
+                {form.graph.curveType === 'sine' ? (
+                  <div>
+                    <label className={labelCls}>Frequency</label>
+                    <input value={form.graph.frequency} onChange={(e) => set('graph', { ...form.graph, frequency: e.target.value })} className={inputCls} placeholder="e.g. 2" />
+                  </div>
+                ) : (
+                  <div>
+                    <label className={labelCls}>Steepness (a)</label>
+                    <input value={form.graph.a} onChange={(e) => set('graph', { ...form.graph, a: e.target.value })} className={inputCls} placeholder="leave empty to auto-fit" />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <label className={labelCls}>Custom points ({'"x, y"'} one per line)</label>
+                <textarea
+                  value={form.graph.customPoints}
+                  onChange={(e) => set('graph', { ...form.graph, customPoints: e.target.value })}
+                  rows={4}
+                  className={`${inputCls} font-mono text-[13px]`}
+                  placeholder={'0, 0\n2.5, 5\n5, 0'}
+                />
+              </div>
+            )}
+
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div>
+                <label className={labelCls}>Peak x</label>
+                <input value={form.graph.peakX} onChange={(e) => set('graph', { ...form.graph, peakX: e.target.value })} className={inputCls} placeholder="e.g. 5" />
+              </div>
+              <div>
+                <label className={labelCls}>Peak y</label>
+                <input value={form.graph.peakY} onChange={(e) => set('graph', { ...form.graph, peakY: e.target.value })} className={inputCls} placeholder="e.g. 2.5" />
+              </div>
+              <div>
+                <label className={labelCls}>Peak label</label>
+                <input value={form.graph.peakLabel} onChange={(e) => set('graph', { ...form.graph, peakLabel: e.target.value })} className={inputCls} placeholder="H = 2.5 m" />
+              </div>
+              <div>
+                <label className={labelCls}>Angle θ (degrees)</label>
+                <input value={form.graph.angleDeg} onChange={(e) => set('graph', { ...form.graph, angleDeg: e.target.value })} className={inputCls} placeholder="45" />
+              </div>
+              <div>
+                <label className={labelCls}>Angle label</label>
+                <input value={form.graph.angleLabel} onChange={(e) => set('graph', { ...form.graph, angleLabel: e.target.value })} className={inputCls} placeholder="θ = 45°" />
+              </div>
+              <div className="flex items-end gap-4 pb-1">
+                <label className="flex items-center gap-2 text-xs font-bold text-slate-300">
+                  <input type="checkbox" checked={form.graph.dashed} onChange={(e) => set('graph', { ...form.graph, dashed: e.target.checked })} className="accent-aqua-400" />
+                  Dashed curve
+                </label>
+                <label className="flex items-center gap-2 text-xs font-bold text-slate-300">
+                  <input type="checkbox" checked={form.graph.showGrid} onChange={(e) => set('graph', { ...form.graph, showGrid: e.target.checked })} className="accent-aqua-400" />
+                  Grid
+                </label>
+              </div>
             </div>
           </div>
         )}

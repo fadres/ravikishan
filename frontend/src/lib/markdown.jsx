@@ -71,6 +71,7 @@ export function looksLikeMath(inner) {
   if (!s) return false;
   if (/\\[a-zA-Z]/.test(s)) return true; // \alpha, \frac{...}, \text{...}
   if (/[{}\^_]/.test(s)) return true; // x^2, x_i, { ... }
+  if (/^[A-Za-z][A-Za-z0-9]{0,2}$/.test(s)) return true; // $x$, $F$, $v_0$-style short symbols
   if (/[A-Za-z]\s*[=<>≈≠≤≥]\s*[0-9A-Za-z]/.test(s)) return true; // x = 5
   if (/\d\s*[=]\s*\d/.test(s)) return true; // 1 + 2 = 3
   if (/[0-9A-Za-z)]\s*[×÷⋅±∓√∫∑∏]/.test(s)) return true; // a × b
@@ -148,20 +149,10 @@ export function MathSpan({ math, displayMode = false, className = '' }) {
   return <span className={`${className} text-aqua-100 font-mono`}>{latexToPlain(math)}</span>;
 }
 
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  })[c]);
-}
-
 // Inline tokenizer: `code`, **bold**, *italic*, and $math$ — math is rendered
 // with KaTeX when loaded, otherwise converted to plain text by latexToPlain().
 // Dollar spans that do not look like math (currency, prices) stay literal.
-// HTML already escaped.
+// React escapes all rendered text automatically.
 function renderInline(text, keyPrefix, katex) {
   const tokens = [];
   const regex = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*|\$[^$\n]+\$)/g;
@@ -250,7 +241,7 @@ function renderText(text, keyPrefix, katex) {
     // No real math: keep the text intact (emails, a_b, 5^2 stay readable) and
     // only run the LaTeX cleanup when stray \commands would otherwise leak.
     const cleaned = /\\[a-zA-Z]/.test(text) ? latexToPlain(text) : text;
-    return renderInline(escapeHtml(cleaned), keyPrefix, katex);
+    return renderInline(cleaned, keyPrefix, katex);
   }
   // Math present: keep $...$ spans intact (so KaTeX can render them), clean
   // the surrounding text through latexToPlain, and merge everything in order.
@@ -275,7 +266,7 @@ function renderText(text, keyPrefix, katex) {
         </span>,
       ];
     }
-    return renderInline(escapeHtml(latexToPlain(part.text)), kp, katex);
+    return renderInline(latexToPlain(part.text), kp, katex);
   });
 }
 
@@ -295,8 +286,9 @@ export function RichText({ text, className = '' }) {
 
 // Table headers render as plain, standard text: LaTeX is converted (never
 // stripped to nothing, never shown raw) and emphasis markers are removed.
+// React escapes the text automatically — no manual escaping here.
 function plainText(text) {
-  return escapeHtml(latexToPlain(text));
+  return latexToPlain(text);
 }
 
 function InlineBlock({ children }) {

@@ -6,11 +6,12 @@ const LOCKED_BLOCK_TYPES = [
   'note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important',
   'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
   'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary',
+  'graph',
 ];
 
 const ALLOWED_TYPES = {
-  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary'],
-  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'premium_expansion', 'revision_summary'],
+  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary', 'graph'],
+  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'premium_expansion', 'revision_summary', 'graph'],
   english: ['summary', 'keywords', 'important_points', 'learning_outcome', 'pyq', 'revision_summary'],
   nepali: ['byakaran', 'learning_outcome', 'revision_summary'],
 };
@@ -26,6 +27,7 @@ const TYPE_LABELS = {
   learning_outcome: 'Learning Outcomes', mind_recall: 'Mind Recall', pyq: 'Past Year Questions',
   solved_example: 'Solved Example', premium_expansion: 'Advanced Learning',
   reference: 'Reference', revision_summary: 'Revision Summary',
+  graph: 'Graph',
 };
 
 export default function ContentPanel() {
@@ -616,7 +618,7 @@ export default function ContentPanel() {
                 <p className="text-xs text-slate-400 truncate">
                   {b.contentCode ? `code (${b.codeLanguage || 'text'}) · ` : ''}
                   {b.mindmapJson ? 'mindmap · ' : ''}
-                  {b.diagramData ? 'compare · ' : ''}
+                  {b.diagramData?.graph ? 'graph · ' : b.diagramData ? 'compare · ' : ''}
                   {(b.contentRichtext || '').slice(0, 60) || 'no body'}
                 </p>
               </div>

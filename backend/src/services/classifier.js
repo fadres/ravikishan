@@ -31,11 +31,11 @@ import { sectionIndexForBlockType } from '../lib/sections.js';
 //   pyq     → previous-year questions  set     → grouped drill question sets
 //   mindmap → concept-relationship maps
 
-export const TAB_TYPES = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap'];
+export const TAB_TYPES = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap', 'graph'];
 
 // Default tab presentation order for a chapter (overridable per chapter via
 // chapter.metadata.tabOrder; block rendering still follows sectionIndex).
-export const DEFAULT_TAB_ORDER = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap'];
+export const DEFAULT_TAB_ORDER = ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap', 'graph'];
 
 // Tab type → existing BlockType enum (extend, don't replace).
 export const TAB_TO_BLOCK_TYPE = {
@@ -46,6 +46,7 @@ export const TAB_TO_BLOCK_TYPE = {
   pyq: 'pyq',
   set: 'solved_example',
   mindmap: 'mindmap',
+  graph: 'graph',
 };
 
 // Tab type → access tier (3 = free, 2 = member, 1 = premium).
@@ -57,6 +58,7 @@ export const TAB_ACCESS_LEVEL = {
   pyq: 2,
   set: 2,
   mindmap: 1,
+  graph: 1,
 };
 
 // Confidence below this is flagged for manual review instead of importing.
@@ -80,6 +82,12 @@ const FOLDER_TYPE_MAP = {
   mindmap: 'mindmap',
   mindmaps: 'mindmap',
   'mind-map': 'mindmap',
+  graph: 'graph',
+  graphs: 'graph',
+  plot: 'graph',
+  plots: 'graph',
+  diagram: 'graph',
+  diagrams: 'graph',
 };
 
 /**
@@ -97,7 +105,8 @@ export function tabTypeFromFolder(filePath) {
 /**
  * Strict flat-schema validation: { title: string, notes: string[] } plus the
  * optional per-type fields (order: int, year, examSource, latex: bool,
- * type). Invalid files are rejected — no silent coercion.
+ * type, graph). "graph" files carry a GraphSpec in place of (or alongside)
+ * prose. Invalid files are rejected — no silent coercion.
  */
 export function validateNoteSchema(note) {
   if (typeof note !== 'object' || note === null || Array.isArray(note)) {
@@ -107,10 +116,18 @@ export function validateNoteSchema(note) {
   if (typeof note.title !== 'string' || !note.title.trim()) {
     errors.push('"title" must be a non-empty string');
   }
-  if (!Array.isArray(note.notes) || note.notes.length === 0) {
-    errors.push('"notes" must be a non-empty array of strings');
-  } else if (!note.notes.every((n) => typeof n === 'string')) {
-    errors.push('every entry in "notes" must be a string');
+  if (note.graph === undefined) {
+    if (!Array.isArray(note.notes) || note.notes.length === 0) {
+      errors.push('"notes" must be a non-empty array of strings');
+    } else if (!note.notes.every((n) => typeof n === 'string')) {
+      errors.push('every entry in "notes" must be a string');
+    }
+  } else if (typeof note.graph !== 'object' || note.graph === null || Array.isArray(note.graph)) {
+    errors.push('"graph" must be a JSON object (GraphSpec)');
+  } else if (note.notes !== undefined) {
+    if (!Array.isArray(note.notes) || !note.notes.every((n) => typeof n === 'string')) {
+      errors.push('"notes" must be an array of strings');
+    }
   }
   if (note.order !== undefined && (!Number.isInteger(note.order) || note.order < 0)) {
     errors.push('"order" must be a non-negative integer');
@@ -225,11 +242,11 @@ export function classify(note, filePath = '', metadata = {}) {
 
 // ── Allowed types per subject (admin API validation + auto-coercion) ──────
 export const ALLOWED_BLOCK_TYPES = {
-  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'formula', 'symbols', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary'],
-  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'premium_expansion', 'revision_summary'],
+  science_math: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'formula', 'symbols', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary', 'graph'],
+  biology: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'diagram_compare', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'premium_expansion', 'revision_summary', 'graph'],
   english: ['summary', 'keywords', 'important_points', 'learning_outcome', 'pyq', 'revision_summary'],
   nepali: ['byakaran', 'learning_outcome', 'revision_summary'],
-  general_knowledge: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary'],
+  general_knowledge: ['note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important', 'numerical', 'mindmap', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example', 'premium_expansion', 'reference', 'revision_summary', 'graph'],
 };
 
 const FALLBACK_BY_SUBJECT = {
@@ -318,6 +335,10 @@ export function classifyBlock({ title = '', content = '' } = {}) {
     if (keyword.startsWith('numerical')) {
       return { blockType: 'solved_example', reason: `Bare section heading "${titleText}"` };
     }
+  }
+  // Graph / plot blocks — carry a structured GraphSpec in diagramData.graph.
+  if (/^(graph|plot|curve)\b/i.test(firstLine) || /\bgraph\b/i.test(titleText)) {
+    return { blockType: 'graph', reason: 'Graph / plot heading or title' };
   }
   if (OUTCOME_RE.test(firstLine)) {
     return { blockType: 'learning_outcome', reason: 'Learning outcomes heading' };

@@ -1,0 +1,19 @@
+{
+  "title": "Projectile trajectory — parabolic path",
+  "notes": [
+    "The path of a projectile is a **parabola**: $y = x\\tan\\theta - \\dfrac{gx^2}{2u^2\\cos^2\\theta}$. The graph below shows a $45°$ launch (maximum range): the body rises to the peak $H$, then falls symmetrically."
+  ],
+  "type": "graph",
+  "order": 1,
+  "graph": {
+    "title": "Trajectory of a projectile (θ = 45°)",
+    "xLabel": "Horizontal distance",
+    "yLabel": "Height",
+    "xUnit": "m",
+    "yUnit": "m",
+    "curve": { "type": "parabola", "x0": 5, "y0": 2.5 },
+    "peak": { "x": 5, "y": 2.5, "label": "H = 2.5 m" },
+    "angle": { "degrees": 45, "at": [0.8, 0.4], "label": "θ = 45°" },
+    "dashedCurve": true
+  }
+}

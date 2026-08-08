@@ -204,6 +204,7 @@ export function contentHash(data) {
     accessLevel: data.accessLevel,
     sectionIndex: data.sectionIndex,
     mindmapJson: data.mindmapJson ?? null,
+    diagramData: data.diagramData ?? null,
     order: data.metadata.order,
   });
   return createHash('sha256').update(stable).digest('hex');
@@ -264,6 +265,9 @@ export function buildBlockData(note, classification, sourceKey, order) {
     const tree = buildMindmapTree(note.notes);
     if (tree) data.mindmapJson = tree;
   }
+  if (classification.type === 'graph' && note.graph) {
+    data.diagramData = { graph: note.graph };
+  }
   data.metadata.contentHash = contentHash(data);
   return data;
 }
@@ -308,6 +312,7 @@ async function writePendingVersion(db, blockId, data) {
       title: data.title,
       contentRichtext: data.contentRichtext,
       mindmapJson: data.mindmapJson ?? undefined,
+      diagramData: data.diagramData ?? undefined,
       changedBy: 'import-notes',
     },
   });
@@ -336,6 +341,7 @@ async function upsertBlock(db, chapter, data, flags, log) {
           title: data.title,
           contentRichtext: data.contentRichtext,
           mindmapJson: data.mindmapJson ?? undefined,
+          diagramData: data.diagramData ?? undefined,
           accessLevel: data.accessLevel,
           sectionIndex: data.sectionIndex,
           sortOrder: data.metadata.order,
@@ -403,6 +409,7 @@ async function upsertBlock(db, chapter, data, flags, log) {
         title: data.title,
         contentRichtext: data.contentRichtext,
         mindmapJson: data.mindmapJson ?? undefined,
+        diagramData: data.diagramData ?? undefined,
         accessLevel: data.accessLevel,
         sectionIndex: data.sectionIndex,
         sortOrder: data.metadata.order,

@@ -316,3 +316,20 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-deep-700);
 }
+
+/* Pulsing gold glow — footer motto ("Knowledge is Power") */
+.glow-pulse {
+  background: linear-gradient(120deg, #fef3c7, #fbbf24 45%, #f59e0b 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: glowPulse 2.6s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.45)) drop-shadow(0 0 18px rgba(251, 191, 36, 0.22));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.85)) drop-shadow(0 0 34px rgba(251, 191, 36, 0.45));
+  }
+}

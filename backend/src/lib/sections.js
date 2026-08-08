@@ -30,7 +30,7 @@ export const SECTION_ORDER = [
   {
     key: 'diagram',
     label: 'Topic Diagram',
-    blockTypes: ['mindmap'],
+    blockTypes: ['mindmap', 'graph'],
     defaultAccess: 1,
     description: 'Hierarchical diagram of the whole topic (symbols + legend). Premium only.',
   },

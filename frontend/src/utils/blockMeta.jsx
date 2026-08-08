@@ -27,6 +27,7 @@ export const TYPE_META = {
   reference: { label: 'Reference', color: '#94a3b8' },
   revision_summary: { label: 'Revision Summary', color: '#34d399' },
   symbols: { label: 'Symbols', color: '#c084fc' },
+  graph: { label: 'Graph', color: '#7dd3fc' },
 };
 
 export function typeMeta(blockType) {

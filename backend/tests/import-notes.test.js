@@ -252,9 +252,9 @@ test('discoverNoteFiles walks recursively and sorts deterministically', () => {
   }
 });
 
-// Sanity: the exported taxonomy is exactly the 7 tab types.
-test('TAB_TYPES contains exactly the 7 required tab types', () => {
-  assert.deepEqual(TAB_TYPES, ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap']);
+// Sanity: the exported taxonomy is exactly the 8 tab types (graph added for plots).
+test('TAB_TYPES contains exactly the 8 required tab types', () => {
+  assert.deepEqual(TAB_TYPES, ['concept', 'note', 'example', 'formula', 'pyq', 'set', 'mindmap', 'graph']);
 });
 
 // ── Section-awareness (Task 3: --section flag, fail-fast, tree guard) ─────

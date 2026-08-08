@@ -706,6 +706,8 @@ export default function ChapterPage() {
                             copiedAnchor={copiedAnchor}
                             anchor={anchor}
                             headerH={headerH}
+                            unitLabel={structure.unitLetter}
+                            unitTitle={structure.unitTitle}
                           />
                         </div>
                       );
@@ -758,6 +760,12 @@ export default function ChapterPage() {
                                     hideTitle={isHead && block.title}
                                     showSection
                                     embedded
+                                    mindmapContext={{
+                                      unit: structure.unitLetter,
+                                      unitTitle: structure.unitTitle,
+                                      topic: t.number,
+                                      topicTitle: t.topic?.title || '',
+                                    }}
                                   />
                                 ) : (
                                   <LockedBlockCard
@@ -795,7 +803,7 @@ export default function ChapterPage() {
 // of a VariantBox (each Type gets its own interface). `readCi` lets a
 // variant share its group's read badge (all types of one concept are the
 // same "concept read" in the tracker).
-function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, flashId, copyAnchor, copiedAnchor, anchorOverride, readCi }) {
+function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, flashId, copyAnchor, copiedAnchor, anchorOverride, readCi, unitLabel, unitTitle }) {
   const headBlock = c.blocks.find((b) => b.blockType === 'note_topic');
   const anchor = anchorOverride || conceptAnchor(t.number, ci);
   const isRead = Boolean(readMap[`${t.number}-${readCi ?? ci}`]);
@@ -842,6 +850,12 @@ function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, 
                   hideTitle={isHead && block.title}
                   showSection
                   embedded
+                  mindmapContext={{
+                    unit: unitLabel,
+                    unitTitle,
+                    topic: t.number,
+                    topicTitle: t.topic?.title || '',
+                  }}
                 />
               ) : (
                 <LockedBlockCard
@@ -874,6 +888,8 @@ function VariantBox({
   copiedAnchor,
   anchor,
   headerH,
+  unitLabel,
+  unitTitle,
 }) {
   const [active, setActive] = useState(0);
   const stripRef = useRef(null);
@@ -983,6 +999,8 @@ function VariantBox({
           copiedAnchor={copiedAnchor}
           anchorOverride={anchor}
           readCi={variants[0].ci}
+          unitLabel={unitLabel}
+          unitTitle={unitTitle}
         />
       </div>
     </div>

@@ -30,6 +30,9 @@ export function classifyBlock({ title = '', content = '' } = {}) {
   if (contentText.includes('⚠') || IMPORTANT_RE.test(headline)) {
     return { blockType: 'important_points', reason: 'Important / mistakes / traps marker' };
   }
+  if (/^(graph|plot|curve)\b/i.test(firstLine) || /\bgraph\b/i.test(titleText)) {
+    return { blockType: 'graph', reason: 'Graph / plot heading or title' };
+  }
   if (OUTCOME_RE.test(firstLine)) {
     return { blockType: 'learning_outcome', reason: 'Learning outcomes heading' };
   }

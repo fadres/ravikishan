@@ -1,0 +1,154 @@
+{
+  "name": "Cell — The Unit of Life",
+  "desc": "Complete classification of the Cell chapter: every box shows what it means, and its position in the tree is shown by the index badge.",
+  "children": [
+    {
+      "name": "Cell Theory",
+      "desc": "The 3 basic rules that define what a cell is",
+      "children": [
+        {
+          "name": "Schleiden & Schwann",
+          "desc": "1838: all organisms are made of cells; cell is the basic unit"
+        },
+        {
+          "name": "Virchow",
+          "desc": "1855: omnis cellula e cellula — cells arise from existing cells"
+        }
+      ]
+    },
+    {
+      "name": "Cell Types",
+      "desc": "Two fundamental architectures of life",
+      "children": [
+        {
+          "name": "Prokaryotic",
+          "desc": "No true nucleus — DNA floats free in cytoplasm",
+          "children": [
+            { "name": "Bacteria", "desc": "70S ribosomes, no membrane-bound organelles" },
+            { "name": "Archaea", "desc": "Like bacteria but distinct biochemistry" }
+          ]
+        },
+        {
+          "name": "Eukaryotic",
+          "desc": "True nucleus + membrane-bound organelles",
+          "children": [
+            {
+              "name": "Plant cell",
+              "desc": "Has cell wall, chloroplasts and large vacuole",
+              "children": [
+                { "name": "Cell wall", "desc": "Cellulose; gives shape and support" },
+                { "name": "Chloroplasts", "desc": "Site of photosynthesis — makes food" }
+              ]
+            },
+            { "name": "Animal cell", "desc": "No cell wall; centrioles and lysosomes present" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Membrane Systems",
+      "desc": "The factory floor — membranes divide the cell into work stations",
+      "children": [
+        {
+          "name": "Plasma membrane",
+          "desc": "Outer boundary — the gatekeeper of the cell",
+          "children": [
+            { "name": "Fluid mosaic model", "desc": "Phospholipid bilayer with floating proteins" },
+            { "name": "Selective permeability", "desc": "Lets some molecules pass, blocks others" }
+          ]
+        },
+        {
+          "name": "Endomembrane system",
+          "desc": "ER, Golgi and lysosomes work as one transport chain",
+          "children": [
+            {
+              "name": "Endoplasmic reticulum",
+              "desc": "Membrane factory that makes and moves molecules",
+              "children": [
+                { "name": "Rough ER", "desc": "Has ribosomes — makes proteins" },
+                { "name": "Smooth ER", "desc": "Makes lipids and detoxifies" }
+              ]
+            },
+            { "name": "Golgi apparatus", "desc": "Packs and ships proteins like a post office" },
+            { "name": "Lysosomes", "desc": "Suicidal bags — digest waste and invaders" }
+          ]
+        },
+        { "name": "Vacuoles", "desc": "Storage tanks for water, salts and waste" }
+      ]
+    },
+    {
+      "name": "Genetic Material",
+      "desc": "Where the blueprint of life is stored and read",
+      "children": [
+        {
+          "name": "Nucleus",
+          "desc": "Brain of the cell — controls all activities",
+          "children": [
+            { "name": "Nuclear envelope", "desc": "Double membrane with pores for traffic" },
+            { "name": "Nucleolus", "desc": "Makes ribosome subunits" },
+            { "name": "Chromatin", "desc": "DNA + histones — condenses into chromosomes" }
+          ]
+        },
+        {
+          "name": "Ribosomes",
+          "desc": "Protein factories — read mRNA, build proteins",
+          "children": [
+            { "name": "70S ribosome", "desc": "Prokaryotic type: 50S + 30S" },
+            { "name": "80S ribosome", "desc": "Eukaryotic type: 60S + 40S" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Energy Centres",
+      "desc": "Powerhouses that supply ATP for every activity",
+      "children": [
+        {
+          "name": "Mitochondria",
+          "desc": "Powerhouse of the cell — makes ATP by respiration",
+          "children": [
+            { "name": "Cristae", "desc": "Folded inner membrane — more surface for reactions" },
+            { "name": "Matrix", "desc": "Inner fluid holding the Krebs cycle enzymes" }
+          ]
+        },
+        {
+          "name": "Chloroplasts",
+          "desc": "Kitchen of the cell — traps sunlight to make food",
+          "children": [
+            { "name": "Thylakoids", "desc": "Discs stacked as grana — catch light energy" },
+            { "name": "Stroma", "desc": "Fluid where the Calvin cycle builds glucose" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cell Division",
+      "desc": "How cells copy themselves to grow and reproduce",
+      "children": [
+        {
+          "name": "Mitosis",
+          "desc": "One division — identical copies; growth and repair",
+          "children": [
+            { "name": "Prophase", "desc": "Chromosomes condense, spindle forms" },
+            { "name": "Metaphase", "desc": "Chromosomes line up at the equator" },
+            { "name": "Anaphase", "desc": "Sister chromatids are pulled apart" },
+            { "name": "Telophase", "desc": "Two new nuclei form, cell splits" }
+          ]
+        },
+        {
+          "name": "Meiosis",
+          "desc": "Two divisions — halves chromosome number; makes gametes",
+          "children": [
+            { "name": "Meiosis I", "desc": "Homologous chromosomes separate" },
+            { "name": "Meiosis II", "desc": "Sister chromatids separate — 4 haploid cells" }
+          ]
+        }
+      ]
+    }
+  ],
+  "legend": [
+    "Index badge (1.2) = position of the box counted from the top of the classification",
+    "Grey line under a name = the meaning of that box (desc)",
+    "Tap any box → its unit/topic position and full meaning"
+  ]
+}

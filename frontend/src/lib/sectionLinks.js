@@ -12,6 +12,11 @@ export const sections = [
     classSlug: 'class-11',
   },
   {
+    id: 'class-11e',
+    label: 'Class 11E',
+    classSlug: 'class-11e',
+  },
+  {
     id: 'class-12-test',
     label: 'Class 12',
     classSlug: 'class-12',

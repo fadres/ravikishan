@@ -28,7 +28,7 @@ test('GET /api/sections lists the active section registry (no secrets leaked)', 
   const res = await request(app).get('/api/sections');
   assert.equal(res.status, 200);
   assert.ok(Array.isArray(res.body.sections));
-  assert.deepEqual(res.body.sections.map((s) => s.id), ['class-11', 'class-12-test']);
+  assert.deepEqual(res.body.sections.map((s) => s.id), ['class-11', 'class-11e', 'class-12-test']);
   for (const s of res.body.sections) {
     assert.equal(s.status, 'active');
     assert.ok(!('dbUrl' in s), 'dbUrl must never be exposed');
@@ -37,7 +37,11 @@ test('GET /api/sections lists the active section registry (no secrets leaked)', 
   const c11 = res.body.sections[0];
   assert.equal(c11.label, 'Class 11');
   assert.equal(c11.backendUrl, null, 'local sections expose no backendUrl');
-  const c12 = res.body.sections[1];
+  const c11e = res.body.sections[1];
+  assert.equal(c11e.label, 'Class 11E');
+  assert.equal(c11e.classSlug, 'class-11e');
+  assert.equal(c11e.backendUrl, null, 'local sections expose no backendUrl');
+  const c12 = res.body.sections[2];
   assert.equal(c12.label, 'Class 12');
   assert.equal(c12.classSlug, 'class-12');
 });

@@ -3,6 +3,7 @@ import Markdown, { MathSpan, RichText } from '../../lib/markdown.jsx';
 import CodeBlock from './CodeBlock.jsx';
 import MindmapTree from './MindmapTree.jsx';
 import DiagramCompare from './DiagramCompare.jsx';
+import NoteGraph from './NoteGraph.jsx';
 import ErrorBoundary from '../ErrorBoundary.jsx';
 import { sectionStyleForKey } from '../../lib/noteStructure.js';
 
@@ -28,6 +29,7 @@ const BLOCK_STYLE = {
   premium_expansion: { color: '#e879f9', icon: ICONS.mindmap, label: 'Advanced Learning' },
   reference: { color: '#94a3b8', icon: ICONS.summary, label: 'Reference' },
   revision_summary: { color: '#34d399', icon: ICONS.summary, label: 'Revision Summary' },
+  graph: { color: '#7dd3fc', icon: ICONS.graph, label: 'Graph' },
 };
 
 function KeywordsTags({ content }) {
@@ -206,7 +208,7 @@ function QaSplit({ content }) {
   );
 }
 
-export default function BlockRenderer({ block, labelOverride, hideTitle = false, showSection = false, embedded = false }) {
+export default function BlockRenderer({ block, labelOverride, hideTitle = false, showSection = false, embedded = false, mindmapContext }) {
   const isEmpty =
     !(block.contentRichtext || '').trim() &&
     !(block.contentCode || '').trim() &&
@@ -236,7 +238,7 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
   return (
           <div>
             <ErrorBoundary fallback={() => <p className="text-sm text-slate-400">This mind map could not be rendered.</p>}>
-              <MindmapTree data={block.mindmapJson} />
+              <MindmapTree data={block.mindmapJson} context={mindmapContext} />
             </ErrorBoundary>
             {block.mindmapJson?.legend?.length > 0 && (
               <div className="mt-4 pt-3 border-t border-white/10">
@@ -259,6 +261,12 @@ export default function BlockRenderer({ block, labelOverride, hideTitle = false,
         );
       case 'diagram_compare':
         return <DiagramCompare data={block.diagramData} />;
+      case 'graph':
+        return (
+          <ErrorBoundary fallback={() => <p className="text-sm text-slate-400">This graph could not be rendered.</p>}>
+            <NoteGraph data={block.diagramData?.graph} />
+          </ErrorBoundary>
+        );
       case 'formula':
         return <FormulaBody content={block.contentRichtext} />;
       case 'symbols':

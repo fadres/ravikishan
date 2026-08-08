@@ -541,7 +541,7 @@ test('GET /api/sections/<unknown>/ai/ask returns 404 (fail-fast, no fallback)', 
 test('GET /api/sections/search fans out over active sections and merges ranked results', async () => {
   const res = await request(app).get('/api/sections/search?q=kinematics');
   assert.equal(res.status, 200);
-  assert.deepEqual(res.body.sectionIds, ['class-11', 'class-12-test']);
+  assert.deepEqual(res.body.sectionIds, ['class-11', 'class-11e', 'class-12-test']);
   assert.ok(Array.isArray(res.body.failed), 'per-section failures are reported, not fatal');
   const failedIds = res.body.failed.map((f) => f.sectionId);
   assert.ok(
@@ -550,7 +550,10 @@ test('GET /api/sections/search fans out over active sections and merges ranked r
   );
   assert.ok(res.body.results.length >= 1);
   for (const r of res.body.results) {
-    assert.equal(r.sectionId, 'class-11', 'results are attributed to their section');
+    assert.ok(
+      ['class-11', 'class-11e'].includes(r.sectionId),
+      'results are attributed to their section',
+    );
   }
   // Cross-section ranking: sorted by rank descending.
   const ranks = res.body.results.map((r) => r.rank ?? 0);

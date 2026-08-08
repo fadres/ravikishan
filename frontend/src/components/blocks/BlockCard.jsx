@@ -110,4 +110,11 @@ export const ICONS = {
       <path d="M4 4v5M6.5 4v5M4 6.5h5M12 4l1.6 4L18 9l-4.4 1-1.6 4-1.6-4-4.4-1 4.4-1zM7 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" />
     </svg>
   ),
+  graph: (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4">
+      <path d="M4 20V5M4 20h16" strokeLinecap="round" />
+      <path d="M6 17c3-6 5-8 8-10 2-1.4 3-1.8 4-2" strokeLinecap="round" strokeDasharray="2.4 2" />
+      <circle cx="18" cy="5" r="2" fill="currentColor" fillOpacity="0.2" />
+    </svg>
+  ),
 };

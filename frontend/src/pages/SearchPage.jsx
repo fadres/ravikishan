@@ -85,6 +85,7 @@ export default function SearchPage() {
   // no server round trip per click.
   const [subjectFilter, setSubjectFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const [notesOnly, setNotesOnly] = useState(false);
   const [accessFilter, setAccessFilter] = useState(0);
   const [sectionFilter, setSectionFilter] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
@@ -130,17 +131,26 @@ export default function SearchPage() {
     setParams({ q: query.trim(), page: '1' });
   };
 
-  // Instant client-side filtering over the loaded page.
-  const filtered = useMemo(() => {
-    return results.filter((r) => {
-      if (subjectFilter && r.subject.slug !== subjectFilter) return false;
-      if (typeFilter && r.blockType !== typeFilter) return false;
-      if (accessFilter && (r.accessLevel ?? 3) < accessFilter) return false;
-      if (sectionFilter && (r.sectionKey ?? '') !== sectionFilter) return false;
-      if (difficultyFilter && r.difficulty && r.difficulty !== difficultyFilter) return false;
-      return true;
-    });
-  }, [results, subjectFilter, typeFilter, accessFilter, sectionFilter, difficultyFilter]);
+// Instant client-side filtering over the loaded page.
+const NOTE_BLOCK_TYPES = new Set([
+  'note_topic', 'note_statement', 'note_example', 'note_concept', 'note_important',
+  'numerical', 'mindmap', 'diagram_compare', 'summary', 'keywords', 'important_points', 'byakaran',
+  'formula', 'symbols', 'learning_outcome', 'mind_recall', 'pyq', 'solved_example',
+  'premium_expansion', 'reference', 'revision_summary', 'graph',
+]);
+const isNoteBlock = (blockType) => NOTE_BLOCK_TYPES.has(blockType);
+
+const filtered = useMemo(() => {
+  return results.filter((r) => {
+    if (notesOnly && !isNoteBlock(r.blockType)) return false;
+    if (subjectFilter && r.subject.slug !== subjectFilter) return false;
+    if (typeFilter && r.blockType !== typeFilter) return false;
+    if (accessFilter && (r.accessLevel ?? 3) < accessFilter) return false;
+    if (sectionFilter && (r.sectionKey ?? '') !== sectionFilter) return false;
+    if (difficultyFilter && r.difficulty && r.difficulty !== difficultyFilter) return false;
+    return true;
+  });
+}, [results, subjectFilter, typeFilter, accessFilter, sectionFilter, difficultyFilter, notesOnly]);
 
   const sectionOptions = useMemo(() => {
     const seen = new Set();
@@ -255,7 +265,18 @@ export default function SearchPage() {
                     Type
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    <FilterChip active={!typeFilter} onClick={() => setTypeFilter('')}>
+                    <FilterChip
+                      active={notesOnly}
+                      color="#f472b6"
+                      onClick={() => {
+                        const next = !notesOnly;
+                        setNotesOnly(next);
+                        if (next) setTypeFilter('');
+                      }}
+                    >
+                      Notes
+                    </FilterChip>
+                    <FilterChip active={!typeFilter && !notesOnly} onClick={() => { setTypeFilter(''); setNotesOnly(false); }}>
                       All
                     </FilterChip>
                     {typeOptions.map((t) => (

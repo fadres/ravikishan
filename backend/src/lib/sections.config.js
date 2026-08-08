@@ -30,6 +30,23 @@ export const sections = [
     aiModel: process.env.AI_MODEL || 'gpt-4o-mini',
     status: 'active',
   },
+  // Class 11E — a content-variant section of the SAME Class 11 database.
+  // 11E is a one-time snapshot of Class 11 (see prisma/clone-class.js) with
+  // its own extra solutions added on top. It deliberately reuses the
+  // class-11 dbUrl — it is NOT an independent Neon project; the two classes
+  // coexist as separate rows (class-11, class-11e) in one database. Serving
+  // and import (--section class-11e) work exactly like class-11.
+  {
+    id: 'class-11e',
+    label: 'Class 11E',
+    classSlug: 'class-11e',
+    contentDir: 'content/class-11e',
+    dbUrl: process.env.NEON_CLASS11_URL || process.env.DATABASE_URL,
+    aiEndpoint: process.env.CLASS11_AI_ENDPOINT || process.env.AI_ENDPOINT || '',
+    aiApiKey: process.env.AI_API_KEY || '',
+    aiModel: process.env.AI_MODEL || 'gpt-4o-mini',
+    status: 'active',
+  },
   // ── Future sections are appended here — each with its OWN brand-new Neon
   // project/account and its own working systems (own import pipeline, own
   // local AI, own storage), NEVER sharing NEON_CLASS11_URL. See the

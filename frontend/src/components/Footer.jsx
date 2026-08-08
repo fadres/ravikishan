@@ -199,6 +199,11 @@ export default function Footer() {
           Designed and developed by{' '}
           <span className="glow-gold text-lg font-extrabold">Ravikishan</span>
         </p>
+
+        {/* Signature motto — pulsing gold glow */}
+        <p className="glow-pulse mt-2 text-center text-base sm:text-lg font-extrabold tracking-[0.35em] uppercase">
+          Knowledge is Power
+        </p>
       </div>
     </footer>
   );
