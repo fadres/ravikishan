@@ -81,7 +81,7 @@ export default function App() {
 function Shell() {
   const { wallpaper } = useTheme();
   const { pathname } = useLocation();
-  const showFooter = pathname === '/dashboard';
+  const showFooter = pathname === '/';
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <ScrollToTop />
