@@ -9,7 +9,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || '/'}>
         <AuthProvider>
           <App />
         </AuthProvider>
