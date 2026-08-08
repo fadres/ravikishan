@@ -203,7 +203,7 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
    commit, and redeploy — never edit imported blocks by hand (they are
    recreated from the files). Manual blocks added via the admin panel to
    non-imported chapters are untouched.
-4. Note the API URL (e.g. `https://ravikishan-api.onrender.com`). On the free
+4. Note the API URL (e.g. `https://ravikishan-h2b9.onrender.com`). On the free
    plan the service sleeps after ~15 min idle — step 4 keeps it warm.
 
 ### 3. Frontend — Netlify (or Cloudflare Pages / Vercel)
@@ -213,7 +213,7 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
    existing project** → repo.
 2. Build settings are auto-detected from `frontend/netlify.toml`
    (build `npm run build`, publish `dist`).
-3. Add the build-time env var: `VITE_API_URL=https://ravikishan-api.onrender.com`
+3. Add the build-time env var: `VITE_API_URL=https://ravikishan-h2b9.onrender.com`
    (Site settings → Environment variables).
 4. Deploy. SPA routing is handled by `frontend/public/_redirects`.
 5. Update the backend's `CORS_ORIGIN` to `https://<your-site>.netlify.app`.
@@ -222,7 +222,7 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
 1. Dashboard → Workers & Pages → **Create → Pages → Connect to Git** → repo.
 2. Build command: `npm run build` · Build directory: `frontend/dist`
    (root directory: `frontend`).
-3. Environment variable: `VITE_API_URL=https://ravikishan-api.onrender.com`.
+3. Environment variable: `VITE_API_URL=https://ravikishan-h2b9.onrender.com`.
 4. Deploy. SPA routing is handled by `frontend/public/_redirects`.
 5. Update the backend's `CORS_ORIGIN` to `https://<project>.pages.dev`.
 
@@ -233,7 +233,7 @@ The owner password comes from `OWNER_EMAIL`/`OWNER_PASSWORD` in `backend/.env`.
 
 ### 4. Keep the API awake
 
-UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-api.onrender.com/health` → interval 5 min.
+UptimeRobot (free) → new monitor → HTTP(S) → `https://ravikishan-h2b9.onrender.com/health` → interval 5 min.
 
 ---
 

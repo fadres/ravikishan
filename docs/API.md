@@ -1,6 +1,6 @@
 # Ravikishan API Reference
 
-Base URL: `http://localhost:4000` (dev) / `https://ravikishan-api.onrender.com` (prod).
+Base URL: `http://localhost:4000` (dev) / `https://ravikishan-h2b9.onrender.com` (prod).
 
 All request/response bodies are JSON (`Content-Type: application/json`).
 Auth uses `Authorization: Bearer <accessToken>` headers. Refresh tokens are
