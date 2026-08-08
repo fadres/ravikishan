@@ -6,7 +6,7 @@
     "$$\\text{Density} = \\frac{\\text{Mass}}{\\text{Volume}} = \\frac{4.237}{2.51} = 1.6880 \\text{ kg m}^{-3}$$",
     "<p>Here 1.6880 kg m⁻³ has five significant figures but according to rule it should be expressed to only three significant figures i.e. 1.69 kg m⁻³.</p>",
     "<p>One must remember that in general, the final result should not have more significant figures than the original data from which it was obtained.</p>",
-    "<p>Area of an object is measured to be (2.51 m³) as five significant figures but the least precise measurement must also be expressed to the 0.1 decimal place so our final result should be expressed to the 0.1 decimal place, giving us 106.3 kg.</p>",
+    "<p>For example, adding 103.9 kg + 2.10 kg + 0.319 kg gives 106.319 kg; the least precise measurement (103.9 kg) is expressed to the 0.1 decimal place, so the final result should be expressed to the 0.1 decimal place, giving us 106.3 kg.</p>",
     "<p>But the least precise measurement is 103.9. This measurement is expressed to the 0.1 decimal place. Thus, the answer is rounded to the tenths place, giving us 106.319 kg = 106.3 kg.</p>",
 
     "<h2>NUMERICAL EXAMPLES</h2>",
@@ -40,8 +40,8 @@
 
     "<h3>Example 5: How many years older will you be 1.00 billion seconds from now? (Assume a 365-day year.)</h3>",
     "<p><b>Answer:</b> 1 billion seconds = 1 × 10⁹ s</p>",
-    "$$1 \\times 10^9 \\text{s} \\times \\frac{1\\text{ h}}{3600\\text{ s}} \\times \\frac{1 \\text{ day}}{24 \\text{ h}} \\times \\frac{1 \\text{ y}}{365 \\text{ day}} = 31.75 \\text{ years}$$",
-    "<p>So, 1 billion seconds = 31.75 years from now.</p>",
+    "$$1 \\times 10^9 \\text{s} \\times \\frac{1\\text{ h}}{3600\\text{ s}} \\times \\frac{1 \\text{ day}}{24 \\text{ h}} \\times \\frac{1 \\text{ y}}{365 \\text{ day}} = 31.71 \\text{ years}$$",
+    "<p>So, 1 billion seconds = 31.71 years from now.</p>",
 
     "<h3>Example 6: The volume per second of a liquid flowing through a horizontal pipe of length l is given by πpr⁴/8ηl, where p is the excess pressure between two ends, r is the radius of the pipe and η is the coefficient of viscosity of the liquid. From this relation, find the dimensions of η.</h3>",
     "<p><b>Answer:</b> Given</p>",
@@ -55,11 +55,11 @@
     "<p>Joule is the S.I. unit of energy and dimensional formula of energy is [ML²T⁻²].</p>",
     "<p>According to conversional formula, we have</p>",
     "$$N_2 = N_1 \\left[\\frac{M_1}{M_2}\\right]^a \\left[\\frac{L_1}{L_2}\\right]^b \\left[\\frac{T_1}{T_2}\\right]^c$$",
-    "<p>Here a=1, b=2, c=-2. S.I. unit: N₁ = 10, M₁ = 1 kg, L₁ = 1 m, T₁ = 1 s. New units: N₂ = ?, M₂ = 100 gm, L₂ = 30 cm, T₂ = 30 s</p>",
-    "$$N_2 = 10 \\times \\left[\\frac{1\\text{ kg}}{100\\text{ gm}}\\right] \\times \\left[\\frac{1\\text{ m}}{30\\text{ cm}}\\right]^2 \\times \\left[\\frac{1\\text{ s}}{30\\text{ s}}\\right]^{-2}$$",
-    "$$= 10 \\times \\left[\\frac{10^3\\text{ gm}}{100\\text{ gm}}\\right] \\times \\left[\\frac{10^2\\text{ cm}}{30\\text{ cm}}\\right]^2 \\times \\left(\\frac{1}{30}\\right)^{-2}$$",
-    "$$= 10 \\times 10 \\times \\frac{10^4}{9 \\times 10^2} \\times 30^2 = 9 \\times 10^6$$",
-    "<p>Putting these values in above equation, we get N₂ = 9 × 10⁶ new units.</p>",
+    "<p>Here a=1, b=2, c=-2. S.I. unit: N₁ = 10, M₁ = 1 kg, L₁ = 1 m, T₁ = 1 s. New units: N₂ = ?, M₂ = 10 g, L₂ = 30 cm, T₂ = 100 s</p>",
+    "$$N_2 = 10 \\times \\left[\\frac{1\\text{ kg}}{10\\text{ g}}\\right] \\times \\left[\\frac{1\\text{ m}}{30\\text{ cm}}\\right]^2 \\times \\left[\\frac{1\\text{ s}}{100\\text{ s}}\\right]^{-2}$$",
+    "$$= 10 \\times \\left[\\frac{10^3\\text{ g}}{10\\text{ g}}\\right] \\times \\left[\\frac{10^2\\text{ cm}}{30\\text{ cm}}\\right]^2 \\times \\left(\\frac{1}{100}\\right)^{-2}$$",
+    "$$= 10 \\times 10^2 \\times \\frac{10^4}{9 \\times 10^2} \\times 10^4 = \\frac{10^9}{9} \\approx 1.11 \\times 10^8$$",
+    "<p>Putting these values in above equation, we get N₂ = 1.11 × 10⁸ new units.</p>",
 
     "<h3>Example 8: The edge of a cube is measured to be 7.203 m. What is the total surface area and the volume of the cube, to the appropriate number of significant figures?</h3>",
     "<p><b>Answer:</b> Given, edge of the cube (l) = 7.203 m — four significant figures.</p>",
@@ -74,13 +74,13 @@
     "<p>l₁ = 5.234 ± 0.4, l₂ = 2.123 ± 0.2</p>",
     "<p>Combined length (l) = ?</p>",
     "$$l = l_1 + l_2 = (5.234 \\pm 0.4) + (2.123 \\pm 0.2)$$",
-    "$$= 7.347 \\pm 0.6 \\text{ cm}$$",
+    "$$= 7.357 \\pm 0.6 \\text{ cm}$$",
 
     "<h3>Example 10: A car speedometer has a 5% uncertainty. What is the range of possible speeds when it reads 90 km/h.</h3>",
     "<p><b>Answer:</b> Given Percent uncertainty = 5%</p>",
     "<p>For reading of speed = 90 km/h, range of possible speeds = ?</p>",
     "$$\\%\\text{ uncertainty} = \\frac{\\Delta v}{v} \\times 100\\% \\text{ or } 5\\% = \\frac{\\Delta v}{90} \\times 100\\%$$",
-    "$$\\Delta v = 4.50 \\text{ ms}^{-1}$$",
+    "$$\\Delta v = 4.50 \\text{ km h}^{-1}$$",
     "<p>So, measured value of speed then we can write range of possible speeds = 90 ± 4.50 km/h or 5% = 85.50 to 94.50 km/h.</p>"
   ]
 }

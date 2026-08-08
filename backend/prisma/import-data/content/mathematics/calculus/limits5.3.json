@@ -15,7 +15,7 @@
     "<p>A function $f(x)$ at $x=a$ is said to be continuous iff:</p>",
     "<p>i) $f(a)$ exists</p>",
     "$$\\text{ii) } \\lim_{x \\to a^-} f(x) = \\lim_{x \\to a^+} f(x) = \\lim_{x \\to a} f(x)$$",
-    "$$\\text{iii) } f(a) = \\lim_{x \\to a} f(a)$$",
+    "$$\\text{iii) } f(a) = \\lim_{x \\to a} f(x)$$",
     "<p>Otherwise, $f(x)$ is discontinuous at $x=a$.</p>",
 
     "<h3>Note</h3>",
@@ -53,7 +53,7 @@
     "<h4>iv) Proof</h4>",
     "$$f(x) = \\frac{1}{2x} \\text{ at } x = 0$$",
     "<p><b>Solution:</b></p>",
-    "$$f(0) = \\frac{1}{2 \\cdot 0} = \\frac{1}{0} = \\infty \\text{, doesn't exist}$$",
+    "$$f(0) = \\frac{1}{2 \\cdot 0} = \\frac{1}{0} = \\text{undefined, doesn't exist}$$",
     "<p>Since $f(0)$ doesn't exist, $f(x)$ is discontinuous at $x=0$.</p>",
 
     "<h4>v) Proof</h4>",
@@ -75,13 +75,13 @@
     "<h4>vii) Proof</h4>",
     "$$f(x) = \\frac{1}{1-x} \\text{ at } x = 1$$",
     "<p><b>Solution:</b></p>",
-    "$$\\lim_{x \\to 1^-} f(x) = \\lim_{x \\to 1^-} \\frac{1}{1-x}, \\quad f(1) = \\frac{1}{1-1} = \\frac{1}{0} = \\infty$$",
+    "$$\\lim_{x \\to 1^-} f(x) = \\lim_{x \\to 1^-} \\frac{1}{1-x}, \\quad f(1) = \\frac{1}{1-1} = \\frac{1}{0} = \\text{undefined}$$",
     "<p>Here, $f(1)$ doesn't exist. So, it is discontinuous at $x=1$.</p>",
 
     "<h4>viii) Proof</h4>",
     "$$f(x) = \\frac{1}{x-3} \\text{ at } x = 3$$",
     "<p><b>Solution:</b></p>",
-    "$$f(3) = \\frac{1}{3-3} = \\frac{1}{0} = \\infty$$",
+    "$$f(3) = \\frac{1}{3-3} = \\frac{1}{0} = \\text{undefined}$$",
     "<p>Here, $f(3)$ doesn't exist. So, $f(x)$ is discontinuous at $x=3$.</p>",
 
     "<h4>ix) Proof</h4>",
@@ -108,7 +108,7 @@
     "<h4>xii) Proof</h4>",
     "$$f(x) = \\frac{x}{|x|} \\text{ at } x = 0$$",
     "<p><b>Solution:</b></p>",
-    "$$\\lim_{x \\to 0^-} f(x) = \\lim_{x \\to 0^-} \\frac{x}{-x} = \\frac{0}{0}$$",
+    "$$\\lim_{x \\to 0^-} f(x) = \\lim_{x \\to 0^-} \\frac{x}{-x} = -1$$",
     "<p>Here, $\\lim_{x \\to 0} f(x)$ doesn't exist. So, it is discontinuous at $x=0$.</p>",
 
     "<h3>Question 2: Discuss the continuity of functions at the points specified</h3>",
@@ -119,7 +119,7 @@
     "$$\\lim_{x \\to 2^-} f(x) = \\lim_{x \\to 2^-} (2-x^2) = 2 - 2^2 = -2$$",
     "$$\\lim_{x \\to 2^+} f(x) = \\lim_{x \\to 2^+} (x-4) = 2-4 = -2$$",
     "$$f(2) = 2 - 2^2 = -2$$",
-    "<p>Here, $\\lim_{x \\to 2} f(x) = f(x)$. So, it is continuous at $x=2$.</p>",
+    "<p>Here, $\\lim_{x \\to 2} f(x) = f(2)$. So, it is continuous at $x=2$.</p>",
 
     "<h4>ii) Proof</h4>",
     "$$f(x) = \\begin{cases} 2x^2+1 & x \\le 2 \\\\ 4x+1 & x > 2 \\end{cases} \\text{ at } x = 2$$",
@@ -127,7 +127,7 @@
     "$$\\lim_{x \\to 2^-} f(x) = \\lim_{x \\to 2^-} (2x^2+1) = 2 \\cdot 2^2 + 1 = 9$$",
     "$$\\lim_{x \\to 2^+} f(x) = \\lim_{x \\to 2^+} (4x+1) = 4 \\cdot 2 + 1 = 9$$",
     "$$f(2) = 2 \\cdot 2^2 + 1 = 9$$",
-    "<p>Here, $\\lim_{x \\to 2} f(x) = f(x)$. So, it is continuous at $x=2$.</p>",
+    "<p>Here, $\\lim_{x \\to 2} f(x) = f(2)$. So, it is continuous at $x=2$.</p>",
 
     "<h4>iii) Proof</h4>",
     "$$f(x) = \\begin{cases} 2x & x \\le 3 \\\\ 3x-3 & x > 3 \\end{cases} \\text{ at } x = 3$$",
@@ -135,7 +135,7 @@
     "$$\\lim_{x \\to 3^-} f(x) = \\lim_{x \\to 3^-} 2x = 2 \\cdot 3 = 6$$",
     "$$\\lim_{x \\to 3^+} f(x) = \\lim_{x \\to 3^+} (3x-3) = 3 \\cdot 3 - 3 = 6$$",
     "$$f(3) = 2 \\cdot 3 = 6$$",
-    "<p>Here, $\\lim_{x \\to 3} f(x) = f(x)$. So, it is continuous at $x=3$.</p>",
+    "<p>Here, $\\lim_{x \\to 3} f(x) = f(3)$. So, it is continuous at $x=3$.</p>",
 
     "<h4>iv) Proof</h4>",
     "$$f(x) = \\begin{cases} 2x+1 & x < 1 \\\\ 2 & x = 1 \\\\ 3x & x > 1 \\end{cases} \\text{ at } x = 1$$",
@@ -172,8 +172,8 @@
     "$$f(x) = \\begin{cases} 3x-1 & x<2 \\\\ kx+3 & x \\ge 2 \\end{cases}$$",
     "<p>Find the value of $k$ so that $f(x)$ is continuous at $x=2$.</p>",
     "<p><b>Solution:</b></p>",
-    "$$\\lim_{x \\to 2^-} f(x) = \\lim_{x \\to 2^-} (kx+3) = 2k+3$$",
-    "$$\\lim_{x \\to 2^+} f(x) = \\lim_{x \\to 2^+} (3x-1) = 3 \\cdot 2 - 1 = 5$$",
+    "$$\\lim_{x \\to 2^-} f(x) = \\lim_{x \\to 2^-} (3x-1) = 3 \\cdot 2 - 1 = 5$$",
+    "$$\\lim_{x \\to 2^+} f(x) = \\lim_{x \\to 2^+} (kx+3) = 2k+3$$",
     "<p>We know, $\\lim_{x \\to 2^-} f(x) = \\lim_{x \\to 2^+} f(x)$:</p>",
     "$$2k+3 = 5$$",
     "$$k = \\frac{5-3}{2}$$",

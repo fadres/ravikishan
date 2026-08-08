@@ -201,7 +201,7 @@
     "$$= \\lim_{x \\to \\infty} \\frac{(x-a) - bx}{\\sqrt{x-a} + \\sqrt{bx}}$$",
     "$$= \\lim_{x \\to \\infty} \\frac{x(1-b) - a}{\\sqrt{x-a} + \\sqrt{bx}}$$",
     "<p>Dividing numerator and denominator by $x$:</p>",
-    "$$= \\lim_{x \\to \\infty} \\frac{(1-b) - \\frac{a}{x}}{\\sqrt{\\frac{1}{x} - \\frac{a}{x^2}} + \\sqrt{\\frac{b}{x}}} = \\infty \\ \\text{if } b \\ne 1$$",
+    "$$= \\lim_{x \\to \\infty} \\frac{(1-b) - \\frac{a}{x}}{\\sqrt{\\frac{1}{x} - \\frac{a}{x^2}} + \\sqrt{\\frac{b}{x}}} = +\\infty \\ \\text{if } b < 1, \\quad -\\infty \\ \\text{if } b > 1$$",
     "<p>If $b = 1$, then:</p>",
     "$$\\lim_{x \\to \\infty} \\frac{(1-b)(x-a)}{\\sqrt{x-a} + \\sqrt{bx}} = \\frac{-a}{\\infty + \\infty} = 0$$",
 

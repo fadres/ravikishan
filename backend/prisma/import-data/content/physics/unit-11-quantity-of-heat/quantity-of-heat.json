@@ -11,7 +11,7 @@
     "<h2>Molar Heat Capacity</h2>",
     "<p>The heat required to raise the temperature of 1 mole of a substance by 1 K: $C = \\frac{1}{n}\\frac{Q}{\\Delta\\theta}$. For gases there are two values: $C_p$ (at constant pressure) and $C_v$ (at constant volume), with $C_p - C_v = R$ (Mayer's relation).</p>",
     "<h2>Water Equivalent</h2>",
-    "<p>The <b>water equivalent</b> of a body is the mass of water that would require the same quantity of heat as the body to raise its temperature by the same amount: $W = m s$ (mass of water), unit gram or kilogram.</p>",
+    "<p>The <b>water equivalent</b> of a body is the mass of water that would require the same quantity of heat as the body to raise its temperature by the same amount: $W = \\frac{ms}{c_{water}}$ (with $c_{water} = 4200\\,J\\,kg^{-1}\\,K^{-1}$), expressed in grams or kilograms. Note that $ms$ itself has units J/K in SI — it is the body's heat capacity, not a mass.</p>",
     "<h2>Latent Heat and Change of State</h2>",
     "<p>During a change of state (melting, boiling), temperature remains constant while heat is absorbed. The <b>latent heat (L)</b> is the heat required to change the state of unit mass of a substance without changing its temperature:</p>",
     "$$Q = mL$$",
@@ -81,7 +81,7 @@
     },
     {
       "question": "What is the water equivalent of a copper vessel of mass 0.2 kg? (s of copper = 400 J kg⁻¹ K⁻¹)",
-      "answer": "W = ms = 0.2 × 400 = 80 g of water"
+      "answer": "W = ms = 0.2 × 400 = 80 J/K ≈ 19 g of water"
     }
   ],
   "keyPoints": [

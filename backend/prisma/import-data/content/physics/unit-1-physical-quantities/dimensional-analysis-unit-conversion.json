@@ -27,7 +27,7 @@
     "**Q18: Why does the time factor not change the numeric value in Joule-erg conversion?**\n\n**Answer:** Because both systems use seconds, so (T1/T2)⁻² = 1.",
     "**Q19: What is the dimensional formula used for density conversion?**\n\n**Answer:** [M1L-3T0].",
     "**Q20: What power is used for length in the density conversion?**\n\n**Answer:** Power −3.",
-    "**Q21: How do you convert 10 Newton to dyne using the formula?**\n\n**Answer:** n2 = 10×(1000g/1g)¹×(100cm/1cm)¹×(1s/1s)⁻² = 10×10⁶ = 10⁷... using force dimension [MLT⁻²] gives 10⁶ dyne.",
+    "**Q21: How do you convert 10 Newton to dyne using the formula?**\n\n**Answer:** n2 = 10×(1000g/1g)¹×(100cm/1cm)¹×(1s/1s)⁻² = 10×10³×10² = 10⁶ dyne.",
     "**Q22: State the general principle behind unit conversion using dimensions.**\n\n**Answer:** The physical quantity's magnitude stays the same; only the numerical value and unit change between systems, following n1u1 = n2u2.",
     "**Q23: Why must the dimensional formula of the quantity be known first before conversion?**\n\n**Answer:** Because the powers a, b, c of M, L, T determine how each unit ratio is raised in the conversion formula.",
     "**Q24: Convert 1 gm/cm³ using the general formula n2 = n1(M1/M2)(L1/L2)⁻³.**\n\n**Answer:** n2 = 1×(1/1000)×(1/100)⁻³ = 1000 kg/m³.",

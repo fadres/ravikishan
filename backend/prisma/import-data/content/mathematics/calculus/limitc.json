@@ -89,6 +89,6 @@
     "✅ ANSWER: lim(x→π/4) (cotx − tanx)/(x − π/4) = −4",
     "🎯 QUICK-REFERENCE SUMMARY OF ALL RESULTS: (1) [x sinθ−θ sinx]/(x−θ) → sinθ−θcosθ.\n\n(2) [x cosθ−θ cosx]/(x−θ) → cosθ+θsinθ.\n\n(3) [x tanθ−θ tanx]/(x−θ) → tanθ−θsec²θ.\n\n(4) [x cosecθ−θ cosecx]/(x−θ) → cosecθ(1+θcotθ).\n\n(5) [x secθ−θ secx]/(x−θ) → secθ(1−θtanθ).\n\n(6) [cotx−cota]/(x−a) → −cosec²a.\n\n(7) [1+cos(πx)]/tan²(πx) at x→1 → 1/2. (8) (sinx−cosx)/(x−π/4) at x→π/4 → √2. (9) (cotx−tanx)/(x−π/4) at x→π/4 → −4.",
     "💡 PATTERN RECOGNITION TIP: Whenever you see the form [x·f(θ) − θ·f(x)]/(x−θ), ALWAYS substitute x = θ+h first — this is the standard opening move.\n\nThe problem then reduces to a limit of the form θ·[f(θ)−f(θ+h)]/h + f(θ), and you only need to know the correct sum-to-product identity for f(θ)−f(θ+h) to finish it off using lim(h→0) sin(h/2)/(h/2) = 1.",
-    "⚠️ IMPORTANT: These results resemble what you get from DIFFERENTIATION (first-principle definition of a derivative), since [x·f(θ)−θ·f(x)]/(x−θ) as x→θ is closely related to θ·f'(θ) − f(θ) pattern after rearrangement — this is why these problems are often given right before introducing derivatives, as a bridge topic connecting limits to calculus."
+    "⚠️ IMPORTANT: These results resemble what you get from DIFFERENTIATION (first-principle definition of a derivative), since [x·f(θ)−θ·f(x)]/(x−θ) as x→θ is closely related to f(θ) − θ·f'(θ) pattern after rearrangement — this is why these problems are often given right before introducing derivatives, as a bridge topic connecting limits to calculus."
   ]
 }

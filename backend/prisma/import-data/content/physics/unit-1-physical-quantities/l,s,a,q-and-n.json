@@ -11,7 +11,7 @@
     "<h3>18. In a certain system, the units of length, mass and time are chosen to be 1 cm, 100 g and 1 s. What are the units of force and energy in this system?</h3>",
     "<p><b>Solution:</b> Force = mass × acceleration = M¹L¹T⁻². Using conversion:</p>",
     "$$F_{new} = 1 \\times \\left[\\frac{1\\text{ kg}}{100\\text{ g}}\\right] \\times \\left[\\frac{1\\text{ m}}{1\\text{ cm}}\\right] \\times \\left[\\frac{1\\text{ s}}{1\\text{ s}}\\right]^{-2}$$",
-    "<p><b>Ans:</b> 6.31 × 10⁴ dyne-equivalent unit (as given: c. 6.31 × 10⁴)</p>",
+    "<p><b>Ans:</b> 10³ new units of force and 10⁵ new units of energy (unit force = 100 dyne, unit energy = 100 erg)</p>",
 
     "<h3>19. The distance covered by a particle in time t is given by x = a + bt + ct² + dt³; find the dimensions of a, b, c and d.</h3>",
     "<p><b>Solution:</b> Since every term must have the dimension of length [L]:</p>",
@@ -32,19 +32,19 @@
     "<p><b>Solution:</b> Area = length × breadth = 10.5 × 5.2 = 54.6 cm²</p>",
     "<p>Fractional error: ΔA/A = Δl/l + Δb/b = 0.2/10.5 + 0.1/5.2 = 0.019 + 0.0192 = 0.0382</p>",
     "<p>ΔA = 0.0382 × 54.6 ≈ 2.09 cm²</p>",
-    "<p><b>Ans:</b> Area = (51.6 ± 0.6) cm² (matching option d, as per the book's rounding)</p>",
+    "<p><b>Ans:</b> Area = (54.6 ± 2.1) cm²</p>",
 
     "<h2>Long Answer Questions (Each Question Contains 8 Marks)</h2>",
 
     "<h3>1. (a) A student measures a distance of about 75 cm with a meter stick. Estimate the percentage error in this measurement. (b) A body moving through air at high speed v experiences a retarding force F given by F = kAρv², where k = dimensionless constant, A = surface area of the body, ρ = density of air, v = speed of body. Show dimensionally F = kAρv² is dimensionally correct.</h3>",
-    "<p><b>Answer (a):</b> With a meter stick, least count is typically 0.1 cm. Percentage error = (0.1/75) × 100% ≈ 0.1%.</p>",
+    "<p><b>Answer (a):</b> With a meter stick, least count is typically 0.1 cm. Percentage error = (0.1/75) × 100% ≈ 0.13%.</p>",
     "<p><b>Answer (b):</b></p>",
     "$$[\\text{L.H.S.}] = [F] = [MLT^{-2}]$$",
     "$$[\\text{R.H.S.}] = [A][\\rho][v^2] = [L^2][ML^{-3}][LT^{-1}]^2 = [L^2 \\cdot ML^{-3} \\cdot L^2T^{-2}] = [MLT^{-2}]$$",
     "<p>Since [L.H.S.] = [R.H.S.], the equation is dimensionally correct.</p>",
-    "<p><b>Ans:</b> (a) 0.1% (b) confirmed dimensionally correct</p>",
+    "<p><b>Ans:</b> (a) 0.13% (b) confirmed dimensionally correct</p>",
 
-    "<h3>2. (a) What do you mean by error in measurement? Is a > 0. What are the dimensions of V₀ and a? (b) Taking force, length and time to be the fundamental quantities, find the dimensions of (a) density (b) pressure (c) momentum and (d) energy.</h3>",
+    "<h3>2. (a) What do you mean by error in measurement? What are the dimensions of V₀ and a? (b) Taking force, length and time to be the fundamental quantities, find the dimensions of (a) density (b) pressure (c) momentum and (d) energy.</h3>",
     "<p><b>Answer (a):</b> Error in measurement is the difference between the measured value and the real/true value of a physical quantity, arising due to limitations of instruments and observer.</p>",
     "<p><b>Answer (b):</b> With F, L, T as fundamental quantities: [F]=[MLT⁻²], so [M] = [FL⁻¹T²]</p>",
     "<p>(a) Density = M/L³ = [FL⁻¹T²][L⁻³] = [FL⁻⁴T²]</p>",
@@ -52,7 +52,7 @@
     "<p>(c) Momentum = M×L/T = [FL⁻¹T²][L][T⁻¹] = [FLT]</p>",
     "<p>(d) Energy = F×L = [FL]</p>",
 
-    "<h3>3. A vector P is given as P = (3î + 4ĵ + 2k̂) meter. The dimensions of P are: [MLT⁻²] (representing the general dimension of a physical vector quantity where components carry length dimension).</h3>",
+    "<h3>3. A vector P is given as P = (3î + 4ĵ + 2k̂) meter. The dimensions of P are: [M⁰L¹T⁰] (since P is a position vector whose components carry the dimension of length).</h3>",
 
     "<h2>Numerical Problems for Practice</h2>",
 
@@ -67,7 +67,7 @@
     "<h3>3. The time dependent physical quantity, P is given by P = P₀ e⁻ᵅᵗ². Where α is constant and t is time. Find the dimension of α.</h3>",
     "<p><b>Solution:</b> Same as Q1 above (repeated in book): [α] = [T⁻²]</p>",
 
-    "<h3>4. The density of the Earth is given by ρ = Kᵍ rᵂ Gᶻ, where K = dimensionless constant, g = acceleration due to gravity, r = radius and G = Gravitational constant. Obtain the values of x, y and z.</h3>",
+    "<h3>4. The density of the Earth is given by ρ = K gˣ rʸ Gᶻ, where K = dimensionless constant, g = acceleration due to gravity, r = radius and G = Gravitational constant. Obtain the values of x, y and z.</h3>",
     "<p><b>Solution:</b> [ρ] = [ML⁻³], [g] = [LT⁻²], [r] = [L], [G] = [M⁻¹L³T⁻²]</p>",
     "$$[ML^{-3}] = [LT^{-2}]^x [L]^y [M^{-1}L^3T^{-2}]^z$$",
     "$$[ML^{-3}] = [M^{-z}L^{x+y+3z}T^{-2x-2z}]$$",

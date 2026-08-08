@@ -13,7 +13,7 @@
     "**Q6: If A = 4N, B = 3N, θ = 0°, find R.**\n\n**Answer:** R = √(16+9+24) = 7N (maximum, vectors aligned).",
     "**Q7: If A = 4N, B = 3N, θ = 180°, find R.**\n\n**Answer:** R = √(16+9-24) = 1N (minimum, vectors opposite).",
     "**Q8: If A = 5N, B = 5N, θ = 90°, find R.**\n\n**Answer:** R = √(25+25) = √50 ≈ 7.07N.",
-    "**Q9: In the derivation, what is PN equal to in terms of B and θ?**\n\n**Answer:** PN = BsinΘ.",
+    "**Q9: In the derivation, what is PN equal to in terms of B and θ?**\n\n**Answer:** PN = BcosΘ.",
     "**Q10: In the derivation, what is ON equal to?**\n\n**Answer:** ON = OP + PN = A + BcosΘ.",
     "**Q11: Is the parallelogram law equivalent to the triangle law?**\n\n**Answer:** Yes, both give the same resultant; they are geometrically equivalent methods.",
     "**Q12: If A = 6N, B = 8N, θ = 90°, find R.**\n\n**Answer:** R = √(36+64) = 10N.",

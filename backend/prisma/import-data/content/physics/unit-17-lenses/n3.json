@@ -31,7 +31,7 @@
     "<h2>Absolute Mathematical Conditions (Sanity Checks)</h2>",
     "<p><b>The Real Object Condition:</b> in real-world physics problems, the object is always real and placed in front of the mirror. Standard System: u must always be negative. RIP System: u must always be positive.</p>",
     "<p><b>The Concave Mirror Virtual Exception:</b> a concave mirror can only form a virtual image if the object is placed closer than the focal length (u < |f|). If your problem states the image is virtual and you're using a concave mirror, your calculated u must come out smaller than f.</p>",
-    "<p><b>The Focal Length Consistency:</b> the focal length (f) is a physical property of the glass. It cannot change within the same problem unless the mirror is physically swapped. In two-step problems, calculate f in part 1, and plug that same value into part 2.</p>",
+    "<p><b>The Focal Length Consistency:</b> the focal length of a mirror depends only on its curvature (f = R/2) and cannot change within the same problem unless the mirror is physically swapped. In two-step problems, calculate f in part 1, and plug that same value into part 2.</p>",
 
     "<h3>Zero and Infinite Edge Conditions</h3>",
     "<p><b>Condition for Zero Size:</b> an image has zero size (m = 0) only when the object is infinitely far away (u = ∞).</p>",

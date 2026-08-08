@@ -47,7 +47,7 @@
     "$$\\begin{vmatrix} x & y & z \\\\ x^2 & y^2 & z^2 \\\\ yz & zx & xy \\end{vmatrix} = (y-z)(z-x)(x-y)(yz+zx+xy)$$",
     "<p><b>Proof:</b></p>",
     "$$\\text{LHS} = \\begin{vmatrix} x & y & z \\\\ x^2 & y^2 & z^2 \\\\ yz & zx & xy \\end{vmatrix}$$",
-    "<p>Multiply $R_1, R_2, R_3$ by $x, y, z$ respectively and divide by $xyz$:</p>",
+    "<p>Multiply $C_1, C_2, C_3$ by $x, y, z$ respectively and divide by $xyz$:</p>",
     "$$= \\frac{1}{xyz} \\begin{vmatrix} x^2 & y^2 & z^2 \\\\ x^3 & y^3 & z^3 \\\\ xyz & xyz & xyz \\end{vmatrix}$$",
     "<p>Taking $xyz$ common from $R_3$:</p>",
     "$$= \\frac{xyz}{xyz} \\begin{vmatrix} x^2 & y^2 & z^2 \\\\ x^3 & y^3 & z^3 \\\\ 1 & 1 & 1 \\end{vmatrix}$$",

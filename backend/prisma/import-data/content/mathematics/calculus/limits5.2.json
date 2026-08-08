@@ -175,7 +175,7 @@
     "$$\\lim_{x \\to y} \\frac{\\cos x - \\cos y}{x - y}$$",
     "<p><b>Solution:</b> Using $\\cos x - \\cos y = -2\\sin\\left(\\dfrac{x+y}{2}\\right)\\sin\\left(\\dfrac{x-y}{2}\\right)$:</p>",
     "$$= \\lim_{x \\to y} \\frac{-2\\sin\\left(\\frac{x+y}{2}\\right) \\cdot \\sin\\left(\\frac{x-y}{2}\\right)}{(x-y)}$$",
-    "$$= 2 \\cdot \\lim_{x \\to y} \\frac{\\sin(x-y)/2}{(x-y)/2 \\times 2} \\times \\lim_{x \\to y} \\sin\\left(\\frac{x+y}{2}\\right)$$",
+    "$$= -2 \\cdot \\lim_{x \\to y} \\frac{\\sin(x-y)/2}{(x-y)/2 \\times 2} \\times \\lim_{x \\to y} \\sin\\left(\\frac{x+y}{2}\\right)$$",
     "$$= -2 \\times \\frac{1}{2} \\times \\sin\\left(\\frac{2y}{2}\\right)$$",
     "$$= -\\sin y$$",
 

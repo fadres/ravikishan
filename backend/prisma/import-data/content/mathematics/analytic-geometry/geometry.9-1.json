@@ -141,7 +141,7 @@
     "<p>1. For line 1: $\\frac{x}{\\cos\\theta}+\\frac{y}{\\sin\\theta}=a \\implies x\\sin\\theta+y\\cos\\theta-a\\sin\\theta\\cos\\theta=0$</p>",
     "$$p = \\frac{|-a\\sin\\theta\\cos\\theta|}{\\sqrt{\\sin^2\\theta+\\cos^2\\theta}} = a\\sin\\theta\\cos\\theta = \\frac{a}{2}\\sin2\\theta \\implies 2p = a\\sin2\\theta$$",
     "<p>2. For line 2: $x\\cos\\theta - y\\sin\\theta - a\\cos2\\theta = 0$</p>",
-    "$$p' = \\frac{|-a\\cos2\\theta|}{\\sqrt{\\cos^2\\theta+(-\\sin^2\\theta)}} = a\\cos2\\theta$$",
+    "$$p' = \\frac{|-a\\cos2\\theta|}{\\sqrt{\\cos^2\\theta+(-\\sin\\theta)^2}} = a\\cos2\\theta$$",
     "<p>3. Compute $4p^2+p'^2$:</p>",
     "$$4p^2+p'^2 = (2p)^2+p'^2 = (a\\sin2\\theta)^2+(a\\cos2\\theta)^2 = a^2(\\sin^2 2\\theta+\\cos^2 2\\theta) = a^2 = \\text{RHS}$$",
     "<p>(Proven)</p>",

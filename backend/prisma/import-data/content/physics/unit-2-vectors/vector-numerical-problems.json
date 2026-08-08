@@ -9,7 +9,7 @@
     "**Q2: Two vectors of equal magnitude have resultant also equal in magnitude. Find the angle between them.**\n\n**Answer:** 120°.",
     "**Q3: If A = 4î − ĵ + 3k̂ and B = 7î + 5ĵ + k̂, find the angle between A and B.**\n\n**Answer:** θ ≈ 54° (cosθ ≈ 0.58).",
     "**Q4: If F = 2î + ĵ − 3k̂ and displacement D = î − 2ĵ − 3k̂, find work done.**\n\n**Answer:** W = 9 Joule.",
-    "**Q5: If A − B = C and A − B = C (magnitudes), find the angle between A and B.**\n\n**Answer:** 0° (they are parallel/in the same direction, per the derivation shown).",
+    "**Q5: If |A + B| = |A − B|, find the angle between A and B.**\n\n**Answer:** 90° (squaring both sides gives A·B = 0, so the vectors are perpendicular).",
     "**Q6: Why can vectors not be added algebraically?**\n\n**Answer:** Because apart from magnitude, they also have direction, so simple algebra doesn't apply.",
     "**Q7: State the essential condition for addition of vectors.**\n\n**Answer:** They must represent physical quantities of the same nature.",
     "**Q8: Can the resultant of three vectors be zero?**\n\n**Answer:** Yes, if the resultant of any two coplanar vectors is equal in magnitude but opposite in direction to the third.",
