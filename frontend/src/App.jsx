@@ -80,6 +80,8 @@ export default function App() {
 
 function Shell() {
   const { wallpaper } = useTheme();
+  const { pathname } = useLocation();
+  const showFooter = pathname === '/dashboard';
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
       <ScrollToTop />
@@ -134,7 +136,7 @@ function Shell() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 }
