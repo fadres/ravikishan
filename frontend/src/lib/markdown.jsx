@@ -281,11 +281,14 @@ function renderText(text, keyPrefix, katex) {
 
 // Inline rich text with math support — the shared building block for chips,
 // list items, table cells and mind-map labels outside Markdown itself.
+// Inline contexts have no block parser, so $$...$$ display markers are
+// normalized to $...$ before tokenizing (otherwise the leftover dollar
+// signs would render literally around the math).
 export function RichText({ text, className = '' }) {
   const katex = useKatex();
   return (
     <span className={className}>
-      {renderText(String(text ?? ''), 'rt', katex)}
+      {renderText(String(text ?? '').replace(/\$\$/g, '$'), 'rt', katex)}
     </span>
   );
 }

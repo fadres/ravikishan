@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api/client.js';
+import { RichText } from '../lib/markdown.jsx';
 
 // Home-page / Dashboard Quick Review box: shows one 4-option question,
 // auto-advances every `seconds` (4s on Home, 6s on the Dashboard), tap an
@@ -150,7 +151,9 @@ export default function QuickReviewBox({
           </span>
         </div>
 
-        <p className="mt-2.5 text-sm sm:text-base font-semibold text-white leading-snug">{q.question}</p>
+        <p className="mt-2.5 text-sm sm:text-base font-semibold text-white leading-snug">
+          <RichText text={q.question} />
+        </p>
 
         <div className="mt-4 grid gap-2">
           {q.options.map((opt, i) => {
@@ -179,7 +182,9 @@ export default function QuickReviewBox({
                 <span className={`font-extrabold ${letterColor} mr-2`}>
                   {String.fromCharCode(65 + i)}
                 </span>
-                <span className="text-slate-200">{opt}</span>
+                <span className="text-slate-200">
+                  <RichText text={opt} />
+                </span>
                 {selected && isCorrect && <span className="ml-2 text-emerald-300">✓</span>}
                 {selected && isChosen && !isCorrect && <span className="ml-2 text-rose-300">✕</span>}
               </button>
@@ -226,13 +231,15 @@ export default function QuickReviewBox({
                       {h.correct ? '✓ Correct' : '✗ Missed'}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-slate-200 leading-snug">{h.question}</p>
+                  <p className="mt-1 text-sm text-slate-200 leading-snug">
+                    <RichText text={h.question} />
+                  </p>
                   <p className="mt-1 text-xs text-slate-400">
                     <span className={h.correct ? 'text-emerald-300' : 'text-slate-400'}>
-                      {String.fromCharCode(65 + h.chosen)}. {h.options[h.chosen] ?? ''}
+                      {String.fromCharCode(65 + h.chosen)}. <RichText text={h.options[h.chosen] ?? ''} />
                     </span>
                     {!h.correct && (
-                      <span className="text-emerald-300/80"> · answer: {String.fromCharCode(65 + h.correctIndex)}. {h.options[h.correctIndex] ?? ''}</span>
+                      <span className="text-emerald-300/80"> · answer: {String.fromCharCode(65 + h.correctIndex)}. <RichText text={h.options[h.correctIndex] ?? ''} /></span>
                     )}
                   </p>
                 </div>
