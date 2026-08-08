@@ -198,6 +198,7 @@ export function extractOrder(fileName, note, fallback) {
  */
 export function contentHash(data) {
   const stable = JSON.stringify({
+    noteType: data.noteType,
     blockType: data.blockType,
     title: data.title,
     contentRichtext: data.contentRichtext,
@@ -255,6 +256,7 @@ export function buildBlockData(note, classification, sourceKey, order) {
   };
   const data = {
     blockType,
+    noteType: Number.isInteger(note.noteType) && note.noteType >= 1 ? note.noteType : 1,
     title: note.title.trim(),
     contentRichtext,
     accessLevel: TAB_ACCESS_LEVEL[classification.type],
@@ -291,9 +293,9 @@ export function startRunLog(logDir) {
 
 // ── DB steps (guarded: never called during dry-run) ───────────────────────
 
-async function findExistingBlock(db, chapterId, blockType, title) {
+async function findExistingBlock(db, chapterId, blockType, title, noteType = 1) {
   return db.contentBlock.findFirst({
-    where: { chapterId, blockType, title },
+    where: { chapterId, blockType, title, noteType },
     orderBy: { createdAt: 'asc' },
   });
 }
@@ -329,7 +331,7 @@ async function writePendingVersion(db, blockId, data) {
  * untouched. Only --publish (or an admin-panel action) applies it.
  */
 async function upsertBlock(db, chapter, data, flags, log) {
-  const existing = await findExistingBlock(db, chapter.id, data.blockType, data.title);
+  const existing = await findExistingBlock(db, chapter.id, data.blockType, data.title, data.noteType);
 
   if (!existing) {
     const status = flags.publish ? 'published' : 'draft';
@@ -338,6 +340,7 @@ async function upsertBlock(db, chapter, data, flags, log) {
         data: {
           chapterId: chapter.id,
           blockType: data.blockType,
+          noteType: data.noteType,
           title: data.title,
           contentRichtext: data.contentRichtext,
           mindmapJson: data.mindmapJson ?? undefined,
@@ -407,6 +410,7 @@ async function upsertBlock(db, chapter, data, flags, log) {
       where: { id: existing.id },
       data: {
         title: data.title,
+        noteType: data.noteType,
         contentRichtext: data.contentRichtext,
         mindmapJson: data.mindmapJson ?? undefined,
         diagramData: data.diagramData ?? undefined,

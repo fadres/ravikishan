@@ -135,6 +135,9 @@ export function validateNoteSchema(note) {
   if (note.type !== undefined && !TAB_TYPES.includes(note.type)) {
     errors.push(`"type" must be one of: ${TAB_TYPES.join(', ')}`);
   }
+  if (note.noteType !== undefined && (!Number.isInteger(note.noteType) || note.noteType < 1 || note.noteType > 99)) {
+    errors.push('"noteType" must be an integer between 1 and 99 (draft type: 1 = first draft)');
+  }
   if (note.latex !== undefined && typeof note.latex !== 'boolean') {
     errors.push('"latex" must be a boolean');
   }

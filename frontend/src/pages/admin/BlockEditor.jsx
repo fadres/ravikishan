@@ -68,6 +68,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       : { leftName: '', leftPoints: '', rightName: '', rightPoints: '', similarities: '', differences: '' },
     graph: graphForm(block),
     subLevel: block?.subLevel || '',
+    noteType: block?.noteType || 1,
     accessLevel: block?.accessLevel || 3,
     topicId: block ? block.topicId || '' : (topics[0]?.id || ''),
   }));
@@ -160,6 +161,7 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
       codeLanguage: form.contentCode ? form.codeLanguage : null,
       subLevel: form.subLevel.trim() || null,
       accessLevel: Number(form.accessLevel),
+      noteType: Number(form.noteType) || 1,
       mindmapJson: null,
       diagramData: null,
     };
@@ -342,6 +344,21 @@ export default function BlockEditor({ block, chapterId, subjectType, allowedType
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="mt-4">
+          <label className={labelCls}>Type (draft version) — Class 11E keeps every draft as type 1, 2, 3…</label>
+          <input
+            type="number"
+            min="1"
+            max="99"
+            value={form.noteType}
+            onChange={(e) => set('noteType', Number(e.target.value))}
+            className={inputCls}
+          />
+          <p className="mt-1 text-[11px] text-slate-500">
+            Class 11 always stores type 1 (the original); Class 11E stores the drafts side by side.
+          </p>
         </div>
 
         <div className="mt-4">

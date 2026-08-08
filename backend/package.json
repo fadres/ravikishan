@@ -18,6 +18,7 @@
     "content:import": "node prisma/import-content.js",
     "import-notes": "node prisma/import-notes.js",
     "clone:11e": "node prisma/clone-class.js",
+    "promote-11e": "node prisma/promote-class-11e.js",
     "import-11e": "node prisma/import-notes.js --section class-11e",
     "content:restructure": "node prisma/restructure-syllabus.mjs",
     "content:prune": "node prisma/prune-orphans.mjs",

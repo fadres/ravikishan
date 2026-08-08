@@ -301,6 +301,7 @@ const blockSchema = z.object({
     ])
     .nullish(),
   subLevel: z.string().trim().max(300).nullish(),
+  noteType: z.number().int().min(1).max(99).nullish(),
   sortOrder: z.number().int().min(0).nullish(),
   accessLevel: z.number().int().min(1).max(3).nullish(),
   sectionIndex: z.number().int().min(0).max(20).nullish(),

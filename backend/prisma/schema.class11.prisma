@@ -96,6 +96,7 @@ model ContentBlock {
   mindmapJson     Json?
   diagramData     Json?
   subLevel        String?
+  noteType        Int            @default(1)
   classifiedBy    String?
   sectionIndex    Int?
   metadata        Json?

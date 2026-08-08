@@ -210,6 +210,7 @@ const decorateBlock = (b, viewerLevel, dupInfo = new Map()) => {
     accessLevel: b.accessLevel,
     title: b.title,
     subLevel: b.subLevel,
+    noteType: b.noteType,
     sectionIndex,
     sectionLabel: sectionLabelForBlockType(b.blockType),
     sectionKey: sectionKeyForBlockType(b.blockType),

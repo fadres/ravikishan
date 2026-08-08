@@ -119,15 +119,39 @@ export default function ChapterPage() {
   // Blocks with the same body (dupGroupId) are repeated versions of one
   // concept. We collapse each dup group into a single concept box with
   // Type-1/2/3 tabs; the first occurrence keeps its position and anchor.
+  // In Class 11E an EXPLICIT draft type (noteType) takes precedence: notes
+  // saved as type 1, 2, 3, … (same topic/blockType/title, different draft)
+  // collapse into one box with tabs labelled by their type number.
+  const isClass11e = section?.id === 'class-11e';
   const slotsByTopic = useMemo(() => {
+    const typeKeyOf = (c) => {
+      if (!isClass11e) return null;
+      const head = c.blocks.find((b) => b.blockType === 'note_topic') || c.blocks[0];
+      if (!head) return null;
+      const normTitle = String(head.title || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (!normTitle) return null;
+      return `${head.topicId || 'untitled'}|${head.blockType}|${normTitle}`;
+    };
     return structure.topics.map((t) => {
       const groups = new Map();
+      const typeGroups = new Map();
       const used = new Set();
       const dupOf = (c) => {
         const b = c.blocks.find((x) => x.dupGroupId);
         return b ? { groupId: b.dupGroupId, typeIndex: b.dupTypeIndex } : null;
       };
+      const typeOf = (c) => {
+        const key = typeKeyOf(c);
+        if (!key) return null;
+        const head = c.blocks.find((b) => b.blockType === 'note_topic') || c.blocks[0];
+        return { key, noteType: head.noteType || 1 };
+      };
       t.concepts.forEach((c, ci) => {
+        const td = typeOf(c);
+        if (td) {
+          if (!typeGroups.has(td.key)) typeGroups.set(td.key, []);
+          typeGroups.get(td.key).push({ ci, noteType: td.noteType });
+        }
         const d = dupOf(c);
         if (d) {
           if (!groups.has(d.groupId)) groups.set(d.groupId, []);
@@ -135,6 +159,18 @@ export default function ChapterPage() {
         }
       });
       const slots = [];
+      for (const [key, members] of typeGroups) {
+        if (members.length < 2) continue;
+        const sorted = [...members].sort((a, b) => a.noteType - b.noteType);
+        sorted.forEach((m) => used.add(m.ci));
+        slots.push({
+          kind: 'group',
+          groupId: `type-${key}`,
+          conceptIndex: sorted[0].ci,
+          variantIndexes: sorted.map((m) => m.ci),
+          typeLabels: sorted.map((m) => m.noteType),
+        });
+      }
       for (let ci = 0; ci < t.concepts.length; ci++) {
         if (used.has(ci)) continue;
         const d = dupOf(t.concepts[ci]);
@@ -155,7 +191,7 @@ export default function ChapterPage() {
       }
       return slots;
     });
-  }, [structure]);
+  }, [structure, isClass11e]);
 
   // ── Derived counts ───────────────────────────────────────────────
   // Declared BEFORE the effects below: their dependency arrays read these
@@ -696,6 +732,7 @@ export default function ChapterPage() {
                         <div key={`g-${slot.groupId}`} id={anchor} className="scroll-mt-32 mt-6 first:mt-0">
                           <VariantBox
                             variants={slot.variantIndexes.map((ci) => ({ c: t.concepts[ci], ci }))}
+                            typeLabels={slot.typeLabels}
                             topicNumber={t.number}
                             themeColor={subject.themeColor}
                             contactEmail={contactEmail}
@@ -878,6 +915,7 @@ function ConceptBody({ c, ci, t, themeColor, contactEmail, hasContent, readMap, 
 // scrolls past it (sticky within the box) — scrolling back up reveals it.
 function VariantBox({
   variants,
+  typeLabels,
   topicNumber,
   themeColor,
   contactEmail,
@@ -946,9 +984,9 @@ function VariantBox({
                       : { background: `${STRUCTURE_COLORS.concept}22`, color: STRUCTURE_COLORS.concept }
                   }
                 >
-                  {vi + 1}
+                  {typeLabels?.[vi] ?? vi + 1}
                 </span>
-                Type {vi + 1}
+                Type {typeLabels?.[vi] ?? vi + 1}
                 {vHead?.title ? <span className="max-w-[130px] truncate text-slate-300">· {vHead.title}</span> : null}
               </button>
             );
@@ -966,23 +1004,33 @@ function VariantBox({
             className="inline-flex items-center justify-center min-w-[1.1rem] px-1 rounded-md text-[10px] font-extrabold"
             style={{ background: STRUCTURE_COLORS.concept, color: '#0b0a1f' }}
           >
-            {active + 1}
+            {typeLabels?.[active] ?? active + 1}
           </span>
-          Type {active + 1} of {variants.length} · show types
+          Type {typeLabels?.[active] ?? active + 1} of {variants.length} · show types
         </button>
       )}
 
-      {/* Marginal conceptual paragraph — explains what the types are */}
-      <p
-        className="mt-3 text-[11px] leading-relaxed text-slate-400 border-l-2 pl-2.5"
-        style={{ borderColor: `${STRUCTURE_COLORS.concept}88` }}
-      >
-        This concept is recorded {variants.length} times in the syllabus notes — the same idea
-        appears as Type {variants.length > 1 ? '1, 2' : '1'}
-        {variants.length > 2 ? ` and ${variants.length}` : ''}. Type 1 is the original entry;
-        the later types are repeated copies kept exactly as written. Each type opens its own
-        content below — switch to compare wording, formulas or examples across versions.
-      </p>
+      {typeLabels ? (
+        <p
+          className="mt-3 text-[11px] leading-relaxed text-slate-400 border-l-2 pl-2.5"
+          style={{ borderColor: `${STRUCTURE_COLORS.concept}88` }}
+        >
+          This note has {variants.length} saved draft{variants.length > 1 ? 's' : ''} — types{' '}
+          {typeLabels.join(', ')} in Class 11E. Each type opens its own content below; the draft
+          chosen as the original is the one pasted into Class 11.
+        </p>
+      ) : (
+        <p
+          className="mt-3 text-[11px] leading-relaxed text-slate-400 border-l-2 pl-2.5"
+          style={{ borderColor: `${STRUCTURE_COLORS.concept}88` }}
+        >
+          This concept is recorded {variants.length} times in the syllabus notes — the same idea
+          appears as Type {variants.length > 1 ? '1, 2' : '1'}
+          {variants.length > 2 ? ` and ${variants.length}` : ''}. Type 1 is the original entry;
+          the later types are repeated copies kept exactly as written. Each type opens its own
+          content below — switch to compare wording, formulas or examples across versions.
+        </p>
+      )}
 
       {/* Active type's own interface */}
       <div className="mt-3">

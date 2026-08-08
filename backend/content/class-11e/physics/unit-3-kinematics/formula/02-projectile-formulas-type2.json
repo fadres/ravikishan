@@ -1,0 +1,16 @@
+{
+  "title": "Projectile motion — master formulas",
+  "notes": [
+    "**Setup:** projectile launched from ground level with speed $u$ at angle $\\theta$; air resistance ignored, $g$ constant.",
+    "**Components:** $u_x = u\\cos\\theta$ (constant),  $u_y = u\\sin\\theta - gt$.",
+    "**Position:** $x = u\\cos\\theta\\, t$,  $y = u\\sin\\theta\\, t - \\tfrac{1}{2}gt^2$.",
+    "**Time of flight:** $T = \\dfrac{2u\\sin\\theta}{g}$",
+    "**Maximum height:** $H = \\dfrac{u^2\\sin^2\\theta}{2g}$",
+    "**Range:** $R = \\dfrac{u^2\\sin 2\\theta}{g}$, maximum when $\\theta = 45°$.",
+    "**Trajectory (parabola):** $y = x\\tan\\theta - \\dfrac{gx^2}{2u^2\\cos^2\\theta}$.",
+    "**At the apex:** vertical velocity is zero; the total velocity equals the horizontal component $u\\cos\\theta$."
+  ],
+  "type": "formula",
+  "order": 1,
+  "noteType": 2
+}
