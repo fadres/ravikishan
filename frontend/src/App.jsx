@@ -1,5 +1,5 @@
-import { Suspense, lazy } from 'react';
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
@@ -48,6 +48,15 @@ function PageLoader() {
   );
 }
 
+// Every navigation starts at the header (top), never mid-page at the footer.
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
+  return null;
+}
+
 // Legacy /class/<classSlug>/... URLs redirect into the section namespace.
 // Class slugs without a registered section go home — the track does not
 // exist yet.
@@ -73,6 +82,7 @@ function Shell() {
   const { wallpaper } = useTheme();
   return (
     <div className={`ocean-bg min-h-screen text-slate-100 flex flex-col${wallpaper !== 'none' ? ` wp-${wallpaper}` : ''}`}>
+      <ScrollToTop />
       <Header />
       <main id="main-content" className="flex-1 pb-safe px-4 sm:px-6">
         <Suspense fallback={<PageLoader />}>

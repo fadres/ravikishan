@@ -4,7 +4,6 @@ import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { streakDays } from '../utils/streak.js';
 import { QUICK_INSPIRE } from '../data/inspire.js';
-import QuickReviewBox from '../components/QuickReviewBox.jsx';
 import { sectionPath } from '../lib/sectionLinks.js';
 
 const IDIOMS = [
@@ -405,8 +404,6 @@ export default function Home() {
       </section>
 
       <IdiomsStrip />
-
-      <QuickReviewBox />
 
       {/* Four main sections */}
       <section className="mt-8">

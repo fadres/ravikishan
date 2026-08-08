@@ -170,6 +170,30 @@ export default function Footer() {
           for the latest updates. Keep learning, keep growing!
         </p>
 
+        {/* Your words — encouragement */}
+        <div className="mt-6 space-y-3">
+          <p className="max-w-2xl mx-auto text-center text-xs leading-relaxed text-slate-500">
+            Made with curiosity by Ravikishan. All rights reserved. Its your time to shine and make
+            a difference! We are committed to delivering the best experience for our audience. We
+            value your feedback and suggestions. Stay connected with us for the latest updates and
+            news.
+          </p>
+          <p className="max-w-2xl mx-auto text-center text-xs leading-relaxed text-slate-500">
+            Together, we can achieve greatness! Your journey with us is just beginning. Let's make
+            every moment count! We are excited to have you on board! Let's explore new horizons
+            together! Your creativity is our inspiration. Let's build a brighter future together!
+          </p>
+          <p className="max-w-2xl mx-auto text-center text-xs leading-relaxed text-slate-500">
+            Join us on this journey of innovation and creativity! Let's build something amazing
+            together! Thank you for visiting our website. We hope you enjoy your experience here.
+            Stay tuned for more updates and exciting features coming soon! Follow us on social
+            media for the latest news and announcements. We appreciate your support and feedback.
+          </p>
+          <p className="max-w-2xl mx-auto text-center text-xs leading-relaxed text-slate-500">
+            Keep learning, keep growing!
+          </p>
+        </div>
+
         {/* Designed by */}
         <p className="mt-6 text-center text-sm text-slate-400">
           Designed and developed by{' '}
