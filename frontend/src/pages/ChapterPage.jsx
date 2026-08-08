@@ -157,6 +157,16 @@ export default function ChapterPage() {
     });
   }, [structure]);
 
+  // ── Derived counts ───────────────────────────────────────────────
+  // Declared BEFORE the effects below: their dependency arrays read these
+  // bindings during render, so they must already be initialized.
+  const totalConcepts = slotsByTopic.reduce((n, slots) => n + slots.length, 0);
+  const readCount = structure.topics.reduce(
+    (n, t, ti) => n + slotsByTopic[ti].filter((s) => readMap[`${t.number}-${s.conceptIndex}`]).length,
+    0,
+  );
+  const percent = totalConcepts ? Math.round((readCount / totalConcepts) * 100) : 0;
+
   // ── Reading tracker ─────────────────────────────────────────────
   useEffect(() => {
     if (!chapter?.id) return;
@@ -231,13 +241,6 @@ export default function ChapterPage() {
       /* best-effort */
     }
   };
-
-  const totalConcepts = slotsByTopic.reduce((n, slots) => n + slots.length, 0);
-  const readCount = structure.topics.reduce(
-    (n, t, ti) => n + slotsByTopic[ti].filter((s) => readMap[`${t.number}-${s.conceptIndex}`]).length,
-    0,
-  );
-  const percent = totalConcepts ? Math.round((readCount / totalConcepts) * 100) : 0;
 
   const topicRead = (t, ti) => {
     const slots = slotsByTopic[ti] || [];

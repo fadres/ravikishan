@@ -49,17 +49,6 @@ export default function QuizTakePage() {
     };
   }, [quizId]);
 
-  // Countdown timer.
-  useEffect(() => {
-    if (secondsLeft === null) return;
-    if (secondsLeft <= 0) {
-      submit(true); // force: skip the confirm dialog, submit immediately
-      return;
-    }
-    const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-  }, [secondsLeft, submit]);
-
   const submit = useCallback(
     async (force = false) => {
       if (submittedRef.current) return;
@@ -87,6 +76,18 @@ export default function QuizTakePage() {
     },
     [answers, attempt, quiz, navigate],
   );
+
+  // Countdown timer. `submit` must be declared before this effect: its
+  // dependency array reads the binding during render.
+  useEffect(() => {
+    if (secondsLeft === null) return;
+    if (secondsLeft <= 0) {
+      submit(true); // force: skip the confirm dialog, submit immediately
+      return;
+    }
+    const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [secondsLeft, submit]);
 
   if (loading) {
     return (
